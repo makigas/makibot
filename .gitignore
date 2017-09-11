@@ -1,0 +1,5 @@
+# you know
+node_modules/
+
+# sensible things
+config/config.json

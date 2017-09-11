@@ -1,0 +1,24 @@
+{
+  "name": "makibot-discord",
+  "version": "0.1.0",
+  "description": "makigas discord bot",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/makigas/makibot-discord.git"
+  },
+  "keywords": [
+    "makigas",
+    "bot",
+    "discord"
+  ],
+  "author": "Dani Rodríguez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/makigas/makibot-discord/issues"
+  },
+  "homepage": "https://github.com/makigas/makibot-discord#readme",
+  "dependencies": {
+    "discord.js": "^11.2.1"
+  }
+}
