@@ -5,11 +5,12 @@ Here's the Discord bot. It's not mature enough.
 ## Requirements
 
 * Node.js >= 6.0
+* Yarn
 
 ## Setting up
 
 Register a Discord bot if you haven't. Create a Discord app, then bundle a bot.
-[Here is a neat guide covering the process]. The guide also covers how to make
+[Here is a neat guide covering the process][1]. The guide also covers how to make
 the bot join the server, which is important if the bot is not public because
 it will need to be manually invited to the server.
 
