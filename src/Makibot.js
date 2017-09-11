@@ -20,6 +20,7 @@ class Makibot extends Discord.Client {
   }
 
   _onMessageReceived(msg) {
+    console.log(`${msg.author.tag} said at ${msg.channel.name}: ${msg.content}`);
     if (msg.content == '!ping') {
       msg.reply('pong!');
     }
