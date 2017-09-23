@@ -9,7 +9,7 @@ class Makibot extends Discord.Client {
     if (this._validateSettings()) {
       this.on('ready', this._onConnected);
       this.on('message', this._onMessageReceived);
-      this.login(config.bot_token);
+      this.login(config.token);
     } else {
       console.error("ERROR! Invalid settings. Please, verify your config.json");
     }
@@ -27,7 +27,7 @@ class Makibot extends Discord.Client {
   }
 
   _validateSettings() {
-    let token = this._config.bot_token;
+    let token = this._config.token;
     return token != null && typeof(token) == 'string' && token != '';
   }
 

@@ -12,6 +12,9 @@
     "bot",
     "discord"
   ],
+  "scripts": {
+    "start": "node main"
+  },
   "author": "Dani Rodríguez",
   "license": "ISC",
   "bugs": {
