@@ -2,8 +2,11 @@ const Discord = require('discord.js');
 const bigInt = require('big-integer');
 
 const isPrime = n => {
-  if (n.lt(2) || n.mod(2) == 0 || n.mod(3) == 0 || n.mod(5) == 0) {
+  if (n.eq(2) || n.eq(3) || n.eq(5)) {
     return true;
+  }
+  if (n.lt(2) || n.mod(2) == 0 || n.mod(3) == 0 || n.mod(5) == 0) {
+    return false;
   }
   for (let i = bigInt(7); !i.multiply(i).gt(n); i = i.add(6)) {
     if (n.mod(i) == 0 || n.mod(i+4) == 0) {
