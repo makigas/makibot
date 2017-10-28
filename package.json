@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/makigas/makibot-discord#readme",
   "dependencies": {
+    "big-integer": "^1.6.25",
     "discord.js": "^11.2.1",
     "is-prime": "^1.0.1",
     "node-opus": "^0.2.7"

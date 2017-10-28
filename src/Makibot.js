@@ -1,5 +1,17 @@
 const Discord = require('discord.js');
-const isPrime = require('is-prime');
+const bigInt = require('big-integer');
+
+const isPrime = n => {
+  if (n.lt(2) || n.mod(2) == 0 || n.mod(3) == 0 || n.mod(5) == 0) {
+    return false;
+  }
+  for (let i = bigInt(7); !i.multiply(i).gt(n); i = i.add(6)) {
+    if (n.mod(i) == 0 || n.mod(i+4) == 0) {
+      return false;
+    }
+  }
+  return true;
+};
 
 class Makibot extends Discord.Client {
 
@@ -26,12 +38,12 @@ class Makibot extends Discord.Client {
       msg.reply('pong!');
     }
 
-    let prime = /^!prime (\d+)$/;
+    let prime = /^!prime (\-?\d+)$/;
     if (prime.test(msg.content)) {
-      let input = parseInt(prime.exec(msg.content)[1])
+      let input = bigInt(prime.exec(msg.content)[1]);
       if (isPrime(input)) {
         msg.reply(`Se da la circunstancia de que sí, ${input} es primo.`);
-      } else if (input % 2 == 0) {
+      } else if (input.mod(2) == 0) {
         msg.reply(`amigo, deberías saber que un par no puede ser primo.`);
       } else {
         msg.reply(`No, ${input} no es primo.`);
