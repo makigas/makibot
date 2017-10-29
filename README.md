@@ -1,28 +1,32 @@
-# makigas-discord-bot
+<p align="center">
+<img src="https://i.imgur.com/4Mc9y87.png" alt="clank">
+</p>
 
-Here's the Discord bot. It's not mature enough.
+**Clank (formerly known as Makibot)** is the Discord bot for the [makigas Discord server](https://www.makigas.es/discord). It is not stable enough and it probably doesn't contain the most useful commands right now, but it works.
 
 ## Requirements
 
 * Node.js >= 6.0
+* A Discord application that can behave as a bot.
+* A Discord server.
 
 ## Setting up
 
 ### Create a bot
 
-Register a Discord bot if you haven't. Create a Discord app, then bundle a bot.
-[Here is a neat guide covering the process][1]. The guide also covers how to make
-the bot join the server, which is important if the bot is not public because
-it will need to be manually invited to the server.
+Register a Discord bot if you haven't. Create a Discord app, then bundle a bot. [Here is a neat guide covering the process][1]. The guide also covers how to make the bot join the server, which is important if the bot is not public because it will need to be manually invited to the server.
 
-### Set up the token ID
+### Set up the configuration file
 
-To log in the bot you need the **App Bot User Token**. This is not the same as
-the App Secret, the Bot User Token is longer.
+**Clank won't run unless you do this**. Copy `config/config.example.json` to `config/config.json`. The configuration file is local because it will contain login keys that you should NOT expose. Fill in the following keys:
 
-To configure the bot, copy `config/config.example.json` to `config/config.json`.
-The configuration file is local and contains sensible token keys, so you must
-not commit the file into your Git. Set `bot_token` to the app bot user token.
+* **token**: that's the bot token. Log in to Discord via browser, visit the [My Apps](https://discordapp.com/developers/applications/me) page, and click on your bot. Under the section _App Bot User_, your token will be revealed after you press 'Click to reveal'.
+
+* **owner**: that's your user ID. Clank will recognize the user having this ID as the administrator, as some commands will only be available to the bot owner. How to get your user ID:
+
+  - If you are using the native Discord client for Windows, Linux or macOS, go to Appearance settings on your Discord client, and turn on Developer Mode.
+
+  - Type `\@[your username]` into a Discord chat and press Enter. This will send a message with your user ID, and you will be able to see it on the history. Type your username as you'd type it to mention yourself, so if your username is `danirod#2667`, send a message with the contents `\@danirod`. Even if you changed your alias, type your username.
 
 ### Install and run
 
@@ -31,16 +35,12 @@ not commit the file into your Git. Set `bot_token` to the app bot user token.
 
 ## Contributing
 
-Have an idea? Found a bug? This is an open source project. See CONTRIBUTING.md
-for details, but here is the excerpt:
+Have an idea? Found a bug? This is an open source project, so you are free to contribute or provide knowledge if you want. See CONTRIBUTING.md for details, but here is the excerpt:
 
 * Send as many issues/PRs as you need, but please, only one topic per issue/PR.
-* Don't send a non-trivial PR without creating a tracking issue in the issue
-  tracker first.
+* Don't send a non-trivial PR without creating a tracking issue in the issue tracker first.
 * Don't work on top of master branch.
 
-By submitting an issue or a PR – I'd dare to say that by pressing the Fork
-button as well –, you declare that you have read and agree with the contents
-of this document.
+By submitting an issue or a PR – I'd dare to say that by pressing the Fork button as well –, you declare that you have read and agree with the contents of this document.
 
 [1]: https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token
