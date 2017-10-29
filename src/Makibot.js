@@ -21,7 +21,6 @@ class Makibot extends Commando.Client {
 
     if (this._validateSettings()) {
       this.on('ready', this._onConnected);
-      this.on('message', this._onMessageReceived);
       this.login(config.token);
     } else {
       console.error("ERROR! Invalid settings. Please, verify your config.json");
@@ -30,10 +29,6 @@ class Makibot extends Commando.Client {
 
   _onConnected() {
     console.log(`Successfully logged in as ${this.user.tag}!`);
-  }
-
-  _onMessageReceived(msg) {
-    console.log(`${msg.author.tag} said at ${msg.channel.name}: ${msg.content}`);
   }
 
   _validateSettings() {

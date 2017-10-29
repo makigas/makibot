@@ -13,7 +13,7 @@
     "discord"
   ],
   "scripts": {
-    "start": "node main"
+    "start": "nodemon main"
   },
   "author": "Dani Rodríguez",
   "license": "ISC",
@@ -28,5 +28,8 @@
     "is-prime": "^1.0.1",
     "node-opus": "^0.2.7",
     "uws": "^8.14.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1"
   }
 }
