@@ -5,14 +5,17 @@ Here's the Discord bot. It's not mature enough.
 ## Requirements
 
 * Node.js >= 6.0
-* Yarn
 
 ## Setting up
+
+### Create a bot
 
 Register a Discord bot if you haven't. Create a Discord app, then bundle a bot.
 [Here is a neat guide covering the process][1]. The guide also covers how to make
 the bot join the server, which is important if the bot is not public because
 it will need to be manually invited to the server.
+
+### Set up the token ID
 
 To log in the bot you need the **App Bot User Token**. This is not the same as
 the App Secret, the Bot User Token is longer.
@@ -20,6 +23,11 @@ the App Secret, the Bot User Token is longer.
 To configure the bot, copy `config/config.example.json` to `config/config.json`.
 The configuration file is local and contains sensible token keys, so you must
 not commit the file into your Git. Set `bot_token` to the app bot user token.
+
+### Install and run
+
+* `npm install`
+* `npm start`
 
 ## Contributing
 
