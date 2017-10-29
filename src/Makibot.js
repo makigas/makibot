@@ -13,6 +13,7 @@ class Makibot extends Commando.Client {
     this.registry
       .registerDefaultTypes()
       .registerGroups([
+        ['admin', 'Administración'],
         ['fun', 'Entretenimiento'],
         ['utiles', 'Utilidad']
       ])
