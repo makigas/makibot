@@ -55,7 +55,7 @@ module.exports = class PrimoCommand extends Commando.Command {
     if (isPrime(prime)) {
       msg.reply(`Se da la circunstancia de que sí, ${prime} es primo.`);
     } else if (prime.mod(2) == 0) {
-      msg.reply(`amigo, deberías saber que un par no puede ser primo.`);
+      msg.reply(`Amigo, deberías saber que un par mayor que 2 no puede ser primo.`);
     } else {
       msg.reply(`No, ${prime} no es primo.`);
     }
