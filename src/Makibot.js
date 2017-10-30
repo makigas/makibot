@@ -1,4 +1,5 @@
 const Commando = require('discord.js-commando');
+const fileExists = require('file-exists');
 
 class Makibot extends Commando.Client {
 
