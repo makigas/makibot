@@ -6,7 +6,8 @@ class Makibot extends Commando.Client {
     super({
       commandPrefix: '!',
       owner: config.owner,
-      disableEveryone: true
+      disableEveryone: true,
+      unknownCommandResponse: false
     });
 
     this._config = config;
