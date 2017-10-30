@@ -6,7 +6,7 @@
 
 ## Requirements
 
-* Node.js >= 6.0
+* Node.js >= 8.0
 * A Discord application that can behave as a bot.
 * A Discord server.
 
