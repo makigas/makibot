@@ -33,6 +33,7 @@
     "babel-cli": "^6.26.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-env": "^1.6.1",
+    "eslint": "^4.10.0",
     "nodemon": "^1.12.1"
   }
 }

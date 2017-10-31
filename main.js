@@ -5,6 +5,6 @@ var bot = new Makibot(config);
 
 // Disconnect the bot on Ctrl-C / SIGINT.
 process.on('SIGINT', () => {
-  bot.shutdown();
-  process.exit();
+    bot.shutdown();
+    process.exit();
 });
