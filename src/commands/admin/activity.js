@@ -1,6 +1,7 @@
-const Commando = require('discord.js-commando');
+import { Command } from 'discord.js-commando';
 
-module.exports = class ActivityCommand extends Commando.Command {
+export default class ActivityCommand extends Command {
+
   constructor(client) {
     super(client, {
       name: 'activity',
@@ -13,13 +14,13 @@ module.exports = class ActivityCommand extends Commando.Command {
     });
   }
 
-  async run(msg, argv) {
+  async run(msg, { activity }) {
     if (msg.client.isOwner(msg.author)) {
-      if (argv.activity == '') {
+      if (activity == '') {
         msg.client.user.setGame(null);
         msg.reply('Eliminada actividad del bot.');
       } else {
-        msg.client.user.setGame(argv.activity);
+        msg.client.user.setGame(activity);
         msg.reply('Actualizada actividad del bot.');
       }
     } else {

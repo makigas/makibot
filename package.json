@@ -13,7 +13,7 @@
     "discord"
   ],
   "scripts": {
-    "start": "nodemon main"
+    "start": "nodemon main --exec babel-node"
   },
   "author": "Dani Rodríguez",
   "license": "ISC",
@@ -30,6 +30,9 @@
     "uws": "^8.14.1"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-env": "^1.6.1",
     "nodemon": "^1.12.1"
   }
 }

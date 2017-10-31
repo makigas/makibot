@@ -1,4 +1,4 @@
-var Makibot = require('./src/Makibot');
+import Makibot from './src/Makibot';
 
 var config = require('./config/config.json');
 var bot = new Makibot(config);

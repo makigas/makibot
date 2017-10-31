@@ -1,5 +1,5 @@
-const Commando = require('discord.js-commando');
-const bigInt = require('big-integer');
+import { Command } from 'discord.js-commando';
+import bigInt from 'big-integer';
 
 const ipow_mod = (base, exp, mod) => {
   let res = bigInt(1);
@@ -36,7 +36,7 @@ const isPrime = n => {
   return true;
 };
 
-module.exports = class PrimoCommand extends Commando.Command {
+export default class PrimoCommand extends Command {
   constructor(client) {
     super(client, {
       name: 'primo',
@@ -50,8 +50,8 @@ module.exports = class PrimoCommand extends Commando.Command {
     });
   }
 
-  async run(msg, argv) {
-    let prime = bigInt(argv.n);
+  async run(msg, { n }) {
+    let prime = bigInt(n);
     if (isPrime(prime)) {
       msg.reply(`Se da la circunstancia de que sí, ${prime} es primo.`);
     } else if (prime.mod(2) == 0) {

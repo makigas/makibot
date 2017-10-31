@@ -1,6 +1,6 @@
-const Commando = require('discord.js-commando');
+import { Command } from 'discord.js-commando';
 
-module.exports = class HelpCommand extends Commando.Command {
+export default class HelpCommand extends Command {
 
   constructor(client) {
     super(client, {

@@ -1,6 +1,7 @@
-const Commando = require('discord.js-commando');
+import { Command } from 'discord.js-commando';
 
-module.exports = class HornCommand extends Commando.Command {
+export default class HornCommand extends Command {
+
   constructor(client) {
     super(client, {
       name: 'horn',
@@ -10,7 +11,7 @@ module.exports = class HornCommand extends Commando.Command {
     });
   }
 
-  async run(msg, argv) {
+  async run(msg) {
     if (msg.member.voiceChannel) {
       let channel = msg.member.voiceChannel;
       channel.join().then(conn => {

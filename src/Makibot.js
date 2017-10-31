@@ -1,6 +1,6 @@
-const Commando = require('discord.js-commando');
+import Commando from 'discord.js-commando';
 
-class Makibot extends Commando.Client {
+export default class Makibot extends Commando.Client {
 
   constructor(config) {
     super({
@@ -42,5 +42,3 @@ class Makibot extends Commando.Client {
     this.destroy();
   }
 }
-
-module.exports = Makibot;

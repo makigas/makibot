@@ -1,6 +1,7 @@
-const Commando = require('discord.js-commando');
+import { Command } from 'discord.js-commando';
 
-module.exports = class PingCommand extends Commando.Command {
+export default class PingCommand extends Command {
+
   constructor(client) {
     super(client, {
       name: 'ping',
@@ -10,7 +11,7 @@ module.exports = class PingCommand extends Commando.Command {
     });
   }
 
-  async run(msg, argv) {
+  async run(msg) {
     msg.reply('pong');
   }
 }
