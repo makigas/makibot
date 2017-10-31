@@ -2,6 +2,7 @@ import { Command } from 'discord.js-commando';
 
 export default class HelpCommand extends Command {
 
+  /** @param {Commando.CommandoClient} client - Client instance. */
   constructor(client) {
     super(client, {
       name: 'help',

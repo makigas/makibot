@@ -2,6 +2,7 @@ import { Command } from 'discord.js-commando';
 
 export default class PingCommand extends Command {
 
+  /** @param {Commando.CommandoClient} client - Client instance. */
   constructor(client) {
     super(client, {
       name: 'ping',

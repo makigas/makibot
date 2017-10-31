@@ -1,6 +1,13 @@
 import { Command } from 'discord.js-commando';
 import bigInt from 'big-integer';
 
+/**
+ * Calculates b^exp (mod n) using modular algebra.
+ * @param {number} base - Base
+ * @param {number} exp - Exponent
+ * @param {number} mod - Modulus
+ * @return (b ^ exp) (mod n)
+ */
 const ipow_mod = (base, exp, mod) => {
   let res = bigInt(1);
   while (exp > 0) {
@@ -13,6 +20,13 @@ const ipow_mod = (base, exp, mod) => {
   return res.mod(mod);
 };
 
+/**
+ * Applies Fermat probabilistic theorem to guess whether n could be prime.
+ * Remember, there could be some pseudoprimes triggering the function despite
+ * them not being prime.
+ * @param {number} n - The number to test.
+ * @return {boolean} false unless n is prime or pseoduprime.
+ */
 const isPrimeProbabilistic = n => { // fermat
   if (n.eq(1)) return false;
   for (let i = 0; i < 100; ++i) {
@@ -24,6 +38,11 @@ const isPrimeProbabilistic = n => { // fermat
   return true;
 };
 
+/**
+ * Test whether a number is prime or not.
+ * @param {number} n - The number to test.
+ * @return {boolean} false unless n is prime.
+ */
 const isPrime = n => {
   if (n.eq(2) || n.eq(3) || n.eq(5)) return true;
   if (n.lt(2) || n.mod(2) == 0 || n.mod(3) == 0 || n.mod(5) == 0) return false;
@@ -37,6 +56,8 @@ const isPrime = n => {
 };
 
 export default class PrimoCommand extends Command {
+
+  /** @param {Commando.CommandoClient} client - Client instance. */
   constructor(client) {
     super(client, {
       name: 'primo',
@@ -50,6 +71,11 @@ export default class PrimoCommand extends Command {
     });
   }
 
+  /**
+   * @param {Commando.CommandMessage} msg – Sent message.
+   * @param {Object} argv - Provided arguments.
+   * @param {number} argv.n - The integer number to test for being prime.
+   */
   async run(msg, { n }) {
     let prime = bigInt(n);
     if (isPrime(prime)) {

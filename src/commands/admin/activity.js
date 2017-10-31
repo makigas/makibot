@@ -1,7 +1,8 @@
-import { Command } from 'discord.js-commando';
+import Commando from 'discord.js-commando';
 
-export default class ActivityCommand extends Command {
+export default class ActivityCommand extends Commando.Command {
 
+  /** @param {Commando.CommandoClient} client - Client instance. */
   constructor(client) {
     super(client, {
       name: 'activity',
@@ -14,6 +15,11 @@ export default class ActivityCommand extends Command {
     });
   }
 
+  /**
+   * @param {Commando.CommandMessage} msg – Sent message.
+   * @param {Object} argv - Provided arguments.
+   * @param {string} argv.activity - Activity string to set for this bot.
+   */
   async run(msg, { activity }) {
     if (msg.client.isOwner(msg.author)) {
       if (activity == '') {

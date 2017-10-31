@@ -1,7 +1,8 @@
-import { Command } from 'discord.js-commando';
+import Commando from 'discord.js-commando';
 
-export default class HornCommand extends Command {
+export default class HornCommand extends Commando.Command {
 
+  /** @param {Commando.CommandoClient} client - Client instance. */
   constructor(client) {
     super(client, {
       name: 'horn',
@@ -11,6 +12,10 @@ export default class HornCommand extends Command {
     });
   }
 
+  /**
+   * Should attempt to play a horn in the voice channel.
+   * @param msg {Commando.CommandMessage}
+   */
   async run(msg) {
     if (msg.member.voiceChannel) {
       let channel = msg.member.voiceChannel;

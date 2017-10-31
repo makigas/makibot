@@ -1,7 +1,10 @@
 import Commando from 'discord.js-commando';
 
-export default class Makibot extends Commando.Client {
+export default class Makibot extends Commando.CommandoClient {
 
+  /**
+   * @param {Object} config
+   */
   constructor(config) {
     super({
       commandPrefix: '!',
@@ -32,6 +35,10 @@ export default class Makibot extends Commando.Client {
     console.log(`Successfully logged in as ${this.user.tag}!`);
   }
 
+  /**
+   * Check whether settings are valid and the client can connect.
+   * @return {boolean} true unless settings are not valid.
+   */
   _validateSettings() {
     let token = this._config.token;
     return token != null && typeof(token) == 'string' && token != '';
