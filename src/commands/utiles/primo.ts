@@ -2,6 +2,10 @@ import * as Commando from 'discord.js-commando';
 import * as bigInt from 'big-integer';
 import { BigInteger } from 'big-integer';
 
+interface PrimoCommandArguments {
+    n: string;
+}
+
 export = class PrimoCommand extends Commando.Command {
 
     constructor(client: Commando.CommandoClient) {
@@ -17,8 +21,8 @@ export = class PrimoCommand extends Commando.Command {
         });
     }
 
-    async run(msg: Commando.CommandMessage, { n }: { n: string }) {
-        let prime = bigInt(n);
+    async run(msg: Commando.CommandMessage, args: PrimoCommandArguments) {
+        let prime = bigInt(args.n);
         if (this.isPrime(prime)) {
             return msg.reply(`Se da la circunstancia de que sí, ${prime} es primo.`);
         } else if (prime.mod(2).eq(0)) {
