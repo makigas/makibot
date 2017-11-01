@@ -1,13 +1,14 @@
-import Commando from 'discord.js-commando';
-import sqlite from 'sqlite';
-import path from 'path';
+import * as Commando from 'discord.js-commando';
+import * as sqlite from 'sqlite';
+import * as path from 'path';
+import ConfigSchema from './ConfigSchema';
+import { Message } from 'discord.js';
 
 export default class Makibot extends Commando.CommandoClient {
 
-    /**
-   * @param {Object} config
-   */
-    constructor(config) {
+    private config: ConfigSchema;
+
+    public constructor(config: ConfigSchema) {
         super({
             commandPrefix: '!',
             owner: config.owner,
@@ -15,19 +16,17 @@ export default class Makibot extends Commando.CommandoClient {
             unknownCommandResponse: false
         });
 
-        this._config = config;
-
+        this.config = config;
         this.registry.registerDefaultTypes();
         this.registry.registerGroups([
             ['admin', 'Administración'],
             ['fun', 'Entretenimiento'],
             ['utiles', 'Utilidad']
         ]);
-        this.registry.registerCommandsIn(path.join(__dirname, 'commands'));
-
-        if (typeof(this._config.token) != 'string') {
-            throw new TypeError('Login token is not a valid string.');
-        }
+        this.registry.registerCommandsIn({
+            dirname: path.join(__dirname, 'commands'),
+            filter: /^([^\.].*)\.ts$/
+        });
 
         this.on('ready', () => {
             console.log(`Logged in successfully as ${this.user.tag}.`);
@@ -39,7 +38,7 @@ export default class Makibot extends Commando.CommandoClient {
                 .catch(console.log);
         });
 
-        this.login(this._config.token);
+        this.login(this.config.token);
     }
 
     reloadPresence() {

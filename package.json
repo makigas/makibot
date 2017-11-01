@@ -2,7 +2,7 @@
   "name": "@makigas/clank",
   "version": "0.1.0",
   "description": "Discord bot for the makigas server",
-  "main": "main.js",
+  "main": "clank.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/makigas/clank.git"
@@ -13,8 +13,7 @@
     "discord"
   ],
   "scripts": {
-    "start": "babel-node main",
-    "lint": "eslint src main.js"
+    "start": "ts-node clank"
   },
   "author": "Dani Rodríguez",
   "license": "ISC",
@@ -32,9 +31,9 @@
     "uws": "^8.14.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-preset-env": "^1.6.1",
-    "eslint": "^4.10.0"
+    "@types/node": "^8.0.47",
+    "ts-node": "^3.3.0",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.1"
   }
 }

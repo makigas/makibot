@@ -1,9 +1,8 @@
-import Commando from 'discord.js-commando';
+import * as Commando from 'discord.js-commando';
 
-export default class HornCommand extends Commando.Command {
+export = class HornCommand extends Commando.Command {
 
-    /** @param {Commando.CommandoClient} client - Client instance. */
-    constructor(client) {
+    constructor(client: Commando.CommandoClient) {
         super(client, {
             name: 'horn',
             memberName: 'horn',
@@ -12,11 +11,7 @@ export default class HornCommand extends Commando.Command {
         });
     }
 
-    /**
-   * Should attempt to play a horn in the voice channel.
-   * @param msg {Commando.CommandMessage}
-   */
-    async run(msg) {
+    async run(msg: Commando.CommandMessage) {
         if (msg.member.voiceChannel) {
             let channel = msg.member.voiceChannel;
             channel.join().then(conn => {
@@ -25,7 +20,7 @@ export default class HornCommand extends Commando.Command {
                 dispatcher.on('error', e => console.log(e));
             }).catch(console.log);
         } else {
-            msg.reply('debes unirte a un canal de voz para usar este comando');
+            return msg.reply('debes unirte a un canal de voz para usar este comando');
         }
     }
 }

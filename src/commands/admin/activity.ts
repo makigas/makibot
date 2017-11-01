@@ -1,9 +1,8 @@
-import Commando from 'discord.js-commando';
+import * as Commando from 'discord.js-commando';
 
-export default class ActivityCommand extends Commando.Command {
+export = class ActivityCommand extends Commando.Command {
 
-    /** @param {Commando.CommandoClient} client - Client instance. */
-    constructor(client) {
+    constructor(client: Commando.CommandoClient) {
         super(client, {
             name: 'activity',
             memberName: 'activity',
@@ -15,23 +14,16 @@ export default class ActivityCommand extends Commando.Command {
         });
     }
 
-    /**
-   * @param {Commando.CommandMessage} msg – Sent message.
-   * @param {Object} argv - Provided arguments.
-   * @param {string} argv.activity - Activity string to set for this bot.
-   */
-    async run(msg, { activity }) {
+    run(msg: Commando.CommandMessage, { activity }: { activity: string }) {
         if (msg.client.isOwner(msg.author)) {
             if (activity == '') {
                 return msg.client.settings.remove('BotActivity')
                     .then(() => msg.client.settings.remove('BotActivity'))
-                    .then(() => msg.channel.send('Eliminada actividad del bot'))
-                    .catch(console.error);
+                    .then(() => msg.channel.send('Eliminada actividad del bot'));
             } else {
                 return msg.client.settings.set('BotActivity', activity)
                     .then(() => msg.client.user.setGame(activity))
-                    .then(() => msg.channel.send('Actividad del bot actualizada'))
-                    .catch(console.error);
+                    .then(() => msg.channel.send('Actividad del bot actualizada'));
             }
         } else {
             return msg.reply('No estás en el archivo sudoers. Este incidente será reportado :oncoming_police_car:');
