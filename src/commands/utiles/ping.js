@@ -1,18 +1,37 @@
-import { Command } from 'discord.js-commando';
+import Commando from 'discord.js-commando';
 
-export default class PingCommand extends Command {
+/**
+ * This command is used to calculate the time taken for the bot to see and
+ * react to a message. This is known as RTT. Executing `ping` should result
+ * in the amount of milliseconds that takes a message to be delivered to the
+ * bot to be written in the chat output.
+ */
+export default class PingCommand extends Commando.Command {
 
-    /** @param {Commando.CommandoClient} client - Client instance. */
+    /**
+     * @param client {Commando.CommandoClient}
+     */
     constructor(client) {
         super(client, {
             name: 'ping',
             memberName: 'ping',
             group: 'utiles',
-            description: 'Determina si el bot está vivo'
+            description: 'Determina el tiempo de reacción del bot.'
         });
     }
 
+    /**
+     * @param msg {Commando.CommandMessage}
+     */
     async run(msg) {
-        msg.reply('pong');
+        if (msg.editedTimestamp == null) {
+            let sentMessage = await msg.channel.send('pong.');
+            let rtt = sentMessage.createdTimestamp - msg.createdTimestamp;
+            await sentMessage.edit('pong..');
+            let hb = msg.client.ping;
+            await sentMessage.edit(`pong... RTT = ${rtt}ms. HeartBeat = ${hb}ms.`);
+        } else {
+            return [];
+        }
     }
 }
