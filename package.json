@@ -1,11 +1,11 @@
 {
-  "name": "makibot-discord",
+  "name": "@makigas/clank",
   "version": "0.1.0",
-  "description": "makigas discord bot",
+  "description": "Discord bot for the makigas server",
   "main": "main.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/makigas/makibot-discord.git"
+    "url": "git+https://github.com/makigas/clank.git"
   },
   "keywords": [
     "makigas",
@@ -18,9 +18,9 @@
   "author": "Dani Rodríguez",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/makigas/makibot-discord/issues"
+    "url": "https://github.com/makigas/clank/issues"
   },
-  "homepage": "https://github.com/makigas/makibot-discord#readme",
+  "homepage": "https://github.com/makigas/clank#readme",
   "dependencies": {
     "big-integer": "^1.6.25",
     "discord.js": "^11.2.1",
