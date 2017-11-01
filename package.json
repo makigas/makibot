@@ -13,7 +13,8 @@
     "discord"
   ],
   "scripts": {
-    "start": "babel-node main"
+    "start": "babel-node main",
+    "lint": "eslint src main.js"
   },
   "author": "Dani Rodríguez",
   "license": "ISC",

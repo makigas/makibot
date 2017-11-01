@@ -3,3 +3,4 @@ node_modules/
 
 # sensible things
 config/config.json
+settings.db

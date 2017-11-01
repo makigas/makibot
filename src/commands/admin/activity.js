@@ -23,14 +23,18 @@ export default class ActivityCommand extends Commando.Command {
     async run(msg, { activity }) {
         if (msg.client.isOwner(msg.author)) {
             if (activity == '') {
-                msg.client.user.setGame(null);
-                msg.reply('Eliminada actividad del bot.');
+                return msg.client.settings.remove('BotActivity')
+                    .then(() => msg.client.settings.remove('BotActivity'))
+                    .then(() => msg.channel.send('Eliminada actividad del bot'))
+                    .catch(console.error);
             } else {
-                msg.client.user.setGame(activity);
-                msg.reply('Actualizada actividad del bot.');
+                return msg.client.settings.set('BotActivity', activity)
+                    .then(() => msg.client.user.setGame(activity))
+                    .then(() => msg.channel.send('Actividad del bot actualizada'))
+                    .catch(console.error);
             }
         } else {
-            msg.reply('No estás en el archivo sudoers. Este incidente será reportado :oncoming_police_car:');
+            return msg.reply('No estás en el archivo sudoers. Este incidente será reportado :oncoming_police_car:');
         }
     }
 }
