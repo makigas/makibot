@@ -13,7 +13,7 @@
     "discord"
   ],
   "scripts": {
-    "start": "nodemon main --exec babel-node"
+    "start": "babel-node main"
   },
   "author": "Dani Rodríguez",
   "license": "ISC",
@@ -27,13 +27,13 @@
     "discord.js-commando": "https://github.com/Gawdl3y/discord.js-commando#6a608956a2f93c6c142ee1fc22be548f7d97af17",
     "is-prime": "^1.0.1",
     "node-opus": "^0.2.7",
+    "sqlite": "^2.8.0",
     "uws": "^8.14.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-env": "^1.6.1",
-    "eslint": "^4.10.0",
-    "nodemon": "^1.12.1"
+    "eslint": "^4.10.0"
   }
 }
