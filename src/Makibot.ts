@@ -3,6 +3,7 @@ import * as sqlite from 'sqlite';
 import * as path from 'path';
 import ConfigSchema from './ConfigSchema';
 import { Message } from 'discord.js';
+import PinService from './hooks/pin';
 
 export default class Makibot extends Commando.CommandoClient {
 
@@ -34,11 +35,18 @@ export default class Makibot extends Commando.CommandoClient {
             // Load persistent settings.
             sqlite.open('settings.db')
                 .then(db => this.setProvider(new Commando.SQLiteProvider(db)))
-                .then(() => this.reloadPresence())
+                .then(() => this.onDatabaseReady())
                 .catch(console.log);
         });
 
         this.login(this.config.token);
+    }
+
+    private onDatabaseReady() {
+        this.reloadPresence();
+
+        // Register hooks.
+        var pin = new PinService(this);
     }
 
     reloadPresence() {
