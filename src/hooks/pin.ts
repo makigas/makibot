@@ -30,7 +30,7 @@ export default class PinService implements Hook {
         if (channel.type == 'text') {
             let guild = (<Discord.TextChannel> channel).guild;
             let trigger: string = this.getTriggerEmoji(guild);
-            if (reaction.emoji.name == trigger) {
+            if (reaction.emoji.name == trigger && reaction.count == 1) {
                 this.sendReact(reaction.message);
             }
         }
