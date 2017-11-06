@@ -16,19 +16,25 @@ export = class PrimoCommand extends Commando.Command {
             description: 'Calcula si un número es primo o no.',
             examples: ['prime 5', 'prime 6', 'prime 1234'],
             args: [
-                { key: 'n', type: 'string', prompt: 'No me has dicho de qué número quieres calcular el primo.' }
+                { key: 'n', type: 'string', prompt: 'No me has dicho de qué número quieres calcular el primo.', default: '' }
             ]
         });
     }
 
     async run(msg: Commando.CommandMessage, args: PrimoCommandArguments) {
-        let prime = bigInt(args.n);
-        if (this.isPrime(prime)) {
-            return msg.reply(`Se da la circunstancia de que sí, ${prime} es primo.`);
-        } else if (prime.mod(2).eq(0)) {
-            return msg.reply('Amigo, deberías saber que un par no puede ser primo.');
+        if (args.n.trim() == '') {
+            return msg.reply('Uso: `!primo [n:number]`');
+        } else if (/^\-?\d+$/g.test(args.n)) {
+            let prime = bigInt(args.n);
+            if (this.isPrime(prime)) {
+                return msg.reply(`Se da la circunstancia de que sí, ${prime} es primo.`);
+            } else if (prime.mod(2).eq(0)) {
+                return msg.reply('Amigo, deberías saber que un par no puede ser primo.');
+            } else {
+                return msg.reply(`No, ${prime} no es primo.`);
+            }
         } else {
-            return msg.reply(`No, ${prime} no es primo.`);
+            return msg.reply(`\`${args.n}\` no es exactamente un número.`);
         }
     }
 
