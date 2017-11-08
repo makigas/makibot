@@ -2,5 +2,5 @@
 node_modules/
 
 # sensible things
-config/config.json
+.env
 settings.db

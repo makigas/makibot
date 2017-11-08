@@ -7,17 +7,14 @@ import PinService from './hooks/pin';
 
 export default class Makibot extends Commando.CommandoClient {
 
-    private config: ConfigSchema;
-
-    public constructor(config: ConfigSchema) {
+    public constructor() {
         super({
             commandPrefix: '!',
-            owner: config.owner,
+            owner: ConfigSchema.owner,
             disableEveryone: true,
             unknownCommandResponse: false
         });
 
-        this.config = config;
         this.registry.registerDefaultTypes();
         this.registry.registerGroups([
             ['admin', 'Administración'],
@@ -39,7 +36,7 @@ export default class Makibot extends Commando.CommandoClient {
                 .catch(console.log);
         });
 
-        this.login(this.config.token);
+        this.login(ConfigSchema.token);
     }
 
     private onDatabaseReady() {

@@ -18,13 +18,13 @@ Register a Discord bot if you haven't. Create a Discord app, then bundle a bot. 
 
 ### Set up the configuration file
 
-**Clank won't run unless you do this**. Copy `config/config.example.json` to `config/config.json`. The configuration file is local because it will contain login keys that you should NOT expose. Fill in the following keys:
+**Clank won't run unless you do this**. Copy `.env.example` to `.env`. This environment file contain several secret keys required to properly run the bot. Do not expose this file and keep it **secret**, specially your login token since it could allow anyone to impersonate as your bot.
 
-* **token**: that's the bot token. Log in to Discord via browser, visit the [My Apps](https://discordapp.com/developers/applications/me) page, and click on your bot. Under the section _App Bot User_, your token will be revealed after you press 'Click to reveal'.
+* **BOT\_TOKEN**: that's the bot token. Log in to Discord via browser, visit the [My Apps](https://discordapp.com/developers/applications/me) page, and click on your bot. Under the section _App Bot User_, your token will be revealed after you press 'Click to reveal'.
 
-* **owner**: that's your user ID. Clank will recognize the user having this ID as the administrator, as some commands will only be available to the bot owner. How to get your user ID:
+* **BOT\_OWNER**: that's your user ID. Clank will recognize the user having this ID as the administrator, as some commands will only be available to the bot owner. How to get your user ID:
 
-  - If you are using the native Discord client for Windows, Linux or macOS, go to Appearance settings on your Discord client, and turn on Developer Mode.
+  - Go to Settings > Appearance Settings and turn on Developer Mode (scroll down). Then, find a message sent by you in any conversation, right click your name and click Copy ID.
 
   - Type `\@[your username]` into a Discord chat and press Enter. This will send a message with your user ID, and you will be able to see it on the history. Type your username as you'd type it to mention yourself, so if your username is `danirod#2667`, send a message with the contents `\@danirod`. Even if you changed your alias, type your username.
 
