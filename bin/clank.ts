@@ -1,9 +1,9 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import Makibot from './src/Makibot';
-import ConfigSchema from './src/ConfigSchema';
+import Makibot from '../src/Makibot';
+import ConfigSchema from '../src/ConfigSchema';
 
-let configFile = path.join(__dirname, 'config', 'config.json');
+let configFile = path.join(__dirname, '..', 'config', 'config.json');
 if (fs.existsSync(configFile)) {
   let config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
   let makibot = new Makibot(config);
