@@ -31,7 +31,8 @@
     "dotenv": "^4.0.0",
     "node-opus": "^0.2.7",
     "sqlite": "^2.8.0",
-    "uws": "^8.14.1"
+    "uws": "^8.14.1",
+    "xdg-basedir": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": "^8.0.47",

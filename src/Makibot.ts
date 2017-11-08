@@ -4,6 +4,7 @@ import * as path from 'path';
 import ConfigSchema from './ConfigSchema';
 import { Message } from 'discord.js';
 import PinService from './hooks/pin';
+import { config as XDG_CONFIG } from 'xdg-basedir';
 
 export default class Makibot extends Commando.CommandoClient {
 
@@ -30,7 +31,7 @@ export default class Makibot extends Commando.CommandoClient {
             console.log(`Logged in successfully as ${this.user.tag}.`);
 
             // Load persistent settings.
-            sqlite.open('settings.db')
+            sqlite.open(path.join(XDG_CONFIG, 'clank', 'settings.db'))
                 .then(db => this.setProvider(new Commando.SQLiteProvider(db)))
                 .then(() => this.onDatabaseReady())
                 .catch(console.log);
