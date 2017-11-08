@@ -29,6 +29,7 @@
     "discord.js": "^11.2.1",
     "discord.js-commando": "https://github.com/Gawdl3y/discord.js-commando#6a608956a2f93c6c142ee1fc22be548f7d97af17",
     "dotenv": "^4.0.0",
+    "mkdirp": "^0.5.1",
     "node-opus": "^0.2.7",
     "sqlite": "^2.8.0",
     "uws": "^8.14.1",
