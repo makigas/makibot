@@ -52,7 +52,7 @@ export default class Makibot extends Commando.CommandoClient {
     reloadPresence() {
         // Restore activity and online presence.
         this.user.setPresence({
-            status: this.settings.get('BotStatus', 'online'),
+            status: this.settings.get('BotPresence', 'online'),
             game: { name: this.settings.get('BotActivity', null) }
         });
     }
