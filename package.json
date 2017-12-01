@@ -32,7 +32,7 @@
     "mkdirp": "^0.5.1",
     "node-opus": "^0.2.7",
     "sqlite": "^2.8.0",
-    "uws": "^8.14.1",
+    "uws": "^9.14.0",
     "xdg-basedir": "^3.0.0"
   },
   "devDependencies": {
