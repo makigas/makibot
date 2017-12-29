@@ -20,9 +20,6 @@ ADD package.json package.json
 ADD package-lock.json package-lock.json
 RUN npm install
 
-# Not so fast, kid.
-USER node
-
 # Install remaining files
 ADD . .
 
