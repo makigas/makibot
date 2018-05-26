@@ -27,7 +27,7 @@
   "dependencies": {
     "big-integer": "^1.6.28",
     "discord.js": "^11.3.2",
-    "discord.js-commando": "git+https://github.com/Gawdl3y/discord.js-commando.git#6a608956a2f93c6c142ee1fc22be548f7d97af17",
+    "discord.js-commando": "^0.10.0",
     "dotenv": "^5.0.1",
     "mkdirp": "^0.5.1",
     "node-opus": "^0.3.0",
