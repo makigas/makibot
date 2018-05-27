@@ -1,6 +1,6 @@
 {
   "name": "@makigas/clank",
-  "version": "0.2.0",
+  "version": "0.3.20180527",
   "description": "Discord bot for the makigas server",
   "main": "src/Makibot.ts",
   "repository": {
