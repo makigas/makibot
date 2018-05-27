@@ -25,6 +25,8 @@ export = class PinCommand extends Commando.Command {
             memberName: 'pin',
             group: 'admin',
             description: 'Ajusta las opciones del tablón',
+            ownerOnly: true,
+            guildOnly: true,
             args: [
                 { key: 'option', type: 'string', prompt: 'Opción a modificar.', default: '' },
                 { key: 'value', type: 'string', prompt: 'Valor a establecer', default: '' }
@@ -33,19 +35,15 @@ export = class PinCommand extends Commando.Command {
     }
 
     async run(msg: Commando.CommandMessage, args: PinCommandArguments) {
-        if (msg.client.isOwner(msg.author)) {
-            switch (args.option) {
-                case 'emoji':
-                    await this.client.provider.set(msg.guild, 'Pin.Emoji', args.value);
-                    return msg.reply('Cambiaste el emoji de reacción.');
-                case 'pinboard':
-                    await this.client.provider.set(msg.guild, 'Pin.Pinboard', args.value);
-                    return msg.reply('Cambiaste el canal de destino.');
-                default:
-                    return msg.reply('Subcomandos: emoji, pinboard');
-            }
-        } else {
-            return msg.reply('No estás en el archivo sudoers. Este incidente será reportado :oncoming_police_car:');
+        switch (args.option) {
+            case 'emoji':
+                await this.client.provider.set(msg.guild, 'Pin.Emoji', args.value);
+                return msg.reply('Cambiaste el emoji de reacción.');
+            case 'pinboard':
+                await this.client.provider.set(msg.guild, 'Pin.Pinboard', args.value);
+                return msg.reply('Cambiaste el canal de destino.');
+            default:
+                return msg.reply('Subcomandos: emoji, pinboard');
         }
     }
 }
