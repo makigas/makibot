@@ -7,6 +7,7 @@ export = class HornCommand extends Commando.Command {
             name: 'horn',
             memberName: 'horn',
             group: 'fun',
+            guildOnly: true,
             description: 'Prende la vaina (debes estar en un canal de voz)'
         });
     }
