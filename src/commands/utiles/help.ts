@@ -1,4 +1,5 @@
 import * as Commando from 'discord.js-commando';
+import { Message, User } from 'discord.js';
 
 export = class HelpCommand extends Commando.Command {
 
@@ -11,16 +12,23 @@ export = class HelpCommand extends Commando.Command {
         });
     }
 
-    async run(msg: Commando.CommandMessage) {
-        return msg.channel.send(this.groupsString(msg.client.registry));
+    async run(msg: Commando.CommandMessage): Promise<Message | Message[]> {
+        /* if this user is owner, [s]he can see additional commands. */
+        let owner = msg.client.isOwner(msg.author);
+        return msg.channel.send(this.groupsString(msg.client.registry, owner));
     }
 
-    private groupsString(registry: Commando.CommandRegistry) {
+    private groupsString(registry: Commando.CommandRegistry, includeAdmin: boolean): string {
         let info = (g: Commando.CommandGroup) => `__${g.name}__\n${this.commandsString(g)}`;
-        return registry.groups.map(info).join('\n\n');
+        let groups = registry.groups;
+        if (!includeAdmin) {
+            /* If an owner has not sent this message, don't include admin group. */
+            groups = groups.filter((g: Commando.CommandGroup) => g.id != 'admin');
+        }
+        return groups.map(info).join('\n\n');
     }
 
-    private commandsString(group: Commando.CommandGroup) {
+    private commandsString(group: Commando.CommandGroup): string {
         let info = (c: Commando.Command) => `**${c.name}**: ${c.description}`;
         return group.commands.map(info).join('\n');
     }
