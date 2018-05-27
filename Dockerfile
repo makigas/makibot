@@ -1,7 +1,7 @@
 # CLANK DOCKERFILE 🤖
 
 # Alpine Linux because I can only afford slim images.
-FROM node:10.1.2-alpine
+FROM node:10.1-alpine
 
 # Please, use the issue tracker instead of this.
 LABEL maintainer="dani@danirod.es"
