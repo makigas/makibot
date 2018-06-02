@@ -7,7 +7,7 @@ import { Message } from 'discord.js';
 import PinService from './hooks/pin';
 import { config as XDG_CONFIG } from 'xdg-basedir';
 import * as mkdirp from 'mkdirp';
-import LeaveService from './hooks/leave';
+import RosterService from './hooks/roster';
 
 export default class Makibot extends Commando.CommandoClient {
 
@@ -49,7 +49,7 @@ export default class Makibot extends Commando.CommandoClient {
 
         // Register hooks.
         var pin = new PinService(this);
-        var leave = new LeaveService(this);
+        var roster = new RosterService(this);
     }
 
     reloadPresence() {

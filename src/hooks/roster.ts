@@ -2,7 +2,7 @@ import Hook from './hook';
 import { CommandoClient } from 'discord.js-commando'
 import { Guild, GuildMember, TextChannel } from 'discord.js';
 
-export default class LeaveService implements Hook {
+export default class RosterService implements Hook {
 
     private client: CommandoClient;
 
