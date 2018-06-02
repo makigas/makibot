@@ -14,6 +14,10 @@ export default class RosterService implements Hook {
         client.on('guildMemberRemove', (member) => this.memberLeft(member));
     }
 
+    /**
+     * This event is triggered whenever an user joins the guild server.
+     * @param member the member that has joined the server.
+     */
     private memberJoin(member: GuildMember) {
         let modlog = this.getModlog(member.guild);
         if (modlog) {
@@ -40,7 +44,7 @@ export default class RosterService implements Hook {
      * Resolve and get the channel to use as modlog channel in this guild.
      * @param guild the guild to get the modlog channel from.
      */
-    private getModlog(guild: Guild): TextChannel {
+    private getModlog(guild: Guild): TextChannel | null {
         /* If a modlog ID is not registered, there is no modlog. */
         if (!process.env.MODLOG) {
             return null;
