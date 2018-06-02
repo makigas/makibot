@@ -9,11 +9,18 @@ import { Guild, GuildMember, TextChannel } from 'discord.js';
  */
 export default class RosterService implements Hook {
 
-    private client: CommandoClient;
-
     constructor(client: CommandoClient) {
-        this.client = client;
-        this.client.on('guildMemberRemove', (member) => this.memberLeft(member));
+        client.on('guildMemberAdd', (member) => this.memberJoin(member));
+        client.on('guildMemberRemove', (member) => this.memberLeft(member));
+    }
+
+    private memberJoin(member: GuildMember) {
+        let modlog = this.getModlog(member.guild);
+        if (modlog) {
+            modlog.send(`:high_brightness: ${member.user.tag} se unió al servidor.`)
+                .then(msg => console.log(`Enviando mensaje: ${msg}.`))
+                .catch(e => console.error(`Error: ${e}`));
+        }
     }
 
     /**
