@@ -2,6 +2,11 @@ import Hook from './hook';
 import { CommandoClient } from 'discord.js-commando'
 import { Guild, GuildMember, TextChannel } from 'discord.js';
 
+/**
+ * The roster service plugs hooks whenever an user leaves the guild.
+ * It is designed to send to modlog announcements whenever an user leaves the
+ * server to let the server operators know about that.
+ */
 export default class RosterService implements Hook {
 
     private client: CommandoClient;
@@ -11,43 +16,23 @@ export default class RosterService implements Hook {
         this.client.on('guildMemberRemove', (member) => this.memberLeft(member));
     }
 
+    /**
+     * This event is triggered whenever an user leaves the guild server.
+     * @param member the member that has left the server.
+     */
     private memberLeft(member: GuildMember) {
         let modlog = this.getModlog(member.guild);
-        let user = member.user.tag;
-        let message = `:x: ${user} ha ${this.leftMessage()}. ${this.reaction()}.`;
-        modlog.send(message)
-            .then(msg => console.log(`Enviado mensaje: ${msg}.`))
-            .catch(e => console.error(`Error: ${e}`));
+        if (modlog) {
+            modlog.send(`:x: ${member.user.tag} abandonó el servidor.`)
+                .then(msg => console.log(`Enviado mensaje: ${msg}.`))
+                .catch(e => console.error(`Error: ${e}`));
+        }
     }
 
-    /* Send an unfunny joke in the style of the unfunny join messages sent by Discord. */
-    private leftMessage(): string {
-        let messages = [
-            'abandonado el servidor',
-            'hecho un sinpa',
-            'salido por la puerta de atrás',
-            'decidido escapar de aquí',
-            'hecho :wq',
-            'dicho adiós',
-            'sufrido un Segmentation Fault',
-        ];
-        return messages[Math.floor(Math.random() * messages.length)];
-    }
-
-    /* Send an unfunny joke in the style of the unfunny join messages sent by Discord. */
-    private reaction(): string {
-        let reactions = [
-            'Huh',
-            'Meh',
-            'Hasta otra',
-            'Ya volverá',
-            'Sayonara',
-            'Press F to pay respect',
-            'Bye'
-        ];
-        return reactions[Math.floor(Math.random() * reactions.length)];
-    }
-
+    /**
+     * Resolve and get the channel to use as modlog channel in this guild.
+     * @param guild the guild to get the modlog channel from.
+     */
     private getModlog(guild: Guild): TextChannel {
         /* If a modlog ID is not registered, there is no modlog. */
         if (!process.env.MODLOG) {
