@@ -30,34 +30,27 @@ export default class Makibot extends Commando.CommandoClient {
             filter: /^([^\.].*)\.ts$/
         });
 
-        this.on('ready', () => {
-            console.log(`Logged in successfully as ${this.user.tag}.`);
+        this.on('ready', () => console.log(`Logged in successfully as ${this.user.tag}.`));
 
-            // Load persistent settings.
+        this.once('ready', () => {
             this.settingsFile()
                 .then(file => sqlite.open(file))
                 .then(db => this.setProvider(new Commando.SQLiteProvider(db)))
-                .then(() => this.onDatabaseReady())
+                .then(() => {
+                    // Reload presence using database values.
+                    this.user.setPresence({
+                        status: this.settings.get('BotPresence', 'online'),
+                        game: { name: this.settings.get('BotActivity', null) }
+                    });
+
+                    // Register hooks.
+                    var pin = new PinService(this);
+                    var roster = new RosterService(this);
+                })
                 .catch(console.log);
         });
 
         this.login(ConfigSchema.token);
-    }
-
-    private onDatabaseReady() {
-        this.reloadPresence();
-
-        // Register hooks.
-        var pin = new PinService(this);
-        var roster = new RosterService(this);
-    }
-
-    reloadPresence() {
-        // Restore activity and online presence.
-        this.user.setPresence({
-            status: this.settings.get('BotPresence', 'online'),
-            game: { name: this.settings.get('BotActivity', null) }
-        });
     }
 
     private settingsFile(): Promise<string> {
