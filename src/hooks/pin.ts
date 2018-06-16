@@ -38,7 +38,7 @@ export default class PinService implements Hook {
 
     private sendReact(message: Discord.Message) {
         // I can only react to messages sent through guild text channels.
-        if (message.channel.type != 'text') {
+        if (message.channel.type != 'text' || !message.guild) {
             return;
         }
 
@@ -46,6 +46,10 @@ export default class PinService implements Hook {
         let pinboard = this.getPinboardChannel(message.guild);
         let pinchannel = <Discord.TextChannel> message.guild.channels.get(pinboard);
         let srcchannel = <Discord.TextChannel> message.channel;
+
+        if (pinchannel == null) {
+            return;
+        }
 
         // Build an embed with the message information.
         let embed = new Discord.RichEmbed();
@@ -128,6 +132,6 @@ export default class PinService implements Hook {
      * @return Snowflake
      */
     private getPinboardChannel(server: Discord.Guild): string {
-        return this.client.provider.get(server, 'Pin.Pinboard', '377143070745165824');
+        return this.client.provider.get(server, 'Pin.Pinboard', null);
     }
 }
