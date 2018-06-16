@@ -9,7 +9,7 @@ LABEL maintainer="dani@danirod.es"
 # Installs ffmpeg for being able to talk in voice channels.
 # Python and Alpine SDK required because of node-opus – also related to voice.
 # Git is required to fetch some unstable dependencies at the moment.
-RUN apk add --no-cache --update alpine-sdk ffmpeg git python
+RUN apk add --no-cache --update build-base ffmpeg git python
 
 # Let's get this started.
 RUN mkdir /clank
