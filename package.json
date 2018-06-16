@@ -25,10 +25,10 @@
   },
   "homepage": "https://github.com/makigas/clank#readme",
   "dependencies": {
-    "big-integer": "^1.6.28",
+    "big-integer": "^1.6.31",
     "discord.js": "^11.3.2",
     "discord.js-commando": "^0.10.0",
-    "dotenv": "^5.0.1",
+    "dotenv": "^6.0.0",
     "mkdirp": "^0.5.1",
     "node-opus": "^0.3.0",
     "sqlite": "^2.9.2",
@@ -36,9 +36,9 @@
     "xdg-basedir": "^3.0.0"
   },
   "devDependencies": {
-    "@types/node": "^10.1.2",
-    "ts-node": "^6.0.5",
+    "@types/node": "^10.3.3",
+    "ts-node": "^6.1.1",
     "tslint": "^5.10.0",
-    "typescript": "^2.8.3"
+    "typescript": "^2.9.2"
   }
 }
