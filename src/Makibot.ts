@@ -8,6 +8,7 @@ import PinService from './hooks/pin';
 import { config as XDG_CONFIG } from 'xdg-basedir';
 import * as mkdirp from 'mkdirp';
 import RosterService from './hooks/roster';
+import VerifyService from './hooks/verify';
 
 export default class Makibot extends Commando.CommandoClient {
 
@@ -46,6 +47,10 @@ export default class Makibot extends Commando.CommandoClient {
                     // Register hooks.
                     var pin = new PinService(this);
                     var roster = new RosterService(this);
+
+                    if (process.env.VERIFY_CHANNEL && process.env.NEWBIE_ROLE) {
+                        var verify = new VerifyService(this);
+                    }
                 })
                 .catch(console.log);
         });
