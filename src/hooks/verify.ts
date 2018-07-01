@@ -32,13 +32,11 @@ export default class VerifyService implements Hook {
     private handleMessage(message: Message) {
         if (!this.isVerificationMessage(message)) {
             /* Not a message to validate the account. Bail out. */
-            console.error('Not a verification message');
             return;
         }
 
         let channel = this.getVerificationChannel(message.guild);
         if (message.channel.id != channel.id) {
-            console.error('Not in the verification channel');
             /* Not a message sent to the verification channel. Bail out. */
             return;
         }
