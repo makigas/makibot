@@ -48,7 +48,7 @@ export default class Makibot extends Commando.CommandoClient {
                     var pin = new PinService(this);
                     var roster = new RosterService(this);
 
-                    if (process.env.VERIFY_CHANNEL && process.env.NEWBIE_ROLE) {
+                    if (process.env.VERIFY_CHANNEL && process.env.VERIFY_ROLE) {
                         var verify = new VerifyService(this);
                     }
                 })
