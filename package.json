@@ -16,7 +16,7 @@
     "start": "ts-node -r dotenv/config bin/clank"
   },
   "bin": {
-    "clank": "bin/clank.ts"
+    "clank": "src/cli.ts"
   },
   "author": "Dani Rodríguez",
   "license": "ISC",
