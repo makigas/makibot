@@ -2,7 +2,7 @@
   "name": "@makigas/clank",
   "version": "0.4.1",
   "description": "Discord bot for the makigas server",
-  "main": "src/Makibot.ts",
+  "main": "dist/Makibot.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/makigas/clank.git"
@@ -13,10 +13,12 @@
     "discord"
   ],
   "scripts": {
-    "start": "ts-node -r dotenv/config bin/clank"
+    "start": "ts-node -r dotenv/config src/cli",
+    "prepare": "tsc",
+    "clean": "rm -rf dist"
   },
   "bin": {
-    "clank": "src/cli.ts"
+    "clank": "dist/cli.js"
   },
   "author": "Dani Rodríguez",
   "license": "ISC",
