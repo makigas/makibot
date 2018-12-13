@@ -7,9 +7,7 @@ FROM node:10.1-alpine
 LABEL maintainer="dani@danirod.es"
 
 # Installs ffmpeg for being able to talk in voice channels.
-# Python and Alpine SDK required because of node-opus – also related to voice.
-# Git is required to fetch some unstable dependencies at the moment.
-RUN apk add --no-cache --update build-base ffmpeg git python
+RUN apk add --no-cache --update ffmpeg dumb-init
 
 # Let's get this started.
 RUN mkdir /clank
@@ -18,7 +16,9 @@ WORKDIR /clank
 # Install dependencies
 ADD package.json package.json
 ADD package-lock.json package-lock.json
-RUN npm install
+RUN apk add --virtual npm-deps --no-cache --update python git build-base && \
+    npm install && \
+    apk del npm-deps
 
 # Install remaining files
 ADD . .
@@ -27,7 +27,5 @@ ADD . .
 # SIGTERM and SIGINT and gracefully log out the bot, our entrypoint here
 # is an init process whose only responsability is to start npm and catch
 # our signals just to forward them to the script.
-RUN wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64
-RUN chmod +x /usr/local/bin/dumb-init
-ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
+ENTRYPOINT ["dumb-init", "--"]
 CMD ["npm", "start"]
