@@ -14,9 +14,10 @@
   ],
   "scripts": {
     "start": "ts-node -r dotenv/config src/cli",
-    "prepare": "tsc",
-    "clean": "rimraf dist",
-    "distclean": "rimraf dist node_modules"
+    "build": "tsc",
+    "clean": "rimraf makigas-clank*.tgz dist",
+    "distclean": "rimraf dist node_modules",
+    "prepare": "npm run clean -s && npm run build"
   },
   "bin": {
     "clank": "dist/cli.js"
