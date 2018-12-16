@@ -1,31 +1,44 @@
 # CLANK DOCKERFILE 🤖
+# made with ❤️ by your friends at makigas
 
-# Alpine Linux because I can only afford slim images.
-FROM node:10.1-alpine
-
-# Please, use the issue tracker instead of this.
-LABEL maintainer="dani@danirod.es"
-
-# Installs ffmpeg for being able to talk in voice channels.
-RUN apk add --no-cache --update ffmpeg dumb-init
-
-# Let's get this started.
+# ==============================================================================
+# BASE IMAGE
+FROM node:10-alpine AS base
 RUN mkdir /clank
 WORKDIR /clank
 
-# Install dependencies
+
+# ==============================================================================
+# CLANK BUILD
+FROM base AS compile
+
+# Install package.json dependencies
 ADD package.json package.json
 ADD package-lock.json package-lock.json
 RUN apk add --virtual npm-deps --no-cache --update python git build-base && \
     npm install && \
+    npm cache clean --force && \
     apk del npm-deps
 
-# Install remaining files
+# Add and compile code.
 ADD . .
 
-# So Node.js has a hard time running an application as PID 1. To catch
-# SIGTERM and SIGINT and gracefully log out the bot, our entrypoint here
-# is an init process whose only responsability is to start npm and catch
-# our signals just to forward them to the script.
+
+# ==============================================================================
+# UNPACK
+FROM base AS clank
+
+# Install dependencies
+RUN apk add --no-cache --update ffmpeg dumb-init
+
+# Prepare the pack.
+ADD . .
+COPY --from=compile /clank/dist dist
+RUN apk add --virtual npm-deps --no-cache --update python git build-base && \
+    npm i --only=production && \
+    npm cache clean --force && \
+    apk del npm-deps
+
+# Set entrypoint
 ENTRYPOINT ["dumb-init", "--"]
-CMD ["npm", "start"]
+CMD ["node", "dist/cli.js"]
