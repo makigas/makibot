@@ -1,6 +1,9 @@
 # you know
 node_modules/
 
+# compiled stuff
+dist/
+
 # sensible things
 .env
 settings.db
