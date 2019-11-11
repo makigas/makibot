@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/makigas/clank#readme",
   "dependencies": {
-    "big-integer": "^1.6.31",
+    "big-integer": "^1.6.47",
     "discord.js": "^11.3.2",
     "discord.js-commando": "^0.10.0",
     "dotenv": "^8.2.0",
