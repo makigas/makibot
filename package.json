@@ -32,7 +32,7 @@
     "big-integer": "^1.6.31",
     "discord.js": "^11.3.2",
     "discord.js-commando": "^0.10.0",
-    "dotenv": "^6.0.0",
+    "dotenv": "^8.2.0",
     "mkdirp": "^0.5.1",
     "node-opus": "^0.3.3",
     "sqlite": "^2.9.3",
