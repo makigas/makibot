@@ -1,1 +1,4 @@
+.dependabot
+.env
 src/
+tsconfig.json

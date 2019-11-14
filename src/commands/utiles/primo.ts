@@ -1,6 +1,5 @@
 import * as Commando from 'discord.js-commando';
-import * as bigInt from 'big-integer';
-import { BigInteger } from 'big-integer';
+import bigInt, { BigInteger } from 'big-integer';
 
 interface PrimoCommandArguments {
     n: string;
