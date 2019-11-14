@@ -6,7 +6,7 @@
 
 ## Requirements
 
-* Node.js >= 8.0
+* We target Node.js 10. Node.js 12 is not working at the moment due to a dependency issue.
 * A Discord application that can behave as a bot.
 * A Discord server.
 

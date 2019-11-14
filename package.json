@@ -7,6 +7,9 @@
     "type": "git",
     "url": "git+https://github.com/makigas/clank.git"
   },
+  "engines": {
+    "node": ">=10.0 <12.0"
+  },
   "keywords": [
     "makigas",
     "bot",
@@ -40,7 +43,7 @@
     "xdg-basedir": "^4.0.0"
   },
   "devDependencies": {
-    "@types/node": "^10.3.3",
+    "@types/node": "10.17.0",
     "rimraf": "^3.0.0",
     "ts-node": "^6.1.1",
     "tslint": "^5.10.0",
