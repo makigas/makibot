@@ -43,7 +43,7 @@
     "xdg-basedir": "^4.0.0"
   },
   "devDependencies": {
-    "@types/node": "10.17.0",
+    "@types/node": "12.12.7",
     "prettier": "^1.19.1",
     "rimraf": "^3.0.0",
     "ts-node": "^6.1.1",
