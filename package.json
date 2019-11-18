@@ -1,36 +1,16 @@
 {
-  "name": "@makigas/clank",
-  "version": "0.4.1",
-  "description": "Discord bot for the makigas server",
-  "main": "dist/Makibot.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/makigas/clank.git"
-  },
-  "engines": {
-    "node": ">=10.0 <12.0"
-  },
-  "keywords": [
-    "makigas",
-    "bot",
-    "discord"
-  ],
-  "scripts": {
-    "start": "ts-node -r dotenv/config src/cli",
-    "build": "tsc",
-    "clean": "rimraf makigas-clank*.tgz dist",
-    "distclean": "rimraf dist node_modules",
-    "prepare": "npm run clean -s && npm run build"
+  "author": {
+    "email": "dani@danirod.es",
+    "name": "Dani Rodríguez",
+    "url": "https://www.danirod.es"
   },
   "bin": {
     "clank": "dist/cli.js"
   },
-  "author": "Dani Rodríguez",
-  "license": "ISC",
   "bugs": {
+    "email": "makigastutoriales@gmail.com",
     "url": "https://github.com/makigas/clank/issues"
   },
-  "homepage": "https://github.com/makigas/clank#readme",
   "dependencies": {
     "big-integer": "^1.6.31",
     "discord.js": "^11.3.2",
@@ -42,6 +22,7 @@
     "uws": "^10.148.0",
     "xdg-basedir": "^4.0.0"
   },
+  "description": "Discord bot for the makigas server",
   "devDependencies": {
     "@types/node": "10.17.5",
     "prettier": "^1.19.1",
@@ -49,5 +30,34 @@
     "ts-node": "^8.5.2",
     "tslint": "^5.10.0",
     "typescript": "^3.7.2"
-  }
+  },
+  "engines": {
+    "node": ">=10.0 <12.0"
+  },
+  "files": [
+    "contrib/",
+    "dist/"
+  ],
+  "homepage": "https://github.com/makigas/clank#readme",
+  "keywords": [
+    "bot",
+    "discord",
+    "moderation",
+    "makigas",
+    "roster"
+  ],
+  "license": "ISC",
+  "main": "dist/Makibot.js",
+  "name": "@makigas/clank",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/makigas/clank.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf makigas-clank*.tgz dist",
+    "prepare": "npm run build",
+    "start": "ts-node -r dotenv/config src/cli"
+  },
+  "version": "0.4.1"
 }
