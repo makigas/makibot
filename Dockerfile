@@ -3,7 +3,7 @@
 
 # ==============================================================================
 # BASE IMAGE
-FROM node:10-alpine AS base
+FROM node:12-alpine AS base
 RUN mkdir /clank
 WORKDIR /clank
 
