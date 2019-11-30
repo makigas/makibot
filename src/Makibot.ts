@@ -1,14 +1,11 @@
 import * as Commando from 'discord.js-commando';
-import * as sqlite from 'sqlite';
 import * as path from 'path';
-import * as fs from 'fs';
 import ConfigSchema from './ConfigSchema';
 import { Message } from 'discord.js';
 import PinService from './hooks/pin';
-import { config as XDG_CONFIG } from 'xdg-basedir';
-import * as mkdirp from 'mkdirp';
 import RosterService from './hooks/roster';
 import VerifyService from './hooks/verify';
+import { getDatabase } from './settings';
 
 export default class Makibot extends Commando.CommandoClient {
 
@@ -34,8 +31,7 @@ export default class Makibot extends Commando.CommandoClient {
         this.on('ready', () => console.log(`Logged in successfully as ${this.user.tag}.`));
 
         this.once('ready', () => {
-            this.settingsFile()
-                .then(file => sqlite.open(file))
+            getDatabase()
                 .then(db => this.setProvider(new Commando.SQLiteProvider(db)))
                 .then(() => {
                     // Reload presence using database values.
@@ -56,26 +52,6 @@ export default class Makibot extends Commando.CommandoClient {
         });
 
         this.login(ConfigSchema.token);
-    }
-
-    private settingsFile(): Promise<string> {
-        // This is what we want to return.
-        let configFile = path.join(XDG_CONFIG, 'clank', 'settings.db');
-
-        // But, hold on! Because it may be that the parent directory does not exist.
-        let configDir = path.dirname(configFile);
-        return new Promise((resolve, reject) => {
-            if (!fs.existsSync(configDir)) {
-                // I told you! Let's fix this.
-                mkdirp(configDir, err => {
-                    if (err) reject(err);
-                    else resolve(configFile);
-                });
-            } else {
-                // Ok, just let it go.
-                resolve(configFile);
-            }
-        });
     }
 
     shutdown() {
