@@ -22,6 +22,7 @@ RUN apk add --virtual npm-deps --no-cache --update python git build-base && \
 
 # Add and compile code.
 ADD . .
+RUN npm run build
 
 
 # ==============================================================================
