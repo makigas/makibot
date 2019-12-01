@@ -1,5 +1,6 @@
-import * as Commando from 'discord.js-commando'
-import * as Discord from 'discord.js'
+import Commando from "discord.js-commando";
+
+import Makibot from "../../Makibot";
 
 /**
  * pin allows users to pin messages into a pinboard. To pin a message, simply
@@ -13,37 +14,36 @@ import * as Discord from 'discord.js'
  *
  */
 interface PinCommandArguments {
-    option: string;
-    value: string;
+  option: string;
+  value: string;
 }
 
 export = class PinCommand extends Commando.Command {
+  constructor(client: Makibot) {
+    super(client, {
+      name: "pin",
+      memberName: "pin",
+      group: "admin",
+      description: "Ajusta las opciones del tablón",
+      ownerOnly: true,
+      guildOnly: true,
+      args: [
+        { key: "option", type: "string", prompt: "Opción a modificar.", default: "" },
+        { key: "value", type: "string", prompt: "Valor a establecer", default: "" },
+      ],
+    });
+  }
 
-    constructor(client: Commando.CommandoClient) {
-        super(client, {
-            name: 'pin',
-            memberName: 'pin',
-            group: 'admin',
-            description: 'Ajusta las opciones del tablón',
-            ownerOnly: true,
-            guildOnly: true,
-            args: [
-                { key: 'option', type: 'string', prompt: 'Opción a modificar.', default: '' },
-                { key: 'value', type: 'string', prompt: 'Valor a establecer', default: '' }
-            ]
-        });
+  async run(msg: Commando.CommandMessage, args: PinCommandArguments) {
+    switch (args.option) {
+      case "emoji":
+        await this.client.provider.set(msg.guild, "Pin.Emoji", args.value);
+        return msg.reply("Cambiaste el emoji de reacción.");
+      case "pinboard":
+        await this.client.provider.set(msg.guild, "Pin.Pinboard", args.value);
+        return msg.reply("Cambiaste el canal de destino.");
+      default:
+        return msg.reply("Subcomandos: emoji, pinboard");
     }
-
-    async run(msg: Commando.CommandMessage, args: PinCommandArguments) {
-        switch (args.option) {
-            case 'emoji':
-                await this.client.provider.set(msg.guild, 'Pin.Emoji', args.value);
-                return msg.reply('Cambiaste el emoji de reacción.');
-            case 'pinboard':
-                await this.client.provider.set(msg.guild, 'Pin.Pinboard', args.value);
-                return msg.reply('Cambiaste el canal de destino.');
-            default:
-                return msg.reply('Subcomandos: emoji, pinboard');
-        }
-    }
-}
+  }
+};

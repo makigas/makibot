@@ -1,6 +1,7 @@
-import Hook from './hook';
-import { CommandoClient } from 'discord.js-commando'
-import { Message, TextChannel, Guild, Role } from 'discord.js';
+import { Message, TextChannel, Guild, Role } from "discord.js";
+
+import Hook from "./hook";
+import Makibot from "../Makibot";
 
 /**
  * The verify service allows a server to force users to validate themselves by
@@ -8,70 +9,70 @@ import { Message, TextChannel, Guild, Role } from 'discord.js';
  * applied.
  */
 export default class VerifyService implements Hook {
+  private static ACCEPTED: string = [
+    "Enhorabuena, has verificado tu cuenta en este servidor. Ahora puedes ver",
+    "el resto de canales. Recuerda que al haber firmado el código de conducta,",
+    "entiendes que publicar mensajes que lo incumplan puede acarrear un warn,",
+    "un kick o un ban.",
+  ].join(" ");
 
-    private static ACCEPTED: string = [
-        'Enhorabuena, has verificado tu cuenta en este servidor. Ahora puedes ver',
-        'el resto de canales. Recuerda que al haber firmado el código de conducta,',
-        'entiendes que publicar mensajes que lo incumplan puede acarrear un warn,',
-        'un kick o un ban.'
-    ].join(' ');
+  private channel: string;
 
-    private channel: string;
+  private token: string;
 
-    private token: string;
+  private role: string;
 
-    private role: string;
+  constructor(client: Makibot) {
+    this.channel = process.env.VERIFY_CHANNEL;
+    this.role = process.env.VERIFY_ROLE;
+    this.token = process.env.VERIFY_TOKEN;
+    client.on("message", message => this.handleMessage(message));
+  }
 
-    constructor(client: CommandoClient) {
-        this.channel = process.env.VERIFY_CHANNEL;
-        this.role = process.env.VERIFY_ROLE;
-        this.token = process.env.VERIFY_TOKEN;
-        client.on('message', (message) => this.handleMessage(message));
+  private handleMessage(message: Message) {
+    if (!this.isVerificationMessage(message)) {
+      /* Not a message to validate the account. Bail out. */
+      return;
     }
 
-    private handleMessage(message: Message) {
-        if (!this.isVerificationMessage(message)) {
-            /* Not a message to validate the account. Bail out. */
-            return;
-        }
-
-        let channel = this.getVerificationChannel(message.guild);
-        if (message.channel.id != channel.id) {
-            /* Not a message sent to the verification channel. Bail out. */
-            return;
-        }
-
-        let role = this.getVerificationRole(message.guild);
-        message.member.addRole(role)
-            .then(member => member.send(VerifyService.ACCEPTED))
-            .catch(e => console.error(e));
+    let channel = this.getVerificationChannel(message.guild);
+    if (message.channel.id != channel.id) {
+      /* Not a message sent to the verification channel. Bail out. */
+      return;
     }
 
-    /** Returns the associated role to verified accounts on this guild. */
-    private getVerificationRole(guild: Guild): Role {
-        let role = guild.roles.find('name', this.role);
-        if (!role) {
-            throw new ReferenceError(`Role ${this.role} not found in guild ${guild.name}!`);
-        }
-        return role;
-    }
+    let role = this.getVerificationRole(message.guild);
+    message.member
+      .addRole(role)
+      .then(member => member.send(VerifyService.ACCEPTED))
+      .catch(e => console.error(e));
+  }
 
-    /** Returns the associated channel to verify accounts on this guild. */
-    private getVerificationChannel(guild: Guild): TextChannel {
-        let channel = guild.channels.find('name', this.channel);
-        if (!channel) {
-            throw new ReferenceError(`Channel ${this.channel} not found in guild ${guild.name}!`);
-        }
-        if (channel.type != 'text') {
-            throw new ReferenceError(`Channel ${this.channel} is not a text channel!`);
-        }
-        return <TextChannel> channel;
+  /** Returns the associated role to verified accounts on this guild. */
+  private getVerificationRole(guild: Guild): Role {
+    let role = guild.roles.find("name", this.role);
+    if (!role) {
+      throw new ReferenceError(`Role ${this.role} not found in guild ${guild.name}!`);
     }
+    return role;
+  }
 
-    /** Returns true if the given message is a validation message. */
-    private isVerificationMessage(message: Message) {
-        let cleanToken = this.token.toLowerCase().trim();
-        let inputToken = message.content.toLowerCase().trim();
-        return cleanToken === inputToken;
+  /** Returns the associated channel to verify accounts on this guild. */
+  private getVerificationChannel(guild: Guild): TextChannel {
+    let channel = guild.channels.find("name", this.channel);
+    if (!channel) {
+      throw new ReferenceError(`Channel ${this.channel} not found in guild ${guild.name}!`);
     }
+    if (channel.type != "text") {
+      throw new ReferenceError(`Channel ${this.channel} is not a text channel!`);
+    }
+    return <TextChannel>channel;
+  }
+
+  /** Returns true if the given message is a validation message. */
+  private isVerificationMessage(message: Message) {
+    let cleanToken = this.token.toLowerCase().trim();
+    let inputToken = message.content.toLowerCase().trim();
+    return cleanToken === inputToken;
+  }
 }
