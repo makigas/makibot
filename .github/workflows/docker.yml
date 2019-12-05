@@ -1,0 +1,15 @@
+name: Docker
+on: push
+
+jobs:
+  clank:
+    name: Clank
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Build Dockerfile
+        run: docker build -t makigas/clank:edge .
+      - name: Login to GitHub
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com --username ${{ github.actor }} --password-stdin
+      - name: Push
+        run: docker push docker.pkg.github.com/${{ github.repository }}/clank
