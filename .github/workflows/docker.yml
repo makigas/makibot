@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Build Dockerfile
-        run: docker build -t docker.pkg.github.com/${{ github.repository }}/clank
+        run: docker build -t docker.pkg.github.com/${{ github.repository }}/clank .
       - name: Login to GitHub
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com --username ${{ github.actor }} --password-stdin
       - name: Push
