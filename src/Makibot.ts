@@ -25,7 +25,7 @@ export default class Makibot extends Commando.CommandoClient {
     ]);
     this.registry.registerCommandsIn({
       dirname: path.join(__dirname, "commands"),
-      filter: /^([^\.].*)\.ts$/,
+      filter: /^([^\.].*)\.[jt]s$/,
     });
 
     this.on("ready", () => console.log(`Logged in successfully as ${this.user.tag}.`));
