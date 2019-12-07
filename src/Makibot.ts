@@ -55,7 +55,10 @@ export default class Makibot extends Commando.CommandoClient {
   }
 
   shutdown() {
-    console.log("The bot was asked to shutdown. Good night!");
-    this.destroy();
+    console.log("The bot was asked to shutdown.");
+    this.destroy().finally(() => {
+      console.log("Good night!");
+      process.exit(0);
+    });
   }
 }
