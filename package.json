@@ -28,7 +28,7 @@
     "rimraf": "^3.0.2",
     "ts-node": "^8.6.2",
     "tslint": "^6.0.0",
-    "typescript": "^3.8.2"
+    "typescript": "^3.8.3"
   },
   "engines": {
     "node": ">=10.0 <12.0"
