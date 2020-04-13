@@ -20,7 +20,6 @@ export default class Makibot extends Commando.CommandoClient {
     this.registry.registerDefaultTypes();
     this.registry.registerGroups([
       ["admin", "Administración"],
-      ["fun", "Entretenimiento"],
       ["utiles", "Utilidad"],
     ]);
     this.registry.registerCommandsIn({
@@ -32,7 +31,7 @@ export default class Makibot extends Commando.CommandoClient {
 
     this.once("ready", () => {
       getDatabase()
-        .then(db => this.setProvider(new Commando.SQLiteProvider(db)))
+        .then((db) => this.setProvider(new Commando.SQLiteProvider(db)))
         .then(() => {
           // Reload presence using database values.
           this.user.setPresence({
