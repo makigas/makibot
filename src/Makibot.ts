@@ -7,6 +7,7 @@ import { getDatabase } from "./settings";
 import PinService from "./hooks/pin";
 import RosterService from "./hooks/roster";
 import VerifyService from "./hooks/verify";
+import WarnService from "./hooks/warn";
 
 export default class Makibot extends Commando.CommandoClient {
   public constructor() {
@@ -43,6 +44,7 @@ export default class Makibot extends Commando.CommandoClient {
           // Register hooks.
           var pin = new PinService(this);
           var roster = new RosterService(this);
+          var warn = new WarnService(this);
 
           if (process.env.VERIFY_CHANNEL && process.env.VERIFY_ROLE) {
             var verify = new VerifyService(this);
