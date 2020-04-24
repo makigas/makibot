@@ -1,3 +1,15 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [0.5.0](https://github.com/makigas/clank/compare/v0.4.2...v0.5.0) (2020-04-24)
+
+
+### Refactor
+
+* remove !horn command ([#93](https://github.com/makigas/clank/issues/93)) ([318bdb6](https://github.com/makigas/clank/commit/318bdb6f1cc75a218c3c10218210f2b07df7f6bf)), closes [#32](https://github.com/makigas/clank/issues/32)
+* use fancier modlog messages ([#99](https://github.com/makigas/clank/issues/99)) ([267027f](https://github.com/makigas/clank/commit/267027fa45f6b582d9b04bb1f599cb0eaa8066ee))
+
 ## [0.4.2](https://github.com/makigas/clank/compare/v0.4.1...v0.4.2) (2019-12-07)
 
 
@@ -49,6 +61,3 @@
 
 
 # 0.1.0 (2017-12-29)
-
-
-

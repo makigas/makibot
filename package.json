@@ -56,7 +56,44 @@
     "build": "tsc",
     "clean": "rimraf makigas-clank*.tgz dist",
     "prepare": "npm run build",
-    "start": "ts-node -r dotenv/config src/cli"
+    "start": "ts-node -r dotenv/config src/cli",
+    "release": "standard-version"
   },
-  "version": "0.4.2"
+  "standard-version": {
+    "types": [
+      {
+        "type": "feat",
+        "section": "Features"
+      },
+      {
+        "type": "fix",
+        "section": "Bug Fixes"
+      },
+      {
+        "type": "chore",
+        "hidden": true
+      },
+      {
+        "type": "docs",
+        "hidden": "Documentation"
+      },
+      {
+        "type": "style",
+        "hidden": true
+      },
+      {
+        "type": "refactor",
+        "section": "Refactor"
+      },
+      {
+        "type": "perf",
+        "hidden": true
+      },
+      {
+        "type": "test",
+        "hidden": true
+      }
+    ]
+  },
+  "version": "0.5.0"
 }
