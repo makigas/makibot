@@ -2,6 +2,7 @@ import { Guild, GuildMember, TextChannel } from "discord.js";
 
 import Hook from "./hook";
 import Makibot from "../Makibot";
+import { JoinModlogEvent, LeaveModlogEvent } from "../lib/modlog";
 
 /**
  * The roster service plugs hooks whenever an user leaves the guild.
@@ -10,8 +11,8 @@ import Makibot from "../Makibot";
  */
 export default class RosterService implements Hook {
   constructor(client: Makibot) {
-    client.on("guildMemberAdd", member => this.memberJoin(member));
-    client.on("guildMemberRemove", member => this.memberLeft(member));
+    client.on("guildMemberAdd", (member) => this.memberJoin(member));
+    client.on("guildMemberRemove", (member) => this.memberLeft(member));
   }
 
   /**
@@ -22,9 +23,8 @@ export default class RosterService implements Hook {
     let modlog = this.getModlog(member.guild);
     if (modlog) {
       modlog
-        .send(`:high_brightness: ${member.user.tag} se unió al servidor.`)
-        .then(msg => console.log(`Enviando mensaje: ${msg}.`))
-        .catch(e => console.error(`Error: ${e}`));
+        .send(new JoinModlogEvent(member).toDiscordEmbed())
+        .catch((e) => console.error(`Error: ${e}`));
     }
   }
 
@@ -36,9 +36,8 @@ export default class RosterService implements Hook {
     let modlog = this.getModlog(member.guild);
     if (modlog) {
       modlog
-        .send(`:x: ${member.user.tag} abandonó el servidor.`)
-        .then(msg => console.log(`Enviado mensaje: ${msg}.`))
-        .catch(e => console.error(`Error: ${e}`));
+        .send(new LeaveModlogEvent(member).toDiscordEmbed())
+        .catch((e) => console.error(`Error: ${e}`));
     }
   }
 
