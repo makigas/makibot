@@ -23,6 +23,9 @@
   "description": "Discord bot for the makigas server",
   "devDependencies": {
     "@types/node": "^10.17.21",
+    "@typescript-eslint/eslint-plugin": "^2.29.0",
+    "@typescript-eslint/parser": "^2.29.0",
+    "eslint": "^6.8.0",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
     "standard-version": "^7.1.0",
@@ -57,6 +60,7 @@
     "clean": "rimraf makigas-clank*.tgz dist",
     "prepare": "npm run build",
     "start": "ts-node -r dotenv/config src/cli",
+    "lint": "eslint 'src/**/*.ts'",
     "release": "standard-version"
   },
   "standard-version": {
