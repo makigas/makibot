@@ -1,4 +1,4 @@
-import { RichEmbedOptions, GuildMember, RichEmbed } from "discord.js";
+import { RichEmbedOptions, GuildMember, RichEmbed, Message } from "discord.js";
 
 interface EmbedField {
   name: string;
@@ -104,5 +104,48 @@ export class LeaveModlogEvent extends ModlogEvent {
         value: this.member.joinedAt.toUTCString(),
       },
     ];
+  }
+}
+
+export class WarnModlogEvent extends ModlogEvent {
+  constructor(private member: GuildMember, private reason: string, private message: Message) {
+    super();
+  }
+
+  title(): string {
+    return "Se ha aplicado un warn";
+  }
+
+  icon(): string {
+    return "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/warning_26a0.png";
+  }
+
+  color(): number {
+    return 0x9b59b6;
+  }
+
+  fields(): EmbedField[] {
+    const fields: EmbedField[] = [];
+    fields.push({
+      name: "Usuario",
+      value: this.member.user.tag,
+    });
+    if (this.reason) {
+      fields.push({
+        name: "Razón",
+        value: this.reason,
+      });
+    }
+    if (this.message) {
+      fields.push({
+        name: "Mensaje",
+        value: this.message.cleanContent,
+      });
+      fields.push({
+        name: "Fecha del mensaje",
+        value: this.message.createdAt.toISOString(),
+      });
+    }
+    return fields;
   }
 }

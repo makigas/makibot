@@ -1,5 +1,6 @@
-import { Guild, Message, RichEmbedOptions, TextChannel, User } from "discord.js";
+import { Guild, Message, RichEmbedOptions, User } from "discord.js";
 import Server from "./server";
+import { WarnModlogEvent } from "./modlog";
 
 /**
  * Information that describes why the warn is being issued. This information
@@ -24,7 +25,7 @@ const messages = [
   "en este servidor no se tolera ese tipo de comportamiento",
 ];
 
-export default function applyWarn(guild: Guild, { user, message, reason }: WarnPayload) {
+export default function applyWarn(guild: Guild, { user, message, reason }: WarnPayload): void {
   // Get the member behind this user.
   const memberToWarn = guild.member(user);
   const server = new Server(guild);
@@ -49,6 +50,7 @@ export default function applyWarn(guild: Guild, { user, message, reason }: WarnP
     description: reason ? `**Razón**: ${reason}` : null,
     author: {
       name: memberToWarn.user.tag,
+      // eslint-disable-next-line @typescript-eslint/camelcase
       icon_url: memberToWarn.user.avatarURL,
     },
     footer: {
@@ -61,5 +63,11 @@ export default function applyWarn(guild: Guild, { user, message, reason }: WarnP
     const randomMessage = messages[Math.floor(Math.random() * messages.length)];
     const warnMessage = `<@${memberToWarn.id}>: ${randomMessage}`;
     publicModlog.send(warnMessage, { embed });
+  }
+
+  const privateModlog = server.modlogChannel;
+  if (privateModlog) {
+    const warnEvent = new WarnModlogEvent(memberToWarn, reason, message);
+    privateModlog.send(warnEvent.toDiscordEmbed());
   }
 }
