@@ -1,6 +1,7 @@
 import Commando from "discord.js-commando";
 
 import Makibot from "../../Makibot";
+import Server from "../../lib/server";
 
 interface HelperCommandArguments {
   mode: string;
@@ -26,28 +27,24 @@ export = class HelperCommand extends Commando.Command {
   }
 
   async run(msg: Commando.CommandMessage, args: HelperCommandArguments) {
-    // Get the helper role name from ENV.
-    let roleName = process.env.HELPER_ROLE || "helpers";
-    if (!msg.guild.roles.find("name", roleName)) {
-      let message = [
-        "Oh, oh. Parece que este bot no está bien configurado.",
-        `¿Hay algún admin que pueda crear un rol llamado "${roleName}"?`,
-      ].join("\n");
-      return msg.channel.send(message);
-    }
+    const server = new Server(msg.guild);
+    const role = server.helperRole;
 
-    let role = msg.guild.roles.find("name", roleName);
+    if (!role) {
+      return msg.channel.send("Oh, oh. Parece que este bot no está bien configurado.");
+    }
 
     // Act on behalf of what the user wants.
     switch (HelperCommand.opmode(args.mode)) {
       case "yes":
+        // Include the user in this role.
         if (msg.member.roles.has(role.id)) {
-          return msg.reply(`Ya formabas parte del rol ${roleName}.`);
+          return msg.reply(`Ya formabas parte del rol ${role.name}.`);
         } else {
           return msg.member
             .addRole(role)
-            .then(member => msg.reply(`Ahora estás en el rol ${roleName}.`))
-            .catch(e => msg.reply(`No puedo satisfacer tu orden porque ${e}.`));
+            .then(() => msg.reply(`Ahora estás en el rol ${role.name}.`))
+            .catch((e) => msg.reply(`No puedo satisfacer tu orden porque ${e}.`));
         }
 
       case "no":
@@ -55,17 +52,17 @@ export = class HelperCommand extends Commando.Command {
         if (msg.member.roles.has(role.id)) {
           return msg.member
             .removeRole(role)
-            .then(member => msg.reply(`Ya no formas parte del rol ${roleName}.`))
-            .catch(e => msg.reply(`No puedo satisfacer tu orden porque ${e}.`));
+            .then(() => msg.reply(`Ya no formas parte del rol ${role.name}.`))
+            .catch((e) => msg.reply(`No puedo satisfacer tu orden porque ${e}.`));
         } else {
-          return msg.reply(`No formabas parte del rol ${roleName}.`);
+          return msg.reply(`No formabas parte del rol ${role.name}.`);
         }
 
-      case "help":
-        let roleStatus = msg.member.roles.has(role.id)
-          ? `**Formas parte del rol ${roleName}**.`
-          : `**No formas parte del rol ${roleName}**.`;
-        let helpMessages: string[] = [
+      case "help": {
+        const roleStatus = msg.member.roles.has(role.id)
+          ? `**Formas parte del rol ${role.name}**.`
+          : `**No formas parte del rol ${role.name}**.`;
+        const helpMessages: string[] = [
           "Envía `!helper on` para unirte al grupo helper.",
           "Envía `!helper off` para abandonar el grupo helper.",
           "",
@@ -73,7 +70,7 @@ export = class HelperCommand extends Commando.Command {
           "Otros términos reconocidos como off: false, f, no, n, off, disable, disabled, 0, -, cancelar, cancel",
         ];
         return msg.reply([roleStatus].concat(helpMessages).join("\n"));
-
+      }
       case "invalid":
         return msg.reply("Parámetro desconocido. Envía `!helper` para ver la ayuda.");
     }
