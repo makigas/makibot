@@ -2,6 +2,7 @@ import Discord from "discord.js";
 
 import Hook from "./hook";
 import Makibot from "../Makibot";
+import Server from "../lib/server";
 
 export default class PinService implements Hook {
   private client: Makibot;
@@ -10,16 +11,16 @@ export default class PinService implements Hook {
     this.client = client;
 
     this.client.on("messageReactionAdd", (reaction, user) =>
-      this.messageReactionAdd(reaction, user),
+      this.messageReactionAdd(reaction, user)
     );
     this.client.on("messageReactionRemove", (reaction, user) =>
-      this.messageReactionRemove(reaction, user),
+      this.messageReactionRemove(reaction, user)
     );
-    this.client.on("messageReactionRemoveAll", message => this.messageReactionRemoveAll(message));
+    this.client.on("messageReactionRemoveAll", (message) => this.messageReactionRemoveAll(message));
 
-    this.client.guilds.forEach(guild => {
+    this.client.guilds.forEach((guild) => {
       // Cache recent messages per server.
-      guild.channels.forEach(channel => {
+      guild.channels.forEach((channel) => {
         if (channel.type == "text") {
           (<Discord.TextChannel>channel).fetchMessages({ limit: 100 }).catch(console.error);
         }
@@ -47,8 +48,8 @@ export default class PinService implements Hook {
     }
 
     // Get the pinboard channel.
-    let pinboard = this.getPinboardChannel(message.guild);
-    let pinchannel = <Discord.TextChannel>message.guild.channels.get(pinboard);
+    const server = new Server(message.guild);
+    const pinchannel = server.pinboardChannel;
     let srcchannel = <Discord.TextChannel>message.channel;
 
     if (pinchannel == null) {
@@ -92,7 +93,7 @@ export default class PinService implements Hook {
    * @return an URL to an embed or null if no embed has thumbnails.
    */
   private getEmbedThumbnail(message: Discord.Message): string {
-    let withThumbnails = message.embeds.filter(e => e.thumbnail);
+    let withThumbnails = message.embeds.filter((e) => e.thumbnail);
     if (withThumbnails.length > 0) {
       return withThumbnails[0].url;
     } else {
@@ -105,7 +106,7 @@ export default class PinService implements Hook {
    * @return an URL to an image attached to the message or null if no images.
    */
   private getAttachedImage(message: Discord.Message): string {
-    let attachedImages = message.attachments.filter(a => a.width != null && a.height != null);
+    let attachedImages = message.attachments.filter((a) => a.width != null && a.height != null);
     if (attachedImages.size > 0) {
       return attachedImages.first().url;
     } else {
@@ -127,7 +128,7 @@ export default class PinService implements Hook {
 
   private messageReactionRemove(reaction: Discord.MessageReaction, user: Discord.User) {
     console.log(
-      `${user.tag} unreacted to ${reaction.message.id} with emoji ${reaction.emoji.name}`,
+      `${user.tag} unreacted to ${reaction.message.id} with emoji ${reaction.emoji.name}`
     );
   }
 
@@ -141,13 +142,5 @@ export default class PinService implements Hook {
    */
   private getTriggerEmoji(server: Discord.Guild): string {
     return this.client.provider.get(server, "Pin.Emoji", "\u2b50");
-  }
-
-  /**
-   * Recupera el canal al que enviar el mensaje.
-   * @return Snowflake
-   */
-  private getPinboardChannel(server: Discord.Guild): string {
-    return this.client.provider.get(server, "Pin.Pinboard", null);
   }
 }
