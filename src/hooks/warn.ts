@@ -2,10 +2,12 @@ import Hook from "./hook";
 import Makibot from "../Makibot";
 import applyWarn from "../lib/warn";
 import { GuildMember, Message, MessageReaction, User } from "discord.js";
+import Server from "../lib/server";
 
 function isMod(user: GuildMember): boolean {
-  const modsRoleName = process.env.MODS_ROLE || "mods";
-  return user.roles.exists("name", modsRoleName);
+  const server = new Server(user.guild);
+  const modRole = server.modsRole;
+  return modRole.members.exists("id", user.id);
 }
 
 function isMessageWarned(message: Message): boolean {

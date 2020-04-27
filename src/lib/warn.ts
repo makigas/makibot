@@ -1,4 +1,5 @@
 import { Guild, Message, RichEmbedOptions, TextChannel, User } from "discord.js";
+import Server from "./server";
 
 /**
  * Information that describes why the warn is being issued. This information
@@ -26,16 +27,20 @@ const messages = [
 export default function applyWarn(guild: Guild, { user, message, reason }: WarnPayload) {
   // Get the member behind this user.
   const memberToWarn = guild.member(user);
+  const server = new Server(guild);
 
-  // Warn this user.
-  const warnRoleName = process.env.WARN_ROLE || "warn";
-  const warnRole = guild.roles.find("name", warnRoleName);
-  memberToWarn.addRole(warnRole);
+  // Assert the command can work.
+  if (!server.warnRole) {
+    throw new ReferenceError("This server lacks a warn role");
+  }
+
+  // Warn the user.
+  memberToWarn.addRole(server.warnRole);
 
   // Remove this user from the helpers role if they were.
-  const helperRoleName = process.env.HELPER_ROLE || "helpers";
-  const helperRole = guild.roles.find("name", helperRoleName);
-  memberToWarn.removeRole(helperRole);
+  if (server.helperRole) {
+    memberToWarn.removeRole(server.helperRole);
+  }
 
   // Send a message to the public modlog.
   const embed: RichEmbedOptions = {
@@ -51,11 +56,10 @@ export default function applyWarn(guild: Guild, { user, message, reason }: WarnP
     },
   };
 
-  const modlogChannelName = process.env.PUBLIC_MODLOG_CHANNEL || "modlog";
-  const modlogChannel = guild.channels.find("name", modlogChannelName);
-  if (modlogChannel.type === "text") {
+  const publicModlog = server.publicModlogChannel;
+  if (publicModlog) {
     const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-    const message = `<@${memberToWarn.id}>: ${randomMessage}`;
-    (<TextChannel>modlogChannel).send(message, { embed });
+    const warnMessage = `<@${memberToWarn.id}>: ${randomMessage}`;
+    publicModlog.send(warnMessage, { embed });
   }
 }

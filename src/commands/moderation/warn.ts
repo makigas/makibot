@@ -1,8 +1,9 @@
-import { User, RichEmbedOptions, GuildMember, GuildChannel, TextChannel } from "discord.js";
+import { User, GuildMember } from "discord.js";
 import Commando from "discord.js-commando";
 
 import Makibot from "../../Makibot";
 import applyWarn from "../../lib/warn";
+import Server from "../../lib/server";
 
 interface WarnCommandArguments {
   target: User;
@@ -35,8 +36,9 @@ export = class WarnCommand extends Commando.Command {
   }
 
   private isMod(user: GuildMember): boolean {
-    const modsRoleName = process.env.MODS_ROLE || "mods";
-    return user.roles.exists("name", modsRoleName);
+    const server = new Server(user.guild);
+    const modRole = server.modsRole;
+    return modRole.members.exists("id", user.id);
   }
 
   run(msg: Commando.CommandMessage, args: WarnCommandArguments) {
