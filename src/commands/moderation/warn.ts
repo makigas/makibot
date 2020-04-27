@@ -1,4 +1,4 @@
-import { User, GuildMember } from "discord.js";
+import { User, Message } from "discord.js";
 import Commando from "discord.js-commando";
 
 import Makibot from "../../Makibot";
@@ -35,19 +35,16 @@ export = class WarnCommand extends Commando.Command {
     });
   }
 
-  private isMod(user: GuildMember): boolean {
-    const server = new Server(user.guild);
+  run(msg: Commando.CommandMessage, { reason, target }: WarnCommandArguments): Promise<Message[]> {
+    const author = msg.member;
+    const server = new Server(msg.guild);
     const modRole = server.modsRole;
-    return modRole.members.exists("id", user.id);
-  }
-
-  run(msg: Commando.CommandMessage, args: WarnCommandArguments) {
-    if (!this.isMod(msg.member)) {
+    if (!modRole.members.exists("id", author.id) && modRole.members.exists("id", target.id)) {
       return Promise.resolve([]);
     }
 
     // The issuer of the command is authorized to warn this user.
-    applyWarn(msg.guild, { user: args.target, reason: args.reason });
+    applyWarn(msg.guild, { user: target, reason: reason });
 
     return Promise.resolve([]);
   }

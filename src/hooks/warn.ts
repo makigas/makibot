@@ -1,21 +1,16 @@
 import Hook from "./hook";
 import Makibot from "../Makibot";
 import applyWarn from "../lib/warn";
-import { GuildMember, Message, MessageReaction, User } from "discord.js";
+import { Message, MessageReaction, User } from "discord.js";
 import Server from "../lib/server";
 
-function isMod(user: GuildMember): boolean {
-  const server = new Server(user.guild);
-  const modRole = server.modsRole;
-  return modRole.members.exists("id", user.id);
-}
-
 function isMessageWarned(message: Message): boolean {
+  const server = new Server(message.guild);
   const warnReaction = message.reactions.find((reaction) => reaction.emoji.name === "⚠️");
   if (!warnReaction) {
     return false;
   }
-  return !!warnReaction.users.find((user) => isMod(message.guild.member(user)));
+  return !!warnReaction.users.find((user) => server.modsRole.members.exists("id", user.id));
 }
 
 export default class WarnService implements Hook {
@@ -29,21 +24,24 @@ export default class WarnService implements Hook {
     );
   }
 
-  private messageReactionAdd(reaction: MessageReaction, user: User) {
+  private messageReactionAdd(reaction: MessageReaction, user: User): void {
     // I can only react to messages sent to guild text channels.
     if (reaction.message.channel.type !== "text" || !reaction.message.guild) {
       return;
     }
 
-    const guildUser = reaction.message.guild.member(user);
-    if (!isMod(guildUser)) {
-      console.log("No es un mod");
+    const author = reaction.message.guild.member(user);
+    const target = reaction.message.author;
+    const server = new Server(reaction.message.guild);
+
+    const modRole = server.modsRole;
+    if (!modRole.members.exists("id", author.id) || modRole.members.exists("id", target.id)) {
       return;
     }
 
     if (reaction.emoji.name === "⚠️") {
       applyWarn(reaction.message.guild, {
-        user: reaction.message.author,
+        user: target,
         message: reaction.message,
       });
     } else if (reaction.emoji.name === "🗑️" && isMessageWarned(reaction.message)) {
