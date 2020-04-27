@@ -42,13 +42,10 @@ export default class Makibot extends Commando.CommandoClient {
           });
 
           // Register hooks.
-          var pin = new PinService(this);
-          var roster = new RosterService(this);
-          var warn = new WarnService(this);
-
-          if (process.env.VERIFY_CHANNEL && process.env.VERIFY_ROLE) {
-            var verify = new VerifyService(this);
-          }
+          new PinService(this);
+          new RosterService(this);
+          new VerifyService(this);
+          new WarnService(this);
         })
         .catch(console.log);
     });
