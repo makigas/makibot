@@ -35,12 +35,6 @@ export default class Makibot extends Commando.CommandoClient {
       getDatabase()
         .then((db) => this.setProvider(new Commando.SQLiteProvider(db)))
         .then(() => {
-          // Reload presence using database values.
-          this.user.setPresence({
-            status: this.settings.get("BotPresence", "online"),
-            game: { name: this.settings.get("BotActivity", null) },
-          });
-
           // Register hooks.
           new PinService(this);
           new RosterService(this);
