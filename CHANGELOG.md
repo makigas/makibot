@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0](https://github.com/makigas/clank/compare/v0.5.1...v0.6.0) (2020-05-01)
+
+
+### Features
+
+* automatic moderation actions ([#94](https://github.com/makigas/clank/issues/94)) ([8561535](https://github.com/makigas/clank/commit/8561535b53f09062e4792fe04a2c4a47cf628fff))
+
+
+### Refactor
+
+* extract server settings into custom class ([#105](https://github.com/makigas/clank/issues/105)) ([2435eee](https://github.com/makigas/clank/commit/2435eee1fa00c8f4901a0b418dda985a24b28ddc))
+* remove !presence and !activity ([#106](https://github.com/makigas/clank/issues/106)) ([0dc9f15](https://github.com/makigas/clank/commit/0dc9f151d57564ed389ce61b0c4f753fbab48f6a)), closes [#33](https://github.com/makigas/clank/issues/33)
+* wrap role and channel accessors in Server class ([#104](https://github.com/makigas/clank/issues/104)) ([1656ba9](https://github.com/makigas/clank/commit/1656ba9d6506355ac783ed00422f8bd0216a1816))
+
 ### [0.5.1](https://github.com/makigas/clank/compare/v0.5.0...v0.5.1) (2020-04-26)
 
 ## [0.5.0](https://github.com/makigas/clank/compare/v0.4.2...v0.5.0) (2020-04-24)
