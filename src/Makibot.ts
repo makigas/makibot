@@ -7,6 +7,7 @@ import { getDatabase } from "./settings";
 import PinService from "./hooks/pin";
 import RosterService from "./hooks/roster";
 import VerifyService from "./hooks/verify";
+import WarnService from "./hooks/warn";
 
 export default class Makibot extends Commando.CommandoClient {
   public constructor() {
@@ -20,6 +21,7 @@ export default class Makibot extends Commando.CommandoClient {
     this.registry.registerDefaultTypes();
     this.registry.registerGroups([
       ["admin", "Administración"],
+      ["moderation", "Moderación"],
       ["utiles", "Utilidad"],
     ]);
     this.registry.registerCommandsIn({
@@ -43,6 +45,7 @@ export default class Makibot extends Commando.CommandoClient {
           new PinService(this);
           new RosterService(this);
           new VerifyService(this);
+          new WarnService(this);
         })
         .catch(console.log);
     });

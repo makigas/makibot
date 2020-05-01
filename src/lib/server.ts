@@ -43,9 +43,24 @@ export default class Server {
     return this.getRoleByName(helperRoleName);
   }
 
+  get modsRole(): Role {
+    const modsRoleName = process.env.MODS_ROLE || "mods";
+    return this.getRoleByName(modsRoleName);
+  }
+
   get verifiedRole(): Role {
     const verifiedRoleName = process.env.VERIFY_ROLE || "verified";
     return this.getRoleByName(verifiedRoleName);
+  }
+
+  get warnRole(): Role {
+    const warnRoleName = process.env.WARN_ROLE || "warn";
+    return this.getRoleByName(warnRoleName);
+  }
+
+  get publicModlogChannel(): TextChannel {
+    const modlogChannelName = process.env.PUBLIC_MODLOG_CHANNEL || "public-modlog";
+    return this.getTextChannelByName(modlogChannelName);
   }
 
   get modlogChannel(): TextChannel {
