@@ -39,7 +39,9 @@ export = class WarnCommand extends Commando.Command {
     const author = msg.member;
     const server = new Server(msg.guild);
     const modRole = server.modsRole;
-    if (!modRole.members.exists("id", author.id) && modRole.members.exists("id", target.id)) {
+    const authorIsMod = modRole.members.exists("id", author.id);
+    const targetIsMod = modRole.members.exists("id", target.id);
+    if (!authorIsMod || targetIsMod) {
       return Promise.resolve([]);
     }
 
