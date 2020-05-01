@@ -10,9 +10,7 @@ export default class PinService implements Hook {
   constructor(client: Makibot) {
     this.client = client;
 
-    this.client.on("messageReactionAdd", (reaction, user) =>
-      this.messageReactionAdd(reaction, user)
-    );
+    this.client.on("messageReactionAdd", (reaction) => this.messageReactionAdd(reaction));
     this.client.on("messageReactionRemove", (reaction, user) =>
       this.messageReactionRemove(reaction, user)
     );
@@ -30,11 +28,11 @@ export default class PinService implements Hook {
     console.log("Pin hook registered.");
   }
 
-  private messageReactionAdd(reaction: Discord.MessageReaction, user: Discord.User) {
-    let channel = reaction.message.channel;
+  private messageReactionAdd(reaction: Discord.MessageReaction): void {
+    const channel = reaction.message.channel;
     if (channel.type == "text") {
-      let guild = (<Discord.TextChannel>channel).guild;
-      let trigger: string = this.getTriggerEmoji(guild);
+      const server = new Server((channel as Discord.TextChannel).guild);
+      const trigger = server.settings.pinEmoji;
       if (reaction.emoji.name == trigger && reaction.count == 1) {
         this.sendReact(reaction.message);
       }
@@ -76,7 +74,7 @@ export default class PinService implements Hook {
     }
 
     // Send this embed.
-    let emoji = this.getTriggerEmoji(message.guild);
+    let emoji = server.settings.pinEmoji;
     let url = this.getURL(message);
     pinchannel.send(`${emoji} :arrow_right: ${url}`, { embed: embed });
   }
@@ -134,13 +132,5 @@ export default class PinService implements Hook {
 
   private messageReactionRemoveAll(message: Discord.Message) {
     console.log(`Reactions to message ${message.id} were deleted.`);
-  }
-
-  /**
-   * Recupera el emoji que, al ser aplicado como reacción, dispara el evento.
-   * @return el emoji que haya establecido un administrador, o ⭐ (0x2B50)
-   */
-  private getTriggerEmoji(server: Discord.Guild): string {
-    return this.client.provider.get(server, "Pin.Emoji", "\u2b50");
   }
 }

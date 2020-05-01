@@ -1,6 +1,8 @@
 import Commando from "discord.js-commando";
 
 import Makibot from "../../Makibot";
+import Server from "../../lib/server";
+import { Message } from "discord.js";
 
 /**
  * pin allows users to pin messages into a pinboard. To pin a message, simply
@@ -34,13 +36,14 @@ export = class PinCommand extends Commando.Command {
     });
   }
 
-  async run(msg: Commando.CommandMessage, args: PinCommandArguments) {
+  async run(msg: Commando.CommandMessage, args: PinCommandArguments): Promise<Message | Message[]> {
+    const server = new Server(msg.guild);
     switch (args.option) {
       case "emoji":
-        await this.client.provider.set(msg.guild, "Pin.Emoji", args.value);
+        await server.settings.setPinEmoji(args.value);
         return msg.reply("Cambiaste el emoji de reacción.");
       case "pinboard":
-        await this.client.provider.set(msg.guild, "Pin.Pinboard", args.value);
+        await server.settings.setPinPinboard(args.value);
         return msg.reply("Cambiaste el canal de destino.");
       default:
         return msg.reply("Subcomandos: emoji, pinboard");

@@ -1,5 +1,6 @@
 import { Guild, Role, TextChannel } from "discord.js";
 import Makibot from "../Makibot";
+import Settings from "./settings";
 
 export default class Server {
   constructor(private guild: Guild) {}
@@ -38,6 +39,10 @@ export default class Server {
     return null;
   }
 
+  get settings(): Settings {
+    return new Settings(this.guild);
+  }
+
   get helperRole(): Role {
     const helperRoleName = process.env.HELPER_ROLE || "helpers";
     return this.getRoleByName(helperRoleName);
@@ -73,8 +78,7 @@ export default class Server {
   }
 
   get pinboardChannel(): TextChannel {
-    const client = this.guild.client as Makibot;
-    const pinboardChannelName = client.provider.get(this.guild, "Pin.Pinboard", null);
+    const pinboardChannelName = this.settings.pinPinboard;
     return this.getTextChannelByName(pinboardChannelName);
   }
 }
