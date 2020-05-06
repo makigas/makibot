@@ -6,37 +6,39 @@ export default class Server {
   constructor(private guild: Guild) {}
 
   private getRoleByName(name: string): Role {
-    if (name && this.guild.roles.exists("name", name)) {
-      return this.guild.roles.find("name", name);
+    if (!name) {
+      return null;
     }
-    return null;
+    return this.guild.roles.find((role) => role.name === name) || null;
   }
 
   private getRoleByID(id: string): Role {
-    if (id && this.guild.roles.exists("id", id)) {
-      return this.guild.roles.find("id", id);
+    if (!id) {
+      return null;
     }
-    return null;
+    return this.guild.roles.find((role) => role.id === id) || null;
   }
 
   private getTextChannelByName(name: string): TextChannel {
-    if (name && this.guild.channels.exists("name", name)) {
-      const channel = this.guild.channels.find("name", name);
-      if (channel.type === "text") {
+    if (!name) {
+      const channel = this.guild.channels.find((channel) => channel.name === name);
+      if (channel && channel.type === "text") {
         return channel as TextChannel;
+      } else {
+        return null;
       }
     }
-    return null;
   }
 
   private getTextChannelByID(id: string): TextChannel {
-    if (id && this.guild.channels.exists("id", id)) {
-      const channel = this.guild.channels.find("id", id);
-      if (channel.type === "text") {
+    if (!id) {
+      const channel = this.guild.channels.find((channel) => channel.id === id);
+      if (channel && channel.type === "text") {
         return channel as TextChannel;
+      } else {
+        return null;
       }
     }
-    return null;
   }
 
   get settings(): Settings {

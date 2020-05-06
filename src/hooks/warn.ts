@@ -11,7 +11,7 @@ function isMessageWarned(message: Message): boolean {
     return false;
   }
   const mods = server.modsRole.members;
-  return !!warnReaction.users.find((user) => mods.exists("id", user.id));
+  return !!warnReaction.users.find((user) => mods.some((mod) => mod.id === user.id));
 }
 
 export default class WarnService implements Hook {
@@ -37,8 +37,8 @@ export default class WarnService implements Hook {
 
     const modRole = server.modsRole;
 
-    const authorIsMod = modRole.members.exists("id", author.id);
-    const targetIsMod = modRole.members.exists("id", target.id);
+    const authorIsMod = modRole.members.some((member) => member.id === author.id);
+    const targetIsMod = modRole.members.some((member) => member.id === target.id);
     if (!authorIsMod || targetIsMod) {
       return;
     }
