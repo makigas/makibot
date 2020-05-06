@@ -20,7 +20,7 @@ export default class Server {
   }
 
   private getTextChannelByName(name: string): TextChannel {
-    if (!name) {
+    if (name) {
       const channel = this.guild.channels.find((channel) => channel.name === name);
       if (channel && channel.type === "text") {
         return channel as TextChannel;
@@ -31,7 +31,7 @@ export default class Server {
   }
 
   private getTextChannelByID(id: string): TextChannel {
-    if (!id) {
+    if (id) {
       const channel = this.guild.channels.find((channel) => channel.id === id);
       if (channel && channel.type === "text") {
         return channel as TextChannel;
