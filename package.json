@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "big-integer": "^1.6.31",
-    "discord.js": "^11.6.0",
+    "discord.js": "^12.0.0",
     "discord.js-commando": "^0.10.0",
     "dotenv": "^8.2.0",
     "sqlite": "^2.9.3",
@@ -59,7 +59,6 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf makigas-clank*.tgz dist",
-    "prepare": "npm run build",
     "start": "ts-node -r dotenv/config src/cli",
     "lint": "eslint 'src/**/*.ts'",
     "release": "standard-version"
