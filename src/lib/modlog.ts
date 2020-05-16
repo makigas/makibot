@@ -1,4 +1,4 @@
-import { RichEmbedOptions, GuildMember, RichEmbed, Message } from "discord.js";
+import { RichEmbedOptions, GuildMember, RichEmbed, Message, TextChannel } from "discord.js";
 
 interface EmbedField {
   name: string;
@@ -141,6 +141,13 @@ export class WarnModlogEvent extends ModlogEvent {
         name: "Mensaje",
         value: this.message.cleanContent,
       });
+      if (this.message.channel.type == "text") {
+        const textChannel = this.message.channel as TextChannel;
+        fields.push({
+          name: "Canal",
+          value: `#${textChannel.name}`,
+        });
+      }
       fields.push({
         name: "Fecha del mensaje",
         value: this.message.createdAt.toISOString(),
