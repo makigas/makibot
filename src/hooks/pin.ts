@@ -2,6 +2,7 @@ import Discord from "discord.js";
 
 import Hook from "./hook";
 import Makibot from "../Makibot";
+import { getURL } from "../lib/message";
 import Server from "../lib/server";
 
 export default class PinService implements Hook {
@@ -60,7 +61,7 @@ export default class PinService implements Hook {
     embed.setTitle(srcchannel.name);
     embed.setFooter(message.id);
     embed.setDescription(message.content);
-    embed.setURL(this.getURL(message));
+    embed.setURL(getURL(message));
     embed.setTimestamp(new Date(message.createdTimestamp));
 
     // Find something to attach if available.
@@ -75,15 +76,8 @@ export default class PinService implements Hook {
 
     // Send this embed.
     let emoji = server.settings.pinEmoji;
-    let url = this.getURL(message);
+    let url = getURL(message);
     pinchannel.send(`${emoji} :arrow_right: ${url}`, { embed: embed });
-  }
-
-  private getURL(message: Discord.Message): string {
-    let server = message.guild.id;
-    let channel = message.channel.id;
-    let post = message.id;
-    return `https://discordapp.com/channels/${server}/${channel}/${post}`;
   }
 
   /**
