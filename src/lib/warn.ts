@@ -1,4 +1,4 @@
-import { Guild, Message, RichEmbedOptions, User } from "discord.js";
+import { Guild, Message, MessageEmbedOptions, User } from "discord.js";
 import Server from "./server";
 import { WarnModlogEvent } from "./modlog";
 
@@ -36,22 +36,21 @@ export default function applyWarn(guild: Guild, { user, message, reason }: WarnP
   }
 
   // Warn the user.
-  memberToWarn.addRole(server.warnRole);
+  memberToWarn.roles.add(server.warnRole);
 
   // Remove this user from the helpers role if they were.
   if (server.helperRole) {
-    memberToWarn.removeRole(server.helperRole);
+    memberToWarn.roles.remove(server.helperRole);
   }
 
   // Send a message to the public modlog.
-  const embed: RichEmbedOptions = {
+  const embed: MessageEmbedOptions = {
     title: `Se llamó la atención a ${memberToWarn.user.tag}`,
     color: 16545847,
     description: reason ? `**Razón**: ${reason}` : null,
     author: {
       name: memberToWarn.user.tag,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      icon_url: memberToWarn.user.avatarURL,
+      iconURL: memberToWarn.user.avatarURL(),
     },
     footer: {
       text: "Mensaje de moderación automático",

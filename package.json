@@ -14,9 +14,9 @@
   "dependencies": {
     "big-integer": "^1.6.31",
     "discord.js": "^12.0.0",
-    "discord.js-commando": "^0.10.0",
+    "discord.js-commando": "git://github.com/discordjs/Commando.git#bdbd84e2a978322f3af12c21e729eb7b7cd4a3dc",
     "dotenv": "^8.2.0",
-    "sqlite": "^2.9.3",
+    "sqlite": "^3.0.0",
     "uws": "^100.0.1",
     "xdg-basedir": "^4.0.0"
   },

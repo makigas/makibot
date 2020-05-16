@@ -44,7 +44,7 @@ export default class Makibot extends Commando.CommandoClient {
         .catch(console.log);
     });
 
-    this.on("disconnect", (error) => {
+    this.on("shardDisconnect", () => {
       console.error(`The bot has been disconnected.`);
       this.shutdown(1);
     });
@@ -54,9 +54,8 @@ export default class Makibot extends Commando.CommandoClient {
 
   shutdown(exitCode = 0) {
     console.log("The bot was asked to shutdown.");
-    this.destroy().finally(() => {
-      console.log("Good night!");
-      process.exit(exitCode);
-    });
+    this.destroy();
+    console.log("Good night!");
+    process.exit(exitCode);
   }
 }

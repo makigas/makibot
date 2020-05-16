@@ -18,11 +18,11 @@ export = class PingCommand extends Commando.Command {
       return msg.channel
         .send("pong")
         .then((sent: Message) => {
-          let rtt = sent.createdTimestamp - msg.createdTimestamp;
+          const rtt = sent.createdTimestamp - msg.createdTimestamp;
           return sent.edit(`${sent.content} - RTT: ${rtt} ms`);
         })
         .then((sent: Message) => {
-          let heartbeat = msg.client.ping;
+          const heartbeat = msg.client.ws.ping;
           return sent.edit(`${sent.content} - Ping: ${heartbeat} ms`);
         });
     }
