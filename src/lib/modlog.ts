@@ -1,5 +1,7 @@
 import { RichEmbedOptions, GuildMember, RichEmbed, Message } from "discord.js";
 
+import { getURL } from "./message";
+
 interface EmbedField {
   name: string;
   value: string;
@@ -144,6 +146,10 @@ export class WarnModlogEvent extends ModlogEvent {
       fields.push({
         name: "Fecha del mensaje",
         value: this.message.createdAt.toISOString(),
+      });
+      fields.push({
+        name: "URL",
+        value: getURL(this.message),
       });
     }
     return fields;
