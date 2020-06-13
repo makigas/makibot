@@ -34,6 +34,10 @@ export = class HelperCommand extends Commando.Command {
       return msg.channel.send("Oh, oh. Parece que este bot no está bien configurado.");
     }
 
+    if (msg.member.roles.has(server.warnRole.id)) {
+      return msg.reply("Tienes anulado el comando !helpers debido a una infracción.");
+    }
+
     // Act on behalf of what the user wants.
     switch (HelperCommand.opmode(args.mode)) {
       case "yes":
