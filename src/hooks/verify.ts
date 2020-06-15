@@ -11,10 +11,14 @@ import Server from "../lib/server";
  */
 export default class VerifyService implements Hook {
   private static ACCEPTED: string = [
-    "Enhorabuena, has verificado tu cuenta en este servidor. Ahora puedes ver",
-    "el resto de canales. Recuerda que al haber firmado el código de conducta,",
+    "La verificacion automatica esta desactivada pero Recuerda que al haber",
+    "firmado el código de conducta,",
     "entiendes que publicar mensajes que lo incumplan puede acarrear un warn,",
     "un kick o un ban.",
+    //"Enhorabuena, has verificado tu cuenta en este servidor. Ahora puedes ver",
+    //"el resto de canales. Recuerda que al haber firmado el código de conducta,",
+    //"entiendes que publicar mensajes que lo incumplan puede acarrear un warn,",
+    //"un kick o un ban.",
   ].join(" ");
 
   private token: string;
@@ -45,7 +49,7 @@ export default class VerifyService implements Hook {
       throw new ReferenceError(`Verification role not found in guild ${message.guild.name}!`);
     }
     message.member
-      .addRole(role)
+      .delRole(role)
       .then((member) => member.send(VerifyService.ACCEPTED))
       .catch((e) => console.error(e));
   }
