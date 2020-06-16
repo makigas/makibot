@@ -18,12 +18,7 @@ export interface WarnPayload {
   reason?: string;
 }
 
-const messages = [
-  "si sigues comportándote así en este servidor, serás echado",
-  "desde moderación encontramos inapropiada esa actitud",
-  "¿te has leído las normas de este servidor? No lo tenemos claro",
-  "en este servidor no se tolera ese tipo de comportamiento",
-];
+const PROMPT_MESSAGE = "Amonestación automática impuesta hacia %s.";
 
 export default function applyWarn(guild: Guild, { user, message, reason }: WarnPayload): void {
   // Get the member behind this user.
@@ -60,8 +55,7 @@ export default function applyWarn(guild: Guild, { user, message, reason }: WarnP
 
   const publicModlog = server.publicModlogChannel;
   if (publicModlog) {
-    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-    const warnMessage = `<@${memberToWarn.id}>: ${randomMessage}`;
+    const warnMessage = PROMPT_MESSAGE.replace("%s", `<@${memberToWarn.id}>`);
     publicModlog.send(warnMessage, { embed });
   }
 
