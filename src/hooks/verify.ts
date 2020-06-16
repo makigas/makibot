@@ -1,8 +1,18 @@
-import { Message } from "discord.js";
+import { GuildMember, Message } from "discord.js";
 
 import Hook from "./hook";
 import Makibot from "../Makibot";
 import Server from "../lib/server";
+
+const TOO_SOON =
+  "%s, te he entendido, pero tienes que esperar un par de minutos para poder ser aprobado.";
+
+const COOLDOWN_MINUTES = 5;
+
+function requiresCooldown(member: GuildMember): boolean {
+  const minutesSinceJoined = Date.now() - member.joinedAt.getTime();
+  return minutesSinceJoined < 60 * 1000 * COOLDOWN_MINUTES;
+}
 
 /**
  * The verify service allows a server to force users to validate themselves by
@@ -44,6 +54,13 @@ export default class VerifyService implements Hook {
     if (!role) {
       throw new ReferenceError(`Verification role not found in guild ${message.guild.name}!`);
     }
+
+    if (requiresCooldown(message.member)) {
+      const messageBody = TOO_SOON.replace("%s", `<@${message.member.id}>`);
+      message.channel.send(messageBody);
+      return;
+    }
+
     message.member
       .addRole(role)
       .then((member) => member.send(VerifyService.ACCEPTED))
