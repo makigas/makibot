@@ -1,7 +1,16 @@
 #!/usr/bin/env node
 
 import Makibot from "./Makibot";
+import serverFactory from "./lib/http/server";
 
-let makibot = new Makibot();
-process.on("SIGTERM", () => makibot.shutdown(0));
-process.on("SIGINT", () => makibot.shutdown(0));
+const makibot = new Makibot();
+const server = serverFactory(makibot);
+const service = server.listen(8080, "0.0.0.0");
+
+function kill(): void {
+  makibot.shutdown(0);
+  service.close();
+}
+
+process.on("SIGTERM", kill);
+process.on("SIGINT", kill);

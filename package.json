@@ -16,12 +16,14 @@
     "discord.js": "^11.6.0",
     "discord.js-commando": "^0.10.0",
     "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "sqlite": "^2.9.3",
     "uws": "^100.0.1",
     "xdg-basedir": "^4.0.0"
   },
   "description": "Discord bot for the makigas server",
   "devDependencies": {
+    "@types/express": "^4.17.6",
     "@types/node": "^12.12.47",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
