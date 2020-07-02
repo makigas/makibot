@@ -3,6 +3,7 @@ import Makibot from "../Makibot";
 import applyWarn from "../lib/warn";
 import { Message, MessageReaction, User } from "discord.js";
 import Server from "../lib/server";
+import applyWastebin from "../lib/wastebin";
 
 function isMessageWarned(message: Message): boolean {
   const server = new Server(message.guild);
@@ -49,7 +50,7 @@ export default class WarnService implements Hook {
         message: reaction.message,
       });
     } else if (reaction.emoji.name === "🗑️" && isMessageWarned(reaction.message)) {
-      reaction.message.delete();
+      applyWastebin(reaction.message);
     }
   }
 }
