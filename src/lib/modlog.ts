@@ -70,6 +70,41 @@ export class JoinModlogEvent extends ModlogEvent {
   }
 }
 
+export class VerifyModlogEvent extends ModlogEvent {
+  constructor(private member: GuildMember) {
+    super();
+  }
+
+  title(): string {
+    return "Miembro ha sido verificado";
+  }
+
+  icon(): string {
+    return "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/248/check-box-with-check_2611.png";
+  }
+
+  color(): number {
+    return 0x5a7702;
+  }
+
+  fields(): EmbedField[] {
+    return [
+      {
+        name: "Handle",
+        value: this.member.user.tag,
+      },
+      {
+        name: "ID",
+        value: this.member.user.id,
+      },
+      {
+        name: "Se unió a Discord",
+        value: this.member.user.createdAt.toUTCString(),
+      },
+    ];
+  }
+}
+
 export class LeaveModlogEvent extends ModlogEvent {
   constructor(private member: GuildMember) {
     super();

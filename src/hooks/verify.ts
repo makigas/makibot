@@ -3,6 +3,7 @@ import { GuildMember, Message } from "discord.js";
 import Hook from "./hook";
 import Makibot from "../Makibot";
 import Server from "../lib/server";
+import { VerifyModlogEvent } from "../lib/modlog";
 
 const TOO_SOON =
   "%s, te he entendido, pero tienes que esperar un par de minutos para poder ser aprobado.";
@@ -65,6 +66,13 @@ export default class VerifyService implements Hook {
       .addRole(role)
       .then((member) => member.send(VerifyService.ACCEPTED))
       .catch((e) => console.error(e));
+
+    /* Log the verify attempt. */
+    if (server.modlogChannel) {
+      server.modlogChannel
+        .send(new VerifyModlogEvent(message.member).toDiscordEmbed())
+        .catch((e) => console.error(`Error: ${e}`));
+    }
   }
 
   /** Returns true if the given message is a validation message. */
