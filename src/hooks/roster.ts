@@ -1,8 +1,8 @@
-import { GuildMember } from "discord.js";
+import { GuildMember, Guild, User } from "discord.js";
 
 import Hook from "./hook";
 import Makibot from "../Makibot";
-import { JoinModlogEvent, LeaveModlogEvent } from "../lib/modlog";
+import { JoinModlogEvent, LeaveModlogEvent, BanModlogEvent } from "../lib/modlog";
 import Server from "../lib/server";
 
 /**
@@ -14,6 +14,21 @@ export default class RosterService implements Hook {
   constructor(client: Makibot) {
     client.on("guildMemberAdd", (member) => this.memberJoin(member));
     client.on("guildMemberRemove", (member) => this.memberLeft(member));
+    client.on("guildBanAdd", (guild, user) => this.memberBan(guild, user));
+  }
+
+  /**
+   * This event is triggered whenever an user is banned from the guild server.
+   * @param guild the guild where the user was banned
+   * @param user the user that has been banned
+   */
+  private memberBan(guild: Guild, user: User): void {
+    const server = new Server(guild);
+    if (server.modlogChannel) {
+      server.modlogChannel
+        .send(new BanModlogEvent(user).toDiscordEmbed())
+        .catch((e) => console.error(`Error: ${e}`));
+    }
   }
 
   /**
