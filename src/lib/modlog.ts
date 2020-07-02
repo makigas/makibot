@@ -1,4 +1,4 @@
-import { RichEmbedOptions, GuildMember, RichEmbed, Message, TextChannel } from "discord.js";
+import { RichEmbedOptions, GuildMember, RichEmbed, Message, TextChannel, User } from "discord.js";
 
 import { getURL } from "./message";
 
@@ -139,6 +139,41 @@ export class LeaveModlogEvent extends ModlogEvent {
       {
         name: "Se unió al servidor",
         value: this.member.joinedAt.toUTCString(),
+      },
+    ];
+  }
+}
+
+export class BanModlogEvent extends ModlogEvent {
+  constructor(private user: User) {
+    super();
+  }
+
+  title(): string {
+    return "Miembro ha sido baneado";
+  }
+
+  icon(): string {
+    return "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/248/hammer_1f528.png";
+  }
+
+  color(): number {
+    return 0x3a3737;
+  }
+
+  fields(): EmbedField[] {
+    return [
+      {
+        name: "Handle",
+        value: this.user.tag,
+      },
+      {
+        name: "ID",
+        value: this.user.id,
+      },
+      {
+        name: "Se unió a Discord",
+        value: this.user.createdAt.toUTCString(),
       },
     ];
   }
