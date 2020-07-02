@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.1](https://github.com/makigas/clank/compare/v0.7.0...v0.7.1) (2020-07-02)
+
+
+### Features
+
+* **mod:** log bans into the private modlog ([#157](https://github.com/makigas/clank/issues/157)) ([f3194bf](https://github.com/makigas/clank/commit/f3194bfb5cdda0aefa71eaf34383c0a5877dadbe))
+* **mod:** log wastebin events ([#156](https://github.com/makigas/clank/issues/156)) ([8157b8f](https://github.com/makigas/clank/commit/8157b8f8487975faa8f3c291ff6fa7d19374386b))
+* **mod:** send successful verifications to modlog ([#155](https://github.com/makigas/clank/issues/155)) ([1138a1c](https://github.com/makigas/clank/commit/1138a1ceb283753af7edce5e19fe20398002bc2b))
+
 ## [0.7.0](https://github.com/makigas/clank/compare/v0.6.2...v0.7.0) (2020-06-25)
 
 ### [0.6.2](https://github.com/makigas/clank/compare/v0.6.1...v0.6.2) (2020-06-16)
