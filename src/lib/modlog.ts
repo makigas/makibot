@@ -197,3 +197,45 @@ export class WarnModlogEvent extends ModlogEvent {
     return fields;
   }
 }
+
+export class WastebinModlogEvent extends ModlogEvent {
+  constructor(private message: Message) {
+    super();
+  }
+
+  title(): string {
+    return "Se ha eliminado un mensaje";
+  }
+
+  icon(): string {
+    return "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/248/wastebasket_1f5d1.png";
+  }
+
+  color(): number {
+    return 0x9b9b9b;
+  }
+
+  fields(): EmbedField[] {
+    const fields: EmbedField[] = [];
+    fields.push({
+      name: "Usuario",
+      value: this.message.author.tag,
+    });
+    fields.push({
+      name: "Mensaje",
+      value: this.message.cleanContent,
+    });
+    if (this.message.channel.type == "text") {
+      const textChannel = this.message.channel as TextChannel;
+      fields.push({
+        name: "Canal",
+        value: `#${textChannel.name}`,
+      });
+    }
+    fields.push({
+      name: "Fecha del mensaje",
+      value: this.message.createdAt.toISOString(),
+    });
+    return fields;
+  }
+}
