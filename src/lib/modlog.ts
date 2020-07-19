@@ -101,6 +101,10 @@ export class VerifyModlogEvent extends ModlogEvent {
         name: "Se unió a Discord",
         value: this.member.user.createdAt.toUTCString(),
       },
+      {
+        name: "Se unió al servidor",
+        value: this.member.joinedAt ? this.member.joinedAt.toUTCString() : "!!",
+      },
     ];
   }
 }
@@ -138,7 +142,7 @@ export class LeaveModlogEvent extends ModlogEvent {
       },
       {
         name: "Se unió al servidor",
-        value: this.member.joinedAt.toUTCString(),
+        value: this.member.joinedAt ? this.member.joinedAt.toUTCString() : "!!",
       },
     ];
   }

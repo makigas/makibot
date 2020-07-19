@@ -6,11 +6,17 @@ import Server from "../lib/server";
 import { VerifyModlogEvent } from "../lib/modlog";
 
 const TOO_SOON =
-  "%s, te he entendido, pero tienes que esperar un par de minutos para poder ser aprobado.";
+  "%s, te he entendido, pero para poder verificarte necesito que permanezcas unos minutos en el servidor.";
 
 const COOLDOWN_MINUTES = 5;
 
 function requiresCooldown(member: GuildMember): boolean {
+  if (!member.joinedAt) {
+    // TODO: Investigate why THIS ↓↓ happens
+    console.warn(`Warn! ${member.user.tag} join date is not available`);
+    return false;
+  }
+
   const minutesSinceJoined = Date.now() - member.joinedAt.getTime();
   return minutesSinceJoined < 60 * 1000 * COOLDOWN_MINUTES;
 }
