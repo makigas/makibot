@@ -21,14 +21,14 @@ const ACCEPTED = [
 ].join(" ");
 
 /* Tests whether a message content is a valid verification token. */
-function isVerificationMessage(message: Message) {
-  const clean = (t: string) => t.toLowerCase().trim().replace(/\s/g, "");
+function isVerificationMessage(message: Message): boolean {
+  const clean: (string) => string = (t) => t.toLowerCase().trim().replace(/\s/g, "");
   return clean(process.env.VERIFY_TOKEN) === clean(message.cleanContent);
 }
 
 /* Escape the member name and submit a message to notify the user about the outcome. */
-function sendOutcome(content: string, message: Message) {
-  let cleanContent = content.replace("%s", `<@${message.member.id}>`);
+function sendOutcome(content: string, message: Message): Promise<Message> {
+  const cleanContent = content.replace("%s", `<@${message.member.id}>`);
   return message.channel.send(cleanContent);
 }
 
@@ -42,20 +42,18 @@ export default class VerifyService implements Hook {
     client.on("message", (message) => this.handleMessage(message));
   }
 
-  private handleMessage(message: Message) {
+  private async handleMessage(message: Message): Promise<void> {
     const server = new Server(message.guild);
-    const member = new Member(message.member);
 
     if (server.captchasChannel?.id == message.channel.id && isVerificationMessage(message)) {
+      const member = new Member(message.member);
       if (member.cooldown) {
-        let event = new VerifyModlogEvent(message.member);
         /* Send the message first, as setting the role may inhibit future events about the channel */
-        sendOutcome(ACCEPTED, message)
-          .then(() => member.setVerification(true))
-          .then(() => server.modlogChannel?.send(event.toDiscordEmbed()))
-          .catch((e) => console.error(e));
+        await sendOutcome(ACCEPTED, message);
+        await member.setVerification(true);
+        await server.modlogChannel?.send(new VerifyModlogEvent(message.member).toDiscordEmbed());
       } else {
-        sendOutcome(TOO_SOON, message).catch((e) => console.error(e));
+        await sendOutcome(TOO_SOON, message);
       }
     }
   }

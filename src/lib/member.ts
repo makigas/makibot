@@ -26,11 +26,12 @@ export default class Member {
     return minutesSinceJoined > 60 * 1000 * 5;
   }
 
-  async setVerification(value: boolean) {
+  async setVerification(value: boolean): Promise<boolean> {
     if (value) {
       await this.guildMember.addRole(this.server.verifiedRole);
     } else {
       await this.guildMember.removeRole(this.server.verifiedRole);
     }
+    return value;
   }
 }
