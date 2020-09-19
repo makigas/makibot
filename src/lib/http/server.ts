@@ -64,14 +64,15 @@ export default function serverFactory(makibot: Makibot): express.Express {
     }
 
     const server = new Server(guild);
-    Object.keys(req.body).forEach((prop) => {
-      switch (prop) {
-        case "pin.pinboard":
-          server.settings.setPinPinboard(req.body["pin.pinboard"]);
-          break;
-        case "pin.emoji":
-          server.settings.setPinEmoji(req.body["pin.emoji"]);
-          break;
+    Object.entries(req.body).forEach(([key, value]: [string, any]) => {
+      if (key === "pin.pinboard") {
+        server.settings.setPinPinboard(value);
+      } else if (key === "pin.emoji") {
+        server.settings.setPinEmoji(value);
+      } else if (key === "modlog.webhookId") {
+        server.settings.setModlogWebhookId(value);
+      } else if (key === "modlog.webhookToken") {
+        server.settings.setModlogWebhookToken(value);
       }
     });
     res.status(200).json(server.settings.toJSON());

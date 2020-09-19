@@ -7,6 +7,10 @@ type SettingsJSONSchema = {
     emoji: string;
     pinboard: string;
   };
+  modlog: {
+    webhookId: string;
+    webhookToken: string;
+  };
 };
 
 export default class Settings {
@@ -14,11 +18,13 @@ export default class Settings {
 
   private readonly tags: { [tag: string]: Tag };
 
-  public constructor(private guild: Guild) {
+  public constructor(guild: Guild) {
     this.client = guild.client as Makibot;
     this.tags = {
       pinEmoji: new Tag(this.client.provider, "Pin.Emoji", guild),
       pinChannel: new Tag(this.client.provider, "Pin.Pinboard", guild),
+      modlogWebhookId: new Tag(this.client.provider, "Webhook.Id", guild),
+      modlogWebhookToken: new Tag(this.client.provider, "Webhook.Token", guild),
     };
   }
 
@@ -27,6 +33,10 @@ export default class Settings {
       pin: {
         emoji: this.pinEmoji,
         pinboard: this.pinPinboard,
+      },
+      modlog: {
+        webhookId: this.modlogWebhookId,
+        webhookToken: this.modlogWebhookToken,
       },
     };
   }
@@ -45,5 +55,21 @@ export default class Settings {
 
   async setPinPinboard(pinboard: string): Promise<void> {
     await this.tags.pinChannel.set(pinboard);
+  }
+
+  get modlogWebhookId(): string {
+    return this.tags.modlogWebhookId.get();
+  }
+
+  get modlogWebhookToken(): string {
+    return this.tags.modlogWebhookToken.get();
+  }
+
+  async setModlogWebhookId(id: string): Promise<void> {
+    await this.tags.modlogWebhookId.set(id);
+  }
+
+  async setModlogWebhookToken(token: string): Promise<void> {
+    await this.tags.modlogWebhookToken.set(token);
   }
 }

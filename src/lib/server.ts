@@ -1,4 +1,4 @@
-import { Guild, Message, Role, TextChannel } from "discord.js";
+import { Guild, Message, Role, TextChannel, WebhookClient } from "discord.js";
 import { ModlogEvent } from "./modlog";
 import Settings from "./settings";
 
@@ -39,7 +39,7 @@ type ServerJSONSchema = {
 };
 
 export default class Server {
-  constructor(private guild: Guild) { }
+  constructor(private guild: Guild) {}
 
   toJSON(): ServerJSONSchema {
     return {
@@ -54,7 +54,6 @@ export default class Server {
       },
       channels: {
         pinboard: channelToJSON(this.pinboardChannel),
-        modlog: channelToJSON(this.modlogChannel),
         publicModlog: channelToJSON(this.publicModlogChannel),
         captchas: channelToJSON(this.captchasChannel),
       },
@@ -98,8 +97,15 @@ export default class Server {
   }
 
   logModlogEvent(event: ModlogEvent): Promise<Message> {
-    if (this.modlogChannel) {
-      return this.modlogChannel.send(event.toDiscordEmbed());
+    const webhookId = this.settings.modlogWebhookId;
+    const webhookToken = this.settings.modlogWebhookToken;
+    if (webhookId && webhookToken) {
+      const client = new WebhookClient(webhookId, webhookToken);
+      return client.send({
+        username: event.title(),
+        avatarURL: event.icon(),
+        embeds: [event.toDiscordEmbed()],
+      });
     } else {
       return Promise.reject(`Configuration error: no modlog for ${this.guild.name}`);
     }
@@ -132,10 +138,6 @@ export default class Server {
   get publicModlogChannel(): TextChannel {
     const modlogChannelName = process.env.PUBLIC_MODLOG_CHANNEL || "public-modlog";
     return this.getTextChannelByName(modlogChannelName);
-  }
-
-  get modlogChannel(): TextChannel {
-    return this.getTextChannelByID(process.env.MODLOG);
   }
 
   get captchasChannel(): TextChannel {
