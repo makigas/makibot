@@ -1,11 +1,27 @@
 import { Guild } from "discord.js";
 import Makibot from "../Makibot";
 
+type SettingsJSONSchema = {
+  pin: {
+    emoji: string;
+    pinboard: string;
+  };
+};
+
 export default class Settings {
   private readonly client: Makibot;
 
   public constructor(private guild: Guild) {
     this.client = guild.client as Makibot;
+  }
+
+  public toJSON(): SettingsJSONSchema {
+    return {
+      pin: {
+        emoji: this.pinEmoji,
+        pinboard: this.pinPinboard,
+      },
+    };
   }
 
   get pinEmoji(): string {
