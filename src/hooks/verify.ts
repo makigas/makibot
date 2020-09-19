@@ -1,24 +1,35 @@
-import { GuildMember, Message } from "discord.js";
+import { Message } from "discord.js";
 
 import Hook from "./hook";
 import Makibot from "../Makibot";
 import Server from "../lib/server";
 import { VerifyModlogEvent } from "../lib/modlog";
+import Member from "../lib/member";
 
-const TOO_SOON =
-  "%s, te he entendido, pero para poder verificarte necesito que permanezcas unos minutos en el servidor.";
+/* The message that will be replied to members that type the token during cooldown period. */
+const TOO_SOON = [
+  "%s, has dicho la palabra secreta correcta, pero para poder verificarte necesito",
+  "que permanezcas unos minutos en el servidor antes de volver a intentar enviarla.",
+  "(Esto también se avisa en las normas, ¿seguro que las has leído?)",
+].join(" ");
 
-const COOLDOWN_MINUTES = 5;
+/* The message that will be replied to members that successfully validate their accounts. */
+const ACCEPTED = [
+  "Gracias por verificar tu cuenta, %s. Ya puedes explorar el resto de canales del servidor.",
+  "Recuerda que has confirmado que has leído las normas. No comportarse puede suponer una",
+  "amonestación o una expulsión del servidor.",
+].join(" ");
 
-function requiresCooldown(member: GuildMember): boolean {
-  if (!member.joinedAt) {
-    // TODO: Investigate why THIS ↓↓ happens
-    console.warn(`Warn! ${member.user.tag} join date is not available`);
-    return false;
-  }
+/* Tests whether a message content is a valid verification token. */
+function isVerificationMessage(message: Message) {
+  const clean = (t: string) => t.toLowerCase().trim().replace(/\s/g, "");
+  return clean(process.env.VERIFY_TOKEN) === clean(message.cleanContent);
+}
 
-  const minutesSinceJoined = Date.now() - member.joinedAt.getTime();
-  return minutesSinceJoined < 60 * 1000 * COOLDOWN_MINUTES;
+/* Escape the member name and submit a message to notify the user about the outcome. */
+function sendOutcome(content: string, message: Message) {
+  let cleanContent = content.replace("%s", `<@${message.member.id}>`);
+  return message.channel.send(cleanContent);
 }
 
 /**
@@ -27,64 +38,25 @@ function requiresCooldown(member: GuildMember): boolean {
  * applied.
  */
 export default class VerifyService implements Hook {
-  private static ACCEPTED: string = [
-    "Enhorabuena, has verificado tu cuenta en este servidor. Ahora puedes ver",
-    "el resto de canales. Recuerda que al haber firmado el código de conducta,",
-    "entiendes que publicar mensajes que lo incumplan puede acarrear un warn,",
-    "un kick o un ban.",
-  ].join(" ");
-
-  private token: string;
-
   constructor(client: Makibot) {
-    this.token = process.env.VERIFY_TOKEN;
     client.on("message", (message) => this.handleMessage(message));
   }
 
-  private handleMessage(message: Message): void {
-    if (!this.isVerificationMessage(message)) {
-      /* Not a message to validate the account. Bail out. */
-      return;
-    }
-
+  private handleMessage(message: Message) {
     const server = new Server(message.guild);
-    const channel = server.captchasChannel;
-    if (!channel) {
-      throw new ReferenceError(`Captchas text channel not found in guild ${message.guild.name}!`);
-    }
-    if (message.channel.id != channel.id) {
-      /* Not a message sent to the verification channel. Bail out. */
-      return;
-    }
+    const member = new Member(message.member);
 
-    const role = server.verifiedRole;
-    if (!role) {
-      throw new ReferenceError(`Verification role not found in guild ${message.guild.name}!`);
+    if (server.captchasChannel?.id == message.channel.id && isVerificationMessage(message)) {
+      if (member.cooldown) {
+        let event = new VerifyModlogEvent(message.member);
+        /* Send the message first, as setting the role may inhibit future events about the channel */
+        sendOutcome(ACCEPTED, message)
+          .then(() => member.setVerification(true))
+          .then(() => server.modlogChannel?.send(event.toDiscordEmbed()))
+          .catch((e) => console.error(e));
+      } else {
+        sendOutcome(TOO_SOON, message).catch((e) => console.error(e));
+      }
     }
-
-    if (requiresCooldown(message.member)) {
-      const messageBody = TOO_SOON.replace("%s", `<@${message.member.id}>`);
-      message.channel.send(messageBody);
-      return;
-    }
-
-    message.member
-      .addRole(role)
-      .then((member) => member.send(VerifyService.ACCEPTED))
-      .catch((e) => console.error(e));
-
-    /* Log the verify attempt. */
-    if (server.modlogChannel) {
-      server.modlogChannel
-        .send(new VerifyModlogEvent(message.member).toDiscordEmbed())
-        .catch((e) => console.error(`Error: ${e}`));
-    }
-  }
-
-  /** Returns true if the given message is a validation message. */
-  private isVerificationMessage(message: Message): boolean {
-    const cleanToken = this.token.toLowerCase().trim();
-    const inputToken = message.content.toLowerCase().trim();
-    return cleanToken === inputToken;
   }
 }
