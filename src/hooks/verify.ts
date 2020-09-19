@@ -51,7 +51,7 @@ export default class VerifyService implements Hook {
         /* Send the message first, as setting the role may inhibit future events about the channel */
         await sendOutcome(ACCEPTED, message);
         await member.setVerification(true);
-        await server.modlogChannel?.send(new VerifyModlogEvent(message.member).toDiscordEmbed());
+        await server.logModlogEvent(new VerifyModlogEvent(message.member));
       } else {
         await sendOutcome(TOO_SOON, message);
       }

@@ -8,9 +8,7 @@ export default function applyWastebin(message: Message): void {
 
   /* Log the deletion event. */
   const server = new Server(message.guild);
-  if (server.modlogChannel) {
-    server.modlogChannel
-      .send(new WastebinModlogEvent(message).toDiscordEmbed())
-      .catch((e) => console.error(`Cannot delete message: ${e}`));
-  }
+  server
+    .logModlogEvent(new WastebinModlogEvent(message))
+    .catch((e) => console.error(`Error during wastebin handler: ${e}`));
 }

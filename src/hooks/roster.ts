@@ -6,9 +6,9 @@ import { JoinModlogEvent, LeaveModlogEvent, BanModlogEvent } from "../lib/modlog
 import Server from "../lib/server";
 
 /**
- * The roster service plugs hooks whenever an user leaves the guild.
- * It is designed to send to modlog announcements whenever an user leaves the
- * server to let the server operators know about that.
+ * The roster sends announces to the modlog channel as a result of some events,
+ * such as members joining or leaving the server, or members being banned, in the
+ * interest of moderators to read.
  */
 export default class RosterService implements Hook {
   constructor(client: Makibot) {
@@ -17,45 +17,30 @@ export default class RosterService implements Hook {
     client.on("guildBanAdd", (guild, user) => this.memberBan(guild, user));
   }
 
-  /**
-   * This event is triggered whenever an user is banned from the guild server.
-   * @param guild the guild where the user was banned
-   * @param user the user that has been banned
-   */
-  private memberBan(guild: Guild, user: User): void {
-    const server = new Server(guild);
-    if (server.modlogChannel) {
-      server.modlogChannel
-        .send(new BanModlogEvent(user).toDiscordEmbed())
-        .catch((e) => console.error(`Error: ${e}`));
+  private async memberBan(guild: Guild, user: User): Promise<void> {
+    try {
+      const server = new Server(guild);
+      await server.logModlogEvent(new BanModlogEvent(user));
+    } catch (e) {
+      console.error(`Roster error for Ban: ${e}`);
     }
   }
 
-  /**
-   * This event is triggered whenever an user joins the guild server.
-   * @param member the member that has joined the server.
-   */
-  private memberJoin(member: GuildMember): void {
-    const server = new Server(member.guild);
-    const modlog = server.modlogChannel;
-    if (modlog) {
-      modlog
-        .send(new JoinModlogEvent(member).toDiscordEmbed())
-        .catch((e) => console.error(`Error: ${e}`));
+  private async memberJoin(member: GuildMember): Promise<void> {
+    try {
+      const server = new Server(member.guild);
+      await server.logModlogEvent(new JoinModlogEvent(member));
+    } catch (e) {
+      console.error(`Roster error for Join: ${e}`);
     }
   }
 
-  /**
-   * This event is triggered whenever an user leaves the guild server.
-   * @param member the member that has left the server.
-   */
-  private memberLeft(member: GuildMember): void {
-    const server = new Server(member.guild);
-    const modlog = server.modlogChannel;
-    if (modlog) {
-      modlog
-        .send(new LeaveModlogEvent(member).toDiscordEmbed())
-        .catch((e) => console.error(`Error: ${e}`));
+  private async memberLeft(member: GuildMember): Promise<void> {
+    try {
+      const server = new Server(member.guild);
+      await server.logModlogEvent(new LeaveModlogEvent(member));
+    } catch (e) {
+      console.error(`Roster error for Leave: ${e}`);
     }
   }
 }

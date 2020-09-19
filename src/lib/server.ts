@@ -1,4 +1,5 @@
-import { Guild, Role, TextChannel } from "discord.js";
+import { Guild, Message, Role, TextChannel } from "discord.js";
+import { ModlogEvent } from "./modlog";
 import Settings from "./settings";
 
 type RoleJSONSchema = {
@@ -38,7 +39,7 @@ type ServerJSONSchema = {
 };
 
 export default class Server {
-  constructor(private guild: Guild) {}
+  constructor(private guild: Guild) { }
 
   toJSON(): ServerJSONSchema {
     return {
@@ -93,6 +94,14 @@ export default class Server {
       } else {
         return null;
       }
+    }
+  }
+
+  logModlogEvent(event: ModlogEvent): Promise<Message> {
+    if (this.modlogChannel) {
+      return this.modlogChannel.send(event.toDiscordEmbed());
+    } else {
+      return Promise.reject(`Configuration error: no modlog for ${this.guild.name}`);
     }
   }
 

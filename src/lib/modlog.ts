@@ -8,17 +8,19 @@ interface EmbedField {
   inline?: boolean;
 }
 
-abstract class ModlogEvent {
+export abstract class ModlogEvent {
   public toDiscordEmbed(): RichEmbed {
     const options: RichEmbedOptions = {
       color: this.color(),
       footer: {
+        // eslint-disable-next-line @typescript-eslint/camelcase
         icon_url:
           "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/page-with-curl_1f4c3.png",
         text: "Mensaje de moderación automática",
       },
       author: {
         name: this.title(),
+        // eslint-disable-next-line @typescript-eslint/camelcase
         icon_url: this.icon(),
       },
       fields: this.fields(),

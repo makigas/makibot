@@ -59,9 +59,7 @@ export default function applyWarn(guild: Guild, { user, message, reason }: WarnP
     publicModlog.send(warnMessage, { embed });
   }
 
-  const privateModlog = server.modlogChannel;
-  if (privateModlog) {
-    const warnEvent = new WarnModlogEvent(memberToWarn, reason, message);
-    privateModlog.send(warnEvent.toDiscordEmbed());
-  }
+  server
+    .logModlogEvent(new WarnModlogEvent(memberToWarn, reason, message))
+    .catch((e) => console.error(`Error during warn: ${e}`));
 }
