@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0](https://github.com/makigas/clank/compare/v0.7.2...v0.8.0) (2020-09-19)
+
+
+### Features
+
+* add experimental clankctl command ([e69881a](https://github.com/makigas/clank/commit/e69881a7415ff6e0d46bab4d72cf881962731360))
+* enhance verification flow ([efd517c](https://github.com/makigas/clank/commit/efd517cc5c6636f3651cf633326de484c0a23e64))
+* expose guilds through the HTTP API ([59660fd](https://github.com/makigas/clank/commit/59660fd1b55d7e6d5f952ed27d00f9688377de23))
+* introduce tags ([e812754](https://github.com/makigas/clank/commit/e8127542b4300195935b542fb4b4ee69188f6b4b))
+* use webhooks for modlog events ([cd91852](https://github.com/makigas/clank/commit/cd91852e45e5b0d805c68bc66c33947029d0f8e8))
+
+
+### Bug Fixes
+
+* downgrade to axios 0.19.x to avoid bugs ([53f6922](https://github.com/makigas/clank/commit/53f6922c7b330e65496fd4f542fe3b1018983303))
+* verifier may throw if message.member is null ([5dd0242](https://github.com/makigas/clank/commit/5dd024278733b6058ec6feaa49cbac080b0ede7b))
+
+
+### Refactor
+
+* centralize modlog event pushing ([2c3c6d6](https://github.com/makigas/clank/commit/2c3c6d6b09c8151058e4138a682726c50b5b787d))
+* ffmpeg is not neccessary in Docker ([e034ec9](https://github.com/makigas/clank/commit/e034ec9d098395f5db56c6b06705828f5a5b7f4f))
+
 ### [0.7.2](https://github.com/makigas/clank/compare/v0.7.1...v0.7.2) (2020-07-19)
 
 
