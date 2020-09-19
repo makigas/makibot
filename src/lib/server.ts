@@ -30,7 +30,7 @@ function channelToJSON(channel?: TextChannel): null | ChannelJSONSchema {
   };
 }
 
-type ServerJSONSchema = {
+export type ServerJSONSchema = {
   id: string;
   name: string;
   icon: string;
@@ -39,7 +39,7 @@ type ServerJSONSchema = {
 };
 
 export default class Server {
-  constructor(private guild: Guild) {}
+  constructor(private guild: Guild) { }
 
   toJSON(): ServerJSONSchema {
     return {

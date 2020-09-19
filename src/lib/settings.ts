@@ -2,7 +2,7 @@ import { Guild } from "discord.js";
 import Makibot from "../Makibot";
 import Tag from "./tag";
 
-type SettingsJSONSchema = {
+export type SettingsJSONSchema = {
   pin: {
     emoji: string;
     pinboard: string;
