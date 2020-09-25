@@ -8,8 +8,11 @@ import PinService from "./hooks/pin";
 import RosterService from "./hooks/roster";
 import VerifyService from "./hooks/verify";
 import WarnService from "./hooks/warn";
+import AntiRaid from "./lib/antiraid";
 
 export default class Makibot extends Commando.CommandoClient {
+  readonly antiraid: AntiRaid;
+
   public constructor() {
     super({
       commandPrefix: "!",
@@ -17,6 +20,8 @@ export default class Makibot extends Commando.CommandoClient {
       disableEveryone: true,
       unknownCommandResponse: false,
     });
+
+    this.antiraid = new AntiRaid(this);
 
     this.registry.registerDefaultTypes();
     this.registry.registerGroups([
@@ -40,6 +45,9 @@ export default class Makibot extends Commando.CommandoClient {
           new RosterService(this);
           new VerifyService(this);
           new WarnService(this);
+
+          // Init the antiraid engine.
+          this.antiraid.init();
         })
         .catch(console.log);
     });
