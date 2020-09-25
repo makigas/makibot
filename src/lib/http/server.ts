@@ -28,6 +28,43 @@ export default function serverFactory(makibot: Makibot): express.Express {
     }
   });
 
+  app.get("/antiraid", (req, res) => {
+    res.contentType("application/json");
+    res.status(200).json({ antiraid: makibot.antiraid.raidMode });
+  });
+
+  app.post("/antiraid", (req, res) => {
+    makibot.antiraid
+      .setRaidMode(true)
+      .then(() => {
+        res.contentType("application/json");
+        res.status(200).json({
+          accepted: true,
+          newMode: makibot.antiraid.raidMode,
+        });
+      })
+      .catch((e) => {
+        res.contentType("text/plain");
+        res.status(500).send(`Command could not be handled: ${e}`);
+      });
+  });
+
+  app.delete("/antiraid", (req, res) => {
+    makibot.antiraid
+      .setRaidMode(false)
+      .then(() => {
+        res.contentType("application/json");
+        res.status(200).json({
+          accepted: true,
+          newMode: makibot.antiraid.raidMode,
+        });
+      })
+      .catch((e) => {
+        res.contentType("text/plain");
+        res.status(500).send(`Command could not be handled: ${e}`);
+      });
+  });
+
   app.get("/guilds", (req, res) => {
     res.json(
       makibot.guilds.map((guild) => ({

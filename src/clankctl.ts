@@ -58,6 +58,36 @@ clankctl.command(
 );
 
 clankctl.command(
+  "antiraid [mode]",
+  "enable or disable the antiraid mode",
+  () => ({}),
+  async (argv: { mode?: string }) => {
+    if (argv.mode) {
+      switch (argv.mode) {
+        case "on":
+          await client.setRaidMode(true);
+          console.log("Antiraid mode has been enabled");
+          process.exit(0);
+          break;
+        case "off":
+          await client.setRaidMode(false);
+          console.log("Antiraid mode has been disabled");
+          process.exit(0);
+          break;
+        default:
+          console.error("Keyword not understood: " + argv.mode);
+          process.exit(1);
+          break;
+      }
+    } else {
+      const status = await client.raidModeStatus();
+      console.log(`Antiraid mode ${status ? "is enabled" : "is disabled"}`);
+      process.exit(0);
+    }
+  }
+);
+
+clankctl.command(
   "set-config <guild> <key> <value>",
   "update the configuration for a specific guild",
   () => ({}),
