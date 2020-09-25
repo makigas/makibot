@@ -20,6 +20,12 @@ const ACCEPTED = [
   "amonestación o una expulsión del servidor.",
 ].join(" ");
 
+const MANUAL = [
+  "Gracias por intentar verificar tu cuenta, %s. Desafortunadamente, la moderación de este",
+  "servidor ha bloqueado la verificación automática en este momento, así que tendrás que",
+  "esperar para recibir acceso manualmente. Disculpa las molestas.",
+].join(" ");
+
 /* Tests whether a message content is a valid verification token. */
 function isVerificationMessage(message: Message): boolean {
   const clean: (string) => string = (t) => t.toLowerCase().trim().replace(/\s/g, "");
@@ -38,7 +44,7 @@ function sendOutcome(content: string, message: Message): Promise<Message> {
  * applied.
  */
 export default class VerifyService implements Hook {
-  constructor(client: Makibot) {
+  constructor(private client: Makibot) {
     client.on("message", (message) => this.handleMessage(message));
   }
 
@@ -48,10 +54,15 @@ export default class VerifyService implements Hook {
     if (server.captchasChannel?.id == message.channel.id && isVerificationMessage(message)) {
       const member = new Member(message.member);
       if (member.cooldown) {
+        /* Test if the bot can accept approves at this moment. */
+        if (this.client.antiraid.raidMode) {
+          await sendOutcome(MANUAL, message);
+        } else {
         /* Send the message first, as setting the role may inhibit future events about the channel */
         await sendOutcome(ACCEPTED, message);
         await member.setVerification(true);
         await server.logModlogEvent(new VerifyModlogEvent(message.member));
+        }
       } else {
         await sendOutcome(TOO_SOON, message);
       }
