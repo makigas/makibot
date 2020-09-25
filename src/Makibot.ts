@@ -9,6 +9,7 @@ import RosterService from "./hooks/roster";
 import VerifyService from "./hooks/verify";
 import WarnService from "./hooks/warn";
 import AntiRaid from "./lib/antiraid";
+import AntispamService from "./hooks/antispam";
 
 export default class Makibot extends Commando.CommandoClient {
   readonly antiraid: AntiRaid;
@@ -45,6 +46,7 @@ export default class Makibot extends Commando.CommandoClient {
           new RosterService(this);
           new VerifyService(this);
           new WarnService(this);
+          new AntispamService(this);
 
           // Init the antiraid engine.
           this.antiraid.init();
