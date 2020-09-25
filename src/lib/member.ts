@@ -15,6 +15,10 @@ export default class Member {
     return this.guildMember.roles.has(this.server.verifiedRole?.id);
   }
 
+  get moderator(): boolean {
+    return this.guildMember.roles.has(this.server.modsRole?.id);
+  }
+
   get cooldown(): boolean {
     if (!this.guildMember.joinedAt) {
       /* TODO: Investigate why THIS happens. */
@@ -31,6 +35,15 @@ export default class Member {
       await this.guildMember.addRole(this.server.verifiedRole);
     } else {
       await this.guildMember.removeRole(this.server.verifiedRole);
+    }
+    return value;
+  }
+
+  async setModerator(value: boolean): Promise<boolean> {
+    if (value) {
+      await this.guildMember.addRole(this.server.modsRole);
+    } else {
+      await this.guildMember.removeRole(this.server.modsRole);
     }
     return value;
   }
