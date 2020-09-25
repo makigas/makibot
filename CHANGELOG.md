@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.9.0](https://github.com/makigas/clank/compare/v0.8.0...v0.9.0) (2020-09-25)
+
+
+### Features
+
+* add antiraid mode ([#177](https://github.com/makigas/clank/issues/177)) ([5bc35dd](https://github.com/makigas/clank/commit/5bc35dddbed0f8413b92e039faa563fc2254881d))
+* remove messages that match invite codes ([#178](https://github.com/makigas/clank/issues/178)) ([19851f2](https://github.com/makigas/clank/commit/19851f24b56aa4072ff78cbb20c154ea3b23a169))
+
+
+### Bug Fixes
+
+* make the cooldown message less aggresive ([9958878](https://github.com/makigas/clank/commit/995887878a89f43ca35c40a26dc86e44a55eba8e))
+
 ## [0.8.0](https://github.com/makigas/clank/compare/v0.7.2...v0.8.0) (2020-09-19)
 
 
