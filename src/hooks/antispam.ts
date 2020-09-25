@@ -15,6 +15,8 @@ function isAllowed(message: Message): boolean {
   return member.moderator;
 }
 
+const NOTIFY = "(Se ha retenido el mensaje de %s porque se ha detectado un enlace de invitación.)";
+
 export default class AntispamService implements Hook {
   private client: Makibot;
 
@@ -26,22 +28,24 @@ export default class AntispamService implements Hook {
 
   private async message(message: Message): Promise<void> {
     if (containsInvite(message) && !isAllowed(message)) {
-      /* Handle invite. */
-      const member = message.member.id;
-      const channel = message.channel;
-      await message.delete();
-      await channel.send(
-        "Se ha retenido automáticamente el mensaje de %s porque se ha detectado un enlace de invitación.".replace(
-          "%s",
-          `<@${member}>`
-        )
-      );
+      const server = new Server(message.guild);
 
       /* Send message to the modlog. */
-      const server = new Server(message.guild);
       server
         .logModlogEvent(new WastebinModlogEvent(message))
         .catch((e) => console.error(`Error during wastebin handler: ${e}`));
+
+      const channel = message.channel;
+      if (server.captchasChannel?.id === channel.id) {
+        /* On the captchas channel, the protocol is to automatically ban the member. */
+        await message.delete();
+        await message.member.ban({
+          reason: "Spam",
+        });
+      } else {
+        await message.delete();
+        await channel.send(NOTIFY.replace("%s", `<@${message.member.id}>`));
+      }
     }
   }
 }
