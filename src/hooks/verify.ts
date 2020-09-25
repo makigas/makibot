@@ -8,9 +8,8 @@ import Member from "../lib/member";
 
 /* The message that will be replied to members that type the token during cooldown period. */
 const TOO_SOON = [
-  "%s, has dicho la palabra secreta correcta, pero para poder verificarte necesito",
-  "que permanezcas unos minutos en el servidor antes de volver a intentar enviarla.",
-  "(Esto también se avisa en las normas, ¿seguro que las has leído?)",
+  "%s, has dicho la palabra secreta correcta, pero como dicen las normas del servidor,",
+  "tienes que permanecer unos minutos para que sea atendida y se pueda validar la cuenta.",
 ].join(" ");
 
 /* The message that will be replied to members that successfully validate their accounts. */
@@ -58,10 +57,10 @@ export default class VerifyService implements Hook {
         if (this.client.antiraid.raidMode) {
           await sendOutcome(MANUAL, message);
         } else {
-        /* Send the message first, as setting the role may inhibit future events about the channel */
-        await sendOutcome(ACCEPTED, message);
-        await member.setVerification(true);
-        await server.logModlogEvent(new VerifyModlogEvent(message.member));
+          /* Send the message first, as setting the role may inhibit future events about the channel */
+          await sendOutcome(ACCEPTED, message);
+          await member.setVerification(true);
+          await server.logModlogEvent(new VerifyModlogEvent(message.member));
         }
       } else {
         await sendOutcome(TOO_SOON, message);
