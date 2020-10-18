@@ -19,6 +19,10 @@ export default class Member {
     return this.guildMember.roles.has(this.server.modsRole?.id);
   }
 
+  get trusted(): boolean {
+    return this.guildMember.roles.has(this.server.trustedRole?.id);
+  }
+
   get cooldown(): boolean {
     if (!this.guildMember.joinedAt) {
       /* TODO: Investigate why THIS happens. */

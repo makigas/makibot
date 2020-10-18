@@ -27,8 +27,12 @@ function matches(message: string): string | undefined {
 }
 
 function isAllowed(message: Message): boolean {
-  const member = new Member(message.member);
-  return member.moderator;
+  if (message.author.bot) {
+    return true;
+  } else {
+    const member = new Member(message.member);
+    return member.trusted || member.moderator;
+  }
 }
 
 /**
@@ -57,8 +61,11 @@ export default class AntispamService implements Hook {
   }
 
   private async message(message: Message): Promise<void> {
+    if (isAllowed(message)) {
+      return; /* trusted member or bot */
+    }
     const match = matches(normalizeMessageContent(message));
-    if (match && !isAllowed(message)) {
+    if (match) {
       const server = new Server(message.guild);
 
       /* Send message to the modlog. */

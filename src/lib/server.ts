@@ -135,6 +135,11 @@ export default class Server {
     return this.getRoleByName(warnRoleName);
   }
 
+  get trustedRole(): Role {
+    const trustedRoleName = process.env.TRUSTED_ROLE || "trusted";
+    return this.getRoleByName(trustedRoleName);
+  }
+
   get publicModlogChannel(): TextChannel {
     const modlogChannelName = process.env.PUBLIC_MODLOG_CHANNEL || "public-modlog";
     return this.getTextChannelByName(modlogChannelName);
