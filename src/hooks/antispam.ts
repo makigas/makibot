@@ -5,9 +5,25 @@ import Server from "../lib/server";
 import Makibot from "../Makibot";
 import Hook from "./hook";
 
-function containsInvite(message: Message): boolean {
-  const tokens = ["discord.gg/", "discordapp.com/invite/", "discord.com/invite"];
-  return tokens.some((token) => message.content.includes(token));
+const ruleset: { [reason: string]: RegExp[] } = {
+  "El enlace contiene una invitación de Discord": [
+    /discord.gg\/\w+/,
+    /discordapp.com\/invite\/\w+/,
+    /discord.com\/invite\/\w+/,
+  ],
+  "El enlace apunta a una página de perfil de red social": [
+    /instagram.com\/[\w._]+\/?(\?.+)?$/, // intentionally allow instagram.com/p/ for the moment
+    /facebook.com\/groups\/[\w._]+/, // intentionally also capture permalinks for posts in the group
+    /facebook.com\/pages\/[\w._]+\/\d+/,
+    /twitter.com\/\w+\/?(\?.+)?$/, // intentionally allow status because sharing tweets is common
+  ],
+};
+
+function matches(message: string): string | undefined {
+  return Object.keys(ruleset).find((rule) => {
+    const regexps = ruleset[rule];
+    return regexps.some((regexp) => regexp.test(message));
+  });
 }
 
 function isAllowed(message: Message): boolean {
@@ -15,19 +31,34 @@ function isAllowed(message: Message): boolean {
   return member.moderator;
 }
 
-const NOTIFY = "(Se ha retenido el mensaje de %s porque se ha detectado un enlace de invitación.)";
+/**
+ * Attempts to preprocess a message in order to detect stuff such as separating the
+ * URL with whitespaces or replacing some special tokens with words such as "dot",
+ * "punto", "slash" or "barra".
+ *
+ * @param message the raw message received
+ */
+function normalizeMessageContent(message: Message): string {
+  return message.content
+    .replace(/\bbarra|slash\b/gi, "/")
+    .replace(/\bpunto|dot\b/gi, "/")
+    .replace(/\s+/g, "")
+    .toLowerCase();
+}
+
+const NOTIFY = "(Se ha retenido el mensaje de %s: %s.)";
 
 export default class AntispamService implements Hook {
   private client: Makibot;
 
   constructor(client: Makibot) {
     this.client = client;
-
     this.client.on("message", (message) => this.message(message));
   }
 
   private async message(message: Message): Promise<void> {
-    if (containsInvite(message) && !isAllowed(message)) {
+    const match = matches(normalizeMessageContent(message));
+    if (match && !isAllowed(message)) {
       const server = new Server(message.guild);
 
       /* Send message to the modlog. */
@@ -44,7 +75,7 @@ export default class AntispamService implements Hook {
         });
       } else {
         await message.delete();
-        await channel.send(NOTIFY.replace("%s", `<@${message.member.id}>`));
+        await channel.send(NOTIFY.replace("%s", `<@${message.member.id}>`).replace("%s", match));
       }
     }
   }
