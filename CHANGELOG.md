@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.10.0](https://github.com/makigas/clank/compare/v0.9.0...v0.10.0) (2020-10-18)
+
+
+### Features
+
+* don't dispatch antispam on trusted members ([9feeba8](https://github.com/makigas/clank/commit/9feeba8d7898fa53beab1bc66bfb39c790d193df)), closes [#184](https://github.com/makigas/clank/issues/184)
+* enhance antispam system ([8803083](https://github.com/makigas/clank/commit/8803083b8a42438e90a00776ce423c7d90e5a2fe)), closes [#183](https://github.com/makigas/clank/issues/183)
+
 ## [0.9.0](https://github.com/makigas/clank/compare/v0.8.0...v0.9.0) (2020-09-25)
 
 
