@@ -1,7 +1,7 @@
 # CLANK DOCKERFILE 🤖
 # made with ❤️ by your friends at makigas
 
-FROM node:12-alpine
+FROM node:15-alpine
 RUN mkdir /clank
 WORKDIR /clank
 
