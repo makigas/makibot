@@ -13,7 +13,7 @@
     "url": "https://github.com/makigas/clank/issues"
   },
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.0",
     "big-integer": "^1.6.31",
     "discord.js": "^11.6.0",
     "discord.js-commando": "^0.10.0",
