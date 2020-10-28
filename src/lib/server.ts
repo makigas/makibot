@@ -1,5 +1,6 @@
-import { Guild, Message, Role, TextChannel, WebhookClient } from "discord.js";
+import { Guild, Message, Role, TextChannel, User, WebhookClient } from "discord.js";
 import logger from "./logger";
+import Member from "./member";
 import { ModlogEvent } from "./modlog";
 import Settings from "./settings";
 
@@ -162,5 +163,14 @@ export default class Server {
   get pinboardChannel(): TextChannel {
     const pinboardChannelName = this.settings.pinPinboard;
     return this.getTextChannelByName(pinboardChannelName);
+  }
+
+  member(user: User): Member {
+    const member = this.guild.member(user);
+    if (member) {
+      return new Member(member);
+    } else {
+      return null;
+    }
   }
 }
