@@ -1,7 +1,51 @@
 import { Command, CommandMessage } from "discord.js-commando";
 
 import Makibot from "../../Makibot";
-import Server from "../../lib/server";
+import Member from "../../lib/member";
+import { Message } from "discord.js";
+
+const yes = new Set([
+  "true",
+  "t",
+  "yes",
+  "y",
+  "on",
+  "enable",
+  "enabled",
+  "1",
+  "+",
+  "si",
+  "s",
+  "aceptar",
+  "ok",
+]);
+
+const no = new Set([
+  "false",
+  "f",
+  "no",
+  "n",
+  "off",
+  "disable",
+  "disabled",
+  "0",
+  "-",
+  "cancelar",
+  "cancel",
+]);
+
+function opmode(mode: string): string {
+  mode = mode.toLowerCase().trim();
+  if (mode == "") {
+    return "help";
+  } else if (yes.has(mode)) {
+    return "yes";
+  } else if (no.has(mode)) {
+    return "no";
+  } else {
+    return "invalid";
+  }
+}
 
 interface HelperCommandArguments {
   mode: string;
@@ -26,46 +70,40 @@ export = class HelperCommand extends Command {
     });
   }
 
-  async run(msg: CommandMessage, args: HelperCommandArguments) {
-    const server = new Server(msg.guild);
-    const role = server.helperRole;
+  async run(msg: CommandMessage, args: HelperCommandArguments): Promise<Message | Message[]> {
+    const member = new Member(msg.member);
 
-    if (!role) {
-      return msg.channel.send("Oh, oh. Parece que este bot no está bien configurado.");
-    }
-
-    if (msg.member.roles.has(server.warnRole.id)) {
+    if (member.warned) {
       return msg.reply("Tienes anulado el comando !helpers debido a una infracción.");
     }
-
     // Act on behalf of what the user wants.
-    switch (HelperCommand.opmode(args.mode)) {
+    switch (opmode(args.mode)) {
       case "yes":
         // Include the user in this role.
-        if (msg.member.roles.has(role.id)) {
-          return msg.reply(`Ya formabas parte del rol ${role.name}.`);
+        if (member.helper) {
+          return msg.reply(`Ya formabas parte del rol helpers.`);
         } else {
-          return msg.member
-            .addRole(role)
-            .then(() => msg.reply(`Ahora estás en el rol ${role.name}.`))
+          return member
+            .setHelper(true)
+            .then(() => msg.reply(`Ahora estás en el rol helpers.`))
             .catch((e) => msg.reply(`No puedo satisfacer tu orden porque ${e}.`));
         }
 
       case "no":
         // Remove the user from this role unless they're never in.
-        if (msg.member.roles.has(role.id)) {
-          return msg.member
-            .removeRole(role)
-            .then(() => msg.reply(`Ya no formas parte del rol ${role.name}.`))
+        if (member.helper) {
+          return member
+            .setHelper(false)
+            .then(() => msg.reply(`Ya no formas parte del rol helpers.`))
             .catch((e) => msg.reply(`No puedo satisfacer tu orden porque ${e}.`));
         } else {
-          return msg.reply(`No formabas parte del rol ${role.name}.`);
+          return msg.reply(`No formabas parte del rol helpers.`);
         }
 
       case "help": {
-        const roleStatus = msg.member.roles.has(role.id)
-          ? `**Formas parte del rol ${role.name}**.`
-          : `**No formas parte del rol ${role.name}**.`;
+        const roleStatus = member.helper
+          ? `**Formas parte del rol helpers**.`
+          : `**No formas parte del rol helpers**.`;
         const helpMessages: string[] = [
           "Envía `!helper on` para unirte al grupo helper.",
           "Envía `!helper off` para abandonar el grupo helper.",
@@ -79,46 +117,4 @@ export = class HelperCommand extends Command {
         return msg.reply("Parámetro desconocido. Envía `!helper` para ver la ayuda.");
     }
   }
-
-  private static opmode(mode: string): string {
-    mode = mode.toLowerCase().trim();
-    if (mode == "") {
-      return "help";
-    } else if (HelperCommand.yes.has(mode)) {
-      return "yes";
-    } else if (HelperCommand.no.has(mode)) {
-      return "no";
-    } else {
-      return "invalid";
-    }
-  }
-
-  private static yes = new Set([
-    "true",
-    "t",
-    "yes",
-    "y",
-    "on",
-    "enable",
-    "enabled",
-    "1",
-    "+",
-    "si",
-    "s",
-    "aceptar",
-    "ok",
-  ]);
-  private static no = new Set([
-    "false",
-    "f",
-    "no",
-    "n",
-    "off",
-    "disable",
-    "disabled",
-    "0",
-    "-",
-    "cancelar",
-    "cancel",
-  ]);
 };
