@@ -1,4 +1,4 @@
-import Commando from "discord.js-commando";
+import { Command, CommandoMessage } from "discord.js-commando";
 
 import Makibot from "../../Makibot";
 import Server from "../../lib/server";
@@ -20,7 +20,7 @@ interface PinCommandArguments {
   value: string;
 }
 
-export = class PinCommand extends Commando.Command {
+export = class PinCommand extends Command {
   constructor(client: Makibot) {
     super(client, {
       name: "pin",
@@ -36,7 +36,7 @@ export = class PinCommand extends Commando.Command {
     });
   }
 
-  async run(msg: Commando.CommandMessage, args: PinCommandArguments): Promise<Message | Message[]> {
+  async run(msg: CommandoMessage, args: PinCommandArguments): Promise<Message | Message[]> {
     const server = new Server(msg.guild);
     switch (args.option) {
       case "emoji":

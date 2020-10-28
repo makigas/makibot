@@ -1,4 +1,4 @@
-import { GuildMember } from "discord.js";
+import { GuildMember, Role } from "discord.js";
 import Server from "./server";
 
 export default class Member {
@@ -11,16 +11,37 @@ export default class Member {
     this.server = new Server(this.guildMember.guild);
   }
 
+  private hasRole(role: Role | null | undefined): boolean {
+    return this.guildMember.roles.cache.some((r: Role) => r.id === role?.id);
+  }
+
+  private async setRole(role: Role, value: boolean): Promise<boolean> {
+    if (value) {
+      await this.guildMember.roles.add(role);
+    } else {
+      await this.guildMember.roles.remove(role);
+    }
+    return value;
+  }
+
   get verified(): boolean {
-    return this.guildMember.roles.has(this.server.verifiedRole?.id);
+    return this.hasRole(this.server.verifiedRole);
   }
 
   get moderator(): boolean {
-    return this.guildMember.roles.has(this.server.modsRole?.id);
+    return this.hasRole(this.server.modsRole);
   }
 
   get trusted(): boolean {
-    return this.guildMember.roles.has(this.server.trustedRole?.id);
+    return this.hasRole(this.server.trustedRole);
+  }
+
+  get warned(): boolean {
+    return this.hasRole(this.server.warnRole);
+  }
+
+  get helper(): boolean {
+    return this.hasRole(this.server.helperRole);
   }
 
   get cooldown(): boolean {
@@ -35,20 +56,18 @@ export default class Member {
   }
 
   async setVerification(value: boolean): Promise<boolean> {
-    if (value) {
-      await this.guildMember.addRole(this.server.verifiedRole);
-    } else {
-      await this.guildMember.removeRole(this.server.verifiedRole);
-    }
-    return value;
+    return this.setRole(this.server.verifiedRole, value);
   }
 
   async setModerator(value: boolean): Promise<boolean> {
-    if (value) {
-      await this.guildMember.addRole(this.server.modsRole);
-    } else {
-      await this.guildMember.removeRole(this.server.modsRole);
-    }
-    return value;
+    return this.setRole(this.server.modsRole, value);
+  }
+
+  async setWarned(value: boolean): Promise<boolean> {
+    return this.setRole(this.server.warnRole, value);
+  }
+
+  async setHelper(value: boolean): Promise<boolean> {
+    return this.setRole(this.server.helperRole, value);
   }
 }

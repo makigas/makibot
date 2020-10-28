@@ -1,6 +1,5 @@
 import path from "path";
-
-import Commando from "discord.js-commando";
+import { CommandoClient, SQLiteProvider } from "discord.js-commando";
 
 import ConfigSchema from "./ConfigSchema";
 import { getDatabase } from "./settings";
@@ -11,15 +10,14 @@ import WarnService from "./hooks/warn";
 import AntiRaid from "./lib/antiraid";
 import AntispamService from "./hooks/antispam";
 
-export default class Makibot extends Commando.CommandoClient {
+export default class Makibot extends CommandoClient {
   readonly antiraid: AntiRaid;
 
   public constructor() {
     super({
       commandPrefix: "!",
       owner: ConfigSchema.owner,
-      disableEveryone: true,
-      unknownCommandResponse: false,
+      disableMentions: "everyone",
     });
 
     this.antiraid = new AntiRaid(this);
@@ -39,7 +37,7 @@ export default class Makibot extends Commando.CommandoClient {
 
     this.once("ready", () => {
       getDatabase()
-        .then((db) => this.setProvider(new Commando.SQLiteProvider(db)))
+        .then((db) => this.setProvider(new SQLiteProvider(db)))
         .then(() => {
           // Register hooks.
           new PinService(this);
@@ -54,7 +52,7 @@ export default class Makibot extends Commando.CommandoClient {
         .catch(console.log);
     });
 
-    this.on("disconnect", (error) => {
+    this.on("shardDisconnect", () => {
       console.error(`The bot has been disconnected.`);
       this.shutdown(1);
     });
@@ -64,9 +62,8 @@ export default class Makibot extends Commando.CommandoClient {
 
   shutdown(exitCode = 0) {
     console.log("The bot was asked to shutdown.");
-    this.destroy().finally(() => {
-      console.log("Good night!");
-      process.exit(exitCode);
-    });
+    this.destroy();
+    console.log("Good night!");
+    process.exit(exitCode);
   }
 }

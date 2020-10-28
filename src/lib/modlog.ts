@@ -1,4 +1,11 @@
-import { RichEmbedOptions, GuildMember, RichEmbed, Message, TextChannel, User } from "discord.js";
+import {
+  MessageEmbedOptions,
+  GuildMember,
+  MessageEmbed,
+  Message,
+  TextChannel,
+  User,
+} from "discord.js";
 
 import { getURL } from "./message";
 
@@ -9,8 +16,8 @@ interface EmbedField {
 }
 
 export abstract class ModlogEvent {
-  public toDiscordEmbed(): RichEmbed {
-    const options: RichEmbedOptions = {
+  public toDiscordEmbed(): MessageEmbed {
+    const options: MessageEmbedOptions = {
       color: this.color(),
       footer: {
         // eslint-disable-next-line @typescript-eslint/camelcase
@@ -25,7 +32,7 @@ export abstract class ModlogEvent {
       },
       fields: this.fields(),
     };
-    return new RichEmbed(options);
+    return new MessageEmbed(options);
   }
 
   abstract title(): string;

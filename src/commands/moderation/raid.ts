@@ -1,5 +1,6 @@
 import { Message } from "discord.js";
-import { Command, CommandMessage } from "discord.js-commando";
+import { Command, CommandoMessage } from "discord.js-commando";
+
 import AntiRaid from "../../lib/antiraid";
 import Member from "../../lib/member";
 import Makibot from "../../Makibot";
@@ -29,7 +30,7 @@ export = class RaidCommand extends Command {
     this.antiraid = client.antiraid;
   }
 
-  async run(msg: CommandMessage, { command }: RaidCommandArguments): Promise<Message> {
+  async run(msg: CommandoMessage, { command }: RaidCommandArguments): Promise<Message> {
     // Must be mod to run this command.
     const author = new Member(msg.member);
     if (author.moderator) {

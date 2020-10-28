@@ -1,5 +1,6 @@
 import { Message } from "discord.js";
-import { Command, CommandMessage } from "discord.js-commando";
+import { Command, CommandoMessage } from "discord.js-commando";
+
 import Server from "../../lib/server";
 import Makibot from "../../Makibot";
 
@@ -24,7 +25,7 @@ export = class ModlogCommand extends Command {
     });
   }
 
-  async run(msg: CommandMessage, args: ModlogCommandArguments): Promise<Message | Message[]> {
+  async run(msg: CommandoMessage, args: ModlogCommandArguments): Promise<Message | Message[]> {
     const server = new Server(msg.guild);
     switch (args.option) {
       case "webhookId":

@@ -18,11 +18,11 @@ export default class PinService implements Hook {
     );
     this.client.on("messageReactionRemoveAll", (message) => this.messageReactionRemoveAll(message));
 
-    this.client.guilds.forEach((guild) => {
+    this.client.guilds.cache.forEach((guild) => {
       // Cache recent messages per server.
-      guild.channels.forEach((channel) => {
+      guild.channels.cache.forEach((channel) => {
         if (channel.type == "text") {
-          (<Discord.TextChannel>channel).fetchMessages({ limit: 100 }).catch(console.error);
+          (channel as Discord.TextChannel).messages.fetch({ limit: 100 }).catch(console.error);
         }
       });
     });
@@ -50,15 +50,15 @@ export default class PinService implements Hook {
     // Get the pinboard channel.
     const server = new Server(message.guild);
     const pinchannel = server.pinboardChannel;
-    let srcchannel = <Discord.TextChannel>message.channel;
+    const srcchannel = message.channel as Discord.TextChannel;
 
     if (pinchannel == null) {
       return;
     }
 
     // Build an embed with the message information.
-    let embed = new Discord.RichEmbed();
-    embed.setAuthor(message.author.tag, message.author.avatarURL);
+    const embed = new Discord.MessageEmbed();
+    embed.setAuthor(message.author.tag, message.author.avatarURL());
     embed.setTitle(srcchannel.name);
     embed.setFooter(message.id);
     embed.setDescription(message.content);
@@ -71,13 +71,13 @@ export default class PinService implements Hook {
     } else if (this.getAttachedImage(message)) {
       embed.setImage(this.getAttachedImage(message));
     } else if (this.getAttachedSomething(message)) {
-      let file = this.getAttachedSomething(message);
-      embed.addField(file.filename, file.url);
+      const file = this.getAttachedSomething(message);
+      embed.addField(file.name, file.url);
     }
 
     // Send this embed.
-    let emoji = server.settings.pinEmoji;
-    let url = getURL(message);
+    const emoji = server.settings.pinEmoji;
+    const url = getURL(message);
     pinchannel.send(`${emoji} :arrow_right: ${url}`, { embed: embed });
   }
 
@@ -86,7 +86,7 @@ export default class PinService implements Hook {
    * @return an URL to an embed or null if no embed has thumbnails.
    */
   private getEmbedThumbnail(message: Discord.Message): string {
-    let withThumbnails = message.embeds.filter((e) => e.thumbnail);
+    const withThumbnails = message.embeds.filter((e) => e.thumbnail);
     if (withThumbnails.length > 0) {
       return withThumbnails[0].url;
     } else {
@@ -99,7 +99,7 @@ export default class PinService implements Hook {
    * @return an URL to an image attached to the message or null if no images.
    */
   private getAttachedImage(message: Discord.Message): string {
-    let attachedImages = message.attachments.filter((a) => a.width != null && a.height != null);
+    const attachedImages = message.attachments.filter((a) => a.width != null && a.height != null);
     if (attachedImages.size > 0) {
       return attachedImages.first().url;
     } else {

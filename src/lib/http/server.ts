@@ -21,8 +21,8 @@ export default function serverFactory(makibot: Makibot): express.Express {
    */
   app.get("/healthcheck", (req, res) => {
     res.contentType("text/plain");
-    if (makibot.status === 0) {
-      res.status(200).send(`MAKIBOT OK, PING ${makibot.ping}`);
+    if (makibot.ws.status === 0) {
+      res.status(200).send(`MAKIBOT OK, PING ${makibot.ws.ping}`);
     } else {
       res.status(503).send(`MAKIBOT KO, SERVICE UNAVAILABLE`);
     }
@@ -67,7 +67,7 @@ export default function serverFactory(makibot: Makibot): express.Express {
 
   app.get("/guilds", (req, res) => {
     res.json(
-      makibot.guilds.map((guild) => ({
+      makibot.guilds.cache.map((guild) => ({
         id: guild.id,
         name: guild.name,
       }))
@@ -75,7 +75,7 @@ export default function serverFactory(makibot: Makibot): express.Express {
   });
 
   app.get("/guilds/:guild", (req, res) => {
-    const guild = makibot.guilds.find((g) => g.id == req.params.guild);
+    const guild = makibot.guilds.cache.find((g) => g.id == req.params.guild);
     if (guild) {
       const server = new Server(guild);
       res.json(server.toJSON());
@@ -85,7 +85,7 @@ export default function serverFactory(makibot: Makibot): express.Express {
   });
 
   app.get("/guilds/:guild/settings", (req, res) => {
-    const guild = makibot.guilds.find((g) => g.id == req.params.guild);
+    const guild = makibot.guilds.cache.find((g) => g.id == req.params.guild);
     if (!guild) {
       return res.status(404).contentType("text/plain").send("Not Found");
     }
@@ -95,7 +95,7 @@ export default function serverFactory(makibot: Makibot): express.Express {
   });
 
   app.patch("/guilds/:guild/settings", (req, res) => {
-    const guild = makibot.guilds.find((g) => g.id == req.params.guild);
+    const guild = makibot.guilds.cache.find((g) => g.id == req.params.guild);
     if (!guild) {
       return res.status(404).contentType("text/plain").send("Not Found");
     }

@@ -1,5 +1,6 @@
-import { Guild, Message, Role, TextChannel, WebhookClient } from "discord.js";
+import { Guild, Message, Role, TextChannel, User, WebhookClient } from "discord.js";
 import logger from "./logger";
+import Member from "./member";
 import { ModlogEvent } from "./modlog";
 import Settings from "./settings";
 
@@ -46,7 +47,7 @@ export default class Server {
     return {
       id: this.guild.id,
       name: this.guild.name,
-      icon: this.guild.iconURL,
+      icon: this.guild.iconURL(),
       roles: {
         helper: roleToJSON(this.helperRole),
         mods: roleToJSON(this.modsRole),
@@ -65,19 +66,19 @@ export default class Server {
     if (!name) {
       return null;
     }
-    return this.guild.roles.find((role) => role.name === name) || null;
+    return this.guild.roles.cache.find((role) => role.name === name) || null;
   }
 
   private getRoleByID(id: string): Role {
     if (!id) {
       return null;
     }
-    return this.guild.roles.find((role) => role.id === id) || null;
+    return this.guild.roles.cache.find((role) => role.id === id) || null;
   }
 
   private getTextChannelByName(name: string): TextChannel {
     if (name) {
-      const channel = this.guild.channels.find((channel) => channel.name === name);
+      const channel = this.guild.channels.cache.find((channel) => channel.name === name);
       if (channel && channel.type === "text") {
         return channel as TextChannel;
       } else {
@@ -88,7 +89,7 @@ export default class Server {
 
   private getTextChannelByID(id: string): TextChannel {
     if (id) {
-      const channel = this.guild.channels.find((channel) => channel.id === id);
+      const channel = this.guild.channels.cache.find((channel) => channel.id === id);
       if (channel && channel.type === "text") {
         return channel as TextChannel;
       } else {
@@ -162,5 +163,14 @@ export default class Server {
   get pinboardChannel(): TextChannel {
     const pinboardChannelName = this.settings.pinPinboard;
     return this.getTextChannelByName(pinboardChannelName);
+  }
+
+  async member(user: User): Promise<Member> {
+    const member = await this.guild.members.fetch(user);
+    if (member) {
+      return new Member(member);
+    } else {
+      return null;
+    }
   }
 }

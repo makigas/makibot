@@ -1,6 +1,7 @@
-import { Guild, Message, RichEmbedOptions, User } from "discord.js";
+import { Guild, Message, MessageEmbedOptions, User } from "discord.js";
 import Server from "./server";
 import { WarnModlogEvent } from "./modlog";
+import Member from "./member";
 
 /**
  * Information that describes why the warn is being issued. This information
@@ -20,7 +21,10 @@ export interface WarnPayload {
 
 const PROMPT_MESSAGE = "Amonestación automática impuesta hacia %s.";
 
-export default function applyWarn(guild: Guild, { user, message, reason }: WarnPayload): void {
+export default async function applyWarn(
+  guild: Guild,
+  { user, message, reason }: WarnPayload
+): Promise<void> {
   // Get the member behind this user.
   const memberToWarn = guild.member(user);
   const server = new Server(guild);
@@ -30,23 +34,21 @@ export default function applyWarn(guild: Guild, { user, message, reason }: WarnP
     throw new ReferenceError("This server lacks a warn role");
   }
 
-  // Warn the user.
-  memberToWarn.addRole(server.warnRole);
-
-  // Remove this user from the helpers role if they were.
-  if (server.helperRole) {
-    memberToWarn.removeRole(server.helperRole);
+  // Warn the user and make it a regular member.
+  const member = new Member(memberToWarn);
+  await member.setWarned(true);
+  if (member.helper) {
+    member.setHelper(false);
   }
 
   // Send a message to the public modlog.
-  const embed: RichEmbedOptions = {
+  const embed: MessageEmbedOptions = {
     title: `Se llamó la atención a ${memberToWarn.user.tag}`,
     color: 16545847,
     description: reason ? `**Razón**: ${reason}` : null,
     author: {
       name: memberToWarn.user.tag,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      icon_url: memberToWarn.user.avatarURL,
+      iconURL: memberToWarn.user.avatarURL(),
     },
     footer: {
       text: "Mensaje de moderación automático",
