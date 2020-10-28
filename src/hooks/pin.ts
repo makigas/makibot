@@ -2,7 +2,9 @@ import Discord from "discord.js";
 
 import Hook from "./hook";
 import Makibot from "../Makibot";
+import { getURL } from "../lib/message";
 import Server from "../lib/server";
+import logger from "../lib/logger";
 
 export default class PinService implements Hook {
   private client: Makibot;
@@ -18,14 +20,14 @@ export default class PinService implements Hook {
 
     this.client.guilds.cache.forEach((guild) => {
       // Cache recent messages per server.
-      guild.channels.forEach((channel) => {
+      guild.channels.cache.forEach((channel) => {
         if (channel.type == "text") {
-          (<Discord.TextChannel>channel).fetchMessages({ limit: 100 }).catch(console.error);
+          (channel as Discord.TextChannel).messages.fetch({ limit: 100 }).catch(console.error);
         }
       });
     });
 
-    console.log("Pin hook registered.");
+    logger.debug("[hooks] hook started: pin");
   }
 
   private messageReactionAdd(reaction: Discord.MessageReaction): void {
@@ -48,19 +50,19 @@ export default class PinService implements Hook {
     // Get the pinboard channel.
     const server = new Server(message.guild);
     const pinchannel = server.pinboardChannel;
-    const srcchannel = <Discord.TextChannel>message.channel;
+    const srcchannel = message.channel as Discord.TextChannel;
 
     if (pinchannel == null) {
       return;
     }
 
     // Build an embed with the message information.
-    const embed = new Discord.RichEmbed();
-    embed.setAuthor(message.author.tag, message.author.avatarURL);
+    const embed = new Discord.MessageEmbed();
+    embed.setAuthor(message.author.tag, message.author.avatarURL());
     embed.setTitle(srcchannel.name);
     embed.setFooter(message.id);
     embed.setDescription(message.content);
-    embed.setURL(this.getURL(message));
+    embed.setURL(getURL(message));
     embed.setTimestamp(new Date(message.createdTimestamp));
 
     // Find something to attach if available.
@@ -70,20 +72,13 @@ export default class PinService implements Hook {
       embed.setImage(this.getAttachedImage(message));
     } else if (this.getAttachedSomething(message)) {
       const file = this.getAttachedSomething(message);
-      embed.addField(file.filename, file.url);
+      embed.addField(file.name, file.url);
     }
 
     // Send this embed.
     const emoji = server.settings.pinEmoji;
-    const url = this.getURL(message);
+    const url = getURL(message);
     pinchannel.send(`${emoji} :arrow_right: ${url}`, { embed: embed });
-  }
-
-  private getURL(message: Discord.Message): string {
-    const server = message.guild.id;
-    const channel = message.channel.id;
-    const post = message.id;
-    return `https://discordapp.com/channels/${server}/${channel}/${post}`;
   }
 
   /**

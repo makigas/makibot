@@ -1,9 +1,9 @@
-import Commando from "discord.js-commando";
 import { Message } from "discord.js";
+import { Command, CommandGroup, CommandoMessage, CommandoRegistry } from "discord.js-commando";
 
 import Makibot from "../../Makibot";
 
-export = class HelpCommand extends Commando.Command {
+export = class HelpCommand extends Command {
   constructor(client: Makibot) {
     super(client, {
       name: "help",
@@ -13,24 +13,24 @@ export = class HelpCommand extends Commando.Command {
     });
   }
 
-  async run(msg: Commando.CommandMessage): Promise<Message | Message[]> {
+  async run(msg: CommandoMessage): Promise<Message | Message[]> {
     /* if this user is owner, [s]he can see additional commands. */
-    let owner = msg.client.isOwner(msg.author);
+    const owner = msg.client.isOwner(msg.author);
     return msg.channel.send(this.groupsString(msg.client.registry, owner));
   }
 
-  private groupsString(registry: Commando.CommandRegistry, includeAdmin: boolean): string {
-    let info = (g: Commando.CommandGroup) => `__${g.name}__\n${this.commandsString(g)}`;
+  private groupsString(registry: CommandoRegistry, includeAdmin: boolean): string {
+    const info = (g: CommandGroup) => `__${g.name}__\n${this.commandsString(g)}`;
     let groups = registry.groups;
     if (!includeAdmin) {
       /* If an owner has not sent this message, don't include admin group. */
-      groups = groups.filter((g: Commando.CommandGroup) => g.id != "admin");
+      groups = groups.filter((g: CommandGroup) => g.id != "admin");
     }
     return groups.map(info).join("\n\n");
   }
 
-  private commandsString(group: Commando.CommandGroup): string {
-    let info = (c: Commando.Command) => `**${c.name}**: ${c.description}`;
+  private commandsString(group: CommandGroup): string {
+    const info = (c: Command) => `**${c.name}**: ${c.description}`;
     return group.commands.map(info).join("\n");
   }
 };

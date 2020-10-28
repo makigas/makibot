@@ -2,6 +2,92 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.1](https://github.com/makigas/clank/compare/v0.10.0...v0.10.1) (2020-10-28)
+
+
+### Features
+
+* add logger to capture bot actions ([dc92a3e](https://github.com/makigas/clank/commit/dc92a3e413dbe63150e1dc1e0a4726a0a69d0e33))
+
+## [0.10.0](https://github.com/makigas/clank/compare/v0.9.0...v0.10.0) (2020-10-18)
+
+
+### Features
+
+* don't dispatch antispam on trusted members ([9feeba8](https://github.com/makigas/clank/commit/9feeba8d7898fa53beab1bc66bfb39c790d193df)), closes [#184](https://github.com/makigas/clank/issues/184)
+* enhance antispam system ([8803083](https://github.com/makigas/clank/commit/8803083b8a42438e90a00776ce423c7d90e5a2fe)), closes [#183](https://github.com/makigas/clank/issues/183)
+
+## [0.9.0](https://github.com/makigas/clank/compare/v0.8.0...v0.9.0) (2020-09-25)
+
+
+### Features
+
+* add antiraid mode ([#177](https://github.com/makigas/clank/issues/177)) ([5bc35dd](https://github.com/makigas/clank/commit/5bc35dddbed0f8413b92e039faa563fc2254881d))
+* remove messages that match invite codes ([#178](https://github.com/makigas/clank/issues/178)) ([19851f2](https://github.com/makigas/clank/commit/19851f24b56aa4072ff78cbb20c154ea3b23a169))
+
+
+### Bug Fixes
+
+* make the cooldown message less aggresive ([9958878](https://github.com/makigas/clank/commit/995887878a89f43ca35c40a26dc86e44a55eba8e))
+
+## [0.8.0](https://github.com/makigas/clank/compare/v0.7.2...v0.8.0) (2020-09-19)
+
+
+### Features
+
+* add experimental clankctl command ([e69881a](https://github.com/makigas/clank/commit/e69881a7415ff6e0d46bab4d72cf881962731360))
+* enhance verification flow ([efd517c](https://github.com/makigas/clank/commit/efd517cc5c6636f3651cf633326de484c0a23e64))
+* expose guilds through the HTTP API ([59660fd](https://github.com/makigas/clank/commit/59660fd1b55d7e6d5f952ed27d00f9688377de23))
+* introduce tags ([e812754](https://github.com/makigas/clank/commit/e8127542b4300195935b542fb4b4ee69188f6b4b))
+* use webhooks for modlog events ([cd91852](https://github.com/makigas/clank/commit/cd91852e45e5b0d805c68bc66c33947029d0f8e8))
+
+
+### Bug Fixes
+
+* downgrade to axios 0.19.x to avoid bugs ([53f6922](https://github.com/makigas/clank/commit/53f6922c7b330e65496fd4f542fe3b1018983303))
+* verifier may throw if message.member is null ([5dd0242](https://github.com/makigas/clank/commit/5dd024278733b6058ec6feaa49cbac080b0ede7b))
+
+
+### Refactor
+
+* centralize modlog event pushing ([2c3c6d6](https://github.com/makigas/clank/commit/2c3c6d6b09c8151058e4138a682726c50b5b787d))
+* ffmpeg is not neccessary in Docker ([e034ec9](https://github.com/makigas/clank/commit/e034ec9d098395f5db56c6b06705828f5a5b7f4f))
+
+### [0.7.2](https://github.com/makigas/clank/compare/v0.7.1...v0.7.2) (2020-07-19)
+
+
+### Bug Fixes
+
+* sometimes GuildMember#joinedAt yields null ([3817b0d](https://github.com/makigas/clank/commit/3817b0d901af00fa8093cb3431dfbad853c55052)), closes [#159](https://github.com/makigas/clank/issues/159) [#9](https://github.com/makigas/clank/issues/9)
+
+### [0.7.1](https://github.com/makigas/clank/compare/v0.7.0...v0.7.1) (2020-07-02)
+
+
+### Features
+
+* **mod:** log bans into the private modlog ([#157](https://github.com/makigas/clank/issues/157)) ([f3194bf](https://github.com/makigas/clank/commit/f3194bfb5cdda0aefa71eaf34383c0a5877dadbe))
+* **mod:** log wastebin events ([#156](https://github.com/makigas/clank/issues/156)) ([8157b8f](https://github.com/makigas/clank/commit/8157b8f8487975faa8f3c291ff6fa7d19374386b))
+* **mod:** send successful verifications to modlog ([#155](https://github.com/makigas/clank/issues/155)) ([1138a1c](https://github.com/makigas/clank/commit/1138a1ceb283753af7edce5e19fe20398002bc2b))
+
+## [0.7.0](https://github.com/makigas/clank/compare/v0.6.2...v0.7.0) (2020-06-25)
+
+### [0.6.2](https://github.com/makigas/clank/compare/v0.6.1...v0.6.2) (2020-06-16)
+
+### [0.6.1](https://github.com/makigas/clank/compare/v0.6.0...v0.6.1) (2020-06-13)
+
+
+### Features
+
+* disallow !helper to users who have been warned ([#145](https://github.com/makigas/clank/issues/145)) ([9b80377](https://github.com/makigas/clank/commit/9b80377ea1aa879f27cb31dd6ef16ee3ba21d75c))
+* include channel in the WarnModlogMessage ([#127](https://github.com/makigas/clank/issues/127)) ([38cd055](https://github.com/makigas/clank/commit/38cd055b1a190e050e73e2dcf396f844915cf7ce))
+* include link in the warned message ([#128](https://github.com/makigas/clank/issues/128)) ([5f656ca](https://github.com/makigas/clank/commit/5f656ca9c16e19d163d9d3aa11a610a88df56b8c)), closes [#107](https://github.com/makigas/clank/issues/107)
+
+
+### Bug Fixes
+
+* channels are not being found ([#114](https://github.com/makigas/clank/issues/114)) ([ca42ed3](https://github.com/makigas/clank/commit/ca42ed39c5f31cb6d257ba922f3bdaf2d2b7bf58))
+* shutdown when the disconnect event is received ([#110](https://github.com/makigas/clank/issues/110)) ([f4ecc03](https://github.com/makigas/clank/commit/f4ecc035f83da947c261f46d6fd5072fc3ebe63c))
+
 ## [0.6.0](https://github.com/makigas/clank/compare/v0.5.1...v0.6.0) (2020-05-01)
 
 

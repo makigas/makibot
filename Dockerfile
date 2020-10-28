@@ -1,12 +1,12 @@
 # CLANK DOCKERFILE 🤖
 # made with ❤️ by your friends at makigas
 
-FROM node:12-alpine AS base
+FROM node:12-alpine
 RUN mkdir /clank
 WORKDIR /clank
 
 # Server dependencies
-RUN apk add --no-cache --update ffmpeg dumb-init
+RUN apk add --no-cache --update dumb-init
 
 # Add source code
 ADD . .
@@ -27,4 +27,4 @@ RUN apk add --virtual npm-deps --no-cache --update python git build-base && \
 
 # Set entrypoint
 ENTRYPOINT ["dumb-init", "--"]
-CMD ["node", "dist/cli.js"]
+CMD ["node", "dist/clankd.js"]

@@ -1,5 +1,5 @@
-import * as Commando from "discord.js-commando";
 import bigInt, { BigInteger } from "big-integer";
+import { Command, CommandoMessage } from "discord.js-commando";
 
 import Makibot from "../../Makibot";
 
@@ -7,7 +7,7 @@ interface PrimoCommandArguments {
   n: string;
 }
 
-export = class PrimoCommand extends Commando.Command {
+export = class PrimoCommand extends Command {
   constructor(client: Makibot) {
     super(client, {
       name: "primo",
@@ -26,7 +26,7 @@ export = class PrimoCommand extends Commando.Command {
     });
   }
 
-  async run(msg: Commando.CommandMessage, args: PrimoCommandArguments) {
+  async run(msg: CommandoMessage, args: PrimoCommandArguments) {
     if (args.n.trim() == "") {
       return msg.reply("Uso: `!primo [n:number]`");
     } else if (/^\-?\d+$/g.test(args.n)) {
@@ -66,10 +66,7 @@ export = class PrimoCommand extends Commando.Command {
   private isPrimeProbabilistic(n: BigInteger) {
     if (n.eq(1)) return false;
     for (let i = 0; i < 100; ++i) {
-      let a = bigInt
-        .randBetween(1, 100000000)
-        .mod(n)
-        .add(1);
+      let a = bigInt.randBetween(1, 100000000).mod(n).add(1);
       if (!this.ipow_mod(a, n.subtract(1), n).eq(1)) {
         return false;
       }

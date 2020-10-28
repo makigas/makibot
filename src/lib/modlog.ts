@@ -1,4 +1,13 @@
-import { RichEmbedOptions, GuildMember, RichEmbed, Message } from "discord.js";
+import {
+  MessageEmbedOptions,
+  GuildMember,
+  MessageEmbed,
+  Message,
+  TextChannel,
+  User,
+} from "discord.js";
+
+import { getURL } from "./message";
 
 interface EmbedField {
   name: string;
@@ -6,22 +15,24 @@ interface EmbedField {
   inline?: boolean;
 }
 
-abstract class ModlogEvent {
-  public toDiscordEmbed(): RichEmbed {
-    const options: RichEmbedOptions = {
+export abstract class ModlogEvent {
+  public toDiscordEmbed(): MessageEmbed {
+    const options: MessageEmbedOptions = {
       color: this.color(),
       footer: {
+        // eslint-disable-next-line @typescript-eslint/camelcase
         icon_url:
           "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/page-with-curl_1f4c3.png",
         text: "Mensaje de moderación automática",
       },
       author: {
         name: this.title(),
+        // eslint-disable-next-line @typescript-eslint/camelcase
         icon_url: this.icon(),
       },
       fields: this.fields(),
     };
-    return new RichEmbed(options);
+    return new MessageEmbed(options);
   }
 
   abstract title(): string;
@@ -68,6 +79,45 @@ export class JoinModlogEvent extends ModlogEvent {
   }
 }
 
+export class VerifyModlogEvent extends ModlogEvent {
+  constructor(private member: GuildMember) {
+    super();
+  }
+
+  title(): string {
+    return "Miembro ha sido verificado";
+  }
+
+  icon(): string {
+    return "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/248/check-box-with-check_2611.png";
+  }
+
+  color(): number {
+    return 0x5a7702;
+  }
+
+  fields(): EmbedField[] {
+    return [
+      {
+        name: "Handle",
+        value: this.member.user.tag,
+      },
+      {
+        name: "ID",
+        value: this.member.user.id,
+      },
+      {
+        name: "Se unió a Discord",
+        value: this.member.user.createdAt.toUTCString(),
+      },
+      {
+        name: "Se unió al servidor",
+        value: this.member.joinedAt ? this.member.joinedAt.toUTCString() : "!!",
+      },
+    ];
+  }
+}
+
 export class LeaveModlogEvent extends ModlogEvent {
   constructor(private member: GuildMember) {
     super();
@@ -101,7 +151,42 @@ export class LeaveModlogEvent extends ModlogEvent {
       },
       {
         name: "Se unió al servidor",
-        value: this.member.joinedAt.toUTCString(),
+        value: this.member.joinedAt ? this.member.joinedAt.toUTCString() : "!!",
+      },
+    ];
+  }
+}
+
+export class BanModlogEvent extends ModlogEvent {
+  constructor(private user: User) {
+    super();
+  }
+
+  title(): string {
+    return "Miembro ha sido baneado";
+  }
+
+  icon(): string {
+    return "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/248/hammer_1f528.png";
+  }
+
+  color(): number {
+    return 0x3a3737;
+  }
+
+  fields(): EmbedField[] {
+    return [
+      {
+        name: "Handle",
+        value: this.user.tag,
+      },
+      {
+        name: "ID",
+        value: this.user.id,
+      },
+      {
+        name: "Se unió a Discord",
+        value: this.user.createdAt.toUTCString(),
       },
     ];
   }
@@ -141,11 +226,64 @@ export class WarnModlogEvent extends ModlogEvent {
         name: "Mensaje",
         value: this.message.cleanContent,
       });
+      if (this.message.channel.type == "text") {
+        const textChannel = this.message.channel as TextChannel;
+        fields.push({
+          name: "Canal",
+          value: `#${textChannel.name}`,
+        });
+      }
       fields.push({
         name: "Fecha del mensaje",
         value: this.message.createdAt.toISOString(),
       });
+      fields.push({
+        name: "URL",
+        value: getURL(this.message),
+      });
     }
+    return fields;
+  }
+}
+
+export class WastebinModlogEvent extends ModlogEvent {
+  constructor(private message: Message) {
+    super();
+  }
+
+  title(): string {
+    return "Se ha eliminado un mensaje";
+  }
+
+  icon(): string {
+    return "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/248/wastebasket_1f5d1.png";
+  }
+
+  color(): number {
+    return 0x9b9b9b;
+  }
+
+  fields(): EmbedField[] {
+    const fields: EmbedField[] = [];
+    fields.push({
+      name: "Usuario",
+      value: this.message.author.tag,
+    });
+    fields.push({
+      name: "Mensaje",
+      value: this.message.cleanContent,
+    });
+    if (this.message.channel.type == "text") {
+      const textChannel = this.message.channel as TextChannel;
+      fields.push({
+        name: "Canal",
+        value: `#${textChannel.name}`,
+      });
+    }
+    fields.push({
+      name: "Fecha del mensaje",
+      value: this.message.createdAt.toISOString(),
+    });
     return fields;
   }
 }

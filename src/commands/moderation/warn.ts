@@ -1,16 +1,17 @@
-import { User, Message } from "discord.js";
-import Commando from "discord.js-commando";
+import { Message, User } from "discord.js";
+import { Command, CommandoMessage } from "discord.js-commando";
 
 import Makibot from "../../Makibot";
 import applyWarn from "../../lib/warn";
 import Server from "../../lib/server";
+import Member from "../../lib/member";
 
 interface WarnCommandArguments {
   target: User;
   reason: string;
 }
 
-export = class WarnCommand extends Commando.Command {
+export = class WarnCommand extends Command {
   constructor(client: Makibot) {
     super(client, {
       name: "warn",
@@ -35,13 +36,20 @@ export = class WarnCommand extends Commando.Command {
     });
   }
 
-  run(msg: Commando.CommandMessage, { reason, target }: WarnCommandArguments): Promise<Message[]> {
-    const author = msg.member;
+  run(
+    msg: CommandoMessage,
+    { reason, target }: WarnCommandArguments
+  ): Promise<Message | Message[]> {
+    const author = new Member(msg.member);
     const server = new Server(msg.guild);
-    const modRole = server.modsRole;
-    const authorIsMod = modRole.members.some((member) => member.id === author.id);
-    const targetIsMod = modRole.members.some((member) => member.id === target.id);
-    if (!authorIsMod || targetIsMod) {
+
+    if (!author.moderator) {
+      return Promise.resolve([]);
+    }
+    if (!target) {
+      return msg.reply("Usage: !warn <member> [reason]");
+    }
+    if (server.member(target)?.moderator) {
       return Promise.resolve([]);
     }
 

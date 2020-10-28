@@ -1,6 +1,7 @@
 import { Guild, Message, MessageEmbedOptions, User } from "discord.js";
 import Server from "./server";
 import { WarnModlogEvent } from "./modlog";
+import Member from "./member";
 
 /**
  * Information that describes why the warn is being issued. This information
@@ -18,14 +19,12 @@ export interface WarnPayload {
   reason?: string;
 }
 
-const messages = [
-  "si sigues comportándote así en este servidor, serás echado",
-  "desde moderación encontramos inapropiada esa actitud",
-  "¿te has leído las normas de este servidor? No lo tenemos claro",
-  "en este servidor no se tolera ese tipo de comportamiento",
-];
+const PROMPT_MESSAGE = "Amonestación automática impuesta hacia %s.";
 
-export default function applyWarn(guild: Guild, { user, message, reason }: WarnPayload): void {
+export default async function applyWarn(
+  guild: Guild,
+  { user, message, reason }: WarnPayload
+): Promise<void> {
   // Get the member behind this user.
   const memberToWarn = guild.member(user);
   const server = new Server(guild);
@@ -35,12 +34,11 @@ export default function applyWarn(guild: Guild, { user, message, reason }: WarnP
     throw new ReferenceError("This server lacks a warn role");
   }
 
-  // Warn the user.
-  memberToWarn.roles.add(server.warnRole);
-
-  // Remove this user from the helpers role if they were.
-  if (server.helperRole) {
-    memberToWarn.roles.remove(server.helperRole);
+  // Warn the user and make it a regular member.
+  const member = new Member(memberToWarn);
+  await member.setWarned(true);
+  if (member.helper) {
+    member.setHelper(false);
   }
 
   // Send a message to the public modlog.
@@ -59,14 +57,11 @@ export default function applyWarn(guild: Guild, { user, message, reason }: WarnP
 
   const publicModlog = server.publicModlogChannel;
   if (publicModlog) {
-    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-    const warnMessage = `<@${memberToWarn.id}>: ${randomMessage}`;
+    const warnMessage = PROMPT_MESSAGE.replace("%s", `<@${memberToWarn.id}>`);
     publicModlog.send(warnMessage, { embed });
   }
 
-  const privateModlog = server.modlogChannel;
-  if (privateModlog) {
-    const warnEvent = new WarnModlogEvent(memberToWarn, reason, message);
-    privateModlog.send(warnEvent.toDiscordEmbed());
-  }
+  server
+    .logModlogEvent(new WarnModlogEvent(memberToWarn, reason, message))
+    .catch((e) => console.error(`Error during warn: ${e}`));
 }
