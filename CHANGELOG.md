@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.1](https://github.com/makigas/clank/compare/v0.10.0...v0.10.1) (2020-10-28)
+
+
+### Features
+
+* add logger to capture bot actions ([dc92a3e](https://github.com/makigas/clank/commit/dc92a3e413dbe63150e1dc1e0a4726a0a69d0e33))
+
 ## [0.10.0](https://github.com/makigas/clank/compare/v0.9.0...v0.10.0) (2020-10-18)
 
 
