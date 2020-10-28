@@ -5,6 +5,7 @@ import { Message, MessageReaction, User } from "discord.js";
 import Server from "../lib/server";
 import applyWastebin from "../lib/wastebin";
 import logger from "../lib/logger";
+import Member from "../lib/member";
 
 function isMessageWarned(message: Message): boolean {
   const server = new Server(message.guild);
@@ -28,27 +29,22 @@ export default class WarnService implements Hook {
     logger.debug("[hooks] hook started: warn");
   }
 
-  private messageReactionAdd(reaction: MessageReaction, user: User): void {
+  private async messageReactionAdd(reaction: MessageReaction, user: User): Promise<void> {
     // I can only react to messages sent to guild text channels.
     if (reaction.message.channel.type !== "text" || !reaction.message.guild) {
       return;
     }
 
-    const author = reaction.message.guild.member(user);
-    const target = reaction.message.author;
     const server = new Server(reaction.message.guild);
-
-    const modRole = server.modsRole;
-
-    const authorIsMod = modRole.members.some((member) => member.id === author.id);
-    const targetIsMod = modRole.members.some((member) => member.id === target.id);
-    if (!authorIsMod || targetIsMod) {
+    const author = await server.member(user);
+    const target = await server.member(reaction.message.author);
+    if (!author || !author.moderator || target.moderator) {
       return;
     }
 
     if (reaction.emoji.name === "⚠️") {
       applyWarn(reaction.message.guild, {
-        user: target,
+        user: reaction.message.author,
         message: reaction.message,
       });
     } else if (reaction.emoji.name === "🗑️" && isMessageWarned(reaction.message)) {

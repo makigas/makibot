@@ -36,7 +36,7 @@ export = class WarnCommand extends Command {
     });
   }
 
-  run(
+  async run(
     msg: CommandoMessage,
     { reason, target }: WarnCommandArguments
   ): Promise<Message | Message[]> {
@@ -49,7 +49,8 @@ export = class WarnCommand extends Command {
     if (!target) {
       return msg.reply("Usage: !warn <member> [reason]");
     }
-    if (server.member(target)?.moderator) {
+    const targetMember = await server.member(target);
+    if (targetMember?.moderator) {
       return Promise.resolve([]);
     }
 

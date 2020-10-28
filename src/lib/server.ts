@@ -165,8 +165,8 @@ export default class Server {
     return this.getTextChannelByName(pinboardChannelName);
   }
 
-  member(user: User): Member {
-    const member = this.guild.member(user);
+  async member(user: User): Promise<Member> {
+    const member = await this.guild.members.fetch(user);
     if (member) {
       return new Member(member);
     } else {
