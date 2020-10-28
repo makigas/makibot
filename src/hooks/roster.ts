@@ -4,6 +4,7 @@ import Hook from "./hook";
 import Makibot from "../Makibot";
 import { JoinModlogEvent, LeaveModlogEvent, BanModlogEvent } from "../lib/modlog";
 import Server from "../lib/server";
+import logger from "../lib/logger";
 
 /**
  * The roster sends announces to the modlog channel as a result of some events,
@@ -15,9 +16,11 @@ export default class RosterService implements Hook {
     client.on("guildMemberAdd", (member) => this.memberJoin(member));
     client.on("guildMemberRemove", (member) => this.memberLeft(member));
     client.on("guildBanAdd", (guild, user) => this.memberBan(guild, user));
+    logger.debug("[hooks] hook started: roster");
   }
 
   private async memberBan(guild: Guild, user: User): Promise<void> {
+    logger.debug(`[roster] announcing ban for ${user.tag}`);
     try {
       const server = new Server(guild);
       await server.logModlogEvent(new BanModlogEvent(user));
@@ -27,6 +30,7 @@ export default class RosterService implements Hook {
   }
 
   private async memberJoin(member: GuildMember): Promise<void> {
+    logger.debug(`[roster] announcing join for ${member.user.tag}`);
     try {
       const server = new Server(member.guild);
       await server.logModlogEvent(new JoinModlogEvent(member));
@@ -36,6 +40,7 @@ export default class RosterService implements Hook {
   }
 
   private async memberLeft(member: GuildMember): Promise<void> {
+    logger.debug(`[roster] announcing leave for ${member.user.tag}`);
     try {
       const server = new Server(member.guild);
       await server.logModlogEvent(new LeaveModlogEvent(member));

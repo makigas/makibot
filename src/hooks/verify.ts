@@ -5,6 +5,7 @@ import Makibot from "../Makibot";
 import Server from "../lib/server";
 import { VerifyModlogEvent } from "../lib/modlog";
 import Member from "../lib/member";
+import logger from "../lib/logger";
 
 /* The message that will be replied to members that type the token during cooldown period. */
 const TOO_SOON = [
@@ -45,6 +46,7 @@ function sendOutcome(content: string, message: Message): Promise<Message> {
 export default class VerifyService implements Hook {
   constructor(private client: Makibot) {
     client.on("message", (message) => this.handleMessage(message));
+    logger.debug("[hooks] hook started: verify");
   }
 
   private async handleMessage(message: Message): Promise<void> {
@@ -58,6 +60,7 @@ export default class VerifyService implements Hook {
           await sendOutcome(MANUAL, message);
         } else {
           /* Send the message first, as setting the role may inhibit future events about the channel */
+          logger.debug(`[verify] handling verification for ${message.member.user.tag}`);
           await sendOutcome(ACCEPTED, message);
           await member.setVerification(true);
           await server.logModlogEvent(new VerifyModlogEvent(message.member));

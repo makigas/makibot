@@ -4,6 +4,7 @@ import Hook from "./hook";
 import Makibot from "../Makibot";
 import { getURL } from "../lib/message";
 import Server from "../lib/server";
+import logger from "../lib/logger";
 
 export default class PinService implements Hook {
   private client: Makibot;
@@ -26,7 +27,7 @@ export default class PinService implements Hook {
       });
     });
 
-    console.log("Pin hook registered.");
+    logger.debug("[hooks] hook started: pin");
   }
 
   private messageReactionAdd(reaction: Discord.MessageReaction): void {

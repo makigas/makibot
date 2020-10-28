@@ -4,6 +4,7 @@ import applyWarn from "../lib/warn";
 import { Message, MessageReaction, User } from "discord.js";
 import Server from "../lib/server";
 import applyWastebin from "../lib/wastebin";
+import logger from "../lib/logger";
 
 function isMessageWarned(message: Message): boolean {
   const server = new Server(message.guild);
@@ -24,6 +25,7 @@ export default class WarnService implements Hook {
     this.client.on("messageReactionAdd", (reaction, user) =>
       this.messageReactionAdd(reaction, user)
     );
+    logger.debug("[hooks] hook started: warn");
   }
 
   private messageReactionAdd(reaction: MessageReaction, user: User): void {

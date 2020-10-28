@@ -1,4 +1,5 @@
 import { Message } from "discord.js";
+import logger from "../lib/logger";
 import Member from "../lib/member";
 import { WastebinModlogEvent } from "../lib/modlog";
 import Server from "../lib/server";
@@ -58,6 +59,7 @@ export default class AntispamService implements Hook {
   constructor(client: Makibot) {
     this.client = client;
     this.client.on("message", (message) => this.message(message));
+    logger.debug("[hooks] hook started: antispam");
   }
 
   private async message(message: Message): Promise<void> {

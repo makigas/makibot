@@ -1,4 +1,5 @@
 import { Guild, Message, Role, TextChannel, WebhookClient } from "discord.js";
+import logger from "./logger";
 import { ModlogEvent } from "./modlog";
 import Settings from "./settings";
 
@@ -39,7 +40,7 @@ export type ServerJSONSchema = {
 };
 
 export default class Server {
-  constructor(private guild: Guild) { }
+  constructor(private guild: Guild) {}
 
   toJSON(): ServerJSONSchema {
     return {
@@ -96,16 +97,24 @@ export default class Server {
     }
   }
 
-  logModlogEvent(event: ModlogEvent): Promise<Message> {
+  async logModlogEvent(event: ModlogEvent): Promise<Message> {
     const webhookId = this.settings.modlogWebhookId;
     const webhookToken = this.settings.modlogWebhookToken;
     if (webhookId && webhookToken) {
       const client = new WebhookClient(webhookId, webhookToken);
-      return client.send({
-        username: event.title(),
-        avatarURL: event.icon(),
-        embeds: [event.toDiscordEmbed()],
-      });
+      try {
+        const payload = {
+          username: event.title(),
+          avatarURL: event.icon(),
+          embeds: [event.toDiscordEmbed()],
+        };
+        logger.debug(`[webhook] attempting to send payload to webhook ${webhookId}`);
+        const message = await client.send(payload);
+        logger.debug(`[webhook] successfully sent webhook; handle ${message.id}`);
+      } catch (e) {
+        logger.error(`[webhook] failed to send the payload`);
+        throw e;
+      }
     } else {
       return Promise.reject(`Configuration error: no modlog for ${this.guild.name}`);
     }

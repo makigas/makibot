@@ -19,6 +19,7 @@
     "discord.js-commando": "^0.10.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "log4js": "^6.3.0",
     "sqlite": "^2.9.3",
     "uws": "^200.0.0",
     "xdg-basedir": "^4.0.0",
