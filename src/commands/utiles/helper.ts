@@ -1,4 +1,4 @@
-import Commando from "discord.js-commando";
+import { Command, CommandMessage } from "discord.js-commando";
 
 import Makibot from "../../Makibot";
 import Server from "../../lib/server";
@@ -7,7 +7,7 @@ interface HelperCommandArguments {
   mode: string;
 }
 
-export = class HelperCommand extends Commando.Command {
+export = class HelperCommand extends Command {
   constructor(client: Makibot) {
     super(client, {
       name: "helper",
@@ -26,7 +26,7 @@ export = class HelperCommand extends Commando.Command {
     });
   }
 
-  async run(msg: Commando.CommandMessage, args: HelperCommandArguments) {
+  async run(msg: CommandMessage, args: HelperCommandArguments) {
     const server = new Server(msg.guild);
     const role = server.helperRole;
 

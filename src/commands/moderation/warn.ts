@@ -1,5 +1,5 @@
 import { User, Message } from "discord.js";
-import Commando from "discord.js-commando";
+import { Command, CommandMessage } from "discord.js-commando";
 
 import Makibot from "../../Makibot";
 import applyWarn from "../../lib/warn";
@@ -10,7 +10,7 @@ interface WarnCommandArguments {
   reason: string;
 }
 
-export = class WarnCommand extends Commando.Command {
+export = class WarnCommand extends Command {
   constructor(client: Makibot) {
     super(client, {
       name: "warn",
@@ -35,7 +35,7 @@ export = class WarnCommand extends Commando.Command {
     });
   }
 
-  run(msg: Commando.CommandMessage, { reason, target }: WarnCommandArguments): Promise<Message[]> {
+  run(msg: CommandMessage, { reason, target }: WarnCommandArguments): Promise<Message[]> {
     const author = msg.member;
     const server = new Server(msg.guild);
     const modRole = server.modsRole;

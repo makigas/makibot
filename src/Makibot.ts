@@ -1,6 +1,5 @@
 import path from "path";
-
-import Commando from "discord.js-commando";
+import { CommandoClient, SQLiteProvider } from "discord.js-commando";
 
 import ConfigSchema from "./ConfigSchema";
 import { getDatabase } from "./settings";
@@ -11,7 +10,7 @@ import WarnService from "./hooks/warn";
 import AntiRaid from "./lib/antiraid";
 import AntispamService from "./hooks/antispam";
 
-export default class Makibot extends Commando.CommandoClient {
+export default class Makibot extends CommandoClient {
   readonly antiraid: AntiRaid;
 
   public constructor() {
@@ -39,7 +38,7 @@ export default class Makibot extends Commando.CommandoClient {
 
     this.once("ready", () => {
       getDatabase()
-        .then((db) => this.setProvider(new Commando.SQLiteProvider(db)))
+        .then((db) => this.setProvider(new SQLiteProvider(db)))
         .then(() => {
           // Register hooks.
           new PinService(this);
