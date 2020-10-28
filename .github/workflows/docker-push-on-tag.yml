@@ -1,8 +1,8 @@
-name: Push current master branch to the Docker registry
+name: Push current trunk branch to the Docker registry
 on:
   release:
     types:
-     - published
+      - published
 jobs:
   docker_registry:
     name: Push Clank image to the registry

@@ -26,12 +26,12 @@ provide feedback on the new feature (or, in some rare cases, to reject the new
 feature). Plus, this allows other developers to know about new code coming in
 so that no one can be surprised about new code or overlapping new features.
 
-## 2.2 Don't work on top of master branch
+## 2.2 Don't work on top of trunk branch
 
-**Always make a feature branch**. Sending a PR from master branch is usually
-a bad idea, since your master branch could be out of date and new commits may
+**Always make a feature branch**. Sending a PR from trunk branch is usually
+a bad idea, since your trunk branch could be out of date and new commits may
 have been already merged, causing a lot of pain. Always work on a separate
-branch, so that you can backport commits from `upstream/master` if needed.
+branch, so that you can backport commits from `upstream/trunk` if needed.
 
 ## 2.3 Contributing License Agreement
 

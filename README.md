@@ -6,9 +6,9 @@
 
 ## Requirements
 
-* We target Node 12.
-* A Discord application that can behave as a bot.
-* A Discord server.
+- We target Node 12.
+- A Discord application that can behave as a bot.
+- A Discord server.
 
 ## Setting up
 
@@ -20,9 +20,9 @@ Register a Discord bot if you haven't. Create a Discord app, then bundle a bot. 
 
 **Clank won't run unless you do this**. Copy `.env.example` to `.env`. This environment file contain several secret keys required to properly run the bot. Do not expose this file and keep it **secret**, specially your login token since it could allow anyone to impersonate as your bot.
 
-* **BOT\_TOKEN**: that's the bot token. Log in to Discord via browser, visit the [My Apps](https://discordapp.com/developers/applications/me) page, and click on your bot. Under the section _App Bot User_, your token will be revealed after you press 'Click to reveal'.
+- **BOT_TOKEN**: that's the bot token. Log in to Discord via browser, visit the [My Apps](https://discordapp.com/developers/applications/me) page, and click on your bot. Under the section _App Bot User_, your token will be revealed after you press 'Click to reveal'.
 
-* **BOT\_OWNER**: that's your user ID. Clank will recognize the user having this ID as the administrator, as some commands will only be available to the bot owner. How to get your user ID:
+- **BOT_OWNER**: that's your user ID. Clank will recognize the user having this ID as the administrator, as some commands will only be available to the bot owner. How to get your user ID:
 
   - Go to Settings > Appearance Settings and turn on Developer Mode (scroll down). Then, find a message sent by you in any conversation, right click your name and click Copy ID.
 
@@ -30,16 +30,16 @@ Register a Discord bot if you haven't. Create a Discord app, then bundle a bot. 
 
 ### Install and run
 
-* `npm install`
-* `npm start`
+- `npm install`
+- `npm start`
 
 ## Contributing
 
 Have an idea? Found a bug? This is an open source project, so you are free to contribute or provide knowledge if you want. See CONTRIBUTING.md for details, but here is the excerpt:
 
-* Send as many issues/PRs as you need, but please, only one topic per issue/PR.
-* Don't send a non-trivial PR without creating a tracking issue in the issue tracker first.
-* Don't work on top of master branch.
+- Send as many issues/PRs as you need, but please, only one topic per issue/PR.
+- Don't send a non-trivial PR without creating a tracking issue in the issue tracker first.
+- Don't work on top of trunk branch.
 
 By submitting an issue or a PR – I'd dare to say that by pressing the Fork button as well –, you declare that you have read and agree with the contents of this document.
 
