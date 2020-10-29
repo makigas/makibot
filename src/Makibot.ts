@@ -18,6 +18,15 @@ export default class Makibot extends CommandoClient {
       commandPrefix: "!",
       owner: ConfigSchema.owner,
       disableMentions: "everyone",
+      ws: {
+        intents: [
+          "GUILD_BANS",
+          "GUILD_MEMBERS",
+          "GUILD_MESSAGES",
+          "GUILD_MESSAGE_REACTIONS",
+          "DIRECT_MESSAGES",
+        ],
+      },
     });
 
     this.antiraid = new AntiRaid(this);
