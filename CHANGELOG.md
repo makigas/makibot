@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.2](https://github.com/makigas/clank/compare/v0.11.1...v0.11.2) (2020-10-30)
+
+
+### Bug Fixes
+
+* fix usage of Intents ([8f5aadc](https://github.com/makigas/clank/commit/8f5aadce45d4efa5a8324448b32deedfbd60931e))
+
 ### [0.11.1](https://github.com/makigas/clank/compare/v0.11.0...v0.11.1) (2020-10-29)
 
 
