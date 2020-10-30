@@ -1,4 +1,5 @@
 import path from "path";
+import { Intents } from "discord.js";
 import { CommandoClient, SQLiteProvider } from "discord.js-commando";
 
 import ConfigSchema from "./ConfigSchema";
@@ -19,13 +20,7 @@ export default class Makibot extends CommandoClient {
       owner: ConfigSchema.owner,
       disableMentions: "everyone",
       ws: {
-        intents: [
-          "GUILD_BANS",
-          "GUILD_MEMBERS",
-          "GUILD_MESSAGES",
-          "GUILD_MESSAGE_REACTIONS",
-          "DIRECT_MESSAGES",
-        ],
+        intents: Intents.ALL,
       },
     });
 
