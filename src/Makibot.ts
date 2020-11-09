@@ -10,6 +10,7 @@ import VerifyService from "./hooks/verify";
 import WarnService from "./hooks/warn";
 import AntiRaid from "./lib/antiraid";
 import AntispamService from "./hooks/antispam";
+import TombstoneService from "./hooks/tombstone";
 
 export default class Makibot extends CommandoClient {
   readonly antiraid: AntiRaid;
@@ -49,6 +50,7 @@ export default class Makibot extends CommandoClient {
           new VerifyService(this);
           new WarnService(this);
           new AntispamService(this);
+          new TombstoneService(this);
 
           // Init the antiraid engine.
           this.antiraid.init();
