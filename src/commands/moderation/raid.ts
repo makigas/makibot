@@ -9,7 +9,7 @@ interface RaidCommandArguments {
   command?: string;
 }
 
-export = class RaidCommand extends Command {
+export default class RaidCommand extends Command {
   private antiraid: AntiRaid;
 
   constructor(client: Makibot) {
@@ -52,4 +52,4 @@ export = class RaidCommand extends Command {
       }
     }
   }
-};
+}

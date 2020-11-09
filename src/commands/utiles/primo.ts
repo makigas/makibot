@@ -7,7 +7,7 @@ interface PrimoCommandArguments {
   n: string;
 }
 
-export = class PrimoCommand extends Command {
+export default class PrimoCommand extends Command {
   constructor(client: Makibot) {
     super(client, {
       name: "primo",
@@ -93,4 +93,4 @@ export = class PrimoCommand extends Command {
     }
     return res.mod(mod);
   }
-};
+}

@@ -20,7 +20,7 @@ interface PinCommandArguments {
   value: string;
 }
 
-export = class PinCommand extends Command {
+export default class PinCommand extends Command {
   constructor(client: Makibot) {
     super(client, {
       name: "pin",
@@ -49,4 +49,4 @@ export = class PinCommand extends Command {
         return msg.reply("Subcomandos: emoji, pinboard");
     }
   }
-};
+}

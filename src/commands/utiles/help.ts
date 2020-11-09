@@ -3,7 +3,7 @@ import { Command, CommandGroup, CommandoMessage, CommandoRegistry } from "discor
 
 import Makibot from "../../Makibot";
 
-export = class HelpCommand extends Command {
+export default class HelpCommand extends Command {
   constructor(client: Makibot) {
     super(client, {
       name: "help",
@@ -33,4 +33,4 @@ export = class HelpCommand extends Command {
     const info = (c: Command) => `**${c.name}**: ${c.description}`;
     return group.commands.map(info).join("\n");
   }
-};
+}

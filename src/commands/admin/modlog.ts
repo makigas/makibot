@@ -9,7 +9,7 @@ interface ModlogCommandArguments {
   value: string;
 }
 
-export = class ModlogCommand extends Command {
+export default class ModlogCommand extends Command {
   constructor(client: Makibot) {
     super(client, {
       name: "modlog",
@@ -38,4 +38,4 @@ export = class ModlogCommand extends Command {
         return msg.reply("Subcomandos: webhookId, webhookToken");
     }
   }
-};
+}

@@ -11,7 +11,7 @@ interface WarnCommandArguments {
   reason: string;
 }
 
-export = class WarnCommand extends Command {
+export default class WarnCommand extends Command {
   constructor(client: Makibot) {
     super(client, {
       name: "warn",
@@ -59,4 +59,4 @@ export = class WarnCommand extends Command {
 
     return Promise.resolve([]);
   }
-};
+}

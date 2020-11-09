@@ -51,7 +51,7 @@ interface HelperCommandArguments {
   mode: string;
 }
 
-export = class HelperCommand extends Command {
+export default class HelperCommand extends Command {
   constructor(client: Makibot) {
     super(client, {
       name: "helper",
@@ -117,4 +117,4 @@ export = class HelperCommand extends Command {
         return msg.reply("Parámetro desconocido. Envía `!helper` para ver la ayuda.");
     }
   }
-};
+}
