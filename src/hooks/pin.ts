@@ -1,13 +1,14 @@
 import Discord from "discord.js";
 
-import Hook from "./hook";
+import { Hook } from "../lib/hook";
 import Makibot from "../Makibot";
 import { getURL } from "../lib/message";
 import Server from "../lib/server";
-import logger from "../lib/logger";
 
 export default class PinService implements Hook {
   private client: Makibot;
+
+  name = "pin";
 
   constructor(client: Makibot) {
     this.client = client;
@@ -26,8 +27,6 @@ export default class PinService implements Hook {
         }
       });
     });
-
-    logger.debug("[hooks] hook started: pin");
   }
 
   private messageReactionAdd(reaction: Discord.MessageReaction): void {

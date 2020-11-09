@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 
-import Hook from "./hook";
+import { Hook } from "../lib/hook";
 import Makibot from "../Makibot";
 import Server from "../lib/server";
 import { VerifyModlogEvent } from "../lib/modlog";
@@ -44,9 +44,10 @@ function sendOutcome(content: string, message: Message): Promise<Message> {
  * applied.
  */
 export default class VerifyService implements Hook {
+  name = "verify";
+
   constructor(private client: Makibot) {
     client.on("message", (message) => this.handleMessage(message));
-    logger.debug("[hooks] hook started: verify");
   }
 
   private async handleMessage(message: Message): Promise<void> {

@@ -1,7 +1,7 @@
 import { Message, TextChannel } from "discord.js";
 import Tag from "../lib/tag";
 import Makibot from "../Makibot";
-import Hook from "./hook";
+import { Hook } from "../lib/hook";
 
 const STALE_HOURS = 24;
 
@@ -46,6 +46,8 @@ async function getTombstone(channel: TextChannel): Promise<Message | null> {
 }
 
 export default class TombstoneService implements Hook {
+  name = "tombstone";
+
   constructor(client: Makibot) {
     client.on("messageDelete", (message) => this.onMessageDelete(message));
     client.on("message", (message) => this.onMessageCreate(message));

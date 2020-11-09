@@ -1,6 +1,6 @@
 import { GuildMember, Guild, User } from "discord.js";
 
-import Hook from "./hook";
+import { Hook } from "../lib/hook";
 import Makibot from "../Makibot";
 import { JoinModlogEvent, LeaveModlogEvent, BanModlogEvent } from "../lib/modlog";
 import Server from "../lib/server";
@@ -12,11 +12,12 @@ import logger from "../lib/logger";
  * interest of moderators to read.
  */
 export default class RosterService implements Hook {
+  name = "roster";
+
   constructor(client: Makibot) {
     client.on("guildMemberAdd", (member) => this.memberJoin(member));
     client.on("guildMemberRemove", (member) => this.memberLeft(member));
     client.on("guildBanAdd", (guild, user) => this.memberBan(guild, user));
-    logger.debug("[hooks] hook started: roster");
   }
 
   private async memberBan(guild: Guild, user: User): Promise<void> {

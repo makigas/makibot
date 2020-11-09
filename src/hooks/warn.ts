@@ -1,11 +1,9 @@
-import Hook from "./hook";
+import { Hook } from "../lib/hook";
 import Makibot from "../Makibot";
 import applyWarn from "../lib/warn";
 import { Message, MessageReaction, User } from "discord.js";
 import Server from "../lib/server";
 import applyWastebin from "../lib/wastebin";
-import logger from "../lib/logger";
-import Member from "../lib/member";
 
 function isMessageWarned(message: Message): boolean {
   const server = new Server(message.guild);
@@ -18,6 +16,8 @@ function isMessageWarned(message: Message): boolean {
 }
 
 export default class WarnService implements Hook {
+  name = "warn";
+
   private client: Makibot;
 
   constructor(client: Makibot) {
@@ -26,7 +26,6 @@ export default class WarnService implements Hook {
     this.client.on("messageReactionAdd", (reaction, user) =>
       this.messageReactionAdd(reaction, user)
     );
-    logger.debug("[hooks] hook started: warn");
   }
 
   private async messageReactionAdd(reaction: MessageReaction, user: User): Promise<void> {

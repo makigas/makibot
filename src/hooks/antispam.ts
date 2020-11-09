@@ -1,10 +1,9 @@
 import { Message } from "discord.js";
-import logger from "../lib/logger";
 import Member from "../lib/member";
 import { WastebinModlogEvent } from "../lib/modlog";
 import Server from "../lib/server";
 import Makibot from "../Makibot";
-import Hook from "./hook";
+import { Hook } from "../lib/hook";
 
 const ruleset: { [reason: string]: RegExp[] } = {
   "El enlace contiene una invitación de Discord": [
@@ -54,12 +53,13 @@ function normalizeMessageContent(message: Message): string {
 const NOTIFY = "(Se ha retenido el mensaje de %s: %s.)";
 
 export default class AntispamService implements Hook {
+  name = "antispam";
+
   private client: Makibot;
 
   constructor(client: Makibot) {
     this.client = client;
     this.client.on("message", (message) => this.message(message));
-    logger.debug("[hooks] hook started: antispam");
   }
 
   private async message(message: Message): Promise<void> {
