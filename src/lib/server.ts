@@ -150,6 +150,11 @@ export default class Server {
     return this.getRoleByName(trustedRoleName);
   }
 
+  get linksDisabledRole(): Role {
+    const linksDisabledRole = process.env.LINKS_DISABLE_ROLE || "links-disabled";
+    return this.getRoleByName(linksDisabledRole);
+  }
+
   get publicModlogChannel(): TextChannel {
     const modlogChannelName = process.env.PUBLIC_MODLOG_CHANNEL || "public-modlog";
     return this.getTextChannelByName(modlogChannelName);

@@ -45,6 +45,10 @@ export default class Member {
     return this.hasRole(this.server.helperRole);
   }
 
+  get canPostLinks(): boolean {
+    return !this.hasRole(this.server.linksDisabledRole);
+  }
+
   get cooldown(): boolean {
     if (!this.guildMember.joinedAt) {
       /* TODO: Investigate why THIS happens. */

@@ -1,4 +1,6 @@
 import { Message } from "discord.js";
+import getUrls from "get-urls";
+
 import Member from "../lib/member";
 import { WastebinModlogEvent } from "../lib/modlog";
 import Server from "../lib/server";
@@ -19,11 +21,30 @@ const ruleset: { [reason: string]: RegExp[] } = {
   ],
 };
 
-function matches(message: string): string | undefined {
+const disabledLinksReason = "el origen está retenido, un mod debería revisar los logs";
+
+function matchesUrlInRuleset(message: string): string | undefined {
   return Object.keys(ruleset).find((rule) => {
     const regexps = ruleset[rule];
     return regexps.some((regexp) => regexp.test(message));
   });
+}
+
+function messageContainsURL(message: string): boolean {
+  return getUrls(message).size > 0;
+}
+
+function testModeration(message: Message): string | undefined {
+  const member = new Member(message.member);
+  const text = normalizeMessageContent(message);
+
+  if (!member.canPostLinks && messageContainsURL(text)) {
+    /* The member cannot post links. */
+    return disabledLinksReason;
+  } else {
+    /* The message may or may not contain a link to an invalid site. */
+    return matchesUrlInRuleset(text);
+  }
 }
 
 function isAllowed(message: Message): boolean {
@@ -66,7 +87,7 @@ export default class AntispamService implements Hook {
     if (isAllowed(message)) {
       return; /* trusted member or bot */
     }
-    const match = matches(normalizeMessageContent(message));
+    const match = testModeration(message);
     if (match) {
       const server = new Server(message.guild);
 

@@ -19,6 +19,7 @@
     "discord.js-commando": "git://github.com/discordjs/Commando.git#198d7604e3725ee88dceab9b5f296edb1b7580a5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "get-urls": "^10.0.0",
     "log4js": "^6.3.0",
     "sqlite": "^2.9.3",
     "uws": "^200.0.0",
