@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.12.0](https://github.com/makigas/clank/compare/v0.11.2...v0.12.0) (2020-12-06)
+
+
+### Features
+
+* add hook registry ([4ef2c25](https://github.com/makigas/clank/commit/4ef2c2551bc237940a3ced67c577da0cb7ddedf5))
+* add karma bag ([de13e0d](https://github.com/makigas/clank/commit/de13e0d93bc410aceb09055833f7049abe6a3871))
+* add tombstones ([c534d67](https://github.com/makigas/clank/commit/c534d676880c768ffc6afcd768a7c93a48b3a7b0))
+* moderate users with links disabled ([7bdd695](https://github.com/makigas/clank/commit/7bdd6956dd56af06654063b30e1ab8191d4b2ec9))
+
+
+### Refactor
+
+* import commands as ES Modules ([31c9365](https://github.com/makigas/clank/commit/31c93654692f3af15d9345990608075fe7ba16bf))
+
 ### [0.11.2](https://github.com/makigas/clank/compare/v0.11.1...v0.11.2) (2020-10-30)
 
 
