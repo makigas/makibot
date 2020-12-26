@@ -1,8 +1,10 @@
 import { Guild, Message, Role, TextChannel, User, WebhookClient } from "discord.js";
+import Makibot from "../Makibot";
 import logger from "./logger";
 import Member from "./member";
 import { ModlogEvent } from "./modlog";
 import Settings from "./settings";
+import TagBag from "./tagbag";
 
 type RoleJSONSchema = {
   id: string;
@@ -41,7 +43,17 @@ export type ServerJSONSchema = {
 };
 
 export default class Server {
+  private _tagbag: TagBag;
+
   constructor(private guild: Guild) {}
+
+  get tagbag(): TagBag {
+    if (!this._tagbag) {
+      const client = this.guild.client as Makibot;
+      this._tagbag = new TagBag(client.provider, this.guild.id, this.guild);
+    }
+    return this._tagbag;
+  }
 
   toJSON(): ServerJSONSchema {
     return {

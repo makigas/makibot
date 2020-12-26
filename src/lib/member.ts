@@ -1,11 +1,15 @@
 import { GuildMember, Role } from "discord.js";
+import Makibot from "../Makibot";
 import Karma from "./karma";
 import Server from "./server";
+import TagBag from "./tagbag";
 
 export default class Member {
   private guildMember: GuildMember;
 
   private server: Server;
+
+  private _tagbag: TagBag;
 
   constructor(guildMember: GuildMember) {
     this.guildMember = guildMember;
@@ -23,6 +27,14 @@ export default class Member {
       await this.guildMember.roles.remove(role);
     }
     return value;
+  }
+
+  get tagbag(): TagBag {
+    if (!this._tagbag) {
+      const client: Makibot = this.guildMember.client as Makibot;
+      this._tagbag = new TagBag(client.provider, this.guildMember.id, this.guildMember.guild);
+    }
+    return this._tagbag;
   }
 
   get verified(): boolean {
