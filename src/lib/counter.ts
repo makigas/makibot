@@ -24,7 +24,7 @@ export default class Counter {
   private options: CounterOptions;
 
   constructor(provider: SettingProvider, key: string, options?: CounterOptions) {
-    this.wrappedTag = new Tag(provider, key, options?.guild);
+    this.wrappedTag = new Tag(provider, key, { guild: options?.guild });
     this.options = options || {};
   }
 

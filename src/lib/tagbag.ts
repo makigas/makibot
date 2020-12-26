@@ -34,6 +34,8 @@ export default class TagBag {
     if (this.tags[key]) {
       return this.tags[key];
     }
-    return (this.tags[key] = new Tag(this.provider, `${this.resolvable}:${key}`, this.guild));
+    return (this.tags[key] = new Tag(this.provider, `${this.resolvable}:${key}`, {
+      guild: this.guild,
+    }));
   }
 }

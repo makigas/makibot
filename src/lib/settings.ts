@@ -21,10 +21,10 @@ export default class Settings {
   public constructor(guild: Guild) {
     this.client = guild.client as Makibot;
     this.tags = {
-      pinEmoji: new Tag(this.client.provider, "Pin.Emoji", guild),
-      pinChannel: new Tag(this.client.provider, "Pin.Pinboard", guild),
-      modlogWebhookId: new Tag(this.client.provider, "Webhook.Id", guild),
-      modlogWebhookToken: new Tag(this.client.provider, "Webhook.Token", guild),
+      pinEmoji: new Tag(this.client.provider, "Pin.Emoji", { guild }),
+      pinChannel: new Tag(this.client.provider, "Pin.Pinboard", { guild }),
+      modlogWebhookId: new Tag(this.client.provider, "Webhook.Id", { guild }),
+      modlogWebhookToken: new Tag(this.client.provider, "Webhook.Token", { guild }),
     };
   }
 

@@ -4,7 +4,9 @@ import Tag from "./tag";
 
 class MemberTag extends Tag {
   constructor(member: GuildMember, key: string) {
-    super((member.client as Makibot).provider, `member:${member.id}:${key}`, member.guild);
+    super((member.client as Makibot).provider, `member:${member.id}:${key}`, {
+      guild: member.guild,
+    });
   }
 }
 
