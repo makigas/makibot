@@ -47,7 +47,7 @@ export default class WarnService implements Hook {
         message: reaction.message,
       });
     } else if (reaction.emoji.name === "🗑️" && isMessageWarned(reaction.message)) {
-      applyWastebin(reaction.message);
+      await applyWastebin(reaction.message);
     }
   }
 }
