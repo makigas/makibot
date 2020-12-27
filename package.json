@@ -33,15 +33,16 @@
     "@types/mocha": "^8.2.0",
     "@types/node": "^12.12.47",
     "@types/require-all": "^3.0.1",
-    "@types/yargs": "^15.0.12",
     "@types/sinon": "^9.0.10",
     "@types/sinon-chai": "^3.2.5",
+    "@types/yargs": "^15.0.12",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.3.0",
+    "husky": "^4.3.6",
     "mocha": "^8.2.1",
     "prettier": "^2.2.1",
     "require-all": "^3.0.0",
@@ -67,6 +68,11 @@
     "makigas",
     "roster"
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test && npm run build"
+    }
+  },
   "license": "ISC",
   "main": "dist/Makibot.js",
   "name": "@makigas/clank",
