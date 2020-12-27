@@ -98,13 +98,56 @@ describe("Tag", () => {
         now.restore();
       });
 
-      it("also saves the time at which the tag is updated", async () => {
-        let provider = mockSettingProvider();
+      describe("with a TTL strategy of TOUCH_FIRST", () => {
+        it("saves the time at which the tag is updated if the tag did not exist", async () => {
+          let provider: SettingProvider = mockSettingProvider();
+          provider.get = (_guild, _key, defVal) => defVal;
 
-        let tag = new Tag(provider, "myKey", { ttl: 500 });
-        await tag.set("fooBar");
-        expect(provider.set).to.have.been.calledWith("global", "myKey", "fooBar");
-        expect(provider.set).to.have.been.calledWith("global", "myKey::updatedAt", 5000000);
+          let tag = new Tag(provider, "myKey", {
+            ttl: 500,
+            ttlStrategy: "TOUCH_FIRST",
+          });
+          await tag.set("fooBar");
+          expect(provider.set).to.have.been.calledWith("global", "myKey", "fooBar");
+          expect(provider.set).to.have.been.calledWith("global", "myKey::updatedAt", 5000000);
+        });
+
+        it("saves the time at which the tag is updated if the tag was expired", async () => {
+          let provider: SettingProvider = mockSettingProvider();
+          provider.get = (_guild, key, defVal) => (key.endsWith("::updatedAt") ? 4500000 : 15);
+
+          let tag = new Tag(provider, "myKey", {
+            ttl: 400,
+            ttlStrategy: "TOUCH_FIRST",
+          });
+          await tag.set("fooBar");
+          expect(provider.set).to.have.been.calledWith("global", "myKey", "fooBar");
+          expect(provider.set).to.have.been.calledWith("global", "myKey::updatedAt", 5000000);
+        });
+
+        it("does not save the time at which the tag is updated if the tag did not expire", async () => {
+          let provider: SettingProvider = mockSettingProvider();
+          provider.get = (_guild, key, defVal) => (key.endsWith("::updatedAt") ? 4500000 : 15);
+
+          let tag = new Tag(provider, "myKey", {
+            ttl: 800,
+            ttlStrategy: "TOUCH_FIRST",
+          });
+          await tag.set("fooBar");
+          expect(provider.set).to.have.been.calledWith("global", "myKey", "fooBar");
+          expect(provider.set).not.to.have.been.calledWith("global", "myKey::updatedAt", 5000000);
+        });
+      });
+
+      describe("with a TTL strategy of TOUCH_ALWAYS", () => {
+        it("also saves the time at which the tag is updated", async () => {
+          let provider = mockSettingProvider();
+
+          let tag = new Tag(provider, "myKey", { ttl: 500, ttlStrategy: "TOUCH_ALWAYS" });
+          await tag.set("fooBar");
+          expect(provider.set).to.have.been.calledWith("global", "myKey", "fooBar");
+          expect(provider.set).to.have.been.calledWith("global", "myKey::updatedAt", 5000000);
+        });
       });
     });
   });

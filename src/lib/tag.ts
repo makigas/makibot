@@ -1,6 +1,8 @@
 import { Guild } from "discord.js";
 import { SettingProvider } from "discord.js-commando";
 
+export type TtlStrategy = "NONE" | "TOUCH_FIRST" | "TOUCH_ALWAYS";
+
 /**
  * Additional options to be used when creating a tag.
  */
@@ -10,6 +12,9 @@ export interface TagOptions {
 
   /** If provided, the TTL the tag has. */
   ttl?: number;
+
+  /** If provided, the TTL strategy to use with this tag. */
+  ttlStrategy?: TtlStrategy;
 }
 
 export default class Tag {
@@ -21,11 +26,19 @@ export default class Tag {
 
   private readonly ttl: number | null;
 
+  private readonly ttlStrategy: TtlStrategy;
+
   constructor(provider: SettingProvider, key: string, options?: TagOptions) {
     this.provider = provider;
     this.key = key;
     this.guildId = options?.guild?.id || "global";
-    this.ttl = options?.ttl || null;
+    if (options && options.ttl) {
+      this.ttl = options.ttl;
+      this.ttlStrategy = options.ttlStrategy;
+    } else {
+      this.ttl = null;
+      this.ttlStrategy = "NONE";
+    }
   }
 
   get<T>(defVal?: T): T {
@@ -36,7 +49,10 @@ export default class Tag {
   }
 
   async set<T>(value: T): Promise<T> {
-    if (this.isExpirable) {
+    if (
+      this.ttlStrategy == "TOUCH_ALWAYS" ||
+      (this.ttlStrategy == "TOUCH_FIRST" && this.isExpired)
+    ) {
       await this.provider.set(this.guildId, this.expireKey, Date.now());
     }
     return this.provider.set(this.guildId, this.key, value);
@@ -50,7 +66,7 @@ export default class Tag {
   }
 
   private get isExpirable(): boolean {
-    return !!this.ttl;
+    return this.ttlStrategy != "NONE";
   }
 
   private get expireKey(): string {
