@@ -1,6 +1,6 @@
 import { Guild } from "discord.js";
 import { SettingProvider } from "discord.js-commando";
-import Tag from "./tag";
+import Tag, { TtlStrategy } from "./tag";
 
 export interface CounterOptions {
   min?: number;
@@ -10,6 +10,10 @@ export interface CounterOptions {
   initial?: number;
 
   guild?: Guild;
+
+  ttl?: number;
+
+  ttlStrategy?: TtlStrategy;
 }
 
 /**
@@ -24,7 +28,11 @@ export default class Counter {
   private options: CounterOptions;
 
   constructor(provider: SettingProvider, key: string, options?: CounterOptions) {
-    this.wrappedTag = new Tag(provider, key, { guild: options?.guild });
+    this.wrappedTag = new Tag(provider, key, {
+      guild: options?.guild,
+      ttl: options?.ttl,
+      ttlStrategy: options?.ttlStrategy,
+    });
     this.options = options || {};
   }
 
