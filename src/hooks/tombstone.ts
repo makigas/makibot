@@ -18,7 +18,7 @@ const TOMBSTONE_TEXT = `👻 _[un mensaje ha sido borrado]_ 👻
  */
 function tombstoneTag(channel: TextChannel): Tag {
   const provider = (channel.client as Makibot).provider;
-  return new Tag(provider, `tombstone:${channel.id}`, channel.guild);
+  return new Tag(provider, `tombstone:${channel.id}`, { guild: channel.guild });
 }
 
 /**
