@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.0](https://github.com/makigas/clank/compare/v0.12.0...v0.13.0) (2021-01-17)
+
+
+### Features
+
+* add Counter ([01ccee3](https://github.com/makigas/clank/commit/01ccee3de06b4c0dd4c13e36051cd05907a1dab8))
+* add expirable Tags ([ccc399d](https://github.com/makigas/clank/commit/ccc399d02b6d42d6eb13564973fb21e037a1b848))
+* add multiple TTL expiration strategies ([f932509](https://github.com/makigas/clank/commit/f9325090c6c6b319e2245411de1e5c6f20c69817))
+* add roles when members join voice channels ([18027fe](https://github.com/makigas/clank/commit/18027fe5cb4e1861d3a89f64c224552adc0f1eab))
+* add TagBag ([c525cf6](https://github.com/makigas/clank/commit/c525cf60d5acbc549638a0e6cbd4bcb2fa396b57))
+* add TTL strategies to Counters ([301fd13](https://github.com/makigas/clank/commit/301fd13d6a917786168330d8675628564b2d09c8))
+* handle duplicate messages (flooding) ([6da4210](https://github.com/makigas/clank/commit/6da4210b187ee4cbfe58c5dcf0ae5427e60ea79c)), closes [#185](https://github.com/makigas/clank/issues/185)
+
+
+### Bug Fixes
+
+* exclude spec directory when building code ([c764f8d](https://github.com/makigas/clank/commit/c764f8d2fed2596782981eeb8d3c94ba3e8cc885))
+* forgot to update some breaking changes ([848530c](https://github.com/makigas/clank/commit/848530c8cd6c071d1f4ee00e9c9501f4ac67ee5e))
+* tweak antispam rules ([330b13c](https://github.com/makigas/clank/commit/330b13c18c99cfe7e7ce25f3dc281ff1f707c200))
+
+
+### Refactor
+
+* **ops:** run JavaScript GitHub Actions ([b81e2f9](https://github.com/makigas/clank/commit/b81e2f9e4657033f8dac6a01ec82c37a5704eebd))
+* unit test Tag and Counter classes ([757af6b](https://github.com/makigas/clank/commit/757af6b90fbc5fb8c89b1ec7dd54a65fe01a1b12))
+
 ## [0.12.0](https://github.com/makigas/clank/compare/v0.11.2...v0.12.0) (2020-12-06)
 
 
