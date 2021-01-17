@@ -18,6 +18,7 @@ const ruleset: { [reason: string]: RegExp[] } = {
     /facebook.com\/groups\/[\w._]+/, // intentionally also capture permalinks for posts in the group
     /facebook.com\/pages\/[\w._]+\/\d+/,
     /twitter.com\/\w+\/?(\?.+)?$/, // intentionally allow status because sharing tweets is common
+    /twitch.tv\/\w+/, // Twitch pages
   ],
 };
 
@@ -32,6 +33,19 @@ function matchesUrlInRuleset(message: string): string | undefined {
 
 function messageContainsURL(message: string): boolean {
   return getUrls(message).size > 0;
+}
+
+/**
+ * Attempts to preprocess a message in order to detect funky changes designed
+ * to bypass antispam systems. Note that you cannot be too strict. For instance,
+ * previously this function would strip all spaces, but this would cause
+ * sentences such as "Hola. Estoy aquí" to be caught, since they yield
+ * "hola.estoyaqui" and "hola.es" gets detected as a link.
+ *
+ * @param message the raw message received
+ */
+function normalizeMessageContent(message: Message): string {
+  return message.content.toLowerCase();
 }
 
 function testModeration(message: Message): string | undefined {
@@ -54,21 +68,6 @@ function isAllowed(message: Message): boolean {
     const member = new Member(message.member);
     return member.trusted || member.moderator;
   }
-}
-
-/**
- * Attempts to preprocess a message in order to detect stuff such as separating the
- * URL with whitespaces or replacing some special tokens with words such as "dot",
- * "punto", "slash" or "barra".
- *
- * @param message the raw message received
- */
-function normalizeMessageContent(message: Message): string {
-  return message.content
-    .replace(/\bbarra|slash\b/gi, "/")
-    .replace(/\bpunto|dot\b/gi, "/")
-    .replace(/\s+/g, "")
-    .toLowerCase();
 }
 
 const NOTIFY = "(Se ha retenido el mensaje de %s: %s.)";
