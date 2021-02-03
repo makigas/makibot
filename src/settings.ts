@@ -2,6 +2,7 @@ import { stat, mkdir } from "fs";
 import { dirname, resolve } from "path";
 
 import { Database, open as sqliteOpen } from "sqlite";
+import sqlite3 from "sqlite3";
 import { config as XDG_CONFIG } from "xdg-basedir";
 
 function assertDirectoryExists(dir: string): Promise<void> {
@@ -10,7 +11,7 @@ function assertDirectoryExists(dir: string): Promise<void> {
       if (statErr) {
         if (statErr.code === "ENOENT") {
           // The directory does not exist. This is a valid case.
-          mkdir(dir, { recursive: true }, mkdirErr => {
+          mkdir(dir, { recursive: true }, (mkdirErr) => {
             if (mkdirErr) {
               reject(mkdirErr);
             } else {
@@ -40,5 +41,8 @@ export async function getDatabase(): Promise<Database> {
   const pathToDbFile = dirname(dbFile);
   await assertDirectoryExists(pathToDbFile);
 
-  return sqliteOpen(dbFile);
+  return sqliteOpen({
+    filename: dbFile,
+    driver: sqlite3.Database,
+  });
 }
