@@ -46,3 +46,14 @@ export async function getDatabase(): Promise<Database> {
     driver: sqlite3.Database,
   });
 }
+
+export async function getKarmaDatabase(): Promise<string> {
+  const dbFile = resolve(XDG_CONFIG, "clank", "karma.db");
+
+  // Need to make sure first that the file exists.
+  const pathToDbFile = dirname(dbFile);
+  await assertDirectoryExists(pathToDbFile);
+
+  return dbFile;
+}
+
