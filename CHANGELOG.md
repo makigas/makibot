@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.0](https://github.com/makigas/clank/compare/v0.13.0...v0.14.0) (2021-02-10)
+
+
+### Features
+
+* **karma:** put a different message for level up to level 1 ([3b01bc6](https://github.com/makigas/clank/commit/3b01bc67dc21c14370dc0e52f5d2295cbc4e3f5c))
+* add karma ([#239](https://github.com/makigas/clank/issues/239)) ([5592fc8](https://github.com/makigas/clank/commit/5592fc80e54408edf14bf1bfa0c905052f331775))
+
 ## [0.13.0](https://github.com/makigas/clank/compare/v0.12.0...v0.13.0) (2021-01-17)
 
 
