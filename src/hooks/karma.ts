@@ -1,4 +1,12 @@
-import { Channel, GuildMember, Message, MessageReaction, TextChannel, User } from "discord.js";
+import {
+  Channel,
+  GuildMember,
+  Message,
+  MessageReaction,
+  Snowflake,
+  TextChannel,
+  User,
+} from "discord.js";
 import { Hook } from "../lib/hook";
 import { KarmaDatabase, openKarmaDatabase } from "../lib/karma/database";
 import Member from "../lib/member";
@@ -217,8 +225,17 @@ export default class KarmaService implements Hook {
       const highScoreLevel = member.tagbag.tag("karma:max");
       if (highScoreLevel.get(0) < expectedLevel) {
         highScoreLevel.set(expectedLevel);
-        channel.send(`¡Enhorabuena, <@${gm.id}>, has alcanzado el nivel ${expectedLevel}!`);
+        channel.send(this.getLevelUpMessage(gm.id, expectedLevel));
       }
+    }
+  }
+
+  private getLevelUpMessage(id: Snowflake, level: number): string {
+    switch (level) {
+      case 1:
+        return `¡Te damos la bienvenida, <@${id}>! Este servidor es mejor ahora que estás aquí. Has publicado tu primer mensaje y por eso has subido a Nivel 1. Interactúa en este servidor para subir de nivel y desbloquear funciones nuevas.`;
+      default:
+        return `¡Enhorabuena, <@${id}>, has alcanzado el Nivel ${level}`;
     }
   }
 }
