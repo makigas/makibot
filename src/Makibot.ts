@@ -18,6 +18,7 @@ export default class Makibot extends CommandoClient {
       ws: {
         intents: Intents.ALL,
       },
+      partials: ["MESSAGE", "REACTION"],
     });
 
     this.antiraid = new AntiRaid(this);
@@ -30,7 +31,7 @@ export default class Makibot extends CommandoClient {
     ]);
     this.registry.registerCommandsIn({
       dirname: path.join(__dirname, "commands"),
-      filter: /^([^\.].*)\.[jt]s$/,
+      filter: /^([^.].*)\.[jt]s$/,
     });
 
     this.on("ready", () => console.log(`Logged in successfully as ${this.user.tag}.`));
@@ -54,7 +55,7 @@ export default class Makibot extends CommandoClient {
     this.login(ConfigSchema.token);
   }
 
-  shutdown(exitCode = 0) {
+  shutdown(exitCode = 0): void {
     console.log("The bot was asked to shutdown.");
     this.destroy();
     console.log("Good night!");
