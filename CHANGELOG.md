@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.14.1](https://github.com/makigas/clank/compare/v0.14.0...v0.14.1) (2021-02-11)
+
+
+### Bug Fixes
+
+* disable Level 1 messages for trusted members ([e1ccd72](https://github.com/makigas/clank/commit/e1ccd72eb81e358acdb5c01ec7c6c7b4e22d24a1))
+
 ## [0.14.0](https://github.com/makigas/clank/compare/v0.13.0...v0.14.0) (2021-02-10)
 
 
