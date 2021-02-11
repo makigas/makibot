@@ -225,7 +225,11 @@ export default class KarmaService implements Hook {
       const highScoreLevel = member.tagbag.tag("karma:max");
       if (highScoreLevel.get(0) < expectedLevel) {
         highScoreLevel.set(expectedLevel);
-        channel.send(this.getLevelUpMessage(gm.id, expectedLevel));
+
+        /* A temporal fix to avoid spamming messages to most existing members. */
+        if (!member.trusted || expectedLevel > 1) {
+          channel.send(this.getLevelUpMessage(gm.id, expectedLevel));
+        }
       }
     }
   }
