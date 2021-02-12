@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.15.0](https://github.com/makigas/clank/compare/v0.14.1...v0.15.0) (2021-02-12)
+
+
+### Features
+
+* add AutoRole hook ([bf1947b](https://github.com/makigas/clank/commit/bf1947b7f5a1f58daea21ecf485d3ed5aae9418d))
+* allow restarting a hook ([c915fcc](https://github.com/makigas/clank/commit/c915fcc90315f14ebbb9869ce7f1b405cd6be3c8))
+
+
+### Bug Fixes
+
+* exclude unverified members from antiflood ([c6f9f65](https://github.com/makigas/clank/commit/c6f9f659cc4d9e0361aa73168fc741691f0f328c)), closes [#242](https://github.com/makigas/clank/issues/242)
+
 ### [0.14.1](https://github.com/makigas/clank/compare/v0.14.0...v0.14.1) (2021-02-11)
 
 
