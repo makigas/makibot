@@ -40,6 +40,7 @@ export default class LinkVoiceCommand extends Command {
     console.log(newState);
 
     await this.client.provider.set(null, "voiceroles", newState);
+    this.client.emit("makibot:restart", "voice-role");
     return msg.reply("Roles have been updated");
   }
 }

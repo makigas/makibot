@@ -5,7 +5,7 @@ import { CommandoClient, SQLiteProvider } from "discord.js-commando";
 import ConfigSchema from "./ConfigSchema";
 import { getDatabase } from "./settings";
 import AntiRaid from "./lib/antiraid";
-import { registerHooks } from "./lib/hook";
+import { HookManager } from "./lib/hook";
 
 export default class Makibot extends CommandoClient {
   readonly antiraid: AntiRaid;
@@ -39,7 +39,10 @@ export default class Makibot extends CommandoClient {
     this.once("ready", () => {
       getDatabase()
         .then((db) => this.setProvider(new SQLiteProvider(db)))
-        .then(() => registerHooks(path.join(__dirname, "hooks"), this))
+        .then(() => {
+          const manager = new HookManager(path.join(__dirname, "hooks"), this);
+          this.on("makibot:restart", (name) => manager.restart(name));
+        })
         .then(() => {
           // Init the antiraid engine.
           this.antiraid.init();

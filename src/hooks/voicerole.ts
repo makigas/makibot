@@ -15,31 +15,37 @@ function channel(voice: VoiceState): string {
 export default class VoiceRoleService implements Hook {
   name = "voice-role";
 
+  allowsRestart = true;
+
   private voicerole: VoiceRole;
 
   constructor(private client: Makibot) {
-    this.client.on("voiceStateUpdate", (oldState, newState) => {
-      /*
-       * TODO: I have to create a manager on each event because I cannot update otherwise the
-       * config if I let it be a property of the service. Hooks should have the ability to
-       * be restarted or reloaded. Wait, this hook system is getting more complicated!
-       */
-      const voiceRoleConfig = client.provider.get(null, "voiceroles", {});
-      this.voicerole = new VoiceRole(voiceRoleConfig);
-      if (oldState.member.id != newState.member.id) {
-        logger.error(`Unexpected condition: ${tag(oldState)} != ${tag(newState)}`);
-        return;
-      }
-      if (oldState.channelID && newState.channelID) {
-        logger.debug(
-          `Member ${tag(oldState)} changes channel: ${channel(oldState)} => ${channel(newState)}`
-        );
-      } else if (!oldState.channelID) {
-        logger.debug(`Member ${tag(newState)} connected from ${channel(newState)}`);
-      } else if (!newState.channelID) {
-        logger.debug(`Member ${tag(oldState)} disconnected from ${channel(oldState)}`);
-      }
-      this.voicerole.trigger(oldState, newState);
-    });
+    const voiceRoleConfig = client.provider.get(null, "voiceroles", {});
+    this.voicerole = new VoiceRole(voiceRoleConfig);
+    this.client.on("voiceStateUpdate", (oldState, newState) =>
+      this.triggerVoiceStateUpdate(oldState, newState)
+    );
+  }
+
+  triggerVoiceStateUpdate(oldState: VoiceState, newState: VoiceState): void {
+    if (oldState.member.id != newState.member.id) {
+      logger.error(`Unexpected condition: ${tag(oldState)} != ${tag(newState)}`);
+      return;
+    }
+    if (oldState.channelID && newState.channelID) {
+      logger.debug(
+        `Member ${tag(oldState)} changes channel: ${channel(oldState)} => ${channel(newState)}`
+      );
+    } else if (!oldState.channelID) {
+      logger.debug(`Member ${tag(newState)} connected from ${channel(newState)}`);
+    } else if (!newState.channelID) {
+      logger.debug(`Member ${tag(oldState)} disconnected from ${channel(oldState)}`);
+    }
+    this.voicerole.trigger(oldState, newState);
+  }
+
+  restart(): void {
+    const voiceRoleConfig = this.client.provider.get(null, "voiceroles", {});
+    this.voicerole = new VoiceRole(voiceRoleConfig);
   }
 }
