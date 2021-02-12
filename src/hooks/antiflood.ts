@@ -35,7 +35,7 @@ export default class AntifloodService implements Hook {
     const normalized = normalize(message.cleanContent);
 
     /* Some cases that are allowed. */
-    if (message.author.bot || member.trusted || member.moderator) {
+    if (message.author.bot || !member.verified || member.trusted || member.moderator) {
       return;
     }
     if (words(message.cleanContent).length <= 3) {
