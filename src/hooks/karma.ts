@@ -82,13 +82,6 @@ export default class KarmaService implements Hook {
     if (!canReceivePoints(message.member)) {
       return;
     }
-    const lastMinutePoints = await this.karma.count(message.author.id, {
-      kind: "message",
-      seconds: 60,
-    });
-    if (lastMinutePoints > 0) {
-      return;
-    }
     await this.karma.action({
       actorId: message.id,
       actorType: "Message",
