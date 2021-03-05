@@ -3,12 +3,15 @@ import { Intents } from "discord.js";
 import { CommandoClient, SQLiteProvider } from "discord.js-commando";
 
 import ConfigSchema from "./ConfigSchema";
-import { getDatabase } from "./settings";
+import { getDatabase, getKarmaDatabase } from "./settings";
 import AntiRaid from "./lib/antiraid";
 import { HookManager } from "./lib/hook";
+import { KarmaDatabase, openKarmaDatabase } from "./lib/karma/database";
 
 export default class Makibot extends CommandoClient {
   readonly antiraid: AntiRaid;
+
+  private _karma: KarmaDatabase;
 
   public constructor() {
     super({
@@ -40,6 +43,11 @@ export default class Makibot extends CommandoClient {
       getDatabase()
         .then((db) => this.setProvider(new SQLiteProvider(db)))
         .then(() => {
+          getKarmaDatabase()
+            .then((dbFile) => openKarmaDatabase(dbFile))
+            .then((db) => (this._karma = db));
+        })
+        .then(() => {
           const manager = new HookManager(path.join(__dirname, "hooks"), this);
           this.on("makibot:restart", (name) => manager.restart(name));
         })
@@ -56,6 +64,10 @@ export default class Makibot extends CommandoClient {
     });
 
     this.login(ConfigSchema.token);
+  }
+
+  get karma(): KarmaDatabase {
+    return this._karma;
   }
 
   shutdown(exitCode = 0): void {

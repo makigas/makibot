@@ -8,10 +8,9 @@ import {
   User,
 } from "discord.js";
 import { Hook } from "../lib/hook";
-import { KarmaDatabase, openKarmaDatabase } from "../lib/karma/database";
+import { KarmaDatabase } from "../lib/karma/database";
 import Member from "../lib/member";
 import Makibot from "../Makibot";
-import { getKarmaDatabase } from "../settings";
 
 async function prefetchMessage(message: Message): Promise<Message> {
   if (message.partial) {
@@ -45,37 +44,25 @@ function canReceivePoints(gm: GuildMember): boolean {
 export default class KarmaService implements Hook {
   name = "karma";
 
-  private karma: KarmaDatabase;
+  constructor(private bot: Makibot) {
+    bot.on("message", (msg) => prefetchMessage(msg).then((msg) => this.onReceivedMessage(msg)));
+    bot.on("messageDelete", (msg) =>
+      prefetchMessage(msg).then((msg) => this.onDeletedMessage(msg))
+    );
+    bot.on("messageReactionAdd", (reaction, user) =>
+      prefetchReaction(reaction).then((reaction) => this.onReactedTo(reaction, user))
+    );
+    bot.on("messageReactionRemove", (reaction, user) =>
+      prefetchReaction(reaction).then((reaction) => this.onUnreactedTo(reaction, user))
+    );
+    bot.on("messageReactionRemoveAll", (msg) =>
+      prefetchMessage(msg).then((msg) => this.onUnreactedToAll(msg))
+    );
+  }
 
-  constructor(bot: Makibot) {
-    getKarmaDatabase()
-      .then((dbFile) => {
-        openKarmaDatabase(dbFile)
-          .then((db) => {
-            this.karma = db;
-            bot.on("message", (msg) =>
-              prefetchMessage(msg).then((msg) => this.onReceivedMessage(msg))
-            );
-            bot.on("messageDelete", (msg) =>
-              prefetchMessage(msg).then((msg) => this.onDeletedMessage(msg))
-            );
-            bot.on("messageReactionAdd", (reaction, user) =>
-              prefetchReaction(reaction).then((reaction) => this.onReactedTo(reaction, user))
-            );
-            bot.on("messageReactionRemove", (reaction, user) =>
-              prefetchReaction(reaction).then((reaction) => this.onUnreactedTo(reaction, user))
-            );
-            bot.on("messageReactionRemoveAll", (msg) =>
-              prefetchMessage(msg).then((msg) => this.onUnreactedToAll(msg))
-            );
-          })
-          .catch((e) => {
-            console.error(e);
-          });
-      })
-      .catch((e) => {
-        console.error(e);
-      });
+  /* Made as a getter so that we can defer accessing the karma db until the very last moment. */
+  private get karma(): KarmaDatabase {
+    return this.bot.karma;
   }
 
   private async onReceivedMessage(message: Message): Promise<void> {
