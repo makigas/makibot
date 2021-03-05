@@ -1,13 +1,6 @@
-import {
-  Channel,
-  GuildMember,
-  Message,
-  MessageReaction,
-  Snowflake,
-  TextChannel,
-  User,
-} from "discord.js";
+import { Channel, GuildMember, Message, MessageReaction, TextChannel, User } from "discord.js";
 import { Hook } from "../lib/hook";
+import { canReceivePoints, getLevel, getLevelUpMessage } from "../lib/karma";
 import { KarmaDatabase } from "../lib/karma/database";
 import Member from "../lib/member";
 import Makibot from "../Makibot";
@@ -33,13 +26,20 @@ function isTextChannel(channel: Channel): channel is TextChannel {
   return channel.type == "text";
 }
 
-function canReceivePoints(gm: GuildMember): boolean {
-  if (!gm) {
-    return false;
-  }
-  const member = new Member(gm);
-  return !gm.user.bot && member.verified;
-}
+const REACTIONS: { [reaction: string]: { kind: string; score: number } } = {
+  "👍": {
+    kind: "upvote",
+    score: 1,
+  },
+  "👎": {
+    kind: "downvote",
+    score: -1,
+  },
+  "⭐": {
+    kind: "star",
+    score: 3,
+  },
+};
 
 export default class KarmaService implements Hook {
   name = "karma";
@@ -85,7 +85,15 @@ export default class KarmaService implements Hook {
   }
 
   private async onDeletedMessage(message: Message): Promise<void> {
-    await this.karma.undoAction({ actorId: message.id, actorType: "Message", kind: "upvote" });
+    await Promise.all(
+      ["upvote", "downvote", "star"].map((kind) =>
+        this.karma.undoAction({
+          actorId: message.id,
+          actorType: "Message",
+          kind,
+        })
+      )
+    );
     await this.karma.undoAction({
       actorId: message.id,
       kind: "message",
@@ -102,40 +110,16 @@ export default class KarmaService implements Hook {
     ) {
       return;
     }
-    switch (reaction.emoji.name) {
-      case "👍": {
-        await this.karma.action({
-          actorId: reaction.message.id,
-          actorType: "Message",
-          kind: "upvote",
-          points: 1,
-          originatorId: user.id,
-          target: reaction.message.author.id,
-        });
-        break;
-      }
-      case "👎": {
-        await this.karma.action({
-          actorId: reaction.message.id,
-          actorType: "Message",
-          kind: "downvote",
-          points: -1,
-          originatorId: user.id,
-          target: reaction.message.author.id,
-        });
-        break;
-      }
-      case "⭐": {
-        await this.karma.action({
-          actorId: reaction.message.id,
-          actorType: "Message",
-          kind: "star",
-          points: 3,
-          originatorId: user.id,
-          target: reaction.message.author.id,
-        });
-        break;
-      }
+    const reactionSpec = REACTIONS[reaction.emoji.name];
+    if (reactionSpec) {
+      await this.karma.action({
+        actorId: reaction.message.id,
+        actorType: "Message",
+        kind: reactionSpec.kind,
+        points: reactionSpec.score,
+        originatorId: user.id,
+        target: reaction.message.author.id,
+      });
     }
 
     const channel = reaction.message.channel;
@@ -145,58 +129,32 @@ export default class KarmaService implements Hook {
   }
 
   private async onUnreactedTo(reaction: MessageReaction, user: User): Promise<void> {
-    switch (reaction.emoji.name) {
-      case "👍": {
-        await this.karma.undoAction({
-          actorId: reaction.message.id,
-          actorType: "Message",
-          kind: "upvote",
-          originatorId: user.id,
-        });
-        break;
-      }
-      case "👎": {
-        await this.karma.undoAction({
-          actorId: reaction.message.id,
-          actorType: "Message",
-          kind: "downvote",
-          originatorId: user.id,
-        });
-        break;
-      }
-      case "⭐": {
-        await this.karma.undoAction({
-          actorId: reaction.message.id,
-          actorType: "Message",
-          kind: "star",
-          originatorId: user.id,
-        });
-        break;
-      }
+    const reactionSpec = REACTIONS[reaction.emoji.name];
+    if (reactionSpec) {
+      await this.karma.undoAction({
+        actorId: reaction.message.id,
+        actorType: "Message",
+        kind: reactionSpec.kind,
+        originatorId: user.id,
+      });
     }
   }
 
   private async onUnreactedToAll(message: Message): Promise<void> {
-    await this.karma.undoAction({
-      actorId: message.id,
-      actorType: "Message",
-      kind: "upvote",
-    });
-    await this.karma.undoAction({
-      actorId: message.id,
-      actorType: "Message",
-      kind: "downvote",
-    });
-    await this.karma.undoAction({
-      actorId: message.id,
-      actorType: "Message",
-      kind: "star",
-    });
+    await Promise.all(
+      ["upvote", "downvote", "star"].map((kind) =>
+        this.karma.undoAction({
+          actorId: message.id,
+          actorType: "Message",
+          kind,
+        })
+      )
+    );
   }
 
   private async assertLevel(gm: GuildMember, channel: TextChannel): Promise<void> {
     const points = await this.karma.count(gm.id);
-    const expectedLevel = Math.trunc(points / 50) + 1;
+    const expectedLevel = getLevel(points);
 
     const member = new Member(gm);
     const currentLevel = member.tagbag.tag("karma:level");
@@ -208,18 +166,9 @@ export default class KarmaService implements Hook {
 
         /* A temporal fix to avoid spamming messages to most existing members. */
         if (!member.trusted || expectedLevel > 1) {
-          channel.send(this.getLevelUpMessage(gm.id, expectedLevel));
+          channel.send(getLevelUpMessage(gm.id, expectedLevel));
         }
       }
-    }
-  }
-
-  private getLevelUpMessage(id: Snowflake, level: number): string {
-    switch (level) {
-      case 1:
-        return `¡Te damos la bienvenida, <@${id}>! Este servidor es mejor ahora que estás aquí. Has publicado tu primer mensaje y por eso has subido a Nivel 1. Interactúa en este servidor para subir de nivel y desbloquear funciones nuevas.`;
-      default:
-        return `¡Enhorabuena, <@${id}>, has alcanzado el Nivel ${level}`;
     }
   }
 }

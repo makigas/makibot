@@ -1,6 +1,5 @@
 import { GuildMember, Role } from "discord.js";
 import Makibot from "../Makibot";
-import Karma from "./karma";
 import Server from "./server";
 import TagBag from "./tagbag";
 
@@ -70,10 +69,6 @@ export default class Member {
 
     const minutesSinceJoined = Date.now() - this.guildMember.joinedAt.getTime();
     return minutesSinceJoined > 60 * 1000 * 5;
-  }
-
-  get karma(): Karma {
-    return new Karma(this.guildMember);
   }
 
   async setVerification(value: boolean): Promise<boolean> {
