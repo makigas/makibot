@@ -27,7 +27,10 @@ export default class SetKarmaCommand extends Command {
     });
   }
 
-  async run(msg: CommandoMessage, { member, count }: SetKarmaArguments): Promise<Message> {
+  async run(
+    msg: CommandoMessage,
+    { member, count }: SetKarmaArguments
+  ): Promise<Message | Message[]> {
     const karma = (this.client as Makibot).karma;
 
     const gm = new Member(msg.member);
