@@ -56,6 +56,10 @@ export default class Member {
     return this.hasRole(this.server.helperRole);
   }
 
+  get crew(): boolean {
+    return this.server.crewRole && this.hasRole(this.server.crewRole);
+  }
+
   get canPostLinks(): boolean {
     return !this.hasRole(this.server.linksDisabledRole);
   }
@@ -77,6 +81,13 @@ export default class Member {
 
   async setModerator(value: boolean): Promise<boolean> {
     return this.setRole(this.server.modsRole, value);
+  }
+
+  async setCrew(value: boolean): Promise<boolean> {
+    if (this.server.crewRole) {
+      return this.setRole(this.server.crewRole, value);
+    }
+    return false;
   }
 
   async setWarned(value: boolean): Promise<boolean> {

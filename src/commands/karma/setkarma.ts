@@ -1,9 +1,9 @@
-import { User } from "discord.js";
+import { Message, User } from "discord.js";
 import { Command } from "discord.js-commando";
 import { CommandoMessage } from "discord.js-commando";
 import { getLevel } from "../../lib/karma";
-import { KarmaDatabase } from "../../lib/karma/database";
 import Member from "../../lib/member";
+import Server from "../../lib/server";
 import Makibot from "../../Makibot";
 
 interface SetKarmaArguments {
@@ -27,9 +27,11 @@ export default class SetKarmaCommand extends Command {
     });
   }
 
-  async run(msg: CommandoMessage, { member, count }: SetKarmaArguments) {
+  async run(msg: CommandoMessage, { member, count }: SetKarmaArguments): Promise<Message> {
     const karma = (this.client as Makibot).karma;
+
     const gm = new Member(msg.member);
+    const server = new Server(msg.guild);
 
     /* Set the karma offset. */
     await gm.tagbag.tag("karma:offset").set(count);
@@ -44,6 +46,13 @@ export default class SetKarmaCommand extends Command {
       if (highScoreLevel.get(0) < expectedLevel) {
         highScoreLevel.set(expectedLevel);
       }
+    }
+
+    /* Add the member to the crew if has enough karma. */
+    console.log(server.settings.roleCrewId);
+    if (server.crewRole) {
+      console.log("EL SERVIDOR TIENE CREW");
+      gm.setCrew(expectedLevel >= 10);
     }
 
     return msg.reply(

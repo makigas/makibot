@@ -110,6 +110,8 @@ export default function serverFactory(makibot: Makibot): express.Express {
         server.settings.setModlogWebhookId(value);
       } else if (key === "modlog.webhookToken") {
         server.settings.setModlogWebhookToken(value);
+      } else if (key === "roles.crew") {
+        server.settings.setRoleCrewId(value);
       }
     });
     res.status(200).json(server.settings.toJSON());

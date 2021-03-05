@@ -11,6 +11,9 @@ export type SettingsJSONSchema = {
     webhookId: string;
     webhookToken: string;
   };
+  roles: {
+    crew: string;
+  };
 };
 
 export default class Settings {
@@ -25,6 +28,7 @@ export default class Settings {
       pinChannel: new Tag(this.client.provider, "Pin.Pinboard", { guild }),
       modlogWebhookId: new Tag(this.client.provider, "Webhook.Id", { guild }),
       modlogWebhookToken: new Tag(this.client.provider, "Webhook.Token", { guild }),
+      crewRoleId: new Tag(this.client.provider, "Roles.Crew", { guild }),
     };
   }
 
@@ -33,6 +37,9 @@ export default class Settings {
       pin: {
         emoji: this.pinEmoji,
         pinboard: this.pinPinboard,
+      },
+      roles: {
+        crew: this.roleCrewId,
       },
       modlog: {
         webhookId: this.modlogWebhookId,
@@ -63,6 +70,14 @@ export default class Settings {
 
   get modlogWebhookToken(): string {
     return this.tags.modlogWebhookToken.get();
+  }
+
+  get roleCrewId(): string {
+    return this.tags.crewRoleId.get();
+  }
+
+  async setRoleCrewId(id: string): Promise<void> {
+    await this.tags.crewRoleId.set(id);
   }
 
   async setModlogWebhookId(id: string): Promise<void> {
