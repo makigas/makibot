@@ -30,6 +30,7 @@ export default class Makibot extends CommandoClient {
     this.registry.registerGroups([
       ["admin", "Administración"],
       ["moderation", "Moderación"],
+      ["karma", "Karma"],
       ["utiles", "Utilidad"],
     ]);
     this.registry.registerCommandsIn({

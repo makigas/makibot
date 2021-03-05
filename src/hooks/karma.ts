@@ -153,10 +153,10 @@ export default class KarmaService implements Hook {
   }
 
   private async assertLevel(gm: GuildMember, channel: TextChannel): Promise<void> {
-    const points = await this.karma.count(gm.id);
+    const member = new Member(gm);
+    const points = member.tagbag.tag("karma:offset").get(0) + (await this.karma.count(gm.id));
     const expectedLevel = getLevel(points);
 
-    const member = new Member(gm);
     const currentLevel = member.tagbag.tag("karma:level");
     if (currentLevel.get(0) != expectedLevel) {
       currentLevel.set(expectedLevel);
