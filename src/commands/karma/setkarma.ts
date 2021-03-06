@@ -32,9 +32,11 @@ export default class SetKarmaCommand extends Command {
     { member, count }: SetKarmaArguments
   ): Promise<Message | Message[]> {
     const karma = (this.client as Makibot).karma;
-
-    const gm = new Member(msg.member);
     const server = new Server(msg.guild);
+
+    /* Get the pointed member. */
+    const target = await msg.guild.member(member);
+    const gm = new Member(target);
 
     /* Set the karma offset. */
     await gm.tagbag.tag("karma:offset").set(count);
@@ -52,9 +54,7 @@ export default class SetKarmaCommand extends Command {
     }
 
     /* Add the member to the crew if has enough karma. */
-    console.log(server.settings.roleCrewId);
     if (server.crewRole) {
-      console.log("EL SERVIDOR TIENE CREW");
       gm.setCrew(expectedLevel >= 10);
     }
 
