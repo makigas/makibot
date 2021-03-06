@@ -46,7 +46,7 @@
     "eslint-plugin-prettier": "^3.3.1",
     "husky": "^4.3.8",
     "lint-staged": "^10.5.4",
-    "mocha": "^8.3.0",
+    "mocha": "^8.3.1",
     "prettier": "^2.2.1",
     "require-all": "^3.0.0",
     "rimraf": "^3.0.2",
