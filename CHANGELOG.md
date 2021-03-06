@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.16.1](https://github.com/makigas/clank/compare/v0.16.0...v0.16.1) (2021-03-06)
+
+
+### Features
+
+* **karma:** add command to yield the karma of a member ([263ce87](https://github.com/makigas/clank/commit/263ce8796b6790a62e70b026aa592393889bb3d1))
+
+
+### Bug Fixes
+
+* **karma:** !setkarma is giving karma to the sender ([a1e08f9](https://github.com/makigas/clank/commit/a1e08f9e7fb6fd52c5979ae7c6c715147ac25b58))
+
 ## [0.16.0](https://github.com/makigas/clank/compare/v0.15.0...v0.16.0) (2021-03-06)
 
 
