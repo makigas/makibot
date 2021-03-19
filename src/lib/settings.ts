@@ -2,6 +2,11 @@ import { Guild } from "discord.js";
 import Makibot from "../Makibot";
 import Tag from "./tag";
 
+type KarmaTierJSONSchema = {
+  minLevel: number;
+  roleId: string;
+};
+
 export type SettingsJSONSchema = {
   pin: {
     emoji: string;
@@ -11,10 +16,13 @@ export type SettingsJSONSchema = {
     webhookId: string;
     webhookToken: string;
   };
-  roles: {
-    crew: string;
-  };
+  karmaTiers: KarmaTierJSONSchema[];
 };
+
+interface KarmaTier {
+  minLevel: number;
+  roleId: string;
+}
 
 export default class Settings {
   private readonly client: Makibot;
@@ -28,7 +36,7 @@ export default class Settings {
       pinChannel: new Tag(this.client.provider, "Pin.Pinboard", { guild }),
       modlogWebhookId: new Tag(this.client.provider, "Webhook.Id", { guild }),
       modlogWebhookToken: new Tag(this.client.provider, "Webhook.Token", { guild }),
-      crewRoleId: new Tag(this.client.provider, "Roles.Crew", { guild }),
+      karmaTiers: new Tag(this.client.provider, "Karma.Tiers", { guild }),
     };
   }
 
@@ -38,9 +46,7 @@ export default class Settings {
         emoji: this.pinEmoji,
         pinboard: this.pinPinboard,
       },
-      roles: {
-        crew: this.roleCrewId,
-      },
+      karmaTiers: this.karmaTiers,
       modlog: {
         webhookId: this.modlogWebhookId,
         webhookToken: this.modlogWebhookToken,
@@ -72,8 +78,25 @@ export default class Settings {
     return this.tags.modlogWebhookToken.get();
   }
 
-  get roleCrewId(): string {
-    return this.tags.crewRoleId.get();
+  get karmaTiers(): KarmaTier[] {
+    return this.tags.karmaTiers.get([]);
+  }
+
+  async addTier(minLevel: number, roleId: string): Promise<void> {
+    const tiers = this.karmaTiers;
+
+    /* Make sure that we don't add the level more than once. */
+    const cleanTiers = tiers.filter((tier) => tier.minLevel != minLevel);
+
+    /* Then add this level. */
+    const newTiers = [...cleanTiers, { minLevel, roleId }];
+    await this.tags.karmaTiers.set(newTiers);
+  }
+
+  async removeTier(minLevel: number): Promise<void> {
+    const tiers = this.karmaTiers;
+    const cleanTiers = tiers.filter((tier) => tier.minLevel != minLevel);
+    await this.tags.karmaTiers.set(cleanTiers);
   }
 
   async setRoleCrewId(id: string): Promise<void> {

@@ -57,7 +57,8 @@ export default class Member {
   }
 
   get crew(): boolean {
-    return this.server.crewRole && this.hasRole(this.server.crewRole);
+    const tiers = this.server.karmaTiersRole;
+    return Object.values(tiers).some((id) => this.hasRole(id));
   }
 
   get canPostLinks(): boolean {
@@ -83,11 +84,39 @@ export default class Member {
     return this.setRole(this.server.modsRole, value);
   }
 
-  async setCrew(value: boolean): Promise<boolean> {
-    if (this.server.crewRole) {
-      return this.setRole(this.server.crewRole, value);
+  async setCrew(level: number): Promise<boolean> {
+    const tiers = this.server.karmaTiersRole;
+
+    if (Object.keys(tiers).length == 0) {
+      /* Return if the server doesn't have configured any tier. */
+      return false;
     }
-    return false;
+
+    /* Get the tier this user should be in. (If none, will return 0). */
+    const assignableLevel = Object.keys(tiers).reduce((current, tierLevel) => {
+      if (parseInt(tierLevel) > level) {
+        /* Skip tiers that require more level. */
+        return current;
+      } else {
+        /* Get the maximum: either this new level or the level we already have. */
+        return parseInt(tierLevel) > current ? tierLevel : current;
+      }
+    }, 0);
+
+    Object.keys(tiers).forEach(async (level) => {
+      const shouldHaveThisLevel = parseInt(level) == assignableLevel;
+
+      const tierTag = this.tagbag.tag("karma:tier:" + level);
+      if (!shouldHaveThisLevel && tierTag.get(false)) {
+        this.setRole(tiers[level], false);
+        await tierTag.set(false);
+      } else if (shouldHaveThisLevel && !tierTag.get(false)) {
+        this.setRole(tiers[level], true);
+        await tierTag.set(true);
+      }
+    });
+
+    return true;
   }
 
   async setWarned(value: boolean): Promise<boolean> {

@@ -3,7 +3,6 @@ import { Command } from "discord.js-commando";
 import { CommandoMessage } from "discord.js-commando";
 import { getLevel } from "../../lib/karma";
 import Member from "../../lib/member";
-import Server from "../../lib/server";
 import Makibot from "../../Makibot";
 
 interface SetKarmaArguments {
@@ -34,7 +33,6 @@ export default class SetKarmaCommand extends Command {
     const karma = (this.client as Makibot).karma;
 
     const gm = new Member(msg.member);
-    const server = new Server(msg.guild);
 
     /* Set the karma offset. */
     await gm.tagbag.tag("karma:offset").set(count);
@@ -51,12 +49,8 @@ export default class SetKarmaCommand extends Command {
       }
     }
 
-    /* Add the member to the crew if has enough karma. */
-    console.log(server.settings.roleCrewId);
-    if (server.crewRole) {
-      console.log("EL SERVIDOR TIENE CREW");
-      gm.setCrew(expectedLevel >= 10);
-    }
+    /* Update presence in the tiers. */
+    gm.setCrew(currentLevel.get(0));
 
     return msg.reply(
       `Karma adjusted to ${count} (total: ${totalPoints}, new level: ${currentLevel.get(0)})`
