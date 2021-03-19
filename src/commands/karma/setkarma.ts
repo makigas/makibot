@@ -3,7 +3,6 @@ import { Command } from "discord.js-commando";
 import { CommandoMessage } from "discord.js-commando";
 import { getLevel } from "../../lib/karma";
 import Member from "../../lib/member";
-import Server from "../../lib/server";
 import Makibot from "../../Makibot";
 
 interface SetKarmaArguments {
@@ -32,7 +31,6 @@ export default class SetKarmaCommand extends Command {
     { member, count }: SetKarmaArguments
   ): Promise<Message | Message[]> {
     const karma = (this.client as Makibot).karma;
-    const server = new Server(msg.guild);
 
     /* Get the pointed member. */
     const target = await msg.guild.member(member);
@@ -53,10 +51,8 @@ export default class SetKarmaCommand extends Command {
       }
     }
 
-    /* Add the member to the crew if has enough karma. */
-    if (server.crewRole) {
-      gm.setCrew(expectedLevel >= 10);
-    }
+    /* Update presence in the tiers. */
+    gm.setCrew(currentLevel.get(0));
 
     return msg.reply(
       `Karma adjusted to ${count} (total: ${totalPoints}, new level: ${currentLevel.get(0)})`

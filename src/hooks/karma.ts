@@ -3,7 +3,6 @@ import { Hook } from "../lib/hook";
 import { canReceivePoints, getLevel, getLevelUpMessage } from "../lib/karma";
 import { KarmaDatabase } from "../lib/karma/database";
 import Member from "../lib/member";
-import Server from "../lib/server";
 import Makibot from "../Makibot";
 
 async function prefetchMessage(message: Message): Promise<Message> {
@@ -155,7 +154,6 @@ export default class KarmaService implements Hook {
 
   private async assertLevel(gm: GuildMember, channel: TextChannel): Promise<void> {
     const member = new Member(gm);
-    const server = new Server(gm.guild);
     const points = member.tagbag.tag("karma:offset").get(0) + (await this.karma.count(gm.id));
     const expectedLevel = getLevel(points);
     console.log({ expectedLevel, points });
@@ -163,11 +161,6 @@ export default class KarmaService implements Hook {
     const currentLevel = member.tagbag.tag("karma:level");
     if (currentLevel.get(0) != expectedLevel) {
       currentLevel.set(expectedLevel);
-
-      /* Add the member to the crew if has enough karma. */
-      if (server.crewRole) {
-        member.setCrew(expectedLevel >= 10);
-      }
 
       const highScoreLevel = member.tagbag.tag("karma:max");
       if (highScoreLevel.get(0) < expectedLevel) {
@@ -179,5 +172,8 @@ export default class KarmaService implements Hook {
         }
       }
     }
+
+    /* Update presence in the tiers. */
+    member.setCrew(currentLevel.get(0));
   }
 }

@@ -112,6 +112,14 @@ export default function serverFactory(makibot: Makibot): express.Express {
         server.settings.setModlogWebhookToken(value);
       } else if (key === "roles.crew") {
         server.settings.setRoleCrewId(value);
+      } else if (key === "roles.tier1") {
+        server.settings.addTier(2, value);
+      } else if (key === "roles.tier2") {
+        server.settings.addTier(5, value);
+      } else if (key === "roles.tier3") {
+        server.settings.addTier(10, value);
+      } else if (key === "roles.tier4") {
+        server.settings.addTier(50, value);
       }
     });
     res.status(200).json(server.settings.toJSON());

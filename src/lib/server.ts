@@ -167,9 +167,14 @@ export default class Server {
     return this.getRoleByName(linksDisabledRole);
   }
 
-  get crewRole(): Role {
-    const crewRoleId = this.settings.roleCrewId;
-    return crewRoleId ? this.getRoleByID(crewRoleId) : null;
+  get karmaTiersRole(): { [level: number]: Role } {
+    return this.settings.karmaTiers.reduce((obj, tier) => {
+      const role = this.getRoleByID(tier.roleId);
+      if (role) {
+        obj[tier.minLevel] = role;
+      }
+      return obj;
+    }, {});
   }
 
   get publicModlogChannel(): TextChannel {
