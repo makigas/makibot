@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.17.0](https://github.com/makigas/clank/compare/v0.16.1...v0.17.0) (2021-03-19)
+
+
+### Features
+
+* add more levels to the karma system ([#262](https://github.com/makigas/clank/issues/262)) ([20596dc](https://github.com/makigas/clank/commit/20596dc62dbfdc8fff740a826e529be2e07c0365))
+
 ### [0.16.1](https://github.com/makigas/clank/compare/v0.16.0...v0.16.1) (2021-03-06)
 
 
