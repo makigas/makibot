@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.16.1](https://github.com/makigas/clank/compare/v0.16.0...v0.16.1) (2021-03-06)
+
+
+### Features
+
+* **karma:** add command to yield the karma of a member ([263ce87](https://github.com/makigas/clank/commit/263ce8796b6790a62e70b026aa592393889bb3d1))
+
+
+### Bug Fixes
+
+* **karma:** !setkarma is giving karma to the sender ([a1e08f9](https://github.com/makigas/clank/commit/a1e08f9e7fb6fd52c5979ae7c6c715147ac25b58))
+
+## [0.16.0](https://github.com/makigas/clank/compare/v0.15.0...v0.16.0) (2021-03-06)
+
+
+### Features
+
+* add members to role when they reach level 10 ([e8c0704](https://github.com/makigas/clank/commit/e8c070422be330eda7a2e5094a8be9a0047159c4))
+* **karma:** add karma backlog ([2e0aa43](https://github.com/makigas/clank/commit/2e0aa4366aa49ec58f14d14c2d86202bbf62d94b))
+* grant points for every message sent ([237d3a6](https://github.com/makigas/clank/commit/237d3a63ba42112fd993a47fc97e2785f638439f))
+
+
+### Bug Fixes
+
+* **antiflood:** forget deleted messages ([f5cafeb](https://github.com/makigas/clank/commit/f5cafeb73c33bbd684b2a65d878cc667f4cf4fd6))
+* compilation error due to function prototype ([030bdff](https://github.com/makigas/clank/commit/030bdffc08e0e9b05b924c5a4cf0a75630dea525))
+
+
+### Refactor
+
+* extract karma logic to lib/karma.ts ([561d160](https://github.com/makigas/clank/commit/561d160ffbafade32f83f2d095ce2aefdde71dc3))
+* **karma:** move karma database to Client ([6b90bc9](https://github.com/makigas/clank/commit/6b90bc9d2141a69f3428c229f56323e9331892b3))
+
 ## [0.15.0](https://github.com/makigas/clank/compare/v0.14.1...v0.15.0) (2021-02-12)
 
 

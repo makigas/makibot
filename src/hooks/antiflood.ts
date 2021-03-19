@@ -28,6 +28,21 @@ export default class AntifloodService implements Hook {
 
   constructor(private client: Makibot) {
     client.on("message", (message) => this.handleMessage(message));
+    client.on("messageDelete", (message) => this.handleDelete(message));
+    client.on("messageDeleteBulk", (messages) =>
+      messages.forEach((message) => this.handleDelete(message))
+    );
+  }
+
+  private async handleDelete(message: Message): Promise<void> {
+    const member = new Member(message.member);
+    const normalized = normalize(message.cleanContent);
+
+    /* Forget about the message. */
+    const tag = member.tagbag.tag("antiflood:history");
+    const history = tag.get({});
+    delete history[normalized];
+    await tag.set(cleanHistory(history));
   }
 
   private async handleMessage(message: Message): Promise<void> {
@@ -43,7 +58,8 @@ export default class AntifloodService implements Hook {
     }
 
     /* Test if the message was posted recently. */
-    const history = member.tagbag.tag("antiflood:history").get({});
+    const tag = member.tagbag.tag("antiflood:history");
+    const history = tag.get({});
     if (normalized in history) {
       const when = history[normalized];
       if (Date.now() - when < 3600_000) {
@@ -55,7 +71,7 @@ export default class AntifloodService implements Hook {
     }
 
     /* Update the history for this user. */
-    member.tagbag.tag("antiflood:history").set({
+    tag.set({
       ...cleanHistory(history),
       [normalized]: Date.now(),
     });
