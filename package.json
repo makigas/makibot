@@ -37,7 +37,7 @@
     "@types/require-all": "^3.0.1",
     "@types/sinon": "^9.0.11",
     "@types/sinon-chai": "^3.2.5",
-    "@types/yargs": "^16.0.0",
+    "@types/yargs": "^16.0.1",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "chai": "^4.3.4",
