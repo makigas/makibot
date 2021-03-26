@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.17.1](https://github.com/makigas/clank/compare/v0.17.0...v0.17.1) (2021-03-26)
+
+
+### Bug Fixes
+
+* handle negative points ([5565c41](https://github.com/makigas/clank/commit/5565c4124db868060b9568cfda5f009168172c6e))
+
 ## [0.17.0](https://github.com/makigas/clank/compare/v0.16.1...v0.17.0) (2021-03-19)
 
 
