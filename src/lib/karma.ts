@@ -26,6 +26,18 @@ export function getLevel(points: number): number {
    *                 => level = (xp / 50) ^ (1/1.25)
    */
   /* Always add 1 because members should start in level 1. */
-  const progress = Math.pow(points / 50, 1 / 1.25);
-  return Math.trunc(progress) + 1;
+  if (points < 0) {
+    /*
+     * If points is negative, you can't do a root of a negative number.
+     * Tweak this by inverting the sign of inputs and outputs.
+     */
+    const progress = -1 * Math.pow(-points / 50, 1 / 1.25);
+    return Math.trunc(progress) - 1;
+  } else if (points == 0) {
+    /* Except that now I need a whole case for zero! :( */
+    return 0;
+  } else {
+    const progress = Math.pow(points / 50, 1 / 1.25);
+    return Math.trunc(progress) + 1;
+  }
 }
