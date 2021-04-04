@@ -1,0 +1,5 @@
+# .husky/pre-commit (v6)
+
+npx lint-staged
+npm test
+npm run build
