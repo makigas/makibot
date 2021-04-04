@@ -3,7 +3,7 @@ import express from "express";
 
 import { MiddlewareLocals as GuildMiddlewareLocals } from "./guild";
 
-import Member from "../../Member";
+import Member from "../../member";
 import Makibot from "../../../Makibot";
 import { getLevel } from "../../karma";
 
