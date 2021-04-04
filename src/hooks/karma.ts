@@ -69,6 +69,10 @@ export default class KarmaService implements Hook {
     if (!canReceivePoints(message.member)) {
       return;
     }
+    /* Bot commands cannot be given karma. */
+    if (message.cleanContent.startsWith("!")) {
+      return;
+    }
     await this.karma.action({
       actorId: message.id,
       actorType: "Message",
@@ -108,6 +112,10 @@ export default class KarmaService implements Hook {
       user.bot ||
       reaction.message.author.id == user.id
     ) {
+      return;
+    }
+    /* Bot commands cannot be given karma. */
+    if (reaction.message.cleanContent.startsWith("!")) {
       return;
     }
     const reactionSpec = REACTIONS[reaction.emoji.name];
@@ -156,7 +164,6 @@ export default class KarmaService implements Hook {
     const member = new Member(gm);
     const points = member.tagbag.tag("karma:offset").get(0) + (await this.karma.count(gm.id));
     const expectedLevel = getLevel(points);
-    console.log({ expectedLevel, points });
 
     const currentLevel = member.tagbag.tag("karma:level");
     if (currentLevel.get(0) != expectedLevel) {
