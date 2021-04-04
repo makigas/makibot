@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.18.0](https://github.com/makigas/clank/compare/v0.17.1...v0.18.0) (2021-04-04)
+
+
+### Features
+
+* add clankctl commands for getting and setting karma ([7ece349](https://github.com/makigas/clank/commit/7ece349a11d9aecdc8d3bd61431ec461c3539fe2))
+* add endpoints to control karma ([ab92978](https://github.com/makigas/clank/commit/ab9297879d8e7c53858758ecef33c3c0eff1ab73))
+
+
+### Bug Fixes
+
+* case sensitivity on file import ([d9492df](https://github.com/makigas/clank/commit/d9492df7e204783cd3b50cb0f907a8f06276b4db))
+* commands starting with ! should not grant karma ([acf308c](https://github.com/makigas/clank/commit/acf308c94f694d0c6d63f6ea596863b360dbc0ae))
+
 ### [0.17.1](https://github.com/makigas/clank/compare/v0.17.0...v0.17.1) (2021-03-26)
 
 
