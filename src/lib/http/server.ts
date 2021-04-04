@@ -1,6 +1,8 @@
 import express from "express";
 import Makibot from "../../Makibot";
-import Server from "../server";
+
+import antiraidMiddleware from "./middlewares/antiraid";
+import guildMiddleware from "./middlewares/guild";
 
 /**
  * Creates a server factory used to spawn servers. The server has endpoints
@@ -28,43 +30,6 @@ export default function serverFactory(makibot: Makibot): express.Express {
     }
   });
 
-  app.get("/antiraid", (req, res) => {
-    res.contentType("application/json");
-    res.status(200).json({ antiraid: makibot.antiraid.raidMode });
-  });
-
-  app.post("/antiraid", (req, res) => {
-    makibot.antiraid
-      .setRaidMode(true)
-      .then(() => {
-        res.contentType("application/json");
-        res.status(200).json({
-          accepted: true,
-          newMode: makibot.antiraid.raidMode,
-        });
-      })
-      .catch((e) => {
-        res.contentType("text/plain");
-        res.status(500).send(`Command could not be handled: ${e}`);
-      });
-  });
-
-  app.delete("/antiraid", (req, res) => {
-    makibot.antiraid
-      .setRaidMode(false)
-      .then(() => {
-        res.contentType("application/json");
-        res.status(200).json({
-          accepted: true,
-          newMode: makibot.antiraid.raidMode,
-        });
-      })
-      .catch((e) => {
-        res.contentType("text/plain");
-        res.status(500).send(`Command could not be handled: ${e}`);
-      });
-  });
-
   app.get("/guilds", (req, res) => {
     res.json(
       makibot.guilds.cache.map((guild) => ({
@@ -74,56 +39,8 @@ export default function serverFactory(makibot: Makibot): express.Express {
     );
   });
 
-  app.get("/guilds/:guild", (req, res) => {
-    const guild = makibot.guilds.cache.find((g) => g.id == req.params.guild);
-    if (guild) {
-      const server = new Server(guild);
-      res.json(server.toJSON());
-    } else {
-      res.status(404).contentType("text/plain").send("Not Found");
-    }
-  });
-
-  app.get("/guilds/:guild/settings", (req, res) => {
-    const guild = makibot.guilds.cache.find((g) => g.id == req.params.guild);
-    if (!guild) {
-      return res.status(404).contentType("text/plain").send("Not Found");
-    }
-
-    const server = new Server(guild);
-    return res.json(server.settings.toJSON());
-  });
-
-  app.patch("/guilds/:guild/settings", (req, res) => {
-    const guild = makibot.guilds.cache.find((g) => g.id == req.params.guild);
-    if (!guild) {
-      return res.status(404).contentType("text/plain").send("Not Found");
-    }
-
-    const server = new Server(guild);
-    Object.entries(req.body).forEach(([key, value]: [string, any]) => {
-      if (key === "pin.pinboard") {
-        server.settings.setPinPinboard(value);
-      } else if (key === "pin.emoji") {
-        server.settings.setPinEmoji(value);
-      } else if (key === "modlog.webhookId") {
-        server.settings.setModlogWebhookId(value);
-      } else if (key === "modlog.webhookToken") {
-        server.settings.setModlogWebhookToken(value);
-      } else if (key === "roles.crew") {
-        server.settings.setRoleCrewId(value);
-      } else if (key === "roles.tier1") {
-        server.settings.addTier(2, value);
-      } else if (key === "roles.tier2") {
-        server.settings.addTier(5, value);
-      } else if (key === "roles.tier3") {
-        server.settings.addTier(10, value);
-      } else if (key === "roles.tier4") {
-        server.settings.addTier(50, value);
-      }
-    });
-    res.status(200).json(server.settings.toJSON());
-  });
+  app.use("/antiraid", antiraidMiddleware(makibot));
+  app.use("/guilds/:guild", guildMiddleware(makibot));
 
   return app;
 }
