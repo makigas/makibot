@@ -104,4 +104,40 @@ clankctl.command(
   }
 );
 
+clankctl.command(
+  "get-karma <guild> <member>",
+  "get the karma information for a specific member",
+  () => ({}),
+  async (argv: { guild: string; member: string }) => {
+    try {
+      const karma = await client.getKarma(argv.guild, argv.member);
+      console.log("Points: " + karma.points);
+      console.log("Offset: " + karma.offset);
+      console.log("Level: " + karma.level);
+      process.exit(0);
+    } catch (e) {
+      console.error(`Error: ${e}`);
+      process.exit(1);
+    }
+  }
+);
+
+clankctl.command(
+  "set-karma-offset <guild> <member> <offset>",
+  "tune the karma offset for a specific user and update levels",
+  () => ({}),
+  async (argv: { guild: string; member: string; offset: number }) => {
+    try {
+      const karma = await client.setKarmaOffset(argv.guild, argv.member, argv.offset);
+      console.log("Points: " + karma.points);
+      console.log("Offset: " + karma.offset);
+      console.log("Level: " + karma.level);
+      process.exit(0);
+    } catch (e) {
+      console.error(`Error: ${e}`);
+      process.exit(1);
+    }
+  }
+);
+
 clankctl.help().argv;
