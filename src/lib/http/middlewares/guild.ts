@@ -1,7 +1,14 @@
+import { Guild } from "discord.js";
 import express from "express";
 
 import Makibot from "../../../Makibot";
 import Server from "../../server";
+import memberMiddleware from "./member";
+
+export interface MiddlewareLocals {
+  guild: Guild;
+  server: Server;
+}
 
 export default function guildMiddleware(makibot: Makibot): express.Router {
   const router = express.Router({ mergeParams: true });
@@ -11,19 +18,19 @@ export default function guildMiddleware(makibot: Makibot): express.Router {
     const guild = makibot.guilds.cache.find((g) => g.id == req.params.guild);
     if (guild) {
       const server = new Server(guild);
-      res.locals.server = server;
+      res.locals = { ...res.locals, guild, server };
       next();
     } else {
       res.status(404).contentType("text/plain").send("Guild Not Found");
     }
   });
 
-  type MiddlewareLocals = { server: Server };
-
   /* Print information about the server. */
   router.get("/", (req, res) => {
     res.json(res.locals.server.toJSON());
   });
+
+  router.use("/members/:member", memberMiddleware(makibot));
 
   /* Print current settings for the server. */
   router.get("/settings", (req, res) => {
