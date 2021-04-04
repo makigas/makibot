@@ -71,11 +71,6 @@
     "makigas",
     "roster"
   ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged && npm test && npm run build"
-    }
-  },
   "license": "ISC",
   "lint-staged": {
     "*.ts": "eslint"
