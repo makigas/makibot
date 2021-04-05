@@ -25,7 +25,7 @@
     "sqlite": "^4.0.21",
     "sqlite3": "^5.0.2",
     "uws": "^200.0.0",
-    "xdg-basedir": "^4.0.0",
+    "xdg-basedir": "^5.0.1",
     "yargs": "^16.2.0"
   },
   "description": "Discord bot for the makigas server",
