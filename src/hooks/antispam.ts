@@ -66,7 +66,7 @@ function isAllowed(message: Message): boolean {
     return true;
   } else {
     const member = new Member(message.member);
-    return member.trusted || member.moderator;
+    return member.crew || member.trusted || member.moderator;
   }
 }
 
