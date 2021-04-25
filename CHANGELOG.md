@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.19.0](https://github.com/makigas/clank/compare/v0.18.0...v0.19.0) (2021-04-25)
+
+
+### Features
+
+* add members with karma to the allowlist for links ([f61cccf](https://github.com/makigas/clank/commit/f61cccf83a30d1ed85de9405b0cebe8cb5eedc66))
+
 ## [0.18.0](https://github.com/makigas/clank/compare/v0.17.1...v0.18.0) (2021-04-04)
 
 
