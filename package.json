@@ -18,7 +18,7 @@
     "discord.js": "^12.5.3",
     "discord.js-commando": "git://github.com/discordjs/Commando.git#198d7604e3725ee88dceab9b5f296edb1b7580a5",
     "discordjs-voicerole": "^1.0.0",
-    "dotenv": "^8.2.0",
+    "dotenv": "^8.4.0",
     "express": "^4.17.1",
     "get-urls": "^10.0.0",
     "log4js": "^6.3.0",
