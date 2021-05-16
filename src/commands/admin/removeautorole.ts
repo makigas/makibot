@@ -9,7 +9,7 @@ interface RemoveAutoRoleCommandArguments {
 }
 
 export default class RemoveAutoRoleCommand extends Command {
-  constructor(client: Makibot) {
+  constructor(public client: Makibot) {
     super(client, {
       name: "removeautorole",
       memberName: "removeautorole",
@@ -37,7 +37,7 @@ export default class RemoveAutoRoleCommand extends Command {
       (conf) => conf.messageId != args.message || conf.reaction != args.emoji
     );
     return this.client.provider.set("global", "autorole:config", cleanConf).then(() => {
-      this.client.emit("makibot:restart", "autorole");
+      this.client.manager.restart("autorole");
       return msg.reply("Ajustes guardados correctamente");
     });
   }

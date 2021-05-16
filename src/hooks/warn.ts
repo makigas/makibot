@@ -23,9 +23,13 @@ export default class WarnService implements Hook {
   constructor(client: Makibot) {
     this.client = client;
 
-    this.client.on("messageReactionAdd", (reaction, user) =>
-      this.messageReactionAdd(reaction, user)
-    );
+    this.client.on("messageReactionAdd", (reaction, user) => {
+      if (user.partial) {
+        user.fetch().then((realUser) => this.messageReactionAdd(reaction, realUser));
+      } else {
+        this.messageReactionAdd(reaction, user as User);
+      }
+    });
   }
 
   private async messageReactionAdd(reaction: MessageReaction, user: User): Promise<void> {

@@ -1,4 +1,4 @@
-import { GuildPreview, Message } from "discord.js";
+import { GuildPreview, Message, PartialMessage } from "discord.js";
 import { Hook } from "../lib/hook";
 import Member from "../lib/member";
 import applyWastebin from "../lib/wastebin";
@@ -23,14 +23,26 @@ function cleanHistory(history: { [k: string]: number }): { [k: string]: number }
   }, {});
 }
 
+async function prefetchMessage(message: Message | PartialMessage): Promise<Message> {
+  if (message.partial) {
+    return message.fetch();
+  } else {
+    return message as Message;
+  }
+}
+
 export default class AntifloodService implements Hook {
   name = "antiflood";
 
   constructor(private client: Makibot) {
     client.on("message", (message) => this.handleMessage(message));
-    client.on("messageDelete", (message) => this.handleDelete(message));
+    client.on("messageDelete", (message) =>
+      prefetchMessage(message).then((message) => this.handleDelete(message))
+    );
     client.on("messageDeleteBulk", (messages) =>
-      messages.forEach((message) => this.handleDelete(message))
+      messages.forEach((message) =>
+        prefetchMessage(message).then((message) => this.handleDelete(message))
+      )
     );
   }
 

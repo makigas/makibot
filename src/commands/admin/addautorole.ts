@@ -10,7 +10,7 @@ interface AddAutoRoleCommandArguments {
 }
 
 export default class AddAutoRoleCommand extends Command {
-  constructor(client: Makibot) {
+  constructor(public client: Makibot) {
     super(client, {
       name: "addautorole",
       memberName: "addautorole",
@@ -25,6 +25,7 @@ export default class AddAutoRoleCommand extends Command {
       ],
     });
   }
+
 
   async run(msg: CommandoMessage, args: AddAutoRoleCommandArguments): Promise<Message | Message[]> {
     /* Build AutoRole configuration objects. */
@@ -47,7 +48,7 @@ export default class AddAutoRoleCommand extends Command {
     /* Set the new configuration including the new role to assign. */
     const newConf = [...cleanPrevConf, newAutoRole];
     return this.client.provider.set("global", "autorole:config", newConf).then(() => {
-      this.client.emit("makibot:restart", "autorole");
+      this.client.manager.restart("autorole");
       return msg.reply("Ajustes guardados correctamente");
     });
   }
