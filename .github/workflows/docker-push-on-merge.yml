@@ -5,6 +5,7 @@ on:
       - trunk
 jobs:
   docker_registry:
+    if: github.actor!= 'dependabot[bot]'
     name: Push Clank image to the registry
     runs-on: ubuntu-latest
     steps:
