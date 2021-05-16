@@ -3,7 +3,7 @@ import { dirname, resolve } from "path";
 
 import { Database, open as sqliteOpen } from "sqlite";
 import sqlite3 from "sqlite3";
-import { config as XDG_CONFIG } from "xdg-basedir";
+import { getConfigDirectory } from "./lib/utils";
 
 function assertDirectoryExists(dir: string): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -35,7 +35,7 @@ function assertDirectoryExists(dir: string): Promise<void> {
 
 export async function getDatabase(): Promise<Database> {
   // The final location where the database file will be created.
-  const dbFile = resolve(XDG_CONFIG, "clank", "settings.db");
+  const dbFile = resolve(getConfigDirectory(), "clank", "settings.db");
 
   // Need to make sure first that the file exists.
   const pathToDbFile = dirname(dbFile);
@@ -48,7 +48,7 @@ export async function getDatabase(): Promise<Database> {
 }
 
 export async function getKarmaDatabase(): Promise<string> {
-  const dbFile = resolve(XDG_CONFIG, "clank", "karma.db");
+  const dbFile = resolve(getConfigDirectory(), "clank", "karma.db");
 
   // Need to make sure first that the file exists.
   const pathToDbFile = dirname(dbFile);
@@ -56,4 +56,3 @@ export async function getKarmaDatabase(): Promise<string> {
 
   return dbFile;
 }
-
