@@ -4,7 +4,7 @@ import { Command, CommandGroup, CommandoMessage, CommandoRegistry } from "discor
 import Makibot from "../../Makibot";
 
 export default class HelpCommand extends Command {
-  constructor(client: Makibot) {
+  constructor(public client: Makibot) {
     super(client, {
       name: "help",
       memberName: "help",
@@ -15,8 +15,8 @@ export default class HelpCommand extends Command {
 
   async run(msg: CommandoMessage): Promise<Message | Message[]> {
     /* if this user is owner, [s]he can see additional commands. */
-    const owner = msg.client.isOwner(msg.author);
-    return msg.channel.send(this.groupsString(msg.client.registry, owner));
+    const owner = this.client.isOwner(msg.author);
+    return msg.channel.send(this.groupsString(this.client.registry, owner));
   }
 
   private groupsString(registry: CommandoRegistry, includeAdmin: boolean): string {

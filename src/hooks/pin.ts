@@ -1,9 +1,25 @@
-import Discord from "discord.js";
+import Discord, { Message, PartialMessage, PartialUser, User } from "discord.js";
 
 import { Hook } from "../lib/hook";
 import Makibot from "../Makibot";
 import { getURL } from "../lib/message";
 import Server from "../lib/server";
+
+async function resolveUser(user: User | PartialUser): Promise<User> {
+  if (user.partial) {
+    return user.fetch();
+  } else {
+    return user as User;
+  }
+}
+
+async function resolveMessage(message: Message | PartialMessage): Promise<Message> {
+  if (message.partial) {
+    return message.fetch();
+  } else {
+    return message as Message;
+  }
+}
 
 export default class PinService implements Hook {
   private client: Makibot;
@@ -15,9 +31,11 @@ export default class PinService implements Hook {
 
     this.client.on("messageReactionAdd", (reaction) => this.messageReactionAdd(reaction));
     this.client.on("messageReactionRemove", (reaction, user) =>
-      this.messageReactionRemove(reaction, user)
+      resolveUser(user).then((user) => this.messageReactionRemove(reaction, user))
     );
-    this.client.on("messageReactionRemoveAll", (message) => this.messageReactionRemoveAll(message));
+    this.client.on("messageReactionRemoveAll", (message) =>
+      resolveMessage(message).then((message) => this.messageReactionRemoveAll(message))
+    );
 
     this.client.guilds.cache.forEach((guild) => {
       // Cache recent messages per server.

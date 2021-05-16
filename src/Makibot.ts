@@ -13,6 +13,12 @@ export default class Makibot extends CommandoClient {
 
   private _karma: KarmaDatabase;
 
+  private _manager: HookManager;
+
+  public get manager(): HookManager {
+    return this._manager;
+  }
+
   public constructor() {
     super({
       commandPrefix: "!",
@@ -49,8 +55,7 @@ export default class Makibot extends CommandoClient {
             .then((db) => (this._karma = db));
         })
         .then(() => {
-          const manager = new HookManager(path.join(__dirname, "hooks"), this);
-          this.on("makibot:restart", (name) => manager.restart(name));
+          this._manager = new HookManager(path.join(__dirname, "hooks"), this);
         })
         .then(() => {
           // Init the antiraid engine.
@@ -66,6 +71,8 @@ export default class Makibot extends CommandoClient {
 
     this.login(ConfigSchema.token);
   }
+
+
 
   get karma(): KarmaDatabase {
     return this._karma;

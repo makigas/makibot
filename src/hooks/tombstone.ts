@@ -1,4 +1,4 @@
-import { Message, TextChannel } from "discord.js";
+import { Message, PartialMessage, TextChannel } from "discord.js";
 import Tag from "../lib/tag";
 import Makibot from "../Makibot";
 import { Hook } from "../lib/hook";
@@ -45,11 +45,21 @@ async function getTombstone(channel: TextChannel): Promise<Message | null> {
   }
 }
 
+async function resolveMessage(message: Message | PartialMessage): Promise<Message> {
+  if (message.partial) {
+    return message.fetch();
+  } else {
+    return message as Message;
+  }
+}
+
 export default class TombstoneService implements Hook {
   name = "tombstone";
 
   constructor(client: Makibot) {
-    client.on("messageDelete", (message) => this.onMessageDelete(message));
+    client.on("messageDelete", (message) =>
+      resolveMessage(message).then((message) => this.onMessageDelete(message))
+    );
     client.on("message", (message) => this.onMessageCreate(message));
   }
 

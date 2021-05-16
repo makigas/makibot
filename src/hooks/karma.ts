@@ -1,15 +1,32 @@
-import { Channel, GuildMember, Message, MessageReaction, TextChannel, User } from "discord.js";
+import {
+  Channel,
+  GuildMember,
+  Message,
+  MessageReaction,
+  PartialMessage,
+  PartialUser,
+  TextChannel,
+  User,
+} from "discord.js";
 import { Hook } from "../lib/hook";
 import { canReceivePoints, getLevel, getLevelUpMessage } from "../lib/karma";
 import { KarmaDatabase } from "../lib/karma/database";
 import Member from "../lib/member";
 import Makibot from "../Makibot";
 
-async function prefetchMessage(message: Message): Promise<Message> {
+async function prefetchMessage(message: Message | PartialMessage): Promise<Message> {
   if (message.partial) {
     await message.fetch();
   }
-  return message;
+  return message as Message;
+}
+
+async function prefetchUser(user: User | PartialUser): Promise<User> {
+  if (user.partial) {
+    return user.fetch();
+  } else {
+    return user as User;
+  }
 }
 
 async function prefetchReaction(mr: MessageReaction): Promise<MessageReaction> {
@@ -50,10 +67,14 @@ export default class KarmaService implements Hook {
       prefetchMessage(msg).then((msg) => this.onDeletedMessage(msg))
     );
     bot.on("messageReactionAdd", (reaction, user) =>
-      prefetchReaction(reaction).then((reaction) => this.onReactedTo(reaction, user))
+      prefetchReaction(reaction).then((reaction) =>
+        prefetchUser(user).then((user) => this.onReactedTo(reaction, user))
+      )
     );
     bot.on("messageReactionRemove", (reaction, user) =>
-      prefetchReaction(reaction).then((reaction) => this.onUnreactedTo(reaction, user))
+      prefetchReaction(reaction).then((reaction) =>
+        prefetchUser(user).then((user) => this.onUnreactedTo(reaction, user))
+      )
     );
     bot.on("messageReactionRemoveAll", (msg) =>
       prefetchMessage(msg).then((msg) => this.onUnreactedToAll(msg))

@@ -8,7 +8,7 @@ interface LinkVoiceCommandArguments {
 }
 
 export default class LinkVoiceCommand extends Command {
-  constructor(client: Makibot) {
+  constructor(public client: Makibot) {
     super(client, {
       name: "linkvoice",
       memberName: "linkvoice",
@@ -40,7 +40,7 @@ export default class LinkVoiceCommand extends Command {
     console.log(newState);
 
     await this.client.provider.set(null, "voiceroles", newState);
-    this.client.emit("makibot:restart", "voice-role");
+    this.client.manager.restart("voice-role");
     return msg.reply("Roles have been updated");
   }
 }
