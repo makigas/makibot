@@ -52,6 +52,10 @@ export default class Member {
     return this.hasRole(this.server.warnRole);
   }
 
+  get muted(): boolean {
+    return this.hasRole(this.server.muteRole);
+  }
+
   get helper(): boolean {
     return this.hasRole(this.server.helperRole);
   }
@@ -78,6 +82,10 @@ export default class Member {
 
   async setVerification(value: boolean): Promise<boolean> {
     return this.setRole(this.server.verifiedRole, value);
+  }
+
+  async setMuted(value: boolean): Promise<boolean> {
+    return this.setRole(this.server.muteRole, value);
   }
 
   async setModerator(value: boolean): Promise<boolean> {

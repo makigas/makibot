@@ -152,6 +152,11 @@ export default class Server {
     return this.getRoleByName(verifiedRoleName);
   }
 
+  get muteRole(): Role {
+    const mutedRoleName = process.env.MUTE_ROLE || "mute";
+    return this.getRoleByName(mutedRoleName);
+  }
+
   get warnRole(): Role {
     const warnRoleName = process.env.WARN_ROLE || "warn";
     return this.getRoleByName(warnRoleName);

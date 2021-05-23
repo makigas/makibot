@@ -1,4 +1,4 @@
-import { Guild, Message, MessageEmbedOptions, User } from "discord.js";
+import { Guild, GuildMember, Message, MessageEmbedOptions, User } from "discord.js";
 import Server from "./server";
 import { WarnModlogEvent } from "./modlog";
 import Member from "./member";
@@ -21,6 +21,25 @@ export interface WarnPayload {
 
 const PROMPT_MESSAGE = "Amonestación automática impuesta hacia %s.";
 
+export function notifyPublicModlog(server: Server, member: GuildMember, textMessage: string, reason: string) {
+  const publicModlog = server.publicModlogChannel;
+  if (publicModlog) {
+    const embed: MessageEmbedOptions = {
+      title: `Se llamó la atención a ${member.user.tag}`,
+      color: 16545847,
+      description: reason ? `**Razón**: ${reason}` : null,
+      author: {
+        name: member.user.tag,
+        iconURL: member.user.avatarURL(),
+      },
+      footer: {
+        text: "Mensaje de moderación automático",
+      },
+    };
+    publicModlog.send(textMessage, { embed });
+  }
+}
+
 export default async function applyWarn(
   guild: Guild,
   { user, message, reason }: WarnPayload
@@ -42,24 +61,8 @@ export default async function applyWarn(
   }
 
   // Send a message to the public modlog.
-  const embed: MessageEmbedOptions = {
-    title: `Se llamó la atención a ${memberToWarn.user.tag}`,
-    color: 16545847,
-    description: reason ? `**Razón**: ${reason}` : null,
-    author: {
-      name: memberToWarn.user.tag,
-      iconURL: memberToWarn.user.avatarURL(),
-    },
-    footer: {
-      text: "Mensaje de moderación automático",
-    },
-  };
-
-  const publicModlog = server.publicModlogChannel;
-  if (publicModlog) {
-    const warnMessage = PROMPT_MESSAGE.replace("%s", `<@${memberToWarn.id}>`);
-    publicModlog.send(warnMessage, { embed });
-  }
+  const warnMessage = PROMPT_MESSAGE.replace("%s", `<@${memberToWarn.id}>`);
+  notifyPublicModlog(server, memberToWarn, warnMessage, null);
 
   server
     .logModlogEvent(new WarnModlogEvent(memberToWarn, reason, message))

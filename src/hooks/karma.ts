@@ -2,6 +2,7 @@ import {
   Channel,
   GuildMember,
   Message,
+  MessageEmbedOptions,
   MessageReaction,
   PartialMessage,
   PartialUser,
@@ -12,6 +13,8 @@ import { Hook } from "../lib/hook";
 import { canReceivePoints, getLevel, getLevelUpMessage } from "../lib/karma";
 import { KarmaDatabase } from "../lib/karma/database";
 import Member from "../lib/member";
+import Server from "../lib/server";
+import applyWarn, { notifyPublicModlog } from "../lib/warn";
 import Makibot from "../Makibot";
 
 async function prefetchMessage(message: Message | PartialMessage): Promise<Message> {
@@ -189,6 +192,28 @@ export default class KarmaService implements Hook {
     const member = new Member(gm);
     const points = member.tagbag.tag("karma:offset").get(0) + (await this.karma.count(gm.id));
     const expectedLevel = getLevel(points);
+
+    /*
+     * Control mute for members with negative karma.
+     * TODO: This is an ugly patch. Negative levels should be fixed (and not return -1).
+     * Members with negative level should be the ones muted.
+     */
+    if (points <= -3) {
+      /* First, make sure this person is silenced. */
+      await member.setMuted(true);
+
+      /* Then, notify the member about this unless already done. */
+      const alreadyWarnedTag = member.tagbag.tag("karma:mutenotified");
+      if (!alreadyWarnedTag.get(false)) {
+        notifyPublicModlog(
+          new Server(gm.guild),
+          gm,
+          `Has sido silenciado automáticamente, <@${gm.user.id}>`,
+          "Silenciado automáticamente al tener karma excesivamente negativo"
+        );
+        // alreadyWarnedTag.set(true);
+      }
+    }
 
     const currentLevel = member.tagbag.tag("karma:level");
     if (currentLevel.get(0) != expectedLevel) {
