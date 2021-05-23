@@ -8,7 +8,7 @@ interface LinkVoiceCommandArguments {
 }
 
 export default class LinkVoiceCommand extends Command {
-  constructor(public client: Makibot) {
+  constructor(client: Makibot) {
     super(client, {
       name: "unlinkvoice",
       memberName: "unlinkvoice",
@@ -21,6 +21,10 @@ export default class LinkVoiceCommand extends Command {
         { key: "role", type: "string", prompt: "Role snowflake", default: "" },
       ],
     });
+  }
+
+  get makibot(): Makibot {
+    return this.client as Makibot;
   }
 
   async run(msg: CommandoMessage, args: LinkVoiceCommandArguments): Promise<Message | Message[]> {
@@ -47,8 +51,8 @@ export default class LinkVoiceCommand extends Command {
     }
     console.log(newState);
 
-    await this.client.provider.set(null, "voiceroles", newState);
-    this.client.manager.restart("voice-role");
+    await this.makibot.provider.set(null, "voiceroles", newState);
+    this.makibot.manager.restart("voice-role");
     return msg.reply("Roles have been updated");
   }
 }

@@ -4,7 +4,7 @@ import { Command, CommandGroup, CommandoMessage, CommandoRegistry } from "discor
 import Makibot from "../../Makibot";
 
 export default class HelpCommand extends Command {
-  constructor(public client: Makibot) {
+  constructor(client: Makibot) {
     super(client, {
       name: "help",
       memberName: "help",
