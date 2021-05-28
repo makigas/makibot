@@ -207,7 +207,7 @@ export default class KarmaService implements Hook {
       if (!alreadyWarnedTag.get(false)) {
         notifyPublicModlog(
           new Server(gm.guild),
-          gm,
+          member,
           `Has sido silenciado automáticamente, <@${gm.user.id}>`,
           "Silenciado automáticamente al tener karma excesivamente negativo"
         );

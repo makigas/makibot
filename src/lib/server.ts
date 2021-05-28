@@ -1,4 +1,4 @@
-import { Guild, Message, Role, TextChannel, User, WebhookClient } from "discord.js";
+import { Guild, Message, Role, TextChannel, UserResolvable, WebhookClient } from "discord.js";
 import Makibot from "../Makibot";
 import logger from "./logger";
 import Member from "./member";
@@ -197,7 +197,7 @@ export default class Server {
     return this.getTextChannelByName(pinboardChannelName);
   }
 
-  async member(user: User): Promise<Member> {
+  async member(user: UserResolvable): Promise<Member> {
     const member = await this.guild.members.fetch(user);
     if (member) {
       return new Member(member);

@@ -1,6 +1,6 @@
 import { Hook } from "../lib/hook";
 import Makibot from "../Makibot";
-import applyWarn from "../lib/warn";
+import applyWarn, { removeWarn } from "../lib/warn";
 import { Message, MessageReaction, User } from "discord.js";
 import Server from "../lib/server";
 import applyWastebin from "../lib/wastebin";
@@ -28,6 +28,24 @@ export default class WarnService implements Hook {
         user.fetch().then((realUser) => this.messageReactionAdd(reaction, realUser));
       } else {
         this.messageReactionAdd(reaction, user as User);
+      }
+    });
+
+    this.restoreOldTimeouts();
+  }
+
+  private restoreOldTimeouts() {
+    this.client.guilds.cache.forEach(async (guild) => {
+      const server = new Server(guild);
+      const warnList = server.tagbag.tag("warns");
+      const activeWarns = warnList.get({});
+      for (let activeWarn in activeWarns) {
+        let member = await server.member(activeWarn);
+        if (member) {
+          let expDate = activeWarns[activeWarn];
+          let remain = expDate - Date.now();
+          setTimeout(async () => removeWarn(server, member), remain);
+        }
       }
     });
   }

@@ -1,7 +1,9 @@
-import { Guild, GuildMember, Message, MessageEmbedOptions, User } from "discord.js";
+import { Guild, GuildMember, Message, MessageEmbedOptions, User, UserResolvable } from "discord.js";
 import Server from "./server";
 import { WarnModlogEvent } from "./modlog";
 import Member from "./member";
+
+const WARN_DURATION = 86400 * 1000 * 7;
 
 /**
  * Information that describes why the warn is being issued. This information
@@ -21,16 +23,22 @@ export interface WarnPayload {
 
 const PROMPT_MESSAGE = "Amonestación automática impuesta hacia %s.";
 
-export function notifyPublicModlog(server: Server, member: GuildMember, textMessage: string, reason: string) {
+function notifyModlog(
+  server: Server,
+  member: Member,
+  textMessage: string,
+  title: string,
+  reason: string = null
+) {
   const publicModlog = server.publicModlogChannel;
   if (publicModlog) {
     const embed: MessageEmbedOptions = {
-      title: `Se llamó la atención a ${member.user.tag}`,
+      title: title,
       color: 16545847,
       description: reason ? `**Razón**: ${reason}` : null,
       author: {
-        name: member.user.tag,
-        iconURL: member.user.avatarURL(),
+        name: member.usertag,
+        iconURL: member.avatar,
       },
       footer: {
         text: "Mensaje de moderación automático",
@@ -38,6 +46,33 @@ export function notifyPublicModlog(server: Server, member: GuildMember, textMess
     };
     publicModlog.send(textMessage, { embed });
   }
+}
+
+export function notifyPublicModlog(
+  server: Server,
+  member: Member,
+  textMessage: string,
+  reason: string
+) {
+  notifyModlog(server, member, textMessage, `Se llamó la atención a ${member.usertag}`, reason);
+}
+
+export function notifyWarnExpiration(server: Server, member: Member) {
+  const message = `La llamada de atención de <@${member.id}> ha expirado`;
+  const embedTitle = `La llamada de atención de ${member.usertag} ha expirado`;
+  notifyModlog(server, member, message, embedTitle);
+}
+
+export async function removeWarn(server: Server, member: Member): Promise<void> {
+  const warnList = server.tagbag.tag("warns");
+  const activeWarns = warnList.get({});
+  if (activeWarns[member.id]) {
+    delete activeWarns[member.id];
+    warnList.set(activeWarns);
+  }
+
+  await member.setWarned(false);
+  await notifyWarnExpiration(server, member);
 }
 
 export default async function applyWarn(
@@ -60,9 +95,16 @@ export default async function applyWarn(
     member.setHelper(false);
   }
 
+  // Store the expiration date for this warn in the server tag.
+  const warnList = server.tagbag.tag("warns");
+  const activeWarns = warnList.get({});
+  activeWarns[user.id] = Date.now() + WARN_DURATION;
+  warnList.set(activeWarns);
+  setTimeout(async () => removeWarn(server, member), WARN_DURATION);
+
   // Send a message to the public modlog.
   const warnMessage = PROMPT_MESSAGE.replace("%s", `<@${memberToWarn.id}>`);
-  notifyPublicModlog(server, memberToWarn, warnMessage, null);
+  notifyPublicModlog(server, member, warnMessage, null);
 
   server
     .logModlogEvent(new WarnModlogEvent(memberToWarn, reason, message))

@@ -28,6 +28,18 @@ export default class Member {
     return value;
   }
 
+  get id(): string {
+    return this.guildMember.user.id;
+  }
+
+  get usertag(): string {
+    return this.guildMember.user.tag;
+  }
+
+  get avatar(): string {
+    return this.guildMember.user.avatarURL();
+  }
+
   get tagbag(): TagBag {
     if (!this._tagbag) {
       const client: Makibot = this.guildMember.client as Makibot;
