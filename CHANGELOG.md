@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.20.0](https://github.com/makigas/clank/compare/v0.19.0...v0.20.0) (2021-05-28)
+
+
+### Features
+
+* automatically expire warns ([f66ac27](https://github.com/makigas/clank/commit/f66ac27dad0517dff0ea0195766355f0fdf2c587))
+* automatically mute members with -3 karma ([4e79ecd](https://github.com/makigas/clank/commit/4e79ecdb9537dbcfbeb746fff9b122d9baed93c7))
+* handle heart as another +1 for karma ([a67b36d](https://github.com/makigas/clank/commit/a67b36ddbd8e66381eb37e313ac2b96bd7357a64))
+
+
+### Bug Fixes
+
+* code doesn't run because that's not how type systems work ([5720d20](https://github.com/makigas/clank/commit/5720d20e4456aa3b013c8e945b46d8a488a87714))
+* wrong evaluation of undefined variable ([0bfc498](https://github.com/makigas/clank/commit/0bfc498b5bf238f657d23baddfb769b8fadb3951))
+
+
+### Refactor
+
+* inline XDG_CONFIG_HOME instead of using a dep ([d43db30](https://github.com/makigas/clank/commit/d43db304534be1dc0984790d0d9670afd7ed273e))
+
 ## [0.19.0](https://github.com/makigas/clank/compare/v0.18.0...v0.19.0) (2021-04-25)
 
 
