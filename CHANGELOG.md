@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.20.1](https://github.com/makigas/clank/compare/v0.20.0...v0.20.1) (2021-05-30)
+
+
+### Bug Fixes
+
+* member mutenotified tag is not being set ([3a3e0ca](https://github.com/makigas/clank/commit/3a3e0ca389f928fceeb4097c17c70f50db0b5618))
+
 ## [0.20.0](https://github.com/makigas/clank/compare/v0.19.0...v0.20.0) (2021-05-28)
 
 
