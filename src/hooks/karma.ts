@@ -211,7 +211,7 @@ export default class KarmaService implements Hook {
           `Has sido silenciado automáticamente, <@${gm.user.id}>`,
           "Silenciado automáticamente al tener karma excesivamente negativo"
         );
-        // alreadyWarnedTag.set(true);
+        alreadyWarnedTag.set(true);
       }
     }
 
