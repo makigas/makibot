@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.21.0](https://github.com/makigas/clank/compare/v0.20.1...v0.21.0) (2021-06-08)
+
+
+### Features
+
+* grant +1 of karma on :wave: ([5004543](https://github.com/makigas/clank/commit/50045435fd292e81ed0ba9ea4766d94aab4249c3))
+* handle karma using a slash command ([58363cf](https://github.com/makigas/clank/commit/58363cf8e16c65b2266654e5442045bb6df65fe4))
+
+
+### Refactor
+
+* split karma and report by type ([6626d59](https://github.com/makigas/clank/commit/6626d592e81a69397635ea84ff374b936e5a5e7e))
+
 ### [0.20.1](https://github.com/makigas/clank/compare/v0.20.0...v0.20.1) (2021-05-30)
 
 
