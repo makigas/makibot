@@ -55,30 +55,20 @@ export default function memberMiddleware(makibot: Makibot): express.Router {
   });
 
   router.get("/karma", async (req: RouterRequest, res) => {
-    const totalCount = await makibot.karma.count(req.params.member);
-    const messageCount = await makibot.karma.count(req.params.member, { kind: "message" });
-    const upvoteCount = await makibot.karma.count(req.params.member, { kind: "upvote" });
-    const downvoteCount = await makibot.karma.count(req.params.member, { kind: "downvote" });
-    const starCount = await makibot.karma.count(req.params.member, { kind: "star" });
-    const heartCount = await makibot.karma.count(req.params.member, { kind: "heart" });
-    const waveCount = await makibot.karma.count(req.params.member, { kind: "wave" });
-
-    const offset = res.locals.member.tagbag.tag("karma:offset").get(0);
-    const level = res.locals.member.tagbag.tag("karma:level").get(0);
-    const points = totalCount + offset;
+    const karmaStats = await res.locals.member.getKarma();
 
     res.json({
-      level,
-      points,
-      offset,
+      level: karmaStats.level,
+      points: karmaStats.points,
+      offset: karmaStats.offset,
       db: {
-        totalCount,
-        messageCount,
-        upvoteCount,
-        downvoteCount,
-        starCount,
-        heartCount,
-        waveCount,
+        totalCount: karmaStats.total,
+        messageCount: karmaStats.messages,
+        upvoteCount: karmaStats.upvotes,
+        downvoteCount: karmaStats.downvotes,
+        starCount: karmaStats.stars,
+        heartCount: karmaStats.hearts,
+        waveCount: karmaStats.waves,
       },
     });
   });

@@ -3,6 +3,19 @@ import Makibot from "../Makibot";
 import Server from "./server";
 import TagBag from "./tagbag";
 
+interface KarmaStats {
+  messages: number;
+  upvotes: number;
+  downvotes: number;
+  stars: number;
+  hearts: number;
+  waves: number;
+  offset: number;
+  points: number;
+  level: number;
+  total: number;
+}
+
 export default class Member {
   private guildMember: GuildMember;
 
@@ -26,6 +39,10 @@ export default class Member {
       await this.guildMember.roles.remove(role);
     }
     return value;
+  }
+
+  get client(): Makibot {
+    return this.guildMember.client as Makibot;
   }
 
   get id(): string {
@@ -90,6 +107,35 @@ export default class Member {
 
     const minutesSinceJoined = Date.now() - this.guildMember.joinedAt.getTime();
     return minutesSinceJoined > 60 * 1000 * 5;
+  }
+
+  async getKarma(): Promise<KarmaStats> {
+    const results = await Promise.all([
+      this.client.karma.count(this.id),
+      this.client.karma.count(this.id, { kind: "message" }),
+      this.client.karma.count(this.id, { kind: "upvote" }),
+      this.client.karma.count(this.id, { kind: "downvote" }),
+      this.client.karma.count(this.id, { kind: "star" }),
+      this.client.karma.count(this.id, { kind: "heart" }),
+      this.client.karma.count(this.id, { kind: "wave" }),
+    ]);
+    const [total, messages, upvotes, downvotes, stars, hearts, waves] = results;
+    const offset = this.tagbag.tag("karma:offset").get(0);
+    const level = this.tagbag.tag("karma:level").get(1);
+    const points = offset + total;
+
+    return {
+      downvotes,
+      hearts,
+      level,
+      messages,
+      offset,
+      points,
+      stars,
+      upvotes,
+      waves,
+      total,
+    };
   }
 
   async setVerification(value: boolean): Promise<boolean> {
