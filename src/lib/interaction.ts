@@ -56,14 +56,24 @@ const handlers: { [name: string]: Handler } = {
     const server = new Server(guild);
     const member = await server.member(event.member.user.id);
 
+
+    const totalCount = await client.karma.count(member.id);
+    const messageCount = await client.karma.count(member.id, { kind: "message" });
+    const upvoteCount = await client.karma.count(member.id, { kind: "upvote" });
+    const downvoteCount = await client.karma.count(member.id, { kind: "downvote" });
+    const starCount = await client.karma.count(member.id, { kind: "star" });
+    const heartCount = await client.karma.count(member.id, { kind: "heart" });
+    const waveCount = await client.karma.count(member.id, { kind: "wave" });
+
     const offset = member.tagbag.tag("karma:offset").get(0);
-    const karmaCount = await client.karma.count(event.member.user.id);
-    const totalKarma = offset + karmaCount;
-    const currentLevel = member.tagbag.tag("karma:level").get(1);
+    const level = member.tagbag.tag("karma:level").get(0);
+    const points = totalCount + offset;
 
     await sendResponse(
       event,
-      `Tienes ${totalKarma} puntos de karma.\nTu nivel es: ${currentLevel}.`,
+      `🪙 Karma: ${points}      🏅 Nivel: ${level}\n` +
+      ` 💬 Mensajes: ${messageCount}      ⏩ Offset: ${offset}\n` +
+      ` 👍 ${upvoteCount}   👎 ${downvoteCount}   ⭐ ${starCount}   ❤️ ${heartCount}    👋 ${waveCount}`,
       true
     );
   },
