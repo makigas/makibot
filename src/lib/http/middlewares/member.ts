@@ -61,6 +61,7 @@ export default function memberMiddleware(makibot: Makibot): express.Router {
     const downvoteCount = await makibot.karma.count(req.params.member, { kind: "downvote" });
     const starCount = await makibot.karma.count(req.params.member, { kind: "star" });
     const heartCount = await makibot.karma.count(req.params.member, { kind: "heart" });
+    const waveCount = await makibot.karma.count(req.params.member, { kind: "wave" });
 
     const offset = res.locals.member.tagbag.tag("karma:offset").get(0);
     const level = res.locals.member.tagbag.tag("karma:level").get(0);
@@ -77,6 +78,7 @@ export default function memberMiddleware(makibot: Makibot): express.Router {
         downvoteCount,
         starCount,
         heartCount,
+        waveCount,
       },
     });
   });
