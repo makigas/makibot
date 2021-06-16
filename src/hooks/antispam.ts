@@ -12,6 +12,7 @@ const ruleset: { [reason: string]: RegExp[] } = {
     /discord.gg\/\w+/,
     /discordapp.com\/invite\/\w+/,
     /discord.com\/invite\/\w+/,
+    /dsc.gg\/w+/,
   ],
   "El enlace apunta a una página de perfil de red social": [
     /instagram.com\/[\w._]+\/?(\?.+)?$/, // intentionally allow instagram.com/p/ for the moment
