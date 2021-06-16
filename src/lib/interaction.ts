@@ -13,6 +13,27 @@ const interactionsClient = axios.create({
   },
 });
 
+enum ApplicationCommandOptionType {
+  SUB_COMMAND = 1,
+  SUB_COMMAND_GROUP = 2,
+  STRING = 3,
+  INTEGER = 4,
+  BOOLEAN = 5,
+  USER = 6,
+  CHANNEL = 7,
+  ROLE = 8,
+  MENTIONABLE = 9,
+}
+
+type OptionType = any;
+
+interface ApplicationCommandInteractionDataOption {
+  name: string;
+  type: ApplicationCommandOptionType;
+  value?: OptionType;
+  options?: ApplicationCommandInteractionDataOption[];
+}
+
 /** Payload. Not every field is added, only what we care. */
 interface InteractionPayload {
   id: Snowflake;
@@ -21,6 +42,7 @@ interface InteractionPayload {
   data: {
     name: string;
     id: Snowflake;
+    options?: ApplicationCommandInteractionDataOption[];
   };
   member: {
     user: {
@@ -71,6 +93,11 @@ const handlers: { [name: string]: Handler } = {
       `  ${kinds.join("    ")}`;
     await sendResponse(event, response, true);
   },
+  async raid(client, event) {
+    const mode: boolean = event.data.options[0].value as boolean;
+    await client.antiraid.setRaidMode(mode);
+    await sendResponse(event, mode ? "Modo raid activado" : "Modo raid desactivado", true);
+  }
 };
 
 function handleApplicationCommand(client: Makibot, event: InteractionPayload) {
