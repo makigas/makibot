@@ -1,82 +1,88 @@
-/* TODO: Rewrite this when Discord.js 13 is out. */
-
-import axios from "axios";
-import { APIApplicationCommandInteraction, APIGuildInteraction, APIInteraction, ApplicationCommandOptionType, InteractionType } from "discord-api-types/v8";
+import {
+  APIApplicationCommandInteractionDataOption,
+  APIGuildInteraction,
+  APIInteraction,
+  ApplicationCommandOptionType,
+  InteractionType,
+} from "discord-api-types/v8";
+import { Guild } from "discord.js";
+import KarmaCommand from "../interactions/commands/karma";
+import RaidCommand from "../interactions/commands/raid";
 import Makibot from "../Makibot";
+import InteractionCommand from "./interaction/basecommand";
 import logger from "./logger";
-import Server from "./server";
 
-const interactionsClient = axios.create({
-  baseURL: "https://discord.com/api/v8",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-function sendResponse(
-  event: APIInteraction,
-  response: string,
-  ephemeral: boolean = false,
-): Promise<void> {
-  const payload: any = {
-    type: 4,
-    data: { content: response },
-  };
-  if (ephemeral) {
-    payload.data.flags = 64;
-  }
-  logger.debug("[interactions] sending response: ", payload);
-  return interactionsClient.post(`/interactions/${event.id}/${event.token}/callback`, payload);
+interface HandlerConstructor {
+  // https://stackoverflow.com/a/39614325/2033517
+  new (client: Makibot, event: APIGuildInteraction): InteractionCommand<{}>;
 }
 
-type Handler = (client: Makibot, event: APIGuildInteraction) => Promise<void>;
-
-const handlers: { [name: string]: Handler } = {
-  /* { "name": "karma" } */
-  async karma(client, event) {
-    const guild = client.guilds.cache.get(event.guild_id);
-    const server = new Server(guild);
-    const member = await server.member(event.member.user.id);
-
-    const stats = await member.getKarma();
-
-    const kinds = [
-      `👍 ${stats.upvotes}`,
-      `👎 ${stats.downvotes}`,
-      `⭐ ${stats.stars}`,
-      `❤️ ${stats.hearts}`,
-      `👋 ${stats.waves}`,
-    ];
-    const response =
-      `🪙 Karma: ${stats.points}        🏅 Nivel: ${stats.level}\n` +
-      `  💬 Mensajes: ${stats.messages}        ⏩ Offset: ${stats.offset}\n` +
-      `  ${kinds.join("    ")}`;
-    await sendResponse(event, response, true);
-  },
-  async raid(client, event) {
-    let mode: boolean;
-    if (event.data.options[0].type == ApplicationCommandOptionType.BOOLEAN) {
-      mode = event.data.options[0].value;
-      await client.antiraid.setRaidMode(mode);
-      await sendResponse(event, mode ? "Modo raid activado" : "Modo raid desactivado", true);
-    }
-  },
+/* The different command handlers, maps a command name with the appropiate class. */
+const Handlers: { [name: string]: HandlerConstructor } = {
+  karma: KarmaCommand,
+  raid: RaidCommand,
 };
-
-function handleApplicationCommand(client: Makibot, event: APIGuildInteraction) {
-  const handler = handlers[event.data.name];
-  if (handler) {
-    handler(client, event);
-  }
-}
 
 function isThisEventAGuildInteraction(event: APIInteraction): event is APIGuildInteraction {
   return event.type == InteractionType.ApplicationCommand;
 }
 
-export function handleInteraction(client: Makibot, event: APIInteraction) {
+/*
+ * I'm sorry to do this, I'm so sorry for writing this code. But Discord API
+ * yields each parameter inside an object, where there is a type discriminator
+ * to set the real type of "value".
+ *
+ * Besides, some types are snowflakes that must be resolved.
+ */
+async function convertParameters(
+  params: APIApplicationCommandInteractionDataOption[],
+  guild: Guild
+): Promise<object> {
+  /* Too scared to do it with a reduce, because there are asyncs. */
+  const parsedParams = {};
+
+  for (let option of params) {
+    switch (option.type) {
+      case ApplicationCommandOptionType.BOOLEAN:
+      case ApplicationCommandOptionType.INTEGER:
+      case ApplicationCommandOptionType.STRING:
+        parsedParams[option.name] = option.value;
+        break;
+
+      case ApplicationCommandOptionType.CHANNEL: {
+        let channel = guild.channels.cache.get(option.value);
+        parsedParams[option.name] = channel;
+        break;
+      }
+      case ApplicationCommandOptionType.USER: {
+        let user = await guild.members.fetch(option.value);
+        parsedParams[option.name] = user;
+      }
+      case ApplicationCommandOptionType.ROLE: {
+        let role = await guild.roles.fetch(option.value);
+        parsedParams[option.name] = role;
+      }
+      case ApplicationCommandOptionType.MENTIONABLE: {
+        try {
+          let user = await guild.members.fetch(option.value);
+          parsedParams[option.name] = user;
+        } catch (e) {
+          let role = await guild.roles.fetch(option.value);
+          parsedParams[option.name] = role;
+        }
+      }
+    }
+  }
+
+  return parsedParams;
+}
+
+export async function handleInteraction(client: Makibot, event: APIInteraction) {
   logger.debug("[interactions] received event: ", event);
-  if (isThisEventAGuildInteraction(event)) {
-    handleApplicationCommand(client, event);
+  if (isThisEventAGuildInteraction(event) && Handlers[event.data.name]) {
+    let handler = new Handlers[event.data.name](client, event);
+    let guild = await client.guilds.fetch(event.guild_id);
+    let parameters = event.data.options ? await convertParameters(event.data.options, guild) : {};
+    handler.handle(parameters);
   }
 }
