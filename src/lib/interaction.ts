@@ -1,7 +1,7 @@
 /* TODO: Rewrite this when Discord.js 13 is out. */
 
 import axios from "axios";
-import { Snowflake } from "discord.js";
+import { APIApplicationCommandInteraction, APIGuildInteraction, APIInteraction, ApplicationCommandOptionType, InteractionType } from "discord-api-types/v8";
 import Makibot from "../Makibot";
 import logger from "./logger";
 import Server from "./server";
@@ -13,51 +13,11 @@ const interactionsClient = axios.create({
   },
 });
 
-enum ApplicationCommandOptionType {
-  SUB_COMMAND = 1,
-  SUB_COMMAND_GROUP = 2,
-  STRING = 3,
-  INTEGER = 4,
-  BOOLEAN = 5,
-  USER = 6,
-  CHANNEL = 7,
-  ROLE = 8,
-  MENTIONABLE = 9,
-}
-
-type OptionType = any;
-
-interface ApplicationCommandInteractionDataOption {
-  name: string;
-  type: ApplicationCommandOptionType;
-  value?: OptionType;
-  options?: ApplicationCommandInteractionDataOption[];
-}
-
-/** Payload. Not every field is added, only what we care. */
-interface InteractionPayload {
-  id: Snowflake;
-  token: string;
-  type: number;
-  data: {
-    name: string;
-    id: Snowflake;
-    options?: ApplicationCommandInteractionDataOption[];
-  };
-  member: {
-    user: {
-      username: string;
-      discriminator: string;
-      id: Snowflake;
-      public_flags: number;
-      avatar: string;
-    };
-    roles: Snowflake[];
-  };
-  guild_id: string;
-}
-
-function sendResponse(event: InteractionPayload, response: string, ephemeral: boolean = false) {
+function sendResponse(
+  event: APIInteraction,
+  response: string,
+  ephemeral: boolean = false,
+): Promise<void> {
   const payload: any = {
     type: 4,
     data: { content: response },
@@ -69,7 +29,7 @@ function sendResponse(event: InteractionPayload, response: string, ephemeral: bo
   return interactionsClient.post(`/interactions/${event.id}/${event.token}/callback`, payload);
 }
 
-type Handler = (client: Makibot, event: InteractionPayload) => Promise<void>;
+type Handler = (client: Makibot, event: APIGuildInteraction) => Promise<void>;
 
 const handlers: { [name: string]: Handler } = {
   /* { "name": "karma" } */
@@ -94,24 +54,29 @@ const handlers: { [name: string]: Handler } = {
     await sendResponse(event, response, true);
   },
   async raid(client, event) {
-    const mode: boolean = event.data.options[0].value as boolean;
-    await client.antiraid.setRaidMode(mode);
-    await sendResponse(event, mode ? "Modo raid activado" : "Modo raid desactivado", true);
-  }
+    let mode: boolean;
+    if (event.data.options[0].type == ApplicationCommandOptionType.BOOLEAN) {
+      mode = event.data.options[0].value;
+      await client.antiraid.setRaidMode(mode);
+      await sendResponse(event, mode ? "Modo raid activado" : "Modo raid desactivado", true);
+    }
+  },
 };
 
-function handleApplicationCommand(client: Makibot, event: InteractionPayload) {
+function handleApplicationCommand(client: Makibot, event: APIGuildInteraction) {
   const handler = handlers[event.data.name];
   if (handler) {
     handler(client, event);
   }
 }
 
-export function handleInteraction(client: Makibot, event: InteractionPayload) {
+function isThisEventAGuildInteraction(event: APIInteraction): event is APIGuildInteraction {
+  return event.type == InteractionType.ApplicationCommand;
+}
+
+export function handleInteraction(client: Makibot, event: APIInteraction) {
   logger.debug("[interactions] received event: ", event);
-  switch (event.type) {
-    case 2:
-      handleApplicationCommand(client, event);
-      break;
+  if (isThisEventAGuildInteraction(event)) {
+    handleApplicationCommand(client, event);
   }
 }
