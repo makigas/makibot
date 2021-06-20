@@ -1,45 +1,27 @@
 import bigInt, { BigInteger } from "big-integer";
-import { Command, CommandoMessage } from "discord.js-commando";
+import InteractionCommand from "../../lib/interaction/basecommand";
 
-import Makibot from "../../Makibot";
-
-interface PrimoCommandArguments {
+interface PrimoParams {
   n: string;
 }
 
-export default class PrimoCommand extends Command {
-  constructor(client: Makibot) {
-    super(client, {
-      name: "primo",
-      group: "utiles",
-      memberName: "primo",
-      description: "Calcula si un número es primo o no.",
-      examples: ["prime 5", "prime 6", "prime 1234"],
-      args: [
-        {
-          key: "n",
-          type: "string",
-          prompt: "No me has dicho de qué número quieres calcular el primo.",
-          default: "",
-        },
-      ],
-    });
-  }
+export default class PrimoCommand extends InteractionCommand<PrimoParams> {
+  name: string = "primo";
 
-  async run(msg: CommandoMessage, args: PrimoCommandArguments) {
-    if (args.n.trim() == "") {
-      return msg.reply("Uso: `!primo [n:number]`");
-    } else if (/^\-?\d+$/g.test(args.n)) {
-      let prime = bigInt(args.n);
+  handle(params: PrimoParams): Promise<void> {   
+    if (params.n.trim() == "") {
+      return this.sendResponse("Uso: `/primo [n:number]`", true);
+    } else if (/^\-?\d+$/g.test(params.n)) {
+      let prime = bigInt(params.n);
       if (this.isPrime(prime)) {
-        return msg.reply(`Se da la circunstancia de que sí, ${prime} es primo.`);
+        return this.sendResponse(`Se da la circunstancia de que sí, ${prime} es primo.`, false);
       } else if (prime.mod(2).eq(0)) {
-        return msg.reply("Amigo, deberías saber que un par no puede ser primo.");
+        return this.sendResponse("Amigo, deberías saber que un par no puede ser primo.", false);
       } else {
-        return msg.reply(`No, ${prime} no es primo.`);
+        return this.sendResponse(`No, ${prime} no es primo.`, false);
       }
     } else {
-      return msg.reply(`\`${args.n}\` no es exactamente un número.`);
+      return this.sendResponse(`\`${params.n}\` no es exactamente un número`, false);
     }
   }
 

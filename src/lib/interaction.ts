@@ -7,6 +7,7 @@ import {
 } from "discord-api-types/v8";
 import { Guild } from "discord.js";
 import KarmaCommand from "../interactions/commands/karma";
+import PrimoCommand from "../interactions/commands/primo";
 import RaidCommand from "../interactions/commands/raid";
 import Makibot from "../Makibot";
 import InteractionCommand from "./interaction/basecommand";
@@ -20,6 +21,7 @@ interface HandlerConstructor {
 /* The different command handlers, maps a command name with the appropiate class. */
 const Handlers: { [name: string]: HandlerConstructor } = {
   karma: KarmaCommand,
+  primo: PrimoCommand,
   raid: RaidCommand,
 };
 
