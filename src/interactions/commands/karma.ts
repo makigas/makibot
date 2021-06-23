@@ -1,6 +1,12 @@
 import InteractionCommand from "../../lib/interaction/basecommand";
 import Server from "../../lib/server";
 
+/*
+  {
+    "name": "karma",
+    "description": "Muestra el nivel de karma",
+  }
+*/
 export default class KarmaCommand extends InteractionCommand<{}> {
   name = "karma";
 

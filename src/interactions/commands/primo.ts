@@ -5,6 +5,20 @@ interface PrimoParams {
   n: string;
 }
 
+/*
+    {
+      "name": "primo",
+      "description": "Determina si un número es primo o no",
+      "options": [
+        {
+          "type": 3,
+          "name": "n",
+          "description": "El valor que queremos testear como primo",
+          "required": true
+        }
+      ]
+    }
+ */
 export default class PrimoCommand extends InteractionCommand<PrimoParams> {
   name: string = "primo";
 
