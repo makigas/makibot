@@ -6,6 +6,7 @@ import {
   InteractionType,
 } from "discord-api-types/v8";
 import { Guild } from "discord.js";
+import WarnCommand from "../interactions/commands/warn";
 import KarmaCommand from "../interactions/commands/karma";
 import PrimoCommand from "../interactions/commands/primo";
 import RaidCommand from "../interactions/commands/raid";
@@ -23,6 +24,7 @@ const Handlers: { [name: string]: HandlerConstructor } = {
   karma: KarmaCommand,
   primo: PrimoCommand,
   raid: RaidCommand,
+  warn: WarnCommand,
 };
 
 function isThisEventAGuildInteraction(event: APIInteraction): event is APIGuildInteraction {
