@@ -33,18 +33,6 @@ export default class Makibot extends CommandoClient {
 
     this.antiraid = new AntiRaid(this);
 
-    this.registry.registerDefaultTypes();
-    this.registry.registerGroups([
-      ["admin", "Administración"],
-      ["moderation", "Moderación"],
-      ["karma", "Karma"],
-      ["utiles", "Utilidad"],
-    ]);
-    this.registry.registerCommandsIn({
-      dirname: path.join(__dirname, "commands"),
-      filter: /^([^.].*)\.[jt]s$/,
-    });
-
     this.on("ready", () => console.log(`Logged in successfully as ${this.user.tag}.`));
 
     this.ws.on("INTERACTION_CREATE" as WSEventType, (interaction) => {

@@ -101,10 +101,6 @@ export default class KarmaService implements Hook {
     if (!canReceivePoints(message.member)) {
       return;
     }
-    /* Bot commands cannot be given karma. */
-    if (message.cleanContent.startsWith("!")) {
-      return;
-    }
     await this.karma.action({
       actorId: message.id,
       actorType: "Message",
@@ -144,10 +140,6 @@ export default class KarmaService implements Hook {
       user.bot ||
       reaction.message.author.id == user.id
     ) {
-      return;
-    }
-    /* Bot commands cannot be given karma. */
-    if (reaction.message.cleanContent.startsWith("!")) {
       return;
     }
     const reactionSpec = REACTIONS[reaction.emoji.name];
