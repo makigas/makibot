@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.22.0](https://github.com/makigas/clank/compare/v0.21.0...v0.22.0) (2021-06-26)
+
+
+### Features
+
+* create a factory to run interactions ([c101678](https://github.com/makigas/clank/commit/c101678b5d4a9245eeac0ec953950dbb6c9f09da))
+* delete remaining commands ([e47f3bf](https://github.com/makigas/clank/commit/e47f3bf1f2dd03c869cad7e2ca9f8c505a1d66e2))
+* include dsc.gg in the antispam system ([8d22a33](https://github.com/makigas/clank/commit/8d22a33aa3f71d48ebc1ed820246fc3d956121e0))
+* migrate !primo to /primo ([2a9cb8c](https://github.com/makigas/clank/commit/2a9cb8c22f5224b3b39aff0416a82449afe97d6f))
+* migrate raid command to slash command ([9ecfdbb](https://github.com/makigas/clank/commit/9ecfdbb6a335403836c8d9b4bf973590f22794b9))
+* remove !helper command ([4d10559](https://github.com/makigas/clank/commit/4d105596a23748c81cb1cd79c7b1337c69f06b45))
+* replace addautorole and removeautorole with REST endpoints ([9f5d9a4](https://github.com/makigas/clank/commit/9f5d9a4b0780bbcaafaff6b6853c90ef29fb0afc))
+* replace voicerole commands with REST endpoints ([78f40e7](https://github.com/makigas/clank/commit/78f40e713fce6908e6a9719aa221d71e8fa94c3a))
+* transition !warn command to interaction ([65ff19a](https://github.com/makigas/clank/commit/65ff19a60e519d8b931340975ea6c4f0f4ac3b20))
+
+
+### Refactor
+
+* make karma stats part of the Member ([0267588](https://github.com/makigas/clank/commit/02675880d7ddd510dbbeb7235872183d072b709a))
+* replace custom types with discord-api-types ([6d966f0](https://github.com/makigas/clank/commit/6d966f04a1221e2d07fea959bf4c8327e07cac23))
+
 ## [0.21.0](https://github.com/makigas/clank/compare/v0.20.1...v0.21.0) (2021-06-08)
 
 
