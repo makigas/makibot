@@ -5,6 +5,7 @@ import Makibot from "../../../Makibot";
 import Server from "../../server";
 import autorolesMiddleware from "./autoroles";
 import memberMiddleware from "./member";
+import voiceRoleMiddleware from "./voiceroles";
 
 export interface MiddlewareLocals {
   guild: Guild;
@@ -32,7 +33,8 @@ export default function guildMiddleware(makibot: Makibot): express.Router {
   });
 
   router.use("/members/:member", memberMiddleware(makibot));
-  router.use("/roles", autorolesMiddleware(makibot));
+  router.use("/roles/reactions", autorolesMiddleware(makibot));
+  router.use("/roles/voices", voiceRoleMiddleware(makibot));
 
   /* Print current settings for the server. */
   router.get("/settings", (req, res) => {
