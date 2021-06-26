@@ -28,7 +28,8 @@ export default class WarnCommand extends InteractionCommand<WarnParameters> {
           "description": "Por qué le aplicamos un warn",
           "required": false
         }
-      ]
+      ],
+      "default_permission": false
     }
    */
   async handle({ reason, target }: WarnParameters): Promise<void> {
