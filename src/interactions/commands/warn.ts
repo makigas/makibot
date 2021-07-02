@@ -1,4 +1,4 @@
-import { GuildMember, User } from "discord.js";
+import { Guild, GuildMember, User } from "discord.js";
 import Member from "../../lib/member";
 import InteractionCommand from "../../lib/interaction/basecommand";
 import applyWarn from "../../lib/warn";
@@ -32,7 +32,7 @@ export default class WarnCommand extends InteractionCommand<WarnParameters> {
       "default_permission": false
     }
    */
-  async handle({ reason, target }: WarnParameters): Promise<void> {
+  async handle(_guild: Guild, { reason, target }: WarnParameters): Promise<void> {
     let member = new Member(target);
     if (member.moderator) {
       this.sendResponse(`No se puede poner un warn a <@${target.id}> porque es mod.`, true);

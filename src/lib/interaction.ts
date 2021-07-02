@@ -96,6 +96,6 @@ export async function handleInteraction(client: Makibot, event: APIInteraction) 
     const handler = new Handlers[event.data.name](client, event);
     const guild = await client.guilds.fetch(event.guild_id);
     const parameters = event.data.options ? await convertParameters(event.data.options, guild) : {};
-    handler.handle(parameters);
+    handler.handle(guild, parameters);
   }
 }
