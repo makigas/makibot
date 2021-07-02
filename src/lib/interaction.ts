@@ -11,10 +11,11 @@ import WarnCommand from "../interactions/commands/warn";
 import KarmaCommand from "../interactions/commands/karma";
 import PrimoCommand from "../interactions/commands/primo";
 import RaidCommand from "../interactions/commands/raid";
-import ResponderCommand from "../interactions/commands/responder";
+import ResponderCommand, { ResponderActionInteraction } from "../interactions/commands/responder";
 import Makibot from "../Makibot";
 import InteractionCommand from "./interaction/basecommand";
 import logger from "./logger";
+import Server from "./server";
 
 interface HandlerConstructor {
   // https://stackoverflow.com/a/39614325/2033517
@@ -90,14 +91,21 @@ function eventIsSlashCommand(event: APIInteraction): event is APIApplicationComm
 
 export async function handleInteraction(client: Makibot, event: APIInteraction) {
   logger.debug("[interactions] received event: ", event);
-  if (
-    isThisEventAGuildInteraction(event) &&
-    eventIsSlashCommand(event) &&
-    Handlers[event.data.name]
-  ) {
-    const handler = new Handlers[event.data.name](client, event);
-    const guild = await client.guilds.fetch(event.guild_id);
-    const parameters = event.data.options ? await convertParameters(event.data.options, guild) : {};
-    handler.handle(guild, parameters);
+  if (isThisEventAGuildInteraction(event) && eventIsSlashCommand(event)) {
+    let guild = await client.guilds.fetch(event.guild_id);
+    let server = new Server(guild);
+    let replies = server.tagbag.tag("reply").get({});
+
+    if (Handlers[event.data.name]) {
+      /* Run the interaction command for this. */
+      let handler = new Handlers[event.data.name](client, event);
+      let parameters = event.data.options ? await convertParameters(event.data.options, guild) : {};
+      handler.handle(guild, parameters);
+    } else if (replies[event.data.name]) {
+      /* A local command with this name exists, so send the response. */
+      let data = replies[event.data.name];
+      let command = new ResponderActionInteraction(client, event);
+      command.handle(guild, data);
+    }
   }
 }

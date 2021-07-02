@@ -9,6 +9,17 @@ interface ResponderParams {
   respuesta: string;
 }
 
+/**
+ * A fake command just so that I can use the sendResponse.
+ */
+export class ResponderActionInteraction extends InteractionCommand<ResponderParams> {
+  name = null;
+
+  async handle(_guild: Guild, params?: ResponderParams): Promise<void> {
+    await this.sendResponse(params.respuesta, params.efimero);
+  }
+}
+
 async function registerReply(app: Snowflake, guild: Snowflake, name: string): Promise<void> {
   await axios.post(
     `https://discord.com/api/v8/applications/${app}/guilds/${guild}/commands`,
