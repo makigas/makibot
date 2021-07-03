@@ -67,7 +67,7 @@ function isAllowed(message: Message): boolean {
     return true;
   } else {
     const member = new Member(message.member);
-    return member.crew || member.trusted || member.moderator;
+    return member.crew || member.moderator;
   }
 }
 
@@ -85,7 +85,7 @@ export default class AntispamService implements Hook {
 
   private async message(message: Message): Promise<void> {
     if (isAllowed(message)) {
-      return; /* trusted member or bot */
+      return; /* mod or bot */
     }
     const match = testModeration(message);
     if (match) {

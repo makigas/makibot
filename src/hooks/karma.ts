@@ -220,7 +220,7 @@ export default class KarmaService implements Hook {
         highScoreLevel.set(expectedLevel);
 
         /* A temporal fix to avoid spamming messages to most existing members. */
-        if (!member.trusted || expectedLevel > 1) {
+        if (expectedLevel > 1) {
           channel.send(getLevelUpMessage(gm.id, expectedLevel));
         }
       }

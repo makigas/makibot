@@ -73,10 +73,6 @@ export default class Member {
     return this.hasRole(this.server.modsRole);
   }
 
-  get trusted(): boolean {
-    return this.hasRole(this.server.trustedRole);
-  }
-
   get warned(): boolean {
     return this.hasRole(this.server.warnRole);
   }
