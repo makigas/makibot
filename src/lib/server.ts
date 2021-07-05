@@ -162,11 +162,6 @@ export default class Server {
     return this.getRoleByName(warnRoleName);
   }
 
-  get trustedRole(): Role {
-    const trustedRoleName = process.env.TRUSTED_ROLE || "trusted";
-    return this.getRoleByName(trustedRoleName);
-  }
-
   get linksDisabledRole(): Role {
     const linksDisabledRole = process.env.LINKS_DISABLE_ROLE || "links-disabled";
     return this.getRoleByName(linksDisabledRole);

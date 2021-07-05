@@ -46,7 +46,6 @@ export default function memberMiddleware(makibot: Makibot): express.Router {
       moderator: member.moderator,
       status: {
         verified: member.verified,
-        trusted: member.trusted,
         warned: member.warned,
         helper: member.helper,
         canPostLinks: member.canPostLinks,
