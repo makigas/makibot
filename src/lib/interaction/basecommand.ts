@@ -1,6 +1,6 @@
 import { APIGuildInteraction } from "discord-api-types";
 import Makibot from "../../Makibot";
-import { sendResponse } from "../interaction";
+import { sendResponse } from "./response";
 
 export default abstract class InteractionCommand<Params> {
   protected readonly client: Makibot;
