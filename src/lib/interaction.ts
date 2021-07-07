@@ -11,11 +11,32 @@ import WarnCommand from "../interactions/commands/warn";
 import KarmaCommand from "../interactions/commands/karma";
 import PrimoCommand from "../interactions/commands/primo";
 import RaidCommand from "../interactions/commands/raid";
-import ResponderCommand, { ResponderActionInteraction } from "../interactions/commands/responder";
+import ResponderCommand from "../interactions/commands/responder";
 import Makibot from "../Makibot";
 import InteractionCommand from "./interaction/basecommand";
 import logger from "./logger";
 import Server from "./server";
+import axios from "axios";
+
+export async function sendResponse(event: APIGuildInteraction, response: string, ephemeral: boolean = false): Promise<void> {
+  const payload: any = {
+    type: 4,
+    data: { content: response },
+  };
+  if (ephemeral) {
+    payload.data.flags = 64;
+  }
+  logger.debug("[interactions] sending response: ", payload);
+  return axios.post(
+    `https://discord.com/api/v8/interactions/${event.id}/${event.token}/callback`,
+    payload,
+    {
+      headers: {
+      "Content-Type": "application/json",
+    },
+  },
+  );
+}
 
 interface HandlerConstructor {
   // https://stackoverflow.com/a/39614325/2033517
@@ -104,8 +125,7 @@ export async function handleInteraction(client: Makibot, event: APIInteraction) 
     } else if (replies[event.data.name]) {
       /* A local command with this name exists, so send the response. */
       let data = replies[event.data.name];
-      let command = new ResponderActionInteraction(client, event);
-      command.handle(guild, data);
+      await sendResponse(event, data.respuesta, data.efimero);
     }
   }
 }
