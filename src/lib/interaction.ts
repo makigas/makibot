@@ -16,27 +16,7 @@ import Makibot from "../Makibot";
 import InteractionCommand from "./interaction/basecommand";
 import logger from "./logger";
 import Server from "./server";
-import axios from "axios";
-
-export async function sendResponse(event: APIGuildInteraction, response: string, ephemeral: boolean = false): Promise<void> {
-  const payload: any = {
-    type: 4,
-    data: { content: response },
-  };
-  if (ephemeral) {
-    payload.data.flags = 64;
-  }
-  logger.debug("[interactions] sending response: ", payload);
-  return axios.post(
-    `https://discord.com/api/v8/interactions/${event.id}/${event.token}/callback`,
-    payload,
-    {
-      headers: {
-      "Content-Type": "application/json",
-    },
-  },
-  );
-}
+import { sendResponse } from "./interaction/response";
 
 interface HandlerConstructor {
   // https://stackoverflow.com/a/39614325/2033517
