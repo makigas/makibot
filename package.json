@@ -30,7 +30,7 @@
   "description": "Discord bot for the makigas server",
   "devDependencies": {
     "@types/chai": "^4.2.19",
-    "@types/express": "^4.17.12",
+    "@types/express": "^4.17.13",
     "@types/mocha": "^8.2.2",
     "@types/node": "^12.20.15",
     "@types/require-all": "^3.0.2",
