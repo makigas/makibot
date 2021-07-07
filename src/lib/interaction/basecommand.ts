@@ -1,14 +1,6 @@
-import axios from "axios";
 import { APIGuildInteraction } from "discord-api-types";
 import Makibot from "../../Makibot";
-import logger from "../logger";
-
-const interactionsClient = axios.create({
-  baseURL: "https://discord.com/api/v8",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+import { sendResponse } from "../interaction";
 
 export default abstract class InteractionCommand<Params> {
   protected readonly client: Makibot;
@@ -23,17 +15,6 @@ export default abstract class InteractionCommand<Params> {
   abstract handle(params?: Params): Promise<void>;
 
   sendResponse(response: string, ephemeral: boolean = false): Promise<void> {
-    const payload: any = {
-      type: 4,
-      data: { content: response },
-    };
-    if (ephemeral) {
-      payload.data.flags = 64;
-    }
-    logger.debug("[interactions] sending response: ", payload);
-    return interactionsClient.post(
-      `/interactions/${this.event.id}/${this.event.token}/callback`,
-      payload
-    );
+    return sendResponse(this.event, response, ephemeral);
   }
 }
