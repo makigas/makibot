@@ -2,20 +2,61 @@ import { Guild, Snowflake } from "discord.js";
 import Server from "../../lib/server";
 import InteractionCommand from "../../lib/interaction/basecommand";
 import axios from "axios";
+import { APIApplicationCommandOption, ApplicationCommandOptionType } from "discord-api-types";
+
+const commandParamType: { [kind: string]: ApplicationCommandOptionType } = {
+  string: ApplicationCommandOptionType.STRING,
+  integer: ApplicationCommandOptionType.INTEGER,
+  boolean: ApplicationCommandOptionType.BOOLEAN,
+  role: ApplicationCommandOptionType.ROLE,
+  mentionable: ApplicationCommandOptionType.MENTIONABLE,
+  user: ApplicationCommandOptionType.USER,
+  channel: ApplicationCommandOptionType.CHANNEL,
+};
+
+export function parseCommandArguments(input: string): APIApplicationCommandOption[] {
+  if (!input) {
+    return [];
+  }
+
+  /* Trim whitespaces. */
+  const parsedParameters = input.trim().split(/\s+/);
+  return parsedParameters.map((param) => {
+    const splitParams = param.split(":");
+    if (splitParams.length != 2) {
+      throw new Error("This parameter is not declared correctly: " + param);
+    }
+    const [name, type] = splitParams;
+    if (!commandParamType[type]) {
+      throw new Error("Invalid data type: " + type);
+    }
+    return {
+      name,
+      description: name,
+      type: commandParamType[type],
+    };
+  });
+}
 
 interface ResponderParams {
   nombre: string;
   efimero: boolean;
   respuesta: string;
+  params: string;
 }
 
-async function registerReply(app: Snowflake, guild: Snowflake, name: string): Promise<void> {
+async function registerReply(
+  app: Snowflake,
+  guild: Snowflake,
+  name: string,
+  commandParams: APIApplicationCommandOption[]
+): Promise<void> {
   await axios.post(
     `https://discord.com/api/v8/applications/${app}/guilds/${guild}/commands`,
     {
       name,
       description: `Ejecuta comando ${name}`,
-      options: [],
+      options: commandParams || [],
     },
     {
       headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` },
@@ -45,12 +86,18 @@ async function registerReply(app: Snowflake, guild: Snowflake, name: string): Pr
       "name": "respuesta",
       "description": "Qué quieres que diga el bot cuando se mande este comando",
       "required": true
+    },
+    {
+      "type": 3,
+      "name": "params",
+      "description": "Especificación de los parámetros que aceptará este comando",
+      "required": false,
     }
   ]
 }
 */
 export default class ResponderCommand extends InteractionCommand<ResponderParams> {
-  name: string = "responder";
+  name = "responder";
 
   async handle(guild: Guild, params?: ResponderParams): Promise<void> {
     const server = new Server(guild);
@@ -70,7 +117,8 @@ export default class ResponderCommand extends InteractionCommand<ResponderParams
     /* Fetch the APP_ID for this bot. */
     const application = await this.client.fetchApplication();
     const applicationId = application.id;
-    await registerReply(applicationId, guild.id, params.nombre);
+    const commandParams = parseCommandArguments(params.params);
+    await registerReply(applicationId, guild.id, params.nombre, commandParams);
 
     /* Register the command. */
     replyCommands.set(currentCommands);
