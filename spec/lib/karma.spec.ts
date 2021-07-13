@@ -1,24 +1,28 @@
 import { expect } from "chai";
 import "mocha";
 
-import { getLevel } from "../../src/lib/karma";
+import { getLevelV2 } from "../../src/lib/karma";
 
 describe("karma", () => {
-  describe("#getLevel", () => {
+  describe("#getLevelV2", () => {
     it("works for positives", () => {
-      expect(getLevel(1)).to.eq(1);
-      expect(getLevel(49)).to.eq(1);
-      expect(getLevel(50)).to.eq(2);
+      expect(getLevelV2(1)).to.eq(1);
+      expect(getLevelV2(29)).to.eq(1);
+      expect(getLevelV2(30)).to.eq(2);
+      expect(getLevelV2(50)).to.eq(2);
+      expect(getLevelV2(61)).to.eq(3);
+      expect(getLevelV2(3879)).to.eq(49);
+      expect(getLevelV2(3890)).to.eq(50);
     });
 
     it("works for negatives", () => {
-      expect(getLevel(-1)).to.eq(-1);
-      expect(getLevel(-49)).to.eq(-1);
-      expect(getLevel(-50)).to.eq(-2);
+      expect(getLevelV2(-1)).to.eq(-1);
+      expect(getLevelV2(-29)).to.eq(-1);
+      expect(getLevelV2(-30)).to.eq(-2);
     });
 
     it("works for zero", () => {
-      expect(getLevel(0)).to.eq(0);
+      expect(getLevelV2(0)).to.eq(0);
     });
   });
 });

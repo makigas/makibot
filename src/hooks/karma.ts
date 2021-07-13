@@ -2,7 +2,6 @@ import {
   Channel,
   GuildMember,
   Message,
-  MessageEmbedOptions,
   MessageReaction,
   PartialMessage,
   PartialUser,
@@ -10,11 +9,11 @@ import {
   User,
 } from "discord.js";
 import { Hook } from "../lib/hook";
-import { canReceivePoints, getLevel, getLevelUpMessage } from "../lib/karma";
+import { canReceivePoints, getLevelV1, getLevelV2, getLevelUpMessage } from "../lib/karma";
 import { KarmaDatabase } from "../lib/karma/database";
 import Member from "../lib/member";
 import Server from "../lib/server";
-import applyWarn, { notifyPublicModlog } from "../lib/warn";
+import { notifyPublicModlog } from "../lib/warn";
 import Makibot from "../Makibot";
 
 async function prefetchMessage(message: Message | PartialMessage): Promise<Message> {
@@ -187,6 +186,14 @@ export default class KarmaService implements Hook {
   private async assertLevel(gm: GuildMember, channel: TextChannel): Promise<void> {
     const member = new Member(gm);
     const points = member.tagbag.tag("karma:offset").get(0) + (await this.karma.count(gm.id));
+
+    /* Members have to be upgraded to v2. This prevents a storm of level-up messages. */
+    const formulas = {
+      v1: getLevelV1,
+      v2: getLevelV2,
+    };
+    const karmaGeneration = member.tagbag.tag("karma:version").get<string>("v1");
+    const getLevel = formulas[karmaGeneration];
     const expectedLevel = getLevel(points);
 
     /*
@@ -218,11 +225,7 @@ export default class KarmaService implements Hook {
       const highScoreLevel = member.tagbag.tag("karma:max");
       if (highScoreLevel.get(0) < expectedLevel) {
         highScoreLevel.set(expectedLevel);
-
-        /* A temporal fix to avoid spamming messages to most existing members. */
-        if (expectedLevel > 1) {
-          channel.send(getLevelUpMessage(gm.id, expectedLevel));
-        }
+        channel.send(getLevelUpMessage(gm.id, expectedLevel));
       }
     }
 

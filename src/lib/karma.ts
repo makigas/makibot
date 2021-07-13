@@ -18,7 +18,7 @@ export function getLevelUpMessage(id: Snowflake, level: number): string {
   }
 }
 
-export function getLevel(points: number): number {
+export function getLevelV1(points: number): number {
   /*
    * Considerations:
    * - Always add 1 because it is not possible to have level 0, you always start from level 1.
@@ -40,4 +40,38 @@ export function getLevel(points: number): number {
     const progress = Math.pow(points / 50, 1 / 1.25);
     return Math.trunc(progress) + 1;
   }
+}
+
+export function getLevelV2(points: number): number {
+  /*
+   * Formula:  XP = OFFT * (LVL-1)^(1 + LVL/MULT)
+   * Where: OFFT = 30 and MULT = 200
+   *
+   * Rationale: KarmaV2 alters the offset (goes down from 50 to 30)
+   * and also changes the exponent so that it is higher once the
+   * level goes up.
+   *
+   * Screw inverse formulas, this formula is so complex that I prefer
+   * to build a loop that iterates until the desired level gets
+   * computed.
+   *
+   * TODO: Can this be memoized?
+   */
+  if (points === 0) {
+    return 0;
+  } else if (points < 0) {
+    return -1 * getLevelV2(-points);
+  }
+
+  const offset = 30;
+  const mult = 200;
+
+  let pts,
+    level = 0;
+  do {
+    level++;
+    pts = Math.ceil(offset * Math.pow(level - 1, 1 + level / mult));
+  } while (pts <= points);
+
+  return level - 1;
 }

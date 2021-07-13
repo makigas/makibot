@@ -14,6 +14,7 @@ interface KarmaStats {
   points: number;
   level: number;
   total: number;
+  version: string;
 }
 
 export default class Member {
@@ -118,6 +119,7 @@ export default class Member {
     const [total, messages, upvotes, downvotes, stars, hearts, waves] = results;
     const offset = this.tagbag.tag("karma:offset").get(0);
     const level = this.tagbag.tag("karma:level").get(1);
+    const version = this.tagbag.tag("karma:ver").get<string>("v1");
     const points = offset + total;
 
     return {
@@ -131,6 +133,7 @@ export default class Member {
       upvotes,
       waves,
       total,
+      version,
     };
   }
 
