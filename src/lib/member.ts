@@ -145,10 +145,15 @@ export default class Member {
   }
 
   async upgradeKarma(): Promise<void> {
-    const karma = await this.getKarma();
-    if (karma.version === "v1") {
+    const version = this.tagbag.tag("karma:ver").get<string>("v1");
+
+    if (version === "v1") {
       /* Upgrade to v2. */
-      const levelV2 = getLevelV2(karma.points);
+      const total = await this.client.karma.count(this.id);
+      const offset = this.tagbag.tag("karma:offset").get(0);
+      const points = total + offset;
+
+      const levelV2 = getLevelV2(points);
       await this.tagbag.tag("karma:level").set(levelV2);
       await this.tagbag.tag("karma:max").set(levelV2);
       await this.tagbag.tag("karma:ver").set("v2");

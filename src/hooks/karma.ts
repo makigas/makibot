@@ -9,7 +9,7 @@ import {
   User,
 } from "discord.js";
 import { Hook } from "../lib/hook";
-import { canReceivePoints, getLevelV1, getLevelV2, getLevelUpMessage } from "../lib/karma";
+import { canReceivePoints, getLevelV2, getLevelUpMessage } from "../lib/karma";
 import { KarmaDatabase } from "../lib/karma/database";
 import Member from "../lib/member";
 import Server from "../lib/server";
@@ -185,23 +185,14 @@ export default class KarmaService implements Hook {
 
   private async assertLevel(gm: GuildMember, channel: TextChannel): Promise<void> {
     const member = new Member(gm);
-    const points = member.tagbag.tag("karma:offset").get(0) + (await this.karma.count(gm.id));
-
-    /* Members have to be upgraded to v2. This prevents a storm of level-up messages. */
-    const formulas = {
-      v1: getLevelV1,
-      v2: getLevelV2,
-    };
-    const karmaGeneration = member.tagbag.tag("karma:version").get<string>("v1");
-    const getLevel = formulas[karmaGeneration];
-    const expectedLevel = getLevel(points);
+    const karma = await member.getKarma();
 
     /*
      * Control mute for members with negative karma.
      * TODO: This is an ugly patch. Negative levels should be fixed (and not return -1).
      * Members with negative level should be the ones muted.
      */
-    if (points <= -3) {
+    if (karma.points <= -3) {
       /* First, make sure this person is silenced. */
       await member.setMuted(true);
 
@@ -219,6 +210,7 @@ export default class KarmaService implements Hook {
     }
 
     const currentLevel = member.tagbag.tag("karma:level");
+    const expectedLevel = getLevelV2(karma.points);
     if (currentLevel.get(0) != expectedLevel) {
       currentLevel.set(expectedLevel);
 
