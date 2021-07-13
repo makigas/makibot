@@ -1,5 +1,6 @@
 import { GuildMember, Role } from "discord.js";
 import Makibot from "../Makibot";
+import { getLevelV2 } from "./karma";
 import Server from "./server";
 import TagBag from "./tagbag";
 
@@ -122,6 +123,12 @@ export default class Member {
     const version = this.tagbag.tag("karma:ver").get<string>("v1");
     const points = offset + total;
 
+    /* Upgrade to the latest version of the karma formula. */
+    if (version !== "v2") {
+      await this.upgradeKarma();
+      return this.getKarma();
+    }
+
     return {
       downvotes,
       hearts,
@@ -135,6 +142,18 @@ export default class Member {
       total,
       version,
     };
+  }
+
+  async upgradeKarma(): Promise<void> {
+    const karma = await this.getKarma();
+    if (karma.version === "v1") {
+      /* Upgrade to v2. */
+      const levelV2 = getLevelV2(karma.points);
+      await this.tagbag.tag("karma:level").set(levelV2);
+      await this.tagbag.tag("karma:max").set(levelV2);
+      await this.tagbag.tag("karma:ver").set("v2");
+      await this.setCrew(levelV2);
+    }
   }
 
   async setVerification(value: boolean): Promise<boolean> {
