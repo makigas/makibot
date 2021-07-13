@@ -5,7 +5,7 @@ import { MiddlewareLocals as GuildMiddlewareLocals } from "./guild";
 
 import Member from "../../member";
 import Makibot from "../../../Makibot";
-import { getLevel } from "../../karma";
+import { getLevelV1, getLevelV2 } from "../../karma";
 
 export interface MiddlewareLocals extends GuildMiddlewareLocals {
   guildMember: GuildMember;
@@ -77,6 +77,14 @@ export default function memberMiddleware(makibot: Makibot): express.Router {
     if (isNaN(offset) || offset < 0) {
       res.status(400).contentType("text/plain").send("Offset must be a positive number");
     } else {
+      /* Generation. */
+      const karmagen = res.locals.member.tagbag.tag("karma:ver").get<string>("v1");
+      const levelFormulas = {
+        v1: getLevelV1,
+        v2: getLevelV2,
+      };
+      const getLevel = levelFormulas[karmagen];
+
       /* Bump the offset. */
       await res.locals.member.tagbag.tag("karma:offset").set(offset);
 

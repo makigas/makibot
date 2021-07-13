@@ -1,5 +1,6 @@
 import { GuildMember, Role } from "discord.js";
 import Makibot from "../Makibot";
+import { getLevelV2 } from "./karma";
 import Server from "./server";
 import TagBag from "./tagbag";
 
@@ -14,6 +15,7 @@ interface KarmaStats {
   points: number;
   level: number;
   total: number;
+  version: string;
 }
 
 export default class Member {
@@ -118,7 +120,14 @@ export default class Member {
     const [total, messages, upvotes, downvotes, stars, hearts, waves] = results;
     const offset = this.tagbag.tag("karma:offset").get(0);
     const level = this.tagbag.tag("karma:level").get(1);
+    const version = this.tagbag.tag("karma:ver").get<string>("v1");
     const points = offset + total;
+
+    /* Upgrade to the latest version of the karma formula. */
+    if (version !== "v2") {
+      await this.upgradeKarma();
+      return this.getKarma();
+    }
 
     return {
       downvotes,
@@ -131,7 +140,25 @@ export default class Member {
       upvotes,
       waves,
       total,
+      version,
     };
+  }
+
+  async upgradeKarma(): Promise<void> {
+    const version = this.tagbag.tag("karma:ver").get<string>("v1");
+
+    if (version === "v1") {
+      /* Upgrade to v2. */
+      const total = await this.client.karma.count(this.id);
+      const offset = this.tagbag.tag("karma:offset").get(0);
+      const points = total + offset;
+
+      const levelV2 = getLevelV2(points);
+      await this.tagbag.tag("karma:level").set(levelV2);
+      await this.tagbag.tag("karma:max").set(levelV2);
+      await this.tagbag.tag("karma:ver").set("v2");
+      await this.setCrew(levelV2);
+    }
   }
 
   async setVerification(value: boolean): Promise<boolean> {

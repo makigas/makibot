@@ -2,7 +2,6 @@ import {
   Channel,
   GuildMember,
   Message,
-  MessageEmbedOptions,
   MessageReaction,
   PartialMessage,
   PartialUser,
@@ -10,11 +9,11 @@ import {
   User,
 } from "discord.js";
 import { Hook } from "../lib/hook";
-import { canReceivePoints, getLevel, getLevelUpMessage } from "../lib/karma";
+import { canReceivePoints, getLevelV2, getLevelUpMessage } from "../lib/karma";
 import { KarmaDatabase } from "../lib/karma/database";
 import Member from "../lib/member";
 import Server from "../lib/server";
-import applyWarn, { notifyPublicModlog } from "../lib/warn";
+import { notifyPublicModlog } from "../lib/warn";
 import Makibot from "../Makibot";
 
 async function prefetchMessage(message: Message | PartialMessage): Promise<Message> {
@@ -186,15 +185,14 @@ export default class KarmaService implements Hook {
 
   private async assertLevel(gm: GuildMember, channel: TextChannel): Promise<void> {
     const member = new Member(gm);
-    const points = member.tagbag.tag("karma:offset").get(0) + (await this.karma.count(gm.id));
-    const expectedLevel = getLevel(points);
+    const karma = await member.getKarma();
 
     /*
      * Control mute for members with negative karma.
      * TODO: This is an ugly patch. Negative levels should be fixed (and not return -1).
      * Members with negative level should be the ones muted.
      */
-    if (points <= -3) {
+    if (karma.points <= -3) {
       /* First, make sure this person is silenced. */
       await member.setMuted(true);
 
@@ -207,26 +205,23 @@ export default class KarmaService implements Hook {
           `Has sido silenciado automáticamente, <@${gm.user.id}>`,
           "Silenciado automáticamente al tener karma excesivamente negativo"
         );
-        alreadyWarnedTag.set(true);
+        await alreadyWarnedTag.set(true);
       }
     }
 
     const currentLevel = member.tagbag.tag("karma:level");
+    const expectedLevel = getLevelV2(karma.points);
     if (currentLevel.get(0) != expectedLevel) {
-      currentLevel.set(expectedLevel);
+      await currentLevel.set(expectedLevel);
 
       const highScoreLevel = member.tagbag.tag("karma:max");
       if (highScoreLevel.get(0) < expectedLevel) {
-        highScoreLevel.set(expectedLevel);
-
-        /* A temporal fix to avoid spamming messages to most existing members. */
-        if (expectedLevel > 1) {
-          channel.send(getLevelUpMessage(gm.id, expectedLevel));
-        }
+        await highScoreLevel.set(expectedLevel);
+        await channel.send(getLevelUpMessage(gm.id, expectedLevel));
       }
     }
 
     /* Update presence in the tiers. */
-    member.setCrew(currentLevel.get(0));
+    await member.setCrew(currentLevel.get(0));
   }
 }
