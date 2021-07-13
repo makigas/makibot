@@ -1,9 +1,13 @@
 import axios from "axios";
-import { APIGuildInteraction } from "discord-api-types";
+import { APIGuildInteraction, APIInteractionResponse } from "discord-api-types";
 import logger from "../logger";
 
-export async function sendResponse(event: APIGuildInteraction, response: string, ephemeral: boolean = false): Promise<void> {
-  const payload: any = {
+export async function sendResponse(
+  event: APIGuildInteraction,
+  response: string,
+  ephemeral = false
+): Promise<void> {
+  const payload: APIInteractionResponse = {
     type: 4,
     data: { content: response },
   };
@@ -16,8 +20,8 @@ export async function sendResponse(event: APIGuildInteraction, response: string,
     payload,
     {
       headers: {
-      "Content-Type": "application/json",
-    },
-  },
+        "Content-Type": "application/json",
+      },
+    }
   );
 }

@@ -14,7 +14,7 @@ export default abstract class InteractionCommand<Params> {
   abstract name: string;
   abstract handle(params?: Params): Promise<void>;
 
-  sendResponse(response: string, ephemeral: boolean = false): Promise<void> {
+  sendResponse(response: string, ephemeral = false): Promise<void> {
     return sendResponse(this.event, response, ephemeral);
   }
 }
