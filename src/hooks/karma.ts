@@ -205,23 +205,23 @@ export default class KarmaService implements Hook {
           `Has sido silenciado automáticamente, <@${gm.user.id}>`,
           "Silenciado automáticamente al tener karma excesivamente negativo"
         );
-        alreadyWarnedTag.set(true);
+        await alreadyWarnedTag.set(true);
       }
     }
 
     const currentLevel = member.tagbag.tag("karma:level");
     const expectedLevel = getLevelV2(karma.points);
     if (currentLevel.get(0) != expectedLevel) {
-      currentLevel.set(expectedLevel);
+      await currentLevel.set(expectedLevel);
 
       const highScoreLevel = member.tagbag.tag("karma:max");
       if (highScoreLevel.get(0) < expectedLevel) {
-        highScoreLevel.set(expectedLevel);
-        channel.send(getLevelUpMessage(gm.id, expectedLevel));
+        await highScoreLevel.set(expectedLevel);
+        await channel.send(getLevelUpMessage(gm.id, expectedLevel));
       }
     }
 
     /* Update presence in the tiers. */
-    member.setCrew(currentLevel.get(0));
+    await member.setCrew(currentLevel.get(0));
   }
 }
