@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.23.0](https://github.com/makigas/clank/compare/v0.22.0...v0.23.0) (2021-07-13)
+
+
+### Features
+
+* KarmaV2 ([#365](https://github.com/makigas/clank/issues/365)) ([c3e59fc](https://github.com/makigas/clank/commit/c3e59fc3b3f176dbf965704ee6fde7a9d0d27a5b))
+
+
+### Refactor
+
+* extract sendResponse into its own function ([#366](https://github.com/makigas/clank/issues/366)) ([6134bc2](https://github.com/makigas/clank/commit/6134bc2ced939bfb3e3b78d1b800b40db2ba0bba))
+* remove trusted roles ([#352](https://github.com/makigas/clank/issues/352)) ([797f1e3](https://github.com/makigas/clank/commit/797f1e33c5a18980f842a17174feb113ea79af70))
+
 ## [0.22.0](https://github.com/makigas/clank/compare/v0.21.0...v0.22.0) (2021-06-26)
 
 
