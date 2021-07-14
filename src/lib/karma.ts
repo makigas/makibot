@@ -42,6 +42,21 @@ export function getLevelV1(points: number): number {
   }
 }
 
+/* A memoization to store the computed XP points for levels. */
+const memoLevels: { [level: string]: number } = {};
+
+/**
+ * Returns the amount of points required to go to a specific level.
+ */
+export function getPointsForLevelV2(level: number): number {
+  const offset = 30;
+  const mult = 200;
+  if (!memoLevels[level]) {
+    memoLevels[level] = Math.ceil(offset * Math.pow(level - 1, 1 + level / mult));
+  }
+  return memoLevels[level];
+}
+
 export function getLevelV2(points: number): number {
   /*
    * Formula:  XP = OFFT * (LVL-1)^(1 + LVL/MULT)
@@ -54,8 +69,6 @@ export function getLevelV2(points: number): number {
    * Screw inverse formulas, this formula is so complex that I prefer
    * to build a loop that iterates until the desired level gets
    * computed.
-   *
-   * TODO: Can this be memoized?
    */
   if (points === 0) {
     return 0;
@@ -63,14 +76,11 @@ export function getLevelV2(points: number): number {
     return -1 * getLevelV2(-points);
   }
 
-  const offset = 30;
-  const mult = 200;
-
   let pts,
     level = 0;
   do {
     level++;
-    pts = Math.ceil(offset * Math.pow(level - 1, 1 + level / mult));
+    pts = getPointsForLevelV2(level);
   } while (pts <= points);
 
   return level - 1;
