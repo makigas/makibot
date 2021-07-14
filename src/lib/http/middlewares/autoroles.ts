@@ -1,27 +1,31 @@
 import express from "express";
 
 import Makibot from "../../../Makibot";
-import { AutoRoleConfiguration } from "../../autorole";
+import { ReactionRoleConfiguration } from "discordjs-reaction-role";
 
 export default function autorolesMiddleware(makibot: Makibot): express.Router {
   const router = express.Router();
 
   router.get("/", (req, res) => {
-    const config: AutoRoleConfiguration[] = makibot.provider.get("global", "autorole:config", []);
+    const config: ReactionRoleConfiguration[] = makibot.provider.get(
+      "global",
+      "autorole:config",
+      []
+    );
 
     res.json(config);
   });
 
   router.post("/", async (req, res) => {
     if (req.body.message && req.body.role && req.body.emoji) {
-      const newAutoRole: AutoRoleConfiguration = {
+      const newAutoRole: ReactionRoleConfiguration = {
         messageId: req.body.message,
         reaction: req.body.emoji,
         roleId: req.body.role,
       };
 
       /* It is not possible to have two roles for the same messageId and reaction. */
-      const prevConf: AutoRoleConfiguration[] = makibot.provider.get(
+      const prevConf: ReactionRoleConfiguration[] = makibot.provider.get(
         "global",
         "autorole:config",
         []
@@ -42,7 +46,7 @@ export default function autorolesMiddleware(makibot: Makibot): express.Router {
 
   router.delete("/", async (req, res) => {
     if (req.body.emoji && req.body.message) {
-      const prevConf: AutoRoleConfiguration[] = makibot.provider.get(
+      const prevConf: ReactionRoleConfiguration[] = makibot.provider.get(
         "global",
         "autorole:config",
         []
