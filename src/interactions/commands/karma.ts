@@ -1,5 +1,6 @@
 import InteractionCommand from "../../lib/interaction/basecommand";
 import Server from "../../lib/server";
+import { getPointsForLevelV2 } from "../../lib/karma";
 
 /*
   {
@@ -16,6 +17,7 @@ export default class KarmaCommand extends InteractionCommand<{}> {
     const member = await server.member(this.event.member.user.id);
 
     const stats = await member.getKarma();
+    const nextLevel = getPointsForLevelV2(stats.level + 1);
 
     const kinds = [
       `👍 ${stats.upvotes}`,
@@ -24,9 +26,11 @@ export default class KarmaCommand extends InteractionCommand<{}> {
       `❤️ ${stats.hearts}`,
       `👋 ${stats.waves}`,
     ];
+
     const response =
       `🪙 Karma: ${stats.points}        🏅 Nivel: ${stats.level}\n` +
       `  💬 Mensajes: ${stats.messages}        ⏩ Offset: ${stats.offset}\n` +
+      `  🔜 Siguiente nivel en: ${nextLevel - stats.points}\n` +
       `  ${kinds.join("    ")}`;
 
     this.sendResponse(response, true);
