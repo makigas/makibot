@@ -122,7 +122,7 @@ export async function handleInteraction(client: Makibot, event: APIInteraction):
       const data = replies[event.data.name];
       console.log(event.data);
       const options = event.data.options || [];
-      const params = convertParameters(options, guild);
+      const params = await convertParameters(options, guild);
 
       /*
        * Fill interpolations in the template text. They have the format
