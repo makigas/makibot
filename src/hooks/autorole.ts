@@ -1,5 +1,6 @@
+import ReactionRole from "discordjs-reaction-role";
+
 import { Hook } from "../lib/hook";
-import AutoRole from "../lib/autorole";
 import Makibot from "../Makibot";
 
 export default class AutoRoleService implements Hook {
@@ -7,7 +8,7 @@ export default class AutoRoleService implements Hook {
 
   allowsRestart = true;
 
-  private autorole: AutoRole;
+  private autorole: ReactionRole;
 
   constructor(private client: Makibot) {
     this.restart();
@@ -19,6 +20,6 @@ export default class AutoRoleService implements Hook {
 
     /* Start a new AutoRole. */
     const config = this.client.provider.get("global", "autorole:config", []);
-    this.autorole = new AutoRole(this.client, config);
+    this.autorole = new ReactionRole(this.client, config);
   }
 }
