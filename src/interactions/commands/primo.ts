@@ -1,4 +1,5 @@
 import bigInt, { BigInteger } from "big-integer";
+import { Guild } from "discord.js";
 import InteractionCommand from "../../lib/interaction/basecommand";
 
 interface PrimoParams {
@@ -22,7 +23,7 @@ interface PrimoParams {
 export default class PrimoCommand extends InteractionCommand<PrimoParams> {
   name: string = "primo";
 
-  handle(params: PrimoParams): Promise<void> {   
+  handle(_guild: Guild, params: PrimoParams): Promise<void> {
     if (params.n.trim() == "") {
       return this.sendResponse("Uso: `/primo [n:number]`", true);
     } else if (/^\-?\d+$/g.test(params.n)) {
