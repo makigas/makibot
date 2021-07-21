@@ -5,13 +5,13 @@ import axios from "axios";
 import { APIApplicationCommandOption, ApplicationCommandOptionType } from "discord-api-types";
 
 const commandParamType: { [kind: string]: ApplicationCommandOptionType } = {
-  string: ApplicationCommandOptionType.STRING,
-  integer: ApplicationCommandOptionType.INTEGER,
-  boolean: ApplicationCommandOptionType.BOOLEAN,
-  role: ApplicationCommandOptionType.ROLE,
-  mentionable: ApplicationCommandOptionType.MENTIONABLE,
-  user: ApplicationCommandOptionType.USER,
-  channel: ApplicationCommandOptionType.CHANNEL,
+  string: ApplicationCommandOptionType.String,
+  integer: ApplicationCommandOptionType.Integer,
+  boolean: ApplicationCommandOptionType.Boolean,
+  role: ApplicationCommandOptionType.Role,
+  mentionable: ApplicationCommandOptionType.Mentionable,
+  user: ApplicationCommandOptionType.User,
+  channel: ApplicationCommandOptionType.Channel,
 };
 
 export function parseCommandArguments(input: string): APIApplicationCommandOption[] {
