@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.24.0](https://github.com/makigas/clank/compare/v0.23.0...v0.24.0) (2021-07-21)
+
+
+### Features
+
+* disclose the amount of points to level up ([#369](https://github.com/makigas/clank/issues/369)) ([4533e99](https://github.com/makigas/clank/commit/4533e99f95b9a52f2630b5f07a43a8d23fd67f8f))
+* reply commands ([#360](https://github.com/makigas/clank/issues/360)) ([ce7f2fa](https://github.com/makigas/clank/commit/ce7f2facdcba7c070d5aa2d433263183f04daabf))
+
 ## [0.23.0](https://github.com/makigas/clank/compare/v0.22.0...v0.23.0) (2021-07-13)
 
 
