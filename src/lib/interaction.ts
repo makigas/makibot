@@ -15,6 +15,7 @@ import WarnCommand from "../interactions/commands/warn";
 import KarmaCommand from "../interactions/commands/karma";
 import PrimoCommand from "../interactions/commands/primo";
 import RaidCommand from "../interactions/commands/raid";
+import DesresponderCommand from "../interactions/commands/desresponder";
 import ResponderCommand from "../interactions/commands/responder";
 import Makibot from "../Makibot";
 import InteractionCommand from "./interaction/basecommand";
@@ -33,6 +34,7 @@ const Handlers: { [name: string]: HandlerConstructor } = {
   primo: PrimoCommand,
   raid: RaidCommand,
   warn: WarnCommand,
+  desresponder: DesresponderCommand,
   responder: ResponderCommand,
 };
 

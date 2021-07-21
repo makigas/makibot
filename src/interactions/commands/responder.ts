@@ -38,7 +38,7 @@ export function parseCommandArguments(input: string): APIApplicationCommandOptio
   });
 }
 
-interface ResponderParams {
+export interface ResponderParams {
   nombre: string;
   efimero: boolean;
   respuesta: string;
