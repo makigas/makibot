@@ -123,6 +123,6 @@ export default class ResponderCommand extends InteractionCommand<ResponderParams
     /* Register the command. */
     replyCommands.set(currentCommands);
 
-    this.sendResponse(`vale`, true);
+    this.sendResponse("Comando ha sido creado", true);
   }
 }
