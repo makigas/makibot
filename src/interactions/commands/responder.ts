@@ -1,8 +1,8 @@
-import { Guild, Snowflake } from "discord.js";
+import { Guild } from "discord.js";
 import Server from "../../lib/server";
 import InteractionCommand from "../../lib/interaction/basecommand";
-import axios from "axios";
 import { APIApplicationCommandOption, ApplicationCommandOptionType } from "discord-api-types";
+import { createGuildCommand } from "../../lib/interaction/client";
 
 const commandParamType: { [kind: string]: ApplicationCommandOptionType } = {
   string: ApplicationCommandOptionType.String,
@@ -43,25 +43,6 @@ export interface ResponderParams {
   efimero: boolean;
   respuesta: string;
   params: string;
-}
-
-async function registerReply(
-  app: Snowflake,
-  guild: Snowflake,
-  name: string,
-  commandParams: APIApplicationCommandOption[]
-): Promise<void> {
-  await axios.post(
-    `https://discord.com/api/v8/applications/${app}/guilds/${guild}/commands`,
-    {
-      name,
-      description: `Ejecuta comando ${name}`,
-      options: commandParams || [],
-    },
-    {
-      headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` },
-    }
-  );
 }
 
 /*
@@ -115,10 +96,8 @@ export default class ResponderCommand extends InteractionCommand<ResponderParams
     currentCommands[params.nombre] = params;
 
     /* Fetch the APP_ID for this bot. */
-    const application = await this.client.fetchApplication();
-    const applicationId = application.id;
     const commandParams = parseCommandArguments(params.params);
-    await registerReply(applicationId, guild.id, params.nombre, commandParams);
+    await createGuildCommand(guild, params.nombre, commandParams);
 
     /* Register the command. */
     replyCommands.set(currentCommands);
