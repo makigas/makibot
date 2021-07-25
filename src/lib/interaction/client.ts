@@ -42,7 +42,7 @@ export async function createGuildCommand(
  */
 export async function getGuildCommand(guild: Guild, name: string): Promise<APIApplicationCommand> {
   const application = await guild.client.fetchApplication();
-  const url = `/v8/applications/${application.id}/guilds/${guild.id}/commands`;
+  const url = `/applications/${application.id}/guilds/${guild.id}/commands`;
   return client
     .get<RESTGetAPIApplicationGuildCommandsResult>(url)
     .then((resp) => resp.data.find((cmd) => cmd.name === name));
@@ -55,6 +55,6 @@ export async function getGuildCommand(guild: Guild, name: string): Promise<APIAp
  */
 export async function deleteGuildCommand(guild: Guild, id: Snowflake): Promise<void> {
   const application = await guild.client.fetchApplication();
-  const url = `/v8/applications/${application.id}/guilds/${guild.id}/commands/${id}`;
+  const url = `/applications/${application.id}/guilds/${guild.id}/commands/${id}`;
   await client.delete(url);
 }
