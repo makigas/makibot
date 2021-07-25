@@ -118,7 +118,14 @@ export async function handleInteraction(client: Makibot, event: APIInteraction):
       const parameters = event.data.options
         ? await convertParameters(event.data.options, guild)
         : {};
-      handler.handle(guild, parameters);
+
+      handler.handle(guild, parameters).catch((e) => {
+        logger.error("[interactions] command failed with a generic error", event.data, e);
+        const owners = client.owners.map((owner) => `<@${owner.id}>`).join(", ");
+        const check = client.owners.length > 1 ? "revisad" : "revisa";
+        const error = `API Error: el comando ha fallado. Por favor, ${owners}, ${check} los logs`;
+        return handler.sendResponse(error);
+      });
     } else if (replies[event.data.name]) {
       /* A local command with this name exists, so send the response. */
       const data = replies[event.data.name];
