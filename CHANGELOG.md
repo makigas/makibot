@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.24.1](https://github.com/makigas/clank/compare/v0.24.0...v0.24.1) (2021-07-26)
+
+
+### Bug Fixes
+
+* catch errors during command interactions ([#379](https://github.com/makigas/clank/issues/379)) ([5cf03cc](https://github.com/makigas/clank/commit/5cf03cce8854cccbf9323a77e958852055e02bb9))
+
+
+### Refactor
+
+* **dev:** remove CodeQL ([#386](https://github.com/makigas/clank/issues/386)) ([1eb922e](https://github.com/makigas/clank/commit/1eb922e34fb60253c1f664ad3c2b7da06a38cd21))
+* wrap command manipulations in a client ([#378](https://github.com/makigas/clank/issues/378)) ([52af2ba](https://github.com/makigas/clank/commit/52af2bae8caff4c5667bce9e00a489a487ff3777))
+
 ## [0.24.0](https://github.com/makigas/clank/compare/v0.23.0...v0.24.0) (2021-07-21)
 
 
