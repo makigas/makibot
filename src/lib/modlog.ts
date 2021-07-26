@@ -7,8 +7,6 @@ import {
   User,
 } from "discord.js";
 
-import { getURL } from "./message";
-
 interface EmbedField {
   name: string;
   value: string;
@@ -239,7 +237,7 @@ export class WarnModlogEvent extends ModlogEvent {
       });
       fields.push({
         name: "URL",
-        value: getURL(this.message),
+        value: `https://discord.com/channels/${this.message.guild.id}/${this.message.channel.id}/${this.message.id}`,
       });
     }
     return fields;
