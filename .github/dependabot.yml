@@ -1,36 +1,36 @@
 version: 2
 updates:
-- package-ecosystem: npm
-  directory: "/"
-  schedule:
-    interval: daily
-    time: "00:00"
-  open-pull-requests-limit: 99
-  labels:
-  - dependencies
-  ignore:
-  - dependency-name: "@types/node"
-    versions:
-    - ">= 13"
-  - dependency-name: discord.js-commando
-    versions:
-    - ">= 0.12.0"
-  commit-message:
-    prefix: chore
-    include: scope
-- package-ecosystem: docker
-  directory: "/"
-  schedule:
-    interval: weekly
-    day: saturday
-    time: "00:00"
-  open-pull-requests-limit: 99
-  labels:
-  - dependencies
-  ignore:
-  - dependency-name: node
-    versions:
-    - ">= 13"
-  commit-message:
-    prefix: chore
-    include: scope
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "00:00"
+    open-pull-requests-limit: 99
+    labels:
+      - dependencies
+    ignore:
+      - dependency-name: "@types/node"
+        versions:
+          - ">= 15"
+      - dependency-name: discord.js-commando
+        versions:
+          - ">= 0.12.0"
+    commit-message:
+      prefix: chore
+      include: scope
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "00:00"
+    open-pull-requests-limit: 99
+    labels:
+      - dependencies
+    ignore:
+      - dependency-name: node
+        versions:
+          - ">= 13"
+    commit-message:
+      prefix: chore
+      include: scope
