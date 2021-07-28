@@ -12,9 +12,6 @@ updates:
       - dependency-name: "@types/node"
         versions:
           - ">= 15"
-      - dependency-name: discord.js-commando
-        versions:
-          - ">= 0.12.0"
     commit-message:
       prefix: chore
       include: scope
