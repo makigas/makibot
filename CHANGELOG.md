@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.25.0](https://github.com/makigas/clank/compare/v0.24.1...v0.25.0) (2021-07-28)
+
+
+### Features
+
+* add a function to build message embeds ([c8eeadc](https://github.com/makigas/clank/commit/c8eeadcc762000f92806064306b36bd5f1dffeca))
+* handle un-pinning in the pin hook ([f1aa1ea](https://github.com/makigas/clank/commit/f1aa1eafe7c958312fb7e0951e37edd909218ed5))
+
+
+### Refactor
+
+* use the new message quote in pins ([1982d3c](https://github.com/makigas/clank/commit/1982d3cd7502dc2477ff1930ced5fa93b8d599dd))
+
 ### [0.24.1](https://github.com/makigas/clank/compare/v0.24.0...v0.24.1) (2021-07-26)
 
 
