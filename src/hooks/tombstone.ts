@@ -65,7 +65,7 @@ export default class TombstoneService implements Hook {
     const channel = message.channel as TextChannel;
 
     /* Discard messages not sent to a guild. */
-    if (!message.channel || message.channel.type != "text") {
+    if (!message.channel || message.channel.type != "GUILD_TEXT") {
       return;
     }
 
@@ -81,7 +81,7 @@ export default class TombstoneService implements Hook {
     const channel = message.channel as TextChannel;
 
     /* Discard messages not sent to a guild. */
-    if (!message.channel || message.channel.type != "text") {
+    if (!message.channel || message.channel.type != "GUILD_TEXT") {
       return;
     }
 

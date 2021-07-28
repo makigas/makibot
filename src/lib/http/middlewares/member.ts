@@ -1,4 +1,4 @@
-import { GuildMember } from "discord.js";
+import { GuildMember, Snowflake } from "discord.js";
 import express from "express";
 
 import { MiddlewareLocals as GuildMiddlewareLocals } from "./guild";
@@ -14,8 +14,8 @@ export interface MiddlewareLocals extends GuildMiddlewareLocals {
 
 type RouterRequest<ReqBody = {}, ResBody = {}> = express.Request<
   {
-    member: string;
-    guild: string;
+    member: Snowflake;
+    guild: Snowflake;
   },
   ResBody,
   ReqBody,

@@ -24,7 +24,7 @@ export async function createGuildCommand(
   name: string,
   options: APIApplicationCommandOption[]
 ): Promise<void> {
-  const application = await guild.client.fetchApplication();
+  const application = guild.client.application;
   const url = `/applications/${application.id}/guilds/${guild.id}/commands`;
   const payload: RESTPostAPIApplicationGuildCommandsJSONBody = {
     name,
@@ -41,7 +41,7 @@ export async function createGuildCommand(
  * @returns a promise that resolves to the command behind this name
  */
 export async function getGuildCommand(guild: Guild, name: string): Promise<APIApplicationCommand> {
-  const application = await guild.client.fetchApplication();
+  const application = guild.client.application;
   const url = `/applications/${application.id}/guilds/${guild.id}/commands`;
   return client
     .get<RESTGetAPIApplicationGuildCommandsResult>(url)
@@ -54,7 +54,7 @@ export async function getGuildCommand(guild: Guild, name: string): Promise<APIAp
  * @param id the identifier of the command to delete.
  */
 export async function deleteGuildCommand(guild: Guild, id: Snowflake): Promise<void> {
-  const application = await guild.client.fetchApplication();
+  const application = guild.client.application;
   const url = `/applications/${application.id}/guilds/${guild.id}/commands/${id}`;
   await client.delete(url);
 }

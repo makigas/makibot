@@ -1,4 +1,4 @@
-import { GuildMember, Role, User } from "discord.js";
+import { GuildMember, Role, Snowflake, User } from "discord.js";
 import Makibot from "../Makibot";
 import { getLevelV2 } from "./karma";
 import logger from "./logger";
@@ -52,7 +52,7 @@ export default class Member {
     return this.guildMember.client as Makibot;
   }
 
-  get id(): string {
+  get id(): Snowflake {
     return this.guildMember.user.id;
   }
 

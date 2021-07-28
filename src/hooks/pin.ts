@@ -7,7 +7,7 @@ import type Tag from "../lib/tag";
 import type Makibot from "../Makibot";
 
 /* Get the tag that would persist the pin for this message. */
-function pinTag(message: Message): Tag | null {
+function pinTag(message: Message | PartialMessage): Tag | null {
   if (message.guild) {
     const server = new Server(message.guild);
     return server.tagbag.tag(`pin:${message.id}`);
@@ -16,7 +16,7 @@ function pinTag(message: Message): Tag | null {
 }
 
 /* Get the pin channel behind the given guild message. */
-function getPinChannel(message: Message): TextChannel | null {
+function getPinChannel(message: Message | PartialMessage): TextChannel | null {
   if (message.guild) {
     const server = new Server(message.guild);
     return server.pinboardChannel;
@@ -26,7 +26,7 @@ function getPinChannel(message: Message): TextChannel | null {
 }
 
 /* For a message to be pinneable, it must be part of a guild. */
-function isPinneable(message: Message): boolean {
+function isPinneable(message: Message | PartialMessage): boolean {
   if (message.guild) {
     const server = new Server(message.guild);
     return !!server.pinboardChannel && !!server.settings.pinEmoji;
@@ -66,14 +66,17 @@ export default class PinService implements Hook {
     try {
       await reaction.fetch();
 
+      /* I mean, I've just fetched this. */
+      const message = reaction.message as Message;
+
       /* Only pin messages in a properly configured guild will be delegated. */
       if (delegatesToPin(reaction)) {
-        const tag = pinTag(reaction.message);
+        const tag = pinTag(message);
 
         /* Past-proof: legacy pins will not have a tag but will already exist. */
         if (!tag.get(null) && reaction.count === 1) {
-          const channel = getPinChannel(reaction.message);
-          const pins = await channel.send(quoteMessage(reaction.message)).then((pins) => {
+          const channel = getPinChannel(message);
+          const pins = await channel.send(quoteMessage(message)).then((pins) => {
             /* Should not happen, but just in case: coerce to array. */
             return Array.isArray(pins) ? pins : [pins];
           });
@@ -108,7 +111,7 @@ export default class PinService implements Hook {
     }
   }
 
-  private async deletePinMessage(message: Message) {
+  private async deletePinMessage(message: Message | PartialMessage) {
     const tag = pinTag(message);
     const channel = getPinChannel(message);
     await Promise.all(

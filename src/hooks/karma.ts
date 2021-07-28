@@ -32,18 +32,8 @@ async function prefetchUser(user: User | PartialUser): Promise<User> {
   }
 }
 
-async function prefetchReaction(mr: MessageReaction): Promise<MessageReaction> {
-  if (mr.partial) {
-    await mr.fetch();
-  }
-  if (mr.message.partial) {
-    await mr.message.fetch();
-  }
-  return mr;
-}
-
 function isTextChannel(channel: Channel): channel is TextChannel {
-  return channel.type == "text";
+  return channel.type == "GUILD_TEXT" || channel.type == "GUILD_PUBLIC_THREAD" || channel.type === "GUILD_NEWS";
 }
 
 const REACTIONS: { [reaction: string]: { kind: string; score: number } } = {
@@ -78,12 +68,12 @@ export default class KarmaService implements Hook {
       prefetchMessage(msg).then((msg) => this.onDeletedMessage(msg))
     );
     bot.on("messageReactionAdd", (reaction, user) =>
-      prefetchReaction(reaction).then((reaction) =>
+      reaction.fetch().then((reaction) =>
         prefetchUser(user).then((user) => this.onReactedTo(reaction, user))
       )
     );
     bot.on("messageReactionRemove", (reaction, user) =>
-      prefetchReaction(reaction).then((reaction) =>
+      reaction.fetch().then((reaction) =>
         prefetchUser(user).then((user) => this.onUnreactedTo(reaction, user))
       )
     );

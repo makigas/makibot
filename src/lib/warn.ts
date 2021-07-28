@@ -1,4 +1,4 @@
-import { Guild, GuildMember, Message, MessageEmbedOptions, User, UserResolvable } from "discord.js";
+import { Guild, Message, MessageEmbedOptions, User } from "discord.js";
 import Server from "./server";
 import { WarnModlogEvent } from "./modlog";
 import Member from "./member";
@@ -44,7 +44,7 @@ function notifyModlog(
         text: "Mensaje de moderación automático",
       },
     };
-    publicModlog.send(textMessage, { embed });
+    publicModlog.send({ content: textMessage, embeds: [embed] });
   }
 }
 
@@ -80,7 +80,7 @@ export default async function applyWarn(
   { user, message, reason }: WarnPayload
 ): Promise<void> {
   // Get the member behind this user.
-  const memberToWarn = guild.member(user);
+  const memberToWarn = await guild.members.fetch(user);
   const server = new Server(guild);
 
   // Assert the command can work.
