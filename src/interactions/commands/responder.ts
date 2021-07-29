@@ -3,6 +3,7 @@ import Server from "../../lib/server";
 import InteractionCommand from "../../lib/interaction/basecommand";
 import { APIApplicationCommandOption, ApplicationCommandOptionType } from "discord-api-types";
 import { createGuildCommand } from "../../lib/interaction/client";
+import { createToast } from "../../lib/response";
 
 const commandParamType: { [kind: string]: ApplicationCommandOptionType } = {
   string: ApplicationCommandOptionType.String,
@@ -86,10 +87,13 @@ export default class ResponderCommand extends InteractionCommand<ResponderParams
     const currentCommands: { [name: string]: ResponderParams } = replyCommands.get({});
 
     if (currentCommands[params.nombre]) {
-      await this.sendResponse(
-        "Este comando ya está creado, bórralo antes o dale otro nombre",
-        true
-      );
+      const toast = createToast({
+        title: "No se puede crear el comando",
+        description:
+          "Un comando con el mismo nombre ya existe. Deberá ser borrado antes o usar otro nombre.",
+        severity: "error",
+      });
+      await this.sendResponse({ embed: toast, ephemeral: true });
       return;
     }
 
@@ -101,7 +105,10 @@ export default class ResponderCommand extends InteractionCommand<ResponderParams
 
     /* Register the command. */
     replyCommands.set(currentCommands);
-
-    this.sendResponse("Comando ha sido creado", true);
+    const toast = createToast({
+      title: "Comando creado correctamente",
+      severity: "success",
+    });
+    await this.sendResponse({ embed: toast, ephemeral: true });
   }
 }

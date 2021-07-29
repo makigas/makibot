@@ -3,6 +3,7 @@ import Server from "../../lib/server";
 import InteractionCommand from "../../lib/interaction/basecommand";
 import type { ResponderParams } from "./responder";
 import { deleteGuildCommand, getGuildCommand } from "../../lib/interaction/client";
+import { createToast } from "../../lib/response";
 
 interface DesresponderParams {
   nombre: string;
@@ -35,15 +36,27 @@ export default class DesresponderCommand extends InteractionCommand<Desresponder
       if (command) {
         /* The command is found, ready to delete it. */
         deleteGuildCommand(guild, command.id);
-        await this.sendResponse("Comando ha sido eliminado", true);
+        const toast = createToast({
+          title: "El comando ha sido eliminado con éxito",
+          severity: "success",
+        });
+        await this.sendResponse({ embed: toast, ephemeral: true });
       } else {
-        /* The command is not found, but we delete it from the array. */
-        await this.sendResponse("Comando ha sido retirado", true);
+        /* Use a different message to signal the error to clever users. */
+        const toast = createToast({
+          title: "El comando ha sido eliminado del sistema del bot",
+          severity: "success",
+        });
+        await this.sendResponse({ embed: toast, ephemeral: true });
       }
       delete currentCommands[params.nombre];
       await replyCommands.set(currentCommands);
     } else {
-      await this.sendResponse("Este comando no existe", true);
+      const toast = createToast({
+        title: "Comando no encontrado",
+        severity: "error",
+      });
+      await this.sendResponse({ embed: toast, ephemeral: true });
     }
   }
 }

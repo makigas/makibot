@@ -22,6 +22,7 @@ import InteractionCommand from "./interaction/basecommand";
 import logger from "./logger";
 import Server from "./server";
 import { sendResponse } from "./interaction/response";
+import { createToast } from "./response";
 
 interface HandlerConstructor {
   // https://stackoverflow.com/a/39614325/2033517
@@ -121,10 +122,13 @@ export async function handleInteraction(client: Makibot, event: APIInteraction):
 
       handler.handle(guild, parameters).catch((e) => {
         logger.error("[interactions] command failed with a generic error", event.data, e);
-        const owners = client.owners.map((owner) => `<@${owner.id}>`).join(", ");
-        const check = client.owners.length > 1 ? "revisad" : "revisa";
-        const error = `API Error: el comando ha fallado. Por favor, ${owners}, ${check} los logs`;
-        return handler.sendResponse(error);
+        return handler.sendResponse({
+          embed: createToast({
+            title: "API Error: el comando ha fallado",
+            description: "Un administrador encontrará más información en los logs de la aplicación",
+            severity: "error",
+          }),
+        });
       });
     } else if (replies[event.data.name]) {
       /* A local command with this name exists, so send the response. */
@@ -167,7 +171,9 @@ export async function handleInteraction(client: Makibot, event: APIInteraction):
         }
       }, data.respuesta);
 
-      await sendResponse(event, interpolatedResponse, data.efimero);
+      await sendResponse(event, {
+        content: interpolatedResponse,
+      });
     }
   }
 }

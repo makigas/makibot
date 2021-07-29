@@ -1,6 +1,7 @@
 import bigInt, { BigInteger } from "big-integer";
 import { Guild } from "discord.js";
 import InteractionCommand from "../../lib/interaction/basecommand";
+import { createToast } from "../../lib/response";
 
 interface PrimoParams {
   n: string;
@@ -23,20 +24,27 @@ interface PrimoParams {
 export default class PrimoCommand extends InteractionCommand<PrimoParams> {
   name: string = "primo";
 
+  private sendToast(title: string): Promise<void> {
+    return this.sendResponse({
+      embed: createToast({
+        title,
+        severity: "info",
+      }),
+    });
+  }
+
   handle(_guild: Guild, params: PrimoParams): Promise<void> {
-    if (params.n.trim() == "") {
-      return this.sendResponse("Uso: `/primo [n:number]`", true);
-    } else if (/^\-?\d+$/g.test(params.n)) {
+    if (/^\-?\d+$/g.test(params.n)) {
       let prime = bigInt(params.n);
       if (this.isPrime(prime)) {
-        return this.sendResponse(`Se da la circunstancia de que sí, ${prime} es primo.`, false);
+        return this.sendToast(`Informamos que ${prime} es un número primo`);
       } else if (prime.mod(2).eq(0)) {
-        return this.sendResponse("Amigo, deberías saber que un par no puede ser primo.", false);
+        return this.sendToast(`Deberías saber que un par nunca puede ser primo`);
       } else {
-        return this.sendResponse(`No, ${prime} no es primo.`, false);
+        return this.sendToast(`No, ${prime} no es un número primo`);
       }
     } else {
-      return this.sendResponse(`\`${params.n}\` no es exactamente un número`, false);
+      return this.sendToast(`"${params.n}" no es exactamente un número`);
     }
   }
 
