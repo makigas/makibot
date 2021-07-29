@@ -97,14 +97,18 @@ export default class Member {
   }
 
   get cooldown(): boolean {
+    return this.cooldownSeconds === 0;
+  }
+
+  get cooldownSeconds(): number {
     if (!this.guildMember.joinedAt) {
-      /* TODO: Investigate why THIS happens. */
-      console.warn(`Warning! ${this.guildMember.user.tag} join date is not available`);
-      return true;
+      /* Happens when the user account is deleted. */
+      return 0;
     }
 
-    const minutesSinceJoined = Date.now() - this.guildMember.joinedAt.getTime();
-    return minutesSinceJoined > 60 * 1000 * 5;
+    const timeSinceJoined = Date.now() - this.guildMember.joinedAt.getTime();
+    const cooldownPeriod = 60 * 5 * 1000;
+    return Math.max(0, cooldownPeriod - timeSinceJoined);
   }
 
   async getKarma(): Promise<KarmaStats> {

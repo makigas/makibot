@@ -9,16 +9,12 @@ import logger from "../lib/logger";
 
 /* The message that will be replied to members that type the token during cooldown period. */
 const TOO_SOON = [
-  "%s, has dicho la palabra secreta correcta, pero como dicen las normas del servidor,",
-  "tienes que permanecer unos minutos para que sea atendida y se pueda validar la cuenta.",
+  "%s, es correcto, pero tal como dicen las normas no se puede validar tu cuenta hasta que lleves",
+  "unos minutos, por seguridad.\n(Tiempo restante: %t segundos. Gracias por mantenerte a la espera.)",
 ].join(" ");
 
 /* The message that will be replied to members that successfully validate their accounts. */
-const ACCEPTED = [
-  "Gracias por verificar tu cuenta, %s. Ya puedes explorar el resto de canales del servidor.",
-  "Recuerda que has confirmado que has leído las normas. No comportarse puede suponer una",
-  "amonestación o una expulsión del servidor.",
-].join(" ");
+const ACCEPTED = "Gracias por verificar tu cuenta, %s. Ya puedes explorar el resto de canales del servidor.";
 
 const MANUAL = [
   "Gracias por intentar verificar tu cuenta, %s. Desafortunadamente, la moderación de este",
@@ -34,7 +30,10 @@ function isVerificationMessage(message: Message): boolean {
 
 /* Escape the member name and submit a message to notify the user about the outcome. */
 function sendOutcome(content: string, message: Message): Promise<Message> {
-  const cleanContent = content.replace("%s", `<@${message.member.id}>`);
+  const member = new Member(message.member);
+  const cleanContent = content
+    .replace("%s", `<@${member.id}>`)
+    .replace("%t", `${Math.trunc(member.cooldownSeconds / 1000)}`);
   return message.channel.send(cleanContent);
 }
 
