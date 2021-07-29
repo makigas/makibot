@@ -1,6 +1,7 @@
 import InteractionCommand from "../../lib/interaction/basecommand";
 import Server from "../../lib/server";
 import { getPointsForLevelV2 } from "../../lib/karma";
+import { createToast } from "../../lib/response";
 
 /*
   {
@@ -19,20 +20,28 @@ export default class KarmaCommand extends InteractionCommand<{}> {
     const stats = await member.getKarma();
     const nextLevel = getPointsForLevelV2(stats.level + 1);
 
+    const toast = createToast({
+      title: `Balance de karma de @${member.user.username}`,
+      target: member.user,
+      severity: "info",
+    });
+    toast.addField("🪙 Karma", stats.points, true);
+    toast.addField("🏅 Nivel", stats.level, true);
+    toast.addField("💬 Mensajes", stats.messages, true);
+    if (stats.offset > 0) {
+      toast.addField("⏩ Offset", stats.offset, true);
+    }
+    toast.addField("🔜 Puntos hasta el siguiente nivel", nextLevel - stats.points, false);
+
     const kinds = [
       `👍 ${stats.upvotes}`,
       `👎 ${stats.downvotes}`,
       `⭐ ${stats.stars}`,
       `❤️ ${stats.hearts}`,
       `👋 ${stats.waves}`,
-    ];
+    ].join(" / ");
+    toast.addField("Reacciones", kinds, false);
 
-    const response =
-      `🪙 Karma: ${stats.points}        🏅 Nivel: ${stats.level}\n` +
-      `  💬 Mensajes: ${stats.messages}        ⏩ Offset: ${stats.offset}\n` +
-      `  🔜 Siguiente nivel en: ${nextLevel - stats.points}\n` +
-      `  ${kinds.join("    ")}`;
-
-    this.sendResponse(response, true);
+    this.sendResponse({ embed: toast, ephemeral: true });
   }
 }

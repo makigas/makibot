@@ -1,4 +1,4 @@
-import { GuildMember, Role } from "discord.js";
+import { GuildMember, Role, User } from "discord.js";
 import Makibot from "../Makibot";
 import { getLevelV2 } from "./karma";
 import logger from "./logger";
@@ -29,6 +29,10 @@ export default class Member {
   constructor(guildMember: GuildMember) {
     this.guildMember = guildMember;
     this.server = new Server(this.guildMember.guild);
+  }
+
+  get user(): User {
+    return this.guildMember.user;
   }
 
   private hasRole(role: Role | null | undefined): boolean {

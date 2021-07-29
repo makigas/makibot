@@ -1,12 +1,13 @@
-import { Guild, GuildMember, User } from "discord.js";
+import { Guild, GuildMember } from "discord.js";
 import Member from "../../lib/member";
 import InteractionCommand from "../../lib/interaction/basecommand";
 import applyWarn from "../../lib/warn";
+import { createToast } from "../../lib/response";
 
 interface WarnParameters {
-  target: GuildMember,
-  reason?: string,
-};
+  target: GuildMember;
+  reason?: string;
+}
 
 export default class WarnCommand extends InteractionCommand<WarnParameters> {
   name = "warn";
@@ -33,14 +34,32 @@ export default class WarnCommand extends InteractionCommand<WarnParameters> {
     }
    */
   async handle(_guild: Guild, { reason, target }: WarnParameters): Promise<void> {
-    let member = new Member(target);
+    const member = new Member(target);
     if (member.moderator) {
-      this.sendResponse(`No se puede poner un warn a <@${target.id}> porque es mod.`, true);
+      const toast = createToast({
+        title: "No se puede aplicar un warn",
+        description: `@${target.user.username} es un moderador.`,
+        target: target.user,
+        severity: "error",
+      });
+      return this.sendResponse({ embed: toast, ephemeral: true });
     } else if (target.user.bot) {
-      this.sendResponse(`No puedes ponerle un warn a un bot`, true);
+      const toast = createToast({
+        title: "No se puede aplicar un warn",
+        description: `@${target.user.username} es un bot.`,
+        target: target.user,
+        severity: "error",
+      });
+      return this.sendResponse({ embed: toast, ephemeral: true });
     } else {
       await applyWarn(target.guild, { user: target.user, reason });
-      this.sendResponse(`Warn aplicado correctamente.`, true);
+      const toast = createToast({
+        title: "Warn aplicado",
+        description: `Le has aplicado un warn a @${target.user.username}`,
+        target: target.user,
+        severity: "success",
+      });
+      return this.sendResponse({ embed: toast, ephemeral: true });
     }
   }
 }

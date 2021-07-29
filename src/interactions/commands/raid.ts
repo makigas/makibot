@@ -1,6 +1,6 @@
-import { APIGuildInteraction } from "discord-api-types";
 import { Guild } from "discord.js";
 import InteractionCommand from "../../lib/interaction/basecommand";
+import { createToast } from "../../lib/response";
 
 interface RaidParameters {
   "raid-mode": boolean;
@@ -36,9 +36,10 @@ export default class RaidCommand extends InteractionCommand<RaidParameters> {
 
   async handle(_guild: Guild, params: RaidParameters): Promise<void> {
     await this.client.antiraid.setRaidMode(params["raid-mode"]);
-    await this.sendResponse(
-      params["raid-mode"] ? "Modo raid activado" : "Modo raid desactivado",
-      true
-    );
+    const toast = createToast({
+      title: `El modo raid ha sido ${params["raid-mode"] ? "activado" : "desactivado"}`,
+      severity: "info",
+    });
+    await this.sendResponse({ embed: toast, ephemeral: true });
   }
 }
