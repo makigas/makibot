@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.26.0](https://github.com/makigas/clank/compare/v0.25.0...v0.26.0) (2021-07-29)
+
+
+### Features
+
+* new response embeds for hooks and interactions ([#394](https://github.com/makigas/clank/issues/394)) ([828fd7f](https://github.com/makigas/clank/commit/828fd7f6941452d6b994a607601a4784d8c6be38))
+* **verify:** display seconds until cooldown ([bfe4212](https://github.com/makigas/clank/commit/bfe421224128503383fb971e6ba1361477a8a27e))
+
+
+### Bug Fixes
+
+* welcome messages are not being presented ([179b996](https://github.com/makigas/clank/commit/179b996086622a520f88dc79d3a91ae758dc700f))
+
 ## [0.25.0](https://github.com/makigas/clank/compare/v0.24.1...v0.25.0) (2021-07-28)
 
 
