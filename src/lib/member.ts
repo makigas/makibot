@@ -1,6 +1,7 @@
 import { GuildMember, Role } from "discord.js";
 import Makibot from "../Makibot";
 import { getLevelV2 } from "./karma";
+import logger from "./logger";
 import Server from "./server";
 import TagBag from "./tagbag";
 
@@ -123,12 +124,13 @@ export default class Member {
     ]);
     const [total, messages, upvotes, downvotes, stars, hearts, waves] = results;
     const offset = this.tagbag.tag("karma:offset").get(0);
-    const level = this.tagbag.tag("karma:level").get(1);
+    const level = this.tagbag.tag("karma:level").get(0);
     const version = this.tagbag.tag("karma:ver").get<string>("v1");
     const points = offset + total;
 
     /* Upgrade to the latest version of the karma formula. */
-    if (version !== "v2") {
+    if (version !== "v2" && level > 0) {
+      logger.info("[upgrading karma for this person]");
       await this.upgradeKarma();
       return this.getKarma();
     }
