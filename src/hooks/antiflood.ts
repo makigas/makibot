@@ -1,6 +1,7 @@
 import { GuildPreview, Message, PartialMessage } from "discord.js";
 import { Hook } from "../lib/hook";
 import Member from "../lib/member";
+import { createToast } from "../lib/response";
 import applyWastebin from "../lib/wastebin";
 import Makibot from "../Makibot";
 
@@ -75,9 +76,21 @@ export default class AntifloodService implements Hook {
     if (normalized in history) {
       const when = history[normalized];
       if (Date.now() - when < 3600_000) {
-        await message.channel.send(
-          `Enviar el mismo mensaje múltiples veces se considera flooding.\nEstá prohibido en este servidor, <@${message.member.id}>, así que no lo hagas.`
-        );
+        const toast = createToast({
+          title: `@${message.member.user.username}, no hagas flooding`,
+          severity: "warning",
+          target: message.member.user,
+          description: [
+            "Ponte de acuerdo y elige un canal en el que mandar tu mensaje.",
+            "No mandes el mismo mensaje a múltiples canales porque puede ser",
+            "confuso para las personas que te pueden estar intentando echar",
+            "una mano, ¿no crees?",
+            "\n\n",
+            "Tendrás que borrar el mensaje del otro canal si quieres mandarlo",
+            "aquí, o esperar una hora para que el mensaje se enfríe.",
+          ].join(" "),
+        });
+        await message.channel.send(toast);
         await applyWastebin(message);
       }
     }

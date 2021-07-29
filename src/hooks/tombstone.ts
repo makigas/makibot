@@ -2,11 +2,9 @@ import { Message, PartialMessage, TextChannel } from "discord.js";
 import Tag from "../lib/tag";
 import Makibot from "../Makibot";
 import { Hook } from "../lib/hook";
+import { createToast } from "../lib/response";
 
 const STALE_HOURS = 24;
-
-const TOMBSTONE_TEXT = `👻 _[un mensaje ha sido borrado]_ 👻
-    (por eso este canal te sale como no leído)`;
 
 /**
  * Fetch the tag that may yield to the ID of a message acting as a tombstone
@@ -98,7 +96,17 @@ export default class TombstoneService implements Hook {
     const staleness = STALE_HOURS * 3600 * 1000;
     if (messages.first().createdTimestamp < Date.now() - staleness) {
       /* It is. Send a tombstone. */
-      const tombstone = await channel.send(TOMBSTONE_TEXT);
+      const toast = createToast({
+        title: "Un mensaje ha sido eliminado",
+        description: [
+          `Como el mensaje que tengo justo encima tiene más de 24 horas, mando`,
+          `esta notificación para no confundir a quienes vean que hay mensajes nuevos`,
+          `en este canal y no los encuentren.`,
+        ].join(" "),
+        severity: "info",
+        thumbnail: `https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/282/ghost_1f47b.png`,
+      });
+      const tombstone = await message.channel.send(toast);
       tombstoneTag(channel).set(tombstone.id);
     }
   }

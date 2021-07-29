@@ -9,9 +9,10 @@ import {
   User,
 } from "discord.js";
 import { Hook } from "../lib/hook";
-import { canReceivePoints, getLevelV2, getLevelUpMessage } from "../lib/karma";
+import { canReceivePoints, getLevelV2 } from "../lib/karma";
 import { KarmaDatabase } from "../lib/karma/database";
 import Member from "../lib/member";
+import { createToast } from "../lib/response";
 import Server from "../lib/server";
 import { notifyPublicModlog } from "../lib/warn";
 import Makibot from "../Makibot";
@@ -217,7 +218,27 @@ export default class KarmaService implements Hook {
       const highScoreLevel = member.tagbag.tag("karma:max");
       if (highScoreLevel.get(0) < expectedLevel) {
         await highScoreLevel.set(expectedLevel);
-        await channel.send(getLevelUpMessage(gm.id, expectedLevel));
+        if (expectedLevel === 1) {
+          /* First message. */
+          const toast = createToast({
+            title: `¡Es el primer mensaje de @${gm.user.username}!`,
+            description: [
+              `Parece que este es el primer mensaje de @${gm.user.username} en este servidor.`,
+              "¡Te damos la bienvenida, este servidor es mejor ahora que estás aquí!",
+              "Pásalo bien y disfruta en la comunidad.",
+            ].join(" "),
+            severity: "success",
+            target: gm.user,
+          });
+          await channel.send(toast);
+        } else {
+          const toast = createToast({
+            title: `¡@${gm.user.username} ha subido al nivel ${expectedLevel}!`,
+            severity: "success",
+            target: gm.user,
+          });
+          await channel.send(toast);
+        }
       }
     }
 

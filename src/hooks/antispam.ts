@@ -6,6 +6,7 @@ import { WastebinModlogEvent } from "../lib/modlog";
 import Server from "../lib/server";
 import Makibot from "../Makibot";
 import { Hook } from "../lib/hook";
+import { createToast } from "../lib/response";
 
 const ruleset: { [reason: string]: RegExp[] } = {
   "El enlace contiene una invitación de Discord": [
@@ -23,7 +24,8 @@ const ruleset: { [reason: string]: RegExp[] } = {
   ],
 };
 
-const disabledLinksReason = "el origen está retenido, un mod debería revisar los logs";
+const disabledLinksReason =
+  "A este perfil se le ha retirado el permiso para enviar mensajes con enlaces en este servidor";
 
 function matchesUrlInRuleset(message: string): string | undefined {
   return Object.keys(ruleset).find((rule) => {
@@ -105,7 +107,20 @@ export default class AntispamService implements Hook {
         });
       } else {
         await message.delete();
-        await channel.send(NOTIFY.replace("%s", `<@${message.member.id}>`).replace("%s", match));
+        const toast = createToast({
+          title: `@${message.member.user.username}, tu mensaje ha sido retenido por tener un enlace inapropiado`,
+          description: [
+            `Tu mensaje contenía un enlace que ha hecho saltar el filtro antispam.`,
+            `El filtro antispam ha dicho: ${match}.`,
+            `\n\n`,
+            `Tu mensaje ha sido reenviado a moderación para que lo revise y decida`,
+            `si ha sido un error del filtro o si debe dejar caer el martillo del ban`,
+            `sobre ti. Si no has incumplido las normas, no debes tener miedo.`,
+          ].join(" "),
+          severity: "error",
+          target: message.member.user,
+        });
+        await channel.send(toast);
       }
     }
   }

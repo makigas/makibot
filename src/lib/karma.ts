@@ -1,4 +1,4 @@
-import { GuildMember, Snowflake } from "discord.js";
+import { GuildMember } from "discord.js";
 import Member from "./member";
 
 export function canReceivePoints(gm: GuildMember): boolean {
@@ -7,15 +7,6 @@ export function canReceivePoints(gm: GuildMember): boolean {
   }
   const member = new Member(gm);
   return !gm.user.bot && member.verified;
-}
-
-export function getLevelUpMessage(id: Snowflake, level: number): string {
-  switch (level) {
-    case 1:
-      return `¡Te damos la bienvenida, <@${id}>! Este servidor es mejor ahora que estás aquí. Has publicado tu primer mensaje y por eso has subido a Nivel 1. Interactúa en este servidor para subir de nivel y desbloquear funciones nuevas.`;
-    default:
-      return `¡Enhorabuena, <@${id}>, has alcanzado el Nivel ${level}`;
-  }
 }
 
 export function getLevelV1(points: number): number {
