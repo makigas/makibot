@@ -88,7 +88,7 @@
     "prepare": "npm run build",
     "start": "ts-node -r dotenv/config src/clankd",
     "clankctl": "ts-node -r dotenv/config src/clankctl",
-    "lint": "eslint 'src/**/*.ts'",
+    "lint": "eslint \"src/**/*.ts\"",
     "test": "mocha -r ts-node/register spec/**/*.spec.ts",
     "release": "standard-version"
   },
