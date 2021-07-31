@@ -15,7 +15,7 @@ export default class PropinaCommand extends InteractionCommand<PropinaParams> {
 
   respondWith(title: string, description: string, error: boolean): Promise<void> {
     const toast = createToast({ title, description, severity: error ? "warning" : "success" });
-    return this.sendResponse({ embed: toast, ephemeral: !error });
+    return this.sendResponse({ embed: toast, ephemeral: error });
   }
 
   async handle(guild: Guild, { target, valor }): Promise<void> {
