@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.27.0](https://github.com/makigas/clank/compare/v0.26.0...v0.27.0) (2021-07-31)
+
+
+### Features
+
+* add bounties ([#396](https://github.com/makigas/clank/issues/396)) ([7ce8c10](https://github.com/makigas/clank/commit/7ce8c1015f6a4508db4bffc86f30ad389530b8c1))
+* detect message permalinks and embed them ([c36aa05](https://github.com/makigas/clank/commit/c36aa056d6b7fc3ffcb105dec2040c10ce456267)), closes [#383](https://github.com/makigas/clank/issues/383)
+
 ## [0.26.0](https://github.com/makigas/clank/compare/v0.25.0...v0.26.0) (2021-07-29)
 
 
