@@ -17,6 +17,7 @@ import PrimoCommand from "../interactions/commands/primo";
 import RaidCommand from "../interactions/commands/raid";
 import DesresponderCommand from "../interactions/commands/desresponder";
 import ResponderCommand from "../interactions/commands/responder";
+import PropinaCommand from "../interactions/commands/propina";
 import Makibot from "../Makibot";
 import InteractionCommand from "./interaction/basecommand";
 import logger from "./logger";
@@ -35,6 +36,7 @@ const Handlers: { [name: string]: HandlerConstructor } = {
   primo: PrimoCommand,
   raid: RaidCommand,
   warn: WarnCommand,
+  propina: PropinaCommand,
   desresponder: DesresponderCommand,
   responder: ResponderCommand,
 };
