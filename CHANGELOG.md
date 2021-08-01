@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.27.2](https://github.com/makigas/clank/compare/v0.27.1...v0.27.2) (2021-08-01)
+
+
+### Bug Fixes
+
+* wrong variable used for the bounty command ([b0cf92b](https://github.com/makigas/clank/commit/b0cf92b092315189c1e3b4efec328117f1dce7dd))
+
 ### [0.27.1](https://github.com/makigas/clank/compare/v0.27.0...v0.27.1) (2021-07-31)
 
 
