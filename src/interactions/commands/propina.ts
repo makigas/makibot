@@ -27,7 +27,6 @@ export default class PropinaCommand extends InteractionCommand<PropinaParams> {
     const receivedToday = await this.client.karma.bountiesReceivedToday(target.id);
 
     const karma = await originMember.getKarma();
-    console.log({ total: karma.total, valor });
 
     if (targetMember.user.bot) {
       return this.respondWith(
@@ -53,7 +52,7 @@ export default class PropinaCommand extends InteractionCommand<PropinaParams> {
         "Estás intentando regalarte karma a ti mismo. No me hagas perder mi tiempo",
         true
       );
-    } else if (karma.total <= valor) {
+    } else if (karma.points <= valor) {
       return this.respondWith(
         "No se puede entregar esta cantidad de karma",
         "No tienes suficiente karma como para entregar esto. Utiliza /karma para ver tu cantidad actual.",
