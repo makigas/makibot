@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.27.3](https://github.com/makigas/clank/compare/v0.27.2...v0.27.3) (2021-08-04)
+
+
+### Features
+
+* allow disabling verification ([1840116](https://github.com/makigas/clank/commit/184011658832663975b54486f2899843e992ab91))
+
 ### [0.27.2](https://github.com/makigas/clank/compare/v0.27.1...v0.27.2) (2021-08-01)
 
 
