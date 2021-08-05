@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
-* **karma:** only grant messages for regular messages ([dc3490f](https://github.com/makigas/clank/commit/dc3490fe2006fa15029e02db1146c7bbd9bcc0a7))
+* **karma:** only grant karma for regular messages ([dc3490f](https://github.com/makigas/clank/commit/dc3490fe2006fa15029e02db1146c7bbd9bcc0a7))
 
 ### [0.27.3](https://github.com/makigas/clank/compare/v0.27.2...v0.27.3) (2021-08-04)
 
