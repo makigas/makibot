@@ -26,7 +26,7 @@
     "sqlite": "^4.0.23",
     "sqlite3": "^5.0.2",
     "uws": "^200.0.0",
-    "yargs": "^17.0.1"
+    "yargs": "^17.1.0"
   },
   "description": "Discord bot for the makigas server",
   "devDependencies": {
