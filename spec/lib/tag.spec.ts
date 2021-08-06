@@ -3,7 +3,7 @@ import "mocha";
 import { SinonStub, stub } from "sinon";
 import sinonChai from "sinon-chai";
 
-import { SettingProvider } from "discord.js-commando";
+import { SettingProvider } from "../../src/lib/provider";
 import { Guild } from "discord.js";
 
 import Tag from "../../src/lib/tag";
@@ -17,7 +17,7 @@ function mockSettingProvider(returns: any = undefined): SettingProvider {
     set: stub().returns(Promise.resolve(returns)),
     remove: stub().returns(Promise.resolve()),
   };
-  return (fakeSettingProvider as unknown) as SettingProvider;
+  return fakeSettingProvider as unknown as SettingProvider;
 }
 
 describe("Tag", () => {

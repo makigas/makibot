@@ -1,5 +1,5 @@
 import { Guild, Snowflake } from "discord.js";
-import { SettingProvider } from "discord.js-commando";
+import { SettingProvider } from "../../src/lib/provider";
 import Counter, { CounterOptions } from "./counter";
 import Tag from "./tag";
 
