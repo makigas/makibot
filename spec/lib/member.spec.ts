@@ -5,6 +5,7 @@ import Member from "../../src/lib/member";
 import { stub } from "sinon";
 import sinonChai from "sinon-chai";
 import { SettingProvider } from "../../src/lib/provider";
+import Makibot from "../../src/Makibot";
 
 const expect = chai.expect;
 chai.use(sinonChai);
@@ -21,7 +22,7 @@ function mockSettingProvider(returns: any = undefined): SettingProvider {
 describe("Member", () => {
   const fakeClient = {
     provider: mockSettingProvider(10),
-  } as CommandoClient;
+  } as Makibot;
   const fakeGuild = {
     id: "g112233",
     client: fakeClient,
