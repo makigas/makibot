@@ -28,11 +28,11 @@ export class SettingProvider {
     );
   }
 
-  get<T>(guild: Snowflake | "global", key: string, defaultValue: T = undefined): T {
+  get(guild: Snowflake | "global", key: string, defaultValue: any = undefined): any {
     return this.cache[guildToCacheName(guild)][key] || defaultValue;
   }
 
-  async set<T>(guild: Snowflake | "global", key: string, value: T): Promise<T> {
+  async set(guild: Snowflake | "global", key: string, value: any): Promise<any> {
     this.cache[guildToCacheName(guild)][key] = value;
     const newSettings = JSON.stringify(this.cache[guildToCacheName(guild)]);
     await this.db.run("INSERT OR REPLACE INTO settings(guild, settings) VALUES(?, ?)", [
@@ -42,7 +42,7 @@ export class SettingProvider {
     return value;
   }
 
-  async remove(guild: Snowflake | "global", key: string): Promise<void> {
+  async remove(guild: Snowflake | "global", key: string): Promise<any> {
     delete this.cache[guildToCacheName(guild)][key];
     const newSettings = JSON.stringify(this.cache[guildToCacheName(guild)]);
     await this.db.run("INSERT OR REPLACE INTO settings(guild, settings) VALUES(?, ?)", [
