@@ -1,5 +1,5 @@
 import { Guild } from "discord.js";
-import { SettingProvider } from "discord.js-commando";
+import { SettingProvider } from "../../src/lib/provider";
 
 export type TtlStrategy = "NONE" | "TOUCH_FIRST" | "TOUCH_ALWAYS";
 

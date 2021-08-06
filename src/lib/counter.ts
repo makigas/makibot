@@ -1,5 +1,5 @@
 import { Guild } from "discord.js";
-import { SettingProvider } from "discord.js-commando";
+import { SettingProvider } from "../../src/lib/provider";
 import Tag, { TtlStrategy } from "./tag";
 
 export interface CounterOptions {

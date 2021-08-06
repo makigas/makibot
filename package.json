@@ -16,7 +16,6 @@
     "axios": "^0.21.1",
     "big-integer": "^1.6.48",
     "discord.js": "^12.5.3",
-    "discord.js-commando": "^0.12.3",
     "discordjs-reaction-role": "^1.0.1",
     "discordjs-voicerole": "^1.0.0",
     "dotenv": "^10.0.0",

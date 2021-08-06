@@ -4,7 +4,7 @@ import "mocha";
 import Member from "../../src/lib/member";
 import { stub } from "sinon";
 import sinonChai from "sinon-chai";
-import { CommandoClient, SettingProvider } from "discord.js-commando";
+import { SettingProvider } from "../../src/lib/provider";
 
 const expect = chai.expect;
 chai.use(sinonChai);
@@ -15,22 +15,22 @@ function mockSettingProvider(returns: any = undefined): SettingProvider {
     set: stub().returns(Promise.resolve(returns)),
     remove: stub().returns(Promise.resolve()),
   };
-  return (fakeSettingProvider as unknown) as SettingProvider;
+  return fakeSettingProvider as unknown as SettingProvider;
 }
 
 describe("Member", () => {
   const fakeClient = {
     provider: mockSettingProvider(10),
   } as CommandoClient;
-  const fakeGuild = ({
+  const fakeGuild = {
     id: "g112233",
     client: fakeClient,
-  } as unknown) as Guild;
-  const fakeGuildMember = ({
+  } as unknown as Guild;
+  const fakeGuildMember = {
     id: "gm112233",
     guild: fakeGuild,
     client: fakeClient,
-  } as unknown) as GuildMember;
+  } as unknown as GuildMember;
 
   describe("#tagbag", () => {
     it("can be used to bind tags to the member", () => {
