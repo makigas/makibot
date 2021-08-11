@@ -12,7 +12,7 @@ RUN apk add --no-cache --update dumb-init
 ADD . .
 
 # Compile Typescript into dist
-RUN apk add --virtual npm-deps --no-cache --update python git build-base && \
+RUN apk add --virtual npm-deps --no-cache --update python3 git build-base && \
     npm install && \
     npm run build && \
     npm cache clean --force && \
