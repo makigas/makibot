@@ -6,16 +6,19 @@ import {
   NewsChannel,
   TextChannel,
   User,
+  ThreadChannel,
 } from "discord.js";
 
 function permalink(message: Message): string {
   /* Leave the switch open in case threads use a different permalink system. */
   const { channel, guild } = message;
   switch (channel.type) {
-    case "dm":
+    case "DM":
       return `https://discord.com/channels/@me/${channel.id}/${message.id}`;
-    case "news":
-    case "text":
+    case "GUILD_NEWS":
+    case "GUILD_NEWS_THREAD":
+    case "GUILD_PUBLIC_THREAD":
+    case "GUILD_TEXT":
       /* There must be a guild - Discord.js doesn't support group DM. */
       return `https://discord.com/channels/${guild.id}/${channel.id}/${message.id}`;
   }
@@ -24,13 +27,16 @@ function permalink(message: Message): string {
 function embedDescription(message: Message): string {
   const url = permalink(message);
   switch (message.channel.type) {
-    case "dm":
+    case "DM":
       /* The embed will be seen by the user, thus present the name of the bot. */
       return `[${message.client.user.username}](${url}) -- ${message.cleanContent}`;
-    case "text":
+    case "GUILD_TEXT":
       return `[#${(message.channel as TextChannel).name}](${url}) -- ${message.cleanContent}`;
-    case "news":
+    case "GUILD_NEWS":
       return `[#${(message.channel as NewsChannel).name}](${url}) -- ${message.cleanContent}`;
+    case "GUILD_NEWS_THREAD":
+    case "GUILD_PUBLIC_THREAD":
+      return `[#${(message.channel as ThreadChannel).name}](${url}) -- ${message.cleanContent}`;
   }
 }
 
@@ -51,9 +57,8 @@ export function quoteMessage(message: Message): MessageOptions {
   message.attachments.forEach((attachment) => files.push(attachment));
 
   return {
-    disableMentions: "all",
     allowedMentions: {},
-    embed: quote,
+    embeds: [quote],
     files,
   };
 }

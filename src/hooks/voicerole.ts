@@ -32,13 +32,13 @@ export default class VoiceRoleService implements Hook {
       logger.error(`Unexpected condition: ${tag(oldState)} != ${tag(newState)}`);
       return;
     }
-    if (oldState.channelID && newState.channelID) {
+    if (oldState.channelId && newState.channelId) {
       logger.debug(
         `Member ${tag(oldState)} changes channel: ${channel(oldState)} => ${channel(newState)}`
       );
-    } else if (!oldState.channelID) {
+    } else if (!oldState.channelId) {
       logger.debug(`Member ${tag(newState)} connected from ${channel(newState)}`);
-    } else if (!newState.channelID) {
+    } else if (!newState.channelId) {
       logger.debug(`Member ${tag(oldState)} disconnected from ${channel(oldState)}`);
     }
     this.voicerole.trigger(oldState, newState);

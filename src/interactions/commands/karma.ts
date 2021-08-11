@@ -25,13 +25,13 @@ export default class KarmaCommand extends InteractionCommand<{}> {
       target: member.user,
       severity: "info",
     });
-    toast.addField("🪙 Karma", stats.points, true);
-    toast.addField("🏅 Nivel", stats.level, true);
-    toast.addField("💬 Mensajes", stats.messages, true);
+    toast.addField("🪙 Karma", String(stats.points), true);
+    toast.addField("🏅 Nivel", String(stats.level), true);
+    toast.addField("💬 Mensajes", String(stats.messages), true);
     if (stats.offset > 0) {
-      toast.addField("⏩ Offset", stats.offset, true);
+      toast.addField("⏩ Offset", String(stats.offset), true);
     }
-    toast.addField("🔜 Puntos hasta el siguiente nivel", nextLevel - stats.points, false);
+    toast.addField("🔜 Puntos hasta el siguiente nivel", String(nextLevel - stats.points), false);
 
     const kinds = [
       `👍 ${stats.upvotes}`,

@@ -224,7 +224,7 @@ export class WarnModlogEvent extends ModlogEvent {
         name: "Mensaje",
         value: this.message.cleanContent,
       });
-      if (this.message.channel.type == "text") {
+      if (this.message.channel.type == "GUILD_TEXT") {
         const textChannel = this.message.channel as TextChannel;
         fields.push({
           name: "Canal",
@@ -271,7 +271,7 @@ export class WastebinModlogEvent extends ModlogEvent {
       name: "Mensaje",
       value: this.message.cleanContent,
     });
-    if (this.message.channel.type == "text") {
+    if (this.message.channel.type == "GUILD_TEXT") {
       const textChannel = this.message.channel as TextChannel;
       fields.push({
         name: "Canal",

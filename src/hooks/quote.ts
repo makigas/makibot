@@ -22,14 +22,14 @@ export default class QuoteService implements Hook {
             const channel = originalMessage.guild.channels.cache.get(channelId);
             if (channel) {
               switch (channel.type) {
-                case "text": {
+                case "GUILD_TEXT": {
                   const message = await (channel as TextChannel).messages.fetch(messageId);
                   if (message) {
                     originalMessage.channel.send(quoteMessage(message));
                   }
                   break;
                 }
-                case "news": {
+                case "GUILD_NEWS": {
                   const message = await (channel as NewsChannel).messages.fetch(messageId);
                   if (message) {
                     originalMessage.channel.send(quoteMessage(message));

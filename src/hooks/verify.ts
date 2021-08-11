@@ -46,7 +46,7 @@ export default class VerifyService implements Hook {
             severity: "warning",
             target: message.member.user,
           });
-          await message.channel.send(toast);
+          await message.channel.send({ embeds: [toast] });
         } else {
           /* Send the message first, as setting the role may inhibit future events about the channel */
           logger.debug(`[verify] handling verification for ${message.member.user.tag}`);
@@ -59,7 +59,7 @@ export default class VerifyService implements Hook {
             severity: "success",
             target: message.member.user,
           });
-          await message.channel.send(toast);
+          await message.channel.send({ embeds: [toast] });
           await member.setVerification(true);
           await server.logModlogEvent(new VerifyModlogEvent(message.member));
         }
@@ -78,7 +78,7 @@ export default class VerifyService implements Hook {
           severity: "warning",
           target: message.member.user,
         });
-        await message.channel.send(toast);
+        await message.channel.send({ embeds: [toast] });
       }
     }
   }

@@ -27,7 +27,7 @@ export default class RosterService implements Hook {
     client.on("guildMemberRemove", (member) =>
       resolvePartial(member).then((member) => this.memberLeft(member))
     );
-    client.on("guildBanAdd", (guild, user) => this.memberBan(guild, user));
+    client.on("guildBanAdd", (ban) => this.memberBan(ban.guild, ban.user));
   }
 
   private async memberBan(guild: Guild, user: User): Promise<void> {
