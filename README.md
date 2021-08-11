@@ -6,7 +6,7 @@
 
 ## Requirements
 
-- We target Node 14.
+- We target Node 16.
 - A Discord application that can behave as a bot.
 - A Discord server.
 
