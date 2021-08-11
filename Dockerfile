@@ -20,7 +20,7 @@ RUN apk add --virtual npm-deps --no-cache --update python git build-base && \
     apk del npm-deps
 
 # Then install runtime dependencies only
-RUN apk add --virtual npm-deps --no-cache --update python git build-base && \
+RUN apk add --virtual npm-deps --no-cache --update python3 git build-base && \
     npm i --only=production && \
     npm cache clean --force && \
     apk del npm-deps
