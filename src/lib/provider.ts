@@ -13,7 +13,9 @@ export class SettingProvider {
   private cache: { [server: string]: object };
 
   constructor(private db: Database, private client: Client) {
-    this.cache = {};
+    this.cache = {
+      "global": {},
+    };
   }
 
   async init(): Promise<void> {
@@ -29,6 +31,9 @@ export class SettingProvider {
   }
 
   get(guild: Snowflake | "global", key: string, defaultValue: any = undefined): any {
+    if (!this.cache[guildToCacheName(guild)]) {
+      
+    }
     return this.cache[guildToCacheName(guild)][key] || defaultValue;
   }
 
