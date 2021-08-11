@@ -106,7 +106,7 @@ export default class TombstoneService implements Hook {
         severity: "info",
         thumbnail: `https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/282/ghost_1f47b.png`,
       });
-      const tombstone = await message.channel.send(toast);
+      const tombstone = await message.channel.send({ embeds: [toast] });
       tombstoneTag(channel).set(tombstone.id);
     }
   }

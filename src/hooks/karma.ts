@@ -5,6 +5,7 @@ import {
   MessageReaction,
   PartialMessage,
   PartialUser,
+  TextBasedChannels,
   TextChannel,
   User,
 } from "discord.js";
@@ -32,7 +33,7 @@ async function prefetchUser(user: User | PartialUser): Promise<User> {
   }
 }
 
-function isTextChannel(channel: Channel): channel is TextChannel {
+function isTextChannel(channel: TextBasedChannels): channel is TextChannel {
   return channel.type == "GUILD_TEXT" || channel.type == "GUILD_PUBLIC_THREAD" || channel.type === "GUILD_NEWS";
 }
 
@@ -220,14 +221,14 @@ export default class KarmaService implements Hook {
             severity: "success",
             target: gm.user,
           });
-          await channel.send(toast);
+          await channel.send({ embeds: [toast] });
         } else {
           const toast = createToast({
             title: `¡@${gm.user.username} ha subido al nivel ${expectedLevel}!`,
             severity: "success",
             target: gm.user,
           });
-          await channel.send(toast);
+          await channel.send({ embeds: [toast] });
         }
       }
     }

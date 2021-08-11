@@ -114,7 +114,10 @@ export default class Server {
     const webhookId = this.settings.modlogWebhookId;
     const webhookToken = this.settings.modlogWebhookToken;
     if (webhookId && webhookToken) {
-      const client = new WebhookClient(webhookId, webhookToken);
+      const client = new WebhookClient({
+        id: webhookId,
+        token: webhookToken,
+      });
       try {
         const payload = {
           username: event.title(),

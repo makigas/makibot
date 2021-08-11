@@ -120,7 +120,7 @@ export default class AntispamService implements Hook {
           severity: "error",
           target: message.member.user,
         });
-        await channel.send(toast);
+        await channel.send({ embeds: [toast] });
       }
     }
   }

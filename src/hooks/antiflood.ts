@@ -90,7 +90,7 @@ export default class AntifloodService implements Hook {
             "aquí, o esperar una hora para que el mensaje se enfríe.",
           ].join(" "),
         });
-        await message.channel.send(toast);
+        await message.channel.send({ embeds: [toast] });
         await applyWastebin(message);
       }
     }
