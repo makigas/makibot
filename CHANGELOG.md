@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.27.4](https://github.com/makigas/clank/compare/v0.27.3...v0.27.4) (2021-08-05)
+
+
+### Bug Fixes
+
+* **karma:** only grant karma for regular messages ([dc3490f](https://github.com/makigas/clank/commit/dc3490fe2006fa15029e02db1146c7bbd9bcc0a7))
+
+### [0.27.3](https://github.com/makigas/clank/compare/v0.27.2...v0.27.3) (2021-08-04)
+
+
+### Features
+
+* allow disabling verification ([1840116](https://github.com/makigas/clank/commit/184011658832663975b54486f2899843e992ab91))
+
+### [0.27.2](https://github.com/makigas/clank/compare/v0.27.1...v0.27.2) (2021-08-01)
+
+
+### Bug Fixes
+
+* wrong variable used for the bounty command ([b0cf92b](https://github.com/makigas/clank/commit/b0cf92b092315189c1e3b4efec328117f1dce7dd))
+
+### [0.27.1](https://github.com/makigas/clank/compare/v0.27.0...v0.27.1) (2021-07-31)
+
+
+### Bug Fixes
+
+* ephemeral condition is wrong ([0196e78](https://github.com/makigas/clank/commit/0196e78a671fb3d6544aa4cfce92866982e7ddd5))
+
+## [0.27.0](https://github.com/makigas/clank/compare/v0.26.0...v0.27.0) (2021-07-31)
+
+
+### Features
+
+* add bounties ([#396](https://github.com/makigas/clank/issues/396)) ([7ce8c10](https://github.com/makigas/clank/commit/7ce8c1015f6a4508db4bffc86f30ad389530b8c1))
+* detect message permalinks and embed them ([c36aa05](https://github.com/makigas/clank/commit/c36aa056d6b7fc3ffcb105dec2040c10ce456267)), closes [#383](https://github.com/makigas/clank/issues/383)
+
 ## [0.26.0](https://github.com/makigas/clank/compare/v0.25.0...v0.26.0) (2021-07-29)
 
 

@@ -1,5 +1,5 @@
 import { Snowflake } from "discord.js";
-import { open, Database } from "sqlite";
+import { Database, open } from "sqlite";
 import sqlite3 from "sqlite3";
 
 const SETUP_SCRIPT = `
@@ -40,6 +40,10 @@ export interface KarmaDatabase {
   count(target: Snowflake, settings?: KarmaCountParams): Promise<number>;
   undoAction(actor: KarmaUndoActionParams): Promise<void>;
   action(options: KarmaActionParams): Promise<void>;
+
+  bountiesSentToday(sender: Snowflake): Promise<number>;
+  bountiesReceivedToday(receiver: Snowflake): Promise<number>;
+  bounty(id: Snowflake, sender: Snowflake, receiver: Snowflake, amount: number): Promise<void>;
 }
 
 class SqliteKarmaDatabase implements KarmaDatabase {
@@ -51,6 +55,59 @@ class SqliteKarmaDatabase implements KarmaDatabase {
    */
   constructor(db: Database) {
     this.db = db;
+  }
+
+  bountiesSentToday(sender: Snowflake): Promise<number> {
+    const query = `
+      SELECT sum(points) AS total
+      FROM karma
+      WHERE originator_id = ?
+      AND kind='bounty'
+      AND DATE(datetime) == datetime('now')`;
+    const params = [sender];
+    return this.db.get(query, params).then(({ total }) => total || 0);
+  }
+
+  bountiesReceivedToday(receiver: Snowflake): Promise<number> {
+    const query = `
+      SELECT sum(points) AS total
+      FROM karma
+      WHERE target_id = ?
+      AND kind='bounty'
+      AND DATE(datetime) == datetime('now')`;
+    const params = [receiver];
+    return this.db.get(query, params).then(({ total }) => total || 0);
+  }
+
+  async bounty(
+    id: Snowflake,
+    sender: Snowflake,
+    receiver: Snowflake,
+    amount: number
+  ): Promise<void> {
+    /* FIXME: this is not using a transaction. node-sqlite3 doesn't support transactions ·_· */
+    try {
+      await Promise.all([
+        this.action({
+          actorType: "Interaction",
+          actorId: id,
+          kind: "bounty",
+          originatorId: sender,
+          target: receiver,
+          points: amount,
+        }),
+        this.action({
+          actorType: "Interaction",
+          actorId: id,
+          kind: "bounty-send",
+          originatorId: receiver,
+          target: sender,
+          points: -amount,
+        }),
+      ]);
+    } catch (e) {
+      return Promise.reject(e);
+    }
   }
 
   count(target: Snowflake, { kind, seconds }: KarmaCountParams = {}): Promise<number> {

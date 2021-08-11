@@ -1,6 +1,5 @@
 import path from "path";
-import { Intents, WSEventType } from "discord.js";
-import { CommandoClient, SQLiteProvider } from "discord.js-commando";
+import { Client, Intents, WSEventType } from "discord.js";
 
 import ConfigSchema from "./ConfigSchema";
 import { getDatabase, getKarmaDatabase } from "./settings";
@@ -8,11 +7,14 @@ import AntiRaid from "./lib/antiraid";
 import { HookManager } from "./lib/hook";
 import { KarmaDatabase, openKarmaDatabase } from "./lib/karma/database";
 import { handleInteraction } from "./lib/interaction";
+import { SettingProvider } from "./lib/provider";
 
-export default class Makibot extends CommandoClient {
+export default class Makibot extends Client {
   readonly antiraid: AntiRaid;
 
   private _karma: KarmaDatabase;
+
+  private _provider: SettingProvider;
 
   private _manager: HookManager;
 
@@ -22,8 +24,6 @@ export default class Makibot extends CommandoClient {
 
   public constructor() {
     super({
-      commandPrefix: "!",
-      owner: ConfigSchema.owner,
       allowedMentions: {},
       intents: [
         Intents.FLAGS.DIRECT_MESSAGES,
@@ -49,7 +49,10 @@ export default class Makibot extends CommandoClient {
 
     this.once("ready", () => {
       getDatabase()
-        .then((db) => this.setProvider(new SQLiteProvider(db)))
+        .then((db) => {
+          this._provider = new SettingProvider(db, this);
+          return this._provider.init();
+        })
         .then(() => {
           getKarmaDatabase()
             .then((dbFile) => openKarmaDatabase(dbFile))
@@ -75,6 +78,10 @@ export default class Makibot extends CommandoClient {
 
   get karma(): KarmaDatabase {
     return this._karma;
+  }
+
+  get provider(): SettingProvider {
+    return this._provider;
   }
 
   shutdown(exitCode = 0): void {

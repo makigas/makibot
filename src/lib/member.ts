@@ -73,7 +73,11 @@ export default class Member {
   }
 
   get verified(): boolean {
-    return this.hasRole(this.server.verifiedRole);
+    if (process.env.REQUIRE_VERIFICATION) {
+      return this.hasRole(this.server.verifiedRole);
+    } else {
+      return true;
+    }
   }
 
   get moderator(): boolean {
