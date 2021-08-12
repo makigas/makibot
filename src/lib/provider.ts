@@ -13,12 +13,13 @@ export class SettingProvider {
   private cache: { [server: string]: object };
 
   constructor(private db: Database, private client: Client) {
-    this.cache = {
-      "global": {},
-    };
+    this.cache = {};
   }
 
   async init(): Promise<void> {
+    await this.db.run(
+      "CREATE TABLE IF NOT EXISTS settings (guild INTEGER PRIMARY KEY, settings TEXT)"
+    );
     await this.db.each(
       "SELECT CAST(guild as TEXT) as guild, settings FROM settings",
       (err, data) => {
@@ -31,15 +32,15 @@ export class SettingProvider {
   }
 
   get(guild: Snowflake | "global", key: string, defaultValue: any = undefined): any {
-    if (!this.cache[guildToCacheName(guild)]) {
-      
-    }
-    return this.cache[guildToCacheName(guild)][key] || defaultValue;
+    const settings = this.cache[guildToCacheName(guild)];
+    return settings && settings[key] ? settings[key] : defaultValue;
   }
 
   async set(guild: Snowflake | "global", key: string, value: any): Promise<any> {
-    this.cache[guildToCacheName(guild)][key] = value;
-    const newSettings = JSON.stringify(this.cache[guildToCacheName(guild)]);
+    const guildKey = guildToCacheName(guild);
+    this.cache[guildKey] ||= {};
+    this.cache[guildKey][key] = value;
+    const newSettings = JSON.stringify(this.cache[guildKey]);
     await this.db.run("INSERT OR REPLACE INTO settings(guild, settings) VALUES(?, ?)", [
       guildToDatabaseName(guild),
       newSettings,
@@ -48,7 +49,9 @@ export class SettingProvider {
   }
 
   async remove(guild: Snowflake | "global", key: string): Promise<any> {
-    delete this.cache[guildToCacheName(guild)][key];
+    const guildKey = guildToCacheName(guild);
+    this.cache[guildKey] ||= {};
+    delete this.cache[guildKey][key];
     const newSettings = JSON.stringify(this.cache[guildToCacheName(guild)]);
     await this.db.run("INSERT OR REPLACE INTO settings(guild, settings) VALUES(?, ?)", [
       guildToDatabaseName(guild),
