@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.28.0](https://github.com/makigas/clank/compare/v0.27.4...v0.28.0) (2021-08-12)
+
+
+### Bug Fixes
+
+* fails to create settings on new bots ([b377222](https://github.com/makigas/clank/commit/b377222136a9299e98445c251672aaca1f349d36))
+* provider fails to setup on new bots ([#405](https://github.com/makigas/clank/issues/405)) ([d649a95](https://github.com/makigas/clank/commit/d649a95e9e44451f8b9ab97ff34a2b924e211571))
+
+
+### Refactor
+
+* remove discord.js-commando ([#401](https://github.com/makigas/clank/issues/401)) ([7168168](https://github.com/makigas/clank/commit/716816873b901108abd3ab4080cb653dfb5acf2d))
+
 ### [0.27.4](https://github.com/makigas/clank/compare/v0.27.3...v0.27.4) (2021-08-05)
 
 
