@@ -1,4 +1,4 @@
-import { Guild } from "discord.js";
+import { Guild, Snowflake } from "discord.js";
 import Makibot from "../Makibot";
 import Tag from "./tag";
 
@@ -70,7 +70,7 @@ export default class Settings {
     await this.tags.pinChannel.set(pinboard);
   }
 
-  get modlogWebhookId(): string {
+  get modlogWebhookId(): Snowflake {
     return this.tags.modlogWebhookId.get();
   }
 

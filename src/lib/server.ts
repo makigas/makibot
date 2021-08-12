@@ -91,7 +91,7 @@ export default class Server {
   private getTextChannelByName(name: string): TextChannel {
     if (name) {
       const channel = this.guild.channels.cache.find((channel) => channel.name === name);
-      if (channel && channel.type === "text") {
+      if (channel && channel.type === "GUILD_TEXT") {
         return channel as TextChannel;
       } else {
         return null;
@@ -102,7 +102,7 @@ export default class Server {
   private getTextChannelByID(id: string): TextChannel {
     if (id) {
       const channel = this.guild.channels.cache.find((channel) => channel.id === id);
-      if (channel && channel.type === "text") {
+      if (channel && channel.type === "GUILD_TEXT") {
         return channel as TextChannel;
       } else {
         return null;
@@ -114,7 +114,10 @@ export default class Server {
     const webhookId = this.settings.modlogWebhookId;
     const webhookToken = this.settings.modlogWebhookToken;
     if (webhookId && webhookToken) {
-      const client = new WebhookClient(webhookId, webhookToken);
+      const client = new WebhookClient({
+        id: webhookId,
+        token: webhookToken,
+      });
       try {
         const payload = {
           username: event.title(),

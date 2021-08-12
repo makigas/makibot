@@ -112,7 +112,7 @@ class SqliteKarmaDatabase implements KarmaDatabase {
 
   count(target: Snowflake, { kind, seconds }: KarmaCountParams = {}): Promise<number> {
     let query = `SELECT SUM(points) AS score FROM karma WHERE target_id = ?`;
-    const params = [target];
+    const params: [number | string] = [target];
     if (kind) {
       query += ` AND kind = ?`;
       params.push(kind);
