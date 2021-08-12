@@ -13,7 +13,7 @@ ADD . .
 
 # Compile Typescript into dist
 RUN apk add --virtual npm-deps --no-cache --update python3 git build-base && \
-    npm install && \
+    npm install --ignore-scripts && \
     npm run build && \
     npm cache clean --force && \
     rm -rf node_modules && \
@@ -21,7 +21,7 @@ RUN apk add --virtual npm-deps --no-cache --update python3 git build-base && \
 
 # Then install runtime dependencies only
 RUN apk add --virtual npm-deps --no-cache --update python3 git build-base && \
-    npm i --only=production && \
+    npm i --only=production --ignore-scripts && \
     npm cache clean --force && \
     apk del npm-deps
 
