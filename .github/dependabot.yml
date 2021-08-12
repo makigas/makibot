@@ -11,7 +11,7 @@ updates:
     ignore:
       - dependency-name: "@types/node"
         versions:
-          - ">= 15"
+          - ">= 17"
     commit-message:
       prefix: chore
       include: scope
@@ -27,7 +27,7 @@ updates:
     ignore:
       - dependency-name: node
         versions:
-          - ">= 13"
+          - ">= 17"
     commit-message:
       prefix: chore
       include: scope
