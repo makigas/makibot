@@ -1,45 +1,19 @@
-import { Guild } from "discord.js";
-import InteractionCommand from "../../lib/interaction/basecommand";
+import { CommandInteraction } from "discord.js";
+import { CommandInteractionHandler } from "../../lib/interaction";
 import { createToast } from "../../lib/response";
 
-interface RaidParameters {
-  "raid-mode": boolean;
-}
-
-/*
-{
-  "name": "raid",
-  "description": "Apaga o enciende la verificación por captcha",
-  "options": [
-    {
-      "type": 5,
-      "name": "raid-mode",
-      "description": "true para activar modo raid, false en caso contrario",
-      "required": true
-    }
-  ],
-  "default_permission": false
-}
-
-{
-  "permissions": [
-    {
-      "id": "<mod>",
-      "type": 1,
-      "permission": true
-    }
-  ]
-}
-*/
-export default class RaidCommand extends InteractionCommand<RaidParameters> {
+export default class RaidCommand implements CommandInteractionHandler {
   name = "raid";
 
-  async handle(_guild: Guild, params: RaidParameters): Promise<void> {
-    await this.client.antiraid.setRaidMode(params["raid-mode"]);
+  async handle(command: CommandInteraction): Promise<void> {
+    const enabled = command.options.getBoolean("raid-mode", false) || false;
     const toast = createToast({
-      title: `El modo raid ha sido ${params["raid-mode"] ? "activado" : "desactivado"}`,
+      title: `El modo raid ha sido ${enabled ? "activado" : "desactivado"}`,
       severity: "info",
     });
-    await this.sendResponse({ embed: toast, ephemeral: true });
+    return command.reply({
+      embeds: [toast],
+      ephemeral: true,
+    });
   }
 }

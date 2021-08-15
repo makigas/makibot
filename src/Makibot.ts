@@ -1,13 +1,13 @@
 import path from "path";
-import { Client, Intents, WSEventType } from "discord.js";
+import { Client, Intents } from "discord.js";
 
 import ConfigSchema from "./ConfigSchema";
 import { getDatabase, getKarmaDatabase } from "./settings";
 import AntiRaid from "./lib/antiraid";
 import { HookManager } from "./lib/hook";
 import { KarmaDatabase, openKarmaDatabase } from "./lib/karma/database";
-import { handleInteraction } from "./lib/interaction";
 import { SettingProvider } from "./lib/provider";
+import { installCommandInteractionHandler } from "./lib/interaction";
 
 export default class Makibot extends Client {
   readonly antiraid: AntiRaid;
@@ -43,10 +43,6 @@ export default class Makibot extends Client {
 
     this.on("ready", () => console.log(`Logged in successfully as ${this.user.tag}.`));
 
-    this.ws.on("INTERACTION_CREATE" as WSEventType, (interaction) => {
-      handleInteraction(this, interaction);
-    });
-
     this.once("ready", () => {
       getDatabase()
         .then((db) => {
@@ -60,6 +56,7 @@ export default class Makibot extends Client {
         })
         .then(() => {
           this._manager = new HookManager(path.join(__dirname, "hooks"), this);
+          installCommandInteractionHandler(path.join(__dirname, "interactions/commands"), this);
         })
         .then(() => {
           // Init the antiraid engine.
