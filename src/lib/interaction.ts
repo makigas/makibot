@@ -1,4 +1,5 @@
 import type { CommandInteraction } from "discord.js";
+import path from "path";
 import requireAll from "require-all";
 import type Makibot from "../Makibot";
 import logger from "./logger";
@@ -31,8 +32,9 @@ function loadCommandInteractions(path: string): { [name: string]: CommandInterac
   return Object.fromEntries(handlers);
 }
 
-export function installCommandInteractionHandler(path: string, client: Makibot): void {
-  const commands = loadCommandInteractions(path);
+export function installCommandInteractionHandler(root: string, client: Makibot): void {
+  const commands = loadCommandInteractions(path.join(root, "commands"));
+  const menus = loadCommandInteractions(path.join(root, "menus"));
 
   client.on("interactionCreate", (interaction) => {
     if (interaction.isCommand()) {
@@ -45,6 +47,23 @@ export function installCommandInteractionHandler(path: string, client: Makibot):
             createToast({
               title: "Comando no reconocido",
               description: "Es posible que el servidor o DM tenga deshabilitado el comando.",
+              severity: "error",
+            }),
+          ],
+          ephemeral: true,
+        });
+      }
+    } else if (interaction.isContextMenu()) {
+      const handler = menus[interaction.commandName];
+      if (handler) {
+        return handler.handle(interaction);
+      } else {
+        return interaction.reply({
+          embeds: [
+            createToast({
+              title: "Elemento de menú no reconocido",
+              description:
+                "Es posible que el elemento de menú no esté disponible para este servidor o canal de DM.",
               severity: "error",
             }),
           ],

@@ -1,7 +1,7 @@
 import type { CommandInteraction, MessageEmbed } from "discord.js";
-import { CommandInteractionHandler } from "../../lib/interaction";
+import type { CommandInteractionHandler } from "../../lib/interaction";
+import type Member from "../../lib/member";
 import { getPointsForLevelV2 } from "../../lib/karma";
-import Member from "../../lib/member";
 import { createToast } from "../../lib/response";
 import Server from "../../lib/server";
 
@@ -34,17 +34,25 @@ async function createKarmaToast(member: Member): Promise<MessageEmbed> {
   return toast;
 }
 
-export default class KarmaCommand implements CommandInteractionHandler {
-  name = "karma";
+export default class ViewKarmaCommand implements CommandInteractionHandler {
+  name = "Ver karma";
 
-  async handle(command: CommandInteraction): Promise<void> {
-    if (command.inGuild()) {
-      await command.deferReply({ ephemeral: true });
+  async handle(event: CommandInteraction): Promise<void> {
+    await event.deferReply({ ephemeral: true });
+    const value = String(event.options.get("user").value);
+    const server = new Server(event.guild);
+    const member = await server.member(value);
 
-      const server = new Server(command.guild);
-      const member = await server.member(command.user);
-      const toast = await createKarmaToast(member);
-      await command.editReply({ embeds: [toast] });
+    if (member.user.bot) {
+      const toast = createToast({
+        title: `Balance de karma de @${member.user.username}`,
+        description: "Este usuario es un bot y no tiene karma",
+        severity: "error",
+      });
+      await event.editReply({ embeds: [toast] });
+    } else {
+      const report = await createKarmaToast(member);
+      await event.editReply({ embeds: [report] });
     }
   }
 }

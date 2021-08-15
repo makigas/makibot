@@ -56,7 +56,7 @@ export default class Makibot extends Client {
         })
         .then(() => {
           this._manager = new HookManager(path.join(__dirname, "hooks"), this);
-          installCommandInteractionHandler(path.join(__dirname, "interactions/commands"), this);
+          installCommandInteractionHandler(path.join(__dirname, "interactions"), this);
         })
         .then(() => {
           // Init the antiraid engine.
