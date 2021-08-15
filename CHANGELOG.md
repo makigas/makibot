@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.29.0](https://github.com/makigas/clank/compare/v0.28.0...v0.29.0) (2021-08-15)
+
+
+### Refactor
+
+* rewrite interactions using v9 API ([27173a8](https://github.com/makigas/clank/commit/27173a83aa60d698c2f34065f213afa5086c3ebc))
+
 ## [0.28.0](https://github.com/makigas/clank/compare/v0.27.4...v0.28.0) (2021-08-12)
 
 
