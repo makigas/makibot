@@ -1,9 +1,8 @@
-import { Guild, Message, MessageEmbedOptions, User } from "discord.js";
+import { EmbedFieldData, Guild, Message, MessageEmbedOptions, User } from "discord.js";
 import Server from "./server";
 import { WarnModlogEvent } from "./modlog";
 import Member from "./member";
-
-const WARN_DURATION = 86400 * 1000 * 7;
+import humanizeDuration from "humanize-duration";
 
 /**
  * Information that describes why the warn is being issued. This information
@@ -19,32 +18,34 @@ export interface WarnPayload {
 
   /** The reason on why the warn was issued. */
   reason?: string;
+
+  /** The duration (in ms) of the warn. */
+  duration: number;
 }
 
 const PROMPT_MESSAGE = "Amonestación automática impuesta hacia %s.";
 
-function notifyModlog(
+async function notifyModlog(
   server: Server,
   member: Member,
   textMessage: string,
   title: string,
-  reason: string = null
-) {
+  fields: EmbedFieldData[] = []
+): Promise<void> {
   const publicModlog = server.publicModlogChannel;
   if (publicModlog) {
     const embed: MessageEmbedOptions = {
-      title: title,
       color: 16545847,
-      description: reason ? `**Razón**: ${reason}` : null,
       author: {
-        name: member.usertag,
+        name: title,
         iconURL: member.avatar,
       },
+      fields,
       footer: {
         text: "Mensaje de moderación automático",
       },
     };
-    publicModlog.send({ content: textMessage, embeds: [embed] });
+    await publicModlog.send({ content: textMessage, embeds: [embed] });
   }
 }
 
@@ -52,15 +53,38 @@ export function notifyPublicModlog(
   server: Server,
   member: Member,
   textMessage: string,
-  reason: string
-) {
-  notifyModlog(server, member, textMessage, `Se llamó la atención a ${member.usertag}`, reason);
+  reason: string,
+  length = 0
+): Promise<void> {
+  const fields: EmbedFieldData[] = [];
+  if (reason) {
+    fields.push({
+      name: "Razón",
+      value: reason,
+    });
+  }
+  if (length > 0) {
+    fields.push({
+      name: "Duración",
+      value: humanizeDuration(length, {
+        language: "es",
+        fallbacks: ["en"],
+      }),
+    });
+  }
+  return notifyModlog(
+    server,
+    member,
+    textMessage,
+    `Se llamó la atención a @${member.user.username}`,
+    fields
+  );
 }
 
-export function notifyWarnExpiration(server: Server, member: Member) {
+export function notifyWarnExpiration(server: Server, member: Member): Promise<void> {
   const message = `La llamada de atención de <@${member.id}> ha expirado`;
   const embedTitle = `La llamada de atención de ${member.usertag} ha expirado`;
-  notifyModlog(server, member, message, embedTitle);
+  return notifyModlog(server, member, message, embedTitle);
 }
 
 export async function removeWarn(server: Server, member: Member): Promise<void> {
@@ -77,7 +101,7 @@ export async function removeWarn(server: Server, member: Member): Promise<void> 
 
 export default async function applyWarn(
   guild: Guild,
-  { user, message, reason }: WarnPayload
+  { user, message, reason, duration }: WarnPayload
 ): Promise<void> {
   // Get the member behind this user.
   const memberToWarn = await guild.members.fetch(user);
@@ -98,15 +122,15 @@ export default async function applyWarn(
   // Store the expiration date for this warn in the server tag.
   const warnList = server.tagbag.tag("warns");
   const activeWarns = warnList.get({});
-  activeWarns[user.id] = Date.now() + WARN_DURATION;
+  activeWarns[user.id] = Date.now() + duration;
   warnList.set(activeWarns);
-  setTimeout(async () => removeWarn(server, member), WARN_DURATION);
+  setTimeout(async () => removeWarn(server, member), duration);
 
   // Send a message to the public modlog.
   const warnMessage = PROMPT_MESSAGE.replace("%s", `<@${memberToWarn.id}>`);
-  notifyPublicModlog(server, member, warnMessage, null);
+  notifyPublicModlog(server, member, warnMessage, reason, duration);
 
   server
-    .logModlogEvent(new WarnModlogEvent(memberToWarn, reason, message))
+    .logModlogEvent(new WarnModlogEvent(memberToWarn, reason, duration, message))
     .catch((e) => console.error(`Error during warn: ${e}`));
 }

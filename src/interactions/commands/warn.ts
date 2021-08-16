@@ -31,7 +31,7 @@ export default class WarnCommand implements CommandInteractionHandler {
         });
         return event.reply({ embeds: [toast], ephemeral: true });
       } else {
-        await applyWarn(event.guild, { user: member.user, reason });
+        await applyWarn(event.guild, { user: member.user, reason, duration: 86400 * 1000 * 7 });
         const toast = createToast({
           title: "Warn aplicado",
           description: `Le has aplicado un warn a @${member.user.username}`,

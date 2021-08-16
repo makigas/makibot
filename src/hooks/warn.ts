@@ -1,7 +1,7 @@
 import { Hook } from "../lib/hook";
 import Makibot from "../Makibot";
 import applyWarn, { removeWarn } from "../lib/warn";
-import { Message, MessageReaction, Snowflake, User, UserResolvable } from "discord.js";
+import { Message, MessageReaction, Snowflake, User } from "discord.js";
 import Server from "../lib/server";
 import applyWastebin from "../lib/wastebin";
 
@@ -32,16 +32,16 @@ export default class WarnService implements Hook {
     this.restoreOldTimeouts();
   }
 
-  private restoreOldTimeouts() {
+  private restoreOldTimeouts(): void {
     this.client.guilds.cache.forEach(async (guild) => {
       const server = new Server(guild);
       const warnList = server.tagbag.tag("warns");
       const activeWarns: { [id: string]: number } = warnList.get({});
-      for (let activeWarn in activeWarns) {
-        let member = await server.member(activeWarn as Snowflake);
+      for (const activeWarn in activeWarns) {
+        const member = await server.member(activeWarn as Snowflake);
         if (member) {
-          let expDate = activeWarns[activeWarn];
-          let remain = expDate - Date.now();
+          const expDate = activeWarns[activeWarn];
+          const remain = expDate - Date.now();
           setTimeout(async () => removeWarn(server, member), remain);
         }
       }
@@ -52,7 +52,12 @@ export default class WarnService implements Hook {
     await reaction.fetch();
     const message = reaction.message as Message;
 
-    const warneableEntities = ["GUILD_TEXT", "GUILD_PUBLIC_THREAD", "GUILD_NEWS", "GUILD_NEWS_THREAD"]
+    const warneableEntities = [
+      "GUILD_TEXT",
+      "GUILD_PUBLIC_THREAD",
+      "GUILD_NEWS",
+      "GUILD_NEWS_THREAD",
+    ];
     // I can only react to messages sent to guild text channels.
     if (warneableEntities.includes(reaction.message.channel.type) || !reaction.message.guild) {
       return;
@@ -69,6 +74,7 @@ export default class WarnService implements Hook {
       applyWarn(reaction.message.guild, {
         user: reaction.message.author,
         message,
+        duration: 86400 * 1000 * 7,
       });
     } else if (reaction.emoji.name === "🗑️" && isMessageWarned(message)) {
       await applyWastebin(message);

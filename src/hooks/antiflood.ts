@@ -59,6 +59,10 @@ export default class AntifloodService implements Hook {
   }
 
   private async handleMessage(message: Message): Promise<void> {
+    if (!message.member || !message.member.guild) {
+      /* Webhooks will trigger this. */
+      return;
+    }
     const member = new Member(message.member);
     const normalized = normalize(message.cleanContent);
 

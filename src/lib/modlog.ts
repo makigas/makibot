@@ -6,6 +6,7 @@ import {
   TextChannel,
   User,
 } from "discord.js";
+import humanizeDuration from "humanize-duration";
 
 interface EmbedField {
   name: string;
@@ -191,7 +192,12 @@ export class BanModlogEvent extends ModlogEvent {
 }
 
 export class WarnModlogEvent extends ModlogEvent {
-  constructor(private member: GuildMember, private reason: string, private message: Message) {
+  constructor(
+    private member: GuildMember,
+    private reason: string,
+    private duration: number,
+    private message: Message
+  ) {
     super();
   }
 
@@ -212,6 +218,13 @@ export class WarnModlogEvent extends ModlogEvent {
     fields.push({
       name: "Usuario",
       value: this.member.user.tag,
+    });
+    fields.push({
+      name: "Duración",
+      value: humanizeDuration(this.duration, {
+        language: "es",
+        fallbacks: ["en"],
+      }),
     });
     if (this.reason) {
       fields.push({
