@@ -70,9 +70,14 @@ export default class TombstoneService implements Hook {
     }
 
     /* Delete the tombstone and tag if present. */
-    const tombstone = await getTombstone(channel);
-    if (tombstone) {
-      await tombstone.delete();
+    try {
+      const tombstone = await getTombstone(channel);
+      if (tombstone) {
+        await tombstone.delete();
+      }
+    } catch (e) {
+      /* Message not found, let's ignore it. */
+    } finally {
       tombstoneTag(channel).delete();
     }
   }

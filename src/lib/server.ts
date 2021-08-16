@@ -196,10 +196,14 @@ export default class Server {
   }
 
   async member(user: UserResolvable): Promise<Member> {
-    const member = await this.guild.members.fetch(user);
-    if (member) {
-      return new Member(member);
-    } else {
+    try {
+      const member = await this.guild.members.fetch(user);
+      if (member) {
+        return new Member(member);
+      } else {
+        return null;
+      }
+    } catch (e) {
       return null;
     }
   }
