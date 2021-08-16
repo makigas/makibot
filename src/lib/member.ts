@@ -229,4 +229,16 @@ export default class Member {
   async setHelper(value: boolean): Promise<boolean> {
     return this.setRole(this.server.helperRole, value);
   }
+
+  async kick(): Promise<void> {
+    if (this.guildMember.kickable) {
+      await this.guildMember.kick();
+    }
+  }
+
+  async ban(): Promise<void> {
+    if (this.guildMember.bannable) {
+      this.guildMember.ban();
+    }
+  }
 }
