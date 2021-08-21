@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.30.0](https://github.com/makigas/clank/compare/v0.29.0...v0.30.0) (2021-08-21)
+
+
+### Features
+
+* add hook for hard antispam ([e663b04](https://github.com/makigas/clank/commit/e663b04152c802e73ce09642779ba4e73c7e04db))
+* add moderation interactive menu ([27cebf2](https://github.com/makigas/clank/commit/27cebf202c052dae28e6a0121620e36abc484ca3))
+* add support for context menus ([3566ba8](https://github.com/makigas/clank/commit/3566ba8accc6069ef0ee0b76717a35f3b3357591))
+* allow warns to have a custom duration ([4132892](https://github.com/makigas/clank/commit/4132892b58e108db799fb8f1564630abfec80c18))
+* **antiflood:** mute long time offenders ([37d85d4](https://github.com/makigas/clank/commit/37d85d4cfeb2e5d6c9eb7eb5b21d7ed9cc05eb83))
+* **antispam:** add more links to be caught ([a5afde3](https://github.com/makigas/clank/commit/a5afde3f496ab5f78d144e9cf33ea9ea7e8b33dd))
+
+
+### Bug Fixes
+
+* handle deleted messages and users in hooks ([8ddcf83](https://github.com/makigas/clank/commit/8ddcf8397d41a7f67915cf3ef104bae0440457e9))
+
 ## [0.29.0](https://github.com/makigas/clank/compare/v0.28.0...v0.29.0) (2021-08-15)
 
 
