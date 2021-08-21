@@ -96,6 +96,7 @@ export async function removeWarn(server: Server, member: Member): Promise<void> 
   }
 
   await member.setWarned(false);
+  await member.setMuted(false);
   await notifyWarnExpiration(server, member);
 }
 
