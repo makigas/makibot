@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.31.0](https://github.com/makigas/clank/compare/v0.30.0...v0.31.0) (2021-08-21)
+
+
+### Features
+
+* **cmd:** add unwarn command ([9d50a16](https://github.com/makigas/clank/commit/9d50a16e147a69b6984da85f876f10d56a23d4e7))
+
 ## [0.30.0](https://github.com/makigas/clank/compare/v0.29.0...v0.30.0) (2021-08-21)
 
 
