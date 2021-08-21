@@ -20,7 +20,18 @@ const ruleset: { [reason: string]: RegExp[] } = {
     /facebook.com\/groups\/[\w._]+/, // intentionally also capture permalinks for posts in the group
     /facebook.com\/pages\/[\w._]+\/\d+/,
     /twitter.com\/\w+\/?(\?.+)?$/, // intentionally allow status because sharing tweets is common
-    /twitch.tv\/\w+/, // Twitch pages
+    /twitch.tv\/\w+/, // Twitch pages,
+    /steamcommunity.com\/id\/\w+/, // Steam profile pages by vanity URL.
+    /steamcommunity.com\/profiles\/\w+/, // Steam profile pages by ID.
+  ],
+  "El enlace apunta a una tienda de aplicaciones": [
+    /play.google.com\/store\/apps\/details/,
+  ],
+  "El enlace apunta a un Google Doc": [
+    /docs.google.com\/document\/d\//, // Google Docs
+    /docs.google.com\/spreadsheets\/d\//, // Google Docs
+    /docs.google.com\/presentations\/d\//, // Google Docs
+    /docs.google.com\/forms\/d\//, // Google Forms
   ],
 };
 
