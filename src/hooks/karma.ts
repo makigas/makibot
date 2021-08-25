@@ -64,23 +64,7 @@ export default class KarmaService implements Hook {
   name = "karma";
 
   constructor(private bot: Makibot) {
-    bot.on("message", (msg) => prefetchMessage(msg).then((msg) => this.onReceivedMessage(msg)));
-    bot.on("messageDelete", (msg) =>
-      prefetchMessage(msg).then((msg) => this.onDeletedMessage(msg))
-    );
-    bot.on("messageReactionAdd", (reaction, user) =>
-      reaction.fetch().then((reaction) =>
-        prefetchUser(user).then((user) => this.onReactedTo(reaction, user))
-      )
-    );
-    bot.on("messageReactionRemove", (reaction, user) =>
-      reaction.fetch().then((reaction) =>
-        prefetchUser(user).then((user) => this.onUnreactedTo(reaction, user))
-      )
-    );
-    bot.on("messageReactionRemoveAll", (msg) =>
-      prefetchMessage(msg).then((msg) => this.onUnreactedToAll(msg))
-    );
+    
   }
 
   /* Made as a getter so that we can defer accessing the karma db until the very last moment. */
@@ -88,7 +72,7 @@ export default class KarmaService implements Hook {
     return this.bot.karma;
   }
 
-  private async onReceivedMessage(message: Message): Promise<void> {
+  async onMessageCreate(message: Message): Promise<void> {
     if (!canReceivePoints(message.member) || message.type !== "DEFAULT") {
       return;
     }
@@ -107,7 +91,7 @@ export default class KarmaService implements Hook {
     }
   }
 
-  private async onDeletedMessage(message: Message): Promise<void> {
+  async onMessageDestroy(message: PartialMessage): Promise<void> {
     await Promise.all(
       ["upvote", "downvote", "star", "heart", "wave"].map((kind) =>
         this.karma.undoAction({
@@ -125,7 +109,7 @@ export default class KarmaService implements Hook {
     });
   }
 
-  private async onReactedTo(reaction: MessageReaction, user: User): Promise<void> {
+  async onMessageReactionAdd(reaction: MessageReaction, user: User): Promise<void> {
     if (
       !canReceivePoints(reaction.message.member) ||
       user.bot ||
@@ -151,7 +135,7 @@ export default class KarmaService implements Hook {
     }
   }
 
-  private async onUnreactedTo(reaction: MessageReaction, user: User): Promise<void> {
+  async onMessageReactionDestroy(reaction: MessageReaction, user: User): Promise<void> {
     const reactionSpec = REACTIONS[reaction.emoji.name];
     if (reactionSpec) {
       await this.karma.undoAction({
@@ -163,7 +147,7 @@ export default class KarmaService implements Hook {
     }
   }
 
-  private async onUnreactedToAll(message: Message): Promise<void> {
+  async onMessageReactionBulkDestroy(message: Message): Promise<void> {
     await Promise.all(
       ["upvote", "downvote", "star", "heart", "wave"].map((kind) =>
         this.karma.undoAction({

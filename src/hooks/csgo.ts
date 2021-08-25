@@ -51,11 +51,6 @@ const TOKENS = [
 export default class CsgoService implements Hook {
   name = "csgo";
 
-  constructor(private client: Client) {
-    this.handleMessage = this.handleMessage.bind(this);
-    this.client.on("message", this.handleMessage);
-  }
-
   private async handleMatch(message: Message, member: Member): Promise<void> {
     /* Warn and mute the participant. */
     await applyWarn(message.guild, {
@@ -78,7 +73,7 @@ export default class CsgoService implements Hook {
     await message.delete();
   }
 
-  private async handleMessage(message: Message): Promise<void> {
+  async onMessageCreate(message: Message): Promise<void> {
     if (message.guild) {
       const server = new Server(message.guild);
       const member = await server.member(message.author.id);

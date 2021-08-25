@@ -1,4 +1,4 @@
-import type { Message, MessageReaction, PartialMessage, Snowflake, TextChannel } from "discord.js";
+import type { Message, MessageReaction, PartialMessage, Snowflake, TextChannel, User } from "discord.js";
 import { Hook } from "../lib/hook";
 import logger from "../lib/logger";
 import { quoteMessage } from "../lib/response";
@@ -46,23 +46,10 @@ function delegatesToPin(reaction: MessageReaction): boolean {
 }
 
 export default class PinService implements Hook {
-  private client: Makibot;
 
   name = "pin";
 
-  constructor(client: Makibot) {
-    this.client = client;
-
-    this.addReaction = this.addReaction.bind(this);
-    this.removeReaction = this.removeReaction.bind(this);
-    this.removeAllReactions = this.removeAllReactions.bind(this);
-
-    this.client.on("messageReactionAdd", this.addReaction);
-    this.client.on("messageReactionRemove", this.removeReaction);
-    this.client.on("messageReactionRemoveAll", this.removeAllReactions);
-  }
-
-  private async addReaction(reaction: MessageReaction): Promise<void> {
+  async onMessageReactionAdd(reaction: MessageReaction, _user: User): Promise<void> {
     try {
       await reaction.fetch();
 
@@ -89,7 +76,7 @@ export default class PinService implements Hook {
     }
   }
 
-  private async removeReaction(reaction: MessageReaction): Promise<void> {
+  async onMessageReactionDestroy(reaction: MessageReaction, _user: User): Promise<void> {
     try {
       await reaction.fetch();
       if (delegatesToPin(reaction) && reaction.count === 0) {
@@ -100,7 +87,7 @@ export default class PinService implements Hook {
     }
   }
 
-  private async removeAllReactions(message: Message | PartialMessage): Promise<void> {
+  async onMessageReactionBulkDestroy(message: Message): Promise<void> {
     try {
       const richMessage = await message.fetch();
       if (isPinneable(richMessage)) {

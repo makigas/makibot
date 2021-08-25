@@ -43,25 +43,10 @@ async function getTombstone(channel: TextChannel): Promise<Message | null> {
   }
 }
 
-async function resolveMessage(message: Message | PartialMessage): Promise<Message> {
-  if (message.partial) {
-    return message.fetch();
-  } else {
-    return message as Message;
-  }
-}
-
 export default class TombstoneService implements Hook {
   name = "tombstone";
 
-  constructor(client: Makibot) {
-    client.on("messageDelete", (message) =>
-      resolveMessage(message).then((message) => this.onMessageDelete(message))
-    );
-    client.on("message", (message) => this.onMessageCreate(message));
-  }
-
-  private async onMessageCreate(message: Message): Promise<void> {
+  async onMessageCreate(message: Message): Promise<void> {
     const channel = message.channel as TextChannel;
 
     /* Discard messages not sent to a guild. */
@@ -82,7 +67,7 @@ export default class TombstoneService implements Hook {
     }
   }
 
-  private async onMessageDelete(message: Message): Promise<void> {
+  async onMessageDestroy(message: PartialMessage): Promise<void> {
     const channel = message.channel as TextChannel;
 
     /* Discard messages not sent to a guild. */

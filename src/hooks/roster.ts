@@ -1,18 +1,9 @@
-import { GuildMember, Guild, User, PartialGuildMember } from "discord.js";
+import { GuildMember } from "discord.js";
 
 import { Hook } from "../lib/hook";
-import Makibot from "../Makibot";
 import { JoinModlogEvent, LeaveModlogEvent, BanModlogEvent } from "../lib/modlog";
 import Server from "../lib/server";
 import logger from "../lib/logger";
-
-async function resolvePartial(member: GuildMember | PartialGuildMember): Promise<GuildMember> {
-  if (member.partial) {
-    return member.fetch();
-  } else {
-    return member as GuildMember;
-  }
-}
 
 /**
  * The roster sends announces to the modlog channel as a result of some events,
@@ -22,15 +13,7 @@ async function resolvePartial(member: GuildMember | PartialGuildMember): Promise
 export default class RosterService implements Hook {
   name = "roster";
 
-  constructor(client: Makibot) {
-    client.on("guildMemberAdd", (member) => this.memberJoin(member));
-    client.on("guildMemberRemove", (member) =>
-      resolvePartial(member).then((member) => this.memberLeft(member))
-    );
-    client.on("guildBanAdd", (ban) => this.memberBan(ban.guild, ban.user));
-  }
-
-  private async memberBan(guild: Guild, user: User): Promise<void> {
+  async onGuildMemberBan({guild, user}): Promise<void> {
     logger.debug(`[roster] announcing ban for ${user.tag}`);
     try {
       const server = new Server(guild);
@@ -40,7 +23,7 @@ export default class RosterService implements Hook {
     }
   }
 
-  private async memberJoin(member: GuildMember): Promise<void> {
+  async onGuildMemberJoin(member: GuildMember): Promise<void> {
     logger.debug(`[roster] announcing join for ${member.user.tag}`);
     try {
       const server = new Server(member.guild);
@@ -50,7 +33,7 @@ export default class RosterService implements Hook {
     }
   }
 
-  private async memberLeft(member: GuildMember): Promise<void> {
+  async onGuildMemberLeave(member: GuildMember): Promise<void> {
     logger.debug(`[roster] announcing leave for ${member.user.tag}`);
     try {
       const server = new Server(member.guild);

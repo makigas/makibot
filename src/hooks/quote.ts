@@ -1,8 +1,7 @@
-import { NewsChannel, TextChannel } from "discord.js";
+import { Message, NewsChannel, TextChannel } from "discord.js";
 import { Hook } from "../lib/hook";
 import logger from "../lib/logger";
 import { quoteMessage } from "../lib/response";
-import Makibot from "../Makibot";
 
 function permalink(content: string) {
   const regex = /discord\.com\/channels\/([0-9]+)\/([0-9]+)\/([0-9]+)/;
@@ -12,8 +11,8 @@ function permalink(content: string) {
 export default class QuoteService implements Hook {
   name = "quote";
 
-  constructor(private client: Makibot) {
-    this.client.on("message", async (originalMessage) => {
+  async onMessageCreate(originalMessage: Message): Promise<void> {
+    {
       const ids = permalink(originalMessage.cleanContent);
       if (ids) {
         try {
@@ -43,6 +42,6 @@ export default class QuoteService implements Hook {
           logger.error("[quote] cannot send message", e);
         }
       }
-    });
+    }
   }
 }
