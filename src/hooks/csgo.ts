@@ -11,6 +11,7 @@ import applyWarn from "../lib/warn";
 
 const TOKENS = [
   // Different variations of steamcommunity.
+  /steamcommmunlity.com/,
   /steamcconuunity.co/,
   /steamcomminutiu.ru/,
   /steamcomminytiy.ru/,
@@ -30,6 +31,7 @@ const TOKENS = [
   /stermccommunitty.ru/,
   /stiemcommunitty.ru/,
   /steamcommrnunity.com/,
+  /steamcommunity.link/,
 
   // There is this CSGO scam-bot
   /https:\/\/prnt.sc\//,
@@ -43,9 +45,28 @@ const TOKENS = [
   /dlscord.ink/,
   /dlscord.pro/,
   /dlscord.nitro/,
+  /discortnitosteam.online/,
 
-  // TODO: Should I just ban ".ru/" entirely?
-  // /.ru\//,
+  // Update
+  /rust-way.com/,
+  /twitch.rust-ltd.com/,
+  /:\/\/discord-nitro./,
+  /discorcl.link/,
+  /discorcl.click/,
+  /discordapp.click/,
+  /discordapp.link/,
+
+  // I don't have time for this shit
+  /discorcl.[a-z]/,
+  /dlscord.[a-z]/,
+  /discordapp.[abd-z]/,
+
+  // risky, but i think worth
+  /get 3 months/,
+  /get 1 month/,
+  /3 months of discord nitro/,
+  /.ru\//,
+  /.ru.com\//,
 ];
 
 export default class CsgoService implements Hook {
