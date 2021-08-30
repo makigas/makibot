@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.31.2](https://github.com/makigas/clank/compare/v0.31.1...v0.31.2) (2021-08-30)
+
+
+### Bug Fixes
+
+* **csgo:** fix typo in message sent after antispam triggers ([9c1e099](https://github.com/makigas/clank/commit/9c1e09960a9c49cace19bfe58ac8eecf5635f67d))
+* prevent double warns ([66d86c0](https://github.com/makigas/clank/commit/66d86c0894a25b3eb6c705bc952707893ddd995f))
+
+
+### Chore
+
+* **build:** add chore in the changelog ([6cefe5d](https://github.com/makigas/clank/commit/6cefe5d656adf3a9a2b0d37a04d206f1b8b013b6))
+* **csgo:** add more terms to the antispam list ([cebeac2](https://github.com/makigas/clank/commit/cebeac2f202a440b260ed4aa62207601ba551a65))
+
 ### [0.31.1](https://github.com/makigas/clank/compare/v0.31.0...v0.31.1) (2021-08-28)
 
 ## [0.31.0](https://github.com/makigas/clank/compare/v0.30.0...v0.31.0) (2021-08-21)
