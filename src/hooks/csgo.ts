@@ -95,7 +95,7 @@ export default class CsgoService implements Hook {
     const toast = createToast({
       title: "Mensaje interceptado como spam",
       description:
-        "Se ha eliminado un mensaje que ha sido considerado como antispam por el sistema.",
+        "El sistema antispam ha eliminado un mensaje que ha identificado como positivo.",
       severity: "error",
       target: message.author,
     });
