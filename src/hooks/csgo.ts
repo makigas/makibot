@@ -61,7 +61,7 @@ const TOKENS = [
   // I don't have time for this shit
   /discorcl.[a-z]/,
   /dlscord.[a-z]/,
-  /discordapp.[abd-z]/,
+  /discordapp.[abd-mo-z]/,
 
   // risky, but i think worth
   /free nudes/,
