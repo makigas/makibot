@@ -46,6 +46,8 @@ const TOKENS = [
   /dlscord.pro/,
   /dlscord.nitro/,
   /discortnitosteam.online/,
+  /dlscord-nitro./,
+  /gave-nitro./,
 
   // Update
   /rust-way.com/,
@@ -62,6 +64,8 @@ const TOKENS = [
   /discordapp.[abd-z]/,
 
   // risky, but i think worth
+  /free nudes/,
+  /free discord nitro/,
   /get 3 months/,
   /get 1 month/,
   /3 months of discord nitro/,
