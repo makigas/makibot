@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.31.3](https://github.com/makigas/clank/compare/v0.31.2...v0.31.3) (2021-08-31)
+
+
+### Bug Fixes
+
+* **csgo:** discordapp.net is a safe domain ([6e59075](https://github.com/makigas/clank/commit/6e590758c0e380c0fc922c121adfb6a125974706))
+
+
+### Chore
+
+* **csgo:** add more domains to the system ([67c6edb](https://github.com/makigas/clank/commit/67c6edb62fd138d82e06b70fa3b75bfc01145f6a))
+
 ### [0.31.2](https://github.com/makigas/clank/compare/v0.31.1...v0.31.2) (2021-08-30)
 
 
