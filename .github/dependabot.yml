@@ -6,7 +6,7 @@ updates:
       interval: monthly
     labels:
       - dependencies
-   assignees:
+    assignees:
       - danirod
     ignore:
       - dependency-name: "@types/node"
@@ -21,7 +21,7 @@ updates:
       interval: monthly
     labels:
       - dependencies
-   assignees:
+    assignees:
       - danirod
     ignore:
       - dependency-name: node
