@@ -5,8 +5,17 @@ import { createToast } from "../lib/response";
 import Server from "../lib/server";
 import applyWarn from "../lib/warn";
 
-/*
- * CSGO bots (and other well known scammers)
+/**
+ * TODO: Rename this to something different. I called it csgo.ts because the
+ * first spambot was something related to CS:GO, but indeed there are a lot
+ * more of stuff to track.
+ *
+ * Sources:
+ * - https://github.com/Erisa/Cliptok
+ * - https://github.com/BuildBot42/discord-scam-links
+ *
+ * NOTE: Whenever I receive a spamlink that is not in those repos, a PR should
+ * be opened to share the spamlink with those repos as well.
  */
 
 const TOKENS = [
@@ -48,6 +57,7 @@ const TOKENS = [
   /discortnitosteam.online/,
   /dlscord-nitro./,
   /gave-nitro./,
+  /discord-help./,
 
   // Update
   /rust-way.com/,
@@ -59,9 +69,10 @@ const TOKENS = [
   /discordapp.link/,
 
   // I don't have time for this shit
+  /discodnitro.[a-z]/,
   /discorcl.[a-z]/,
   /dlscord.[a-z]/,
-  /discordapp.[abd-mo-z]/,
+  /discordapp.([abd-mo-z]|c[a-n][p-z]|n[a-df-z])/,
 
   // risky, but i think worth
   /free nudes/,
@@ -72,6 +83,10 @@ const TOKENS = [
   /.ru\//,
   /.ru.com\//,
 ];
+
+export function containsSpamLink(content: string) {
+  return TOKENS.some((token) => token.test(content));
+}
 
 export default class CsgoService implements Hook {
   name = "csgo";
