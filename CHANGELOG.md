@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.31.4](https://github.com/makigas/clank/compare/v0.31.3...v0.31.4) (2021-09-01)
+
+
+### Bug Fixes
+
+* **deps:** Dependabot YAML file is invalid ([b044347](https://github.com/makigas/clank/commit/b044347499551a23cd1605164caaa1b13196895d))
+
+
+### Chore
+
+* **deps:** update dependencies (september, 2021) ([1febf33](https://github.com/makigas/clank/commit/1febf331c9121dddf9281a5d66b7bea4076610f6))
+* **deps:** update internal dependencies ([591eaaf](https://github.com/makigas/clank/commit/591eaafee73893c64f88bfb5b82620413164892f))
+
 ### [0.31.3](https://github.com/makigas/clank/compare/v0.31.2...v0.31.3) (2021-08-31)
 
 
