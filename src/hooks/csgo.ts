@@ -83,7 +83,7 @@ const TOKENS = [
   /.ru.com\//,
 ];
 
-export function containsSpamLink(content: string) {
+export function containsSpamLink(content: string): boolean {
   return TOKENS.some((token) => token.test(content));
 }
 
@@ -103,8 +103,7 @@ export default class CsgoService implements Hook {
     /* Delete the original message with a tombstone. */
     const toast = createToast({
       title: "Mensaje interceptado como spam",
-      description:
-        "El sistema antispam ha eliminado un mensaje que ha identificado como positivo.",
+      description: "El sistema antispam ha eliminado un mensaje que ha identificado como positivo.",
       severity: "error",
       target: message.author,
     });
@@ -124,6 +123,22 @@ export default class CsgoService implements Hook {
       if (TOKENS.some((token) => token.test(content))) {
         /* We have a match! */
         return this.handleMatch(message, member);
+      }
+    }
+  }
+
+  async onMessageUpdate(oldMessage: Message, newMessage: Message): Promise<void> {
+    if (oldMessage.guild) {
+      const server = new Server(newMessage.guild);
+      const member = await server.member(newMessage.author.id);
+      if (newMessage.author.bot || member.moderator) {
+        return;
+      }
+
+      const content = newMessage.cleanContent.toLowerCase();
+      if (TOKENS.some((token) => token.test(content))) {
+        /* We have a match! */
+        return this.handleMatch(newMessage, member);
       }
     }
   }
