@@ -113,8 +113,14 @@ export default async function applyWarn(
     throw new ReferenceError("This server lacks a warn role");
   }
 
-  // Warn the user and make it a regular member.
   const member = new Member(memberToWarn);
+
+  // Pointless to apply a double warn, so if already warned, stop.
+  if (member.warned) {
+    return;
+  }
+
+  // Warn the user and demote it into a regular user if needed.
   await member.setWarned(true);
   if (member.helper) {
     member.setHelper(false);

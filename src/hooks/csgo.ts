@@ -5,12 +5,22 @@ import { createToast } from "../lib/response";
 import Server from "../lib/server";
 import applyWarn from "../lib/warn";
 
-/*
- * CSGO bots (and other well known scammers)
+/**
+ * TODO: Rename this to something different. I called it csgo.ts because the
+ * first spambot was something related to CS:GO, but indeed there are a lot
+ * more of stuff to track.
+ *
+ * Sources:
+ * - https://github.com/Erisa/Cliptok
+ * - https://github.com/BuildBot42/discord-scam-links
+ *
+ * NOTE: Whenever I receive a spamlink that is not in those repos, a PR should
+ * be opened to share the spamlink with those repos as well.
  */
 
 const TOKENS = [
   // Different variations of steamcommunity.
+  /steamcommmunlity.com/,
   /steamcommmunlity.com/,
   /steamcconuunity.co/,
   /steamcomminutiu.ru/,
@@ -46,6 +56,10 @@ const TOKENS = [
   /dlscord.pro/,
   /dlscord.nitro/,
   /discortnitosteam.online/,
+  /discortnitosteam.online/,
+  /dlscord-nitro./,
+  /gave-nitro./,
+  /discord-help./,
 
   // Update
   /rust-way.com/,
@@ -69,6 +83,10 @@ const TOKENS = [
   /.ru.com\//,
 ];
 
+export function containsSpamLink(content: string) {
+  return TOKENS.some((token) => token.test(content));
+}
+
 export default class CsgoService implements Hook {
   name = "csgo";
 
@@ -86,7 +104,7 @@ export default class CsgoService implements Hook {
     const toast = createToast({
       title: "Mensaje interceptado como spam",
       description:
-        "Se ha eliminado un mensaje que ha sido considerado como antispam por el sistema.",
+        "El sistema antispam ha eliminado un mensaje que ha identificado como positivo.",
       severity: "error",
       target: message.author,
     });

@@ -3,11 +3,11 @@ updates:
   - package-ecosystem: npm
     directory: "/"
     schedule:
-      interval: daily
-      time: "00:00"
-    open-pull-requests-limit: 99
+      interval: monthly
     labels:
       - dependencies
+    assignees:
+      - danirod
     ignore:
       - dependency-name: "@types/node"
         versions:
@@ -18,12 +18,11 @@ updates:
   - package-ecosystem: docker
     directory: "/"
     schedule:
-      interval: weekly
-      day: saturday
-      time: "00:00"
-    open-pull-requests-limit: 99
+      interval: monthly
     labels:
       - dependencies
+    assignees:
+      - danirod
     ignore:
       - dependency-name: node
         versions:

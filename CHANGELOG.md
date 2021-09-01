@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.31.4](https://github.com/makigas/clank/compare/v0.31.3...v0.31.4) (2021-09-01)
+
+
+### Bug Fixes
+
+* **deps:** Dependabot YAML file is invalid ([b044347](https://github.com/makigas/clank/commit/b044347499551a23cd1605164caaa1b13196895d))
+
+
+### Chore
+
+* **deps:** update dependencies (september, 2021) ([1febf33](https://github.com/makigas/clank/commit/1febf331c9121dddf9281a5d66b7bea4076610f6))
+* **deps:** update internal dependencies ([591eaaf](https://github.com/makigas/clank/commit/591eaafee73893c64f88bfb5b82620413164892f))
+
+### [0.31.3](https://github.com/makigas/clank/compare/v0.31.2...v0.31.3) (2021-08-31)
+
+
+### Bug Fixes
+
+* **csgo:** discordapp.net is a safe domain ([6e59075](https://github.com/makigas/clank/commit/6e590758c0e380c0fc922c121adfb6a125974706))
+
+
+### Chore
+
+* **csgo:** add more domains to the system ([67c6edb](https://github.com/makigas/clank/commit/67c6edb62fd138d82e06b70fa3b75bfc01145f6a))
+
+### [0.31.2](https://github.com/makigas/clank/compare/v0.31.1...v0.31.2) (2021-08-30)
+
+
+### Bug Fixes
+
+* **csgo:** fix typo in message sent after antispam triggers ([9c1e099](https://github.com/makigas/clank/commit/9c1e09960a9c49cace19bfe58ac8eecf5635f67d))
+* prevent double warns ([66d86c0](https://github.com/makigas/clank/commit/66d86c0894a25b3eb6c705bc952707893ddd995f))
+
+
+### Chore
+
+* **build:** add chore in the changelog ([6cefe5d](https://github.com/makigas/clank/commit/6cefe5d656adf3a9a2b0d37a04d206f1b8b013b6))
+* **csgo:** add more terms to the antispam list ([cebeac2](https://github.com/makigas/clank/commit/cebeac2f202a440b260ed4aa62207601ba551a65))
+
+### [0.31.1](https://github.com/makigas/clank/compare/v0.31.0...v0.31.1) (2021-08-28)
+
 ## [0.31.0](https://github.com/makigas/clank/compare/v0.30.0...v0.31.0) (2021-08-21)
 
 
