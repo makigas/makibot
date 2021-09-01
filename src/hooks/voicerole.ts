@@ -22,9 +22,6 @@ export default class VoiceRoleService implements Hook {
   constructor(private client: Makibot) {
     const voiceRoleConfig = client.provider.get(null, "voiceroles", {});
     this.voicerole = new VoiceRole(voiceRoleConfig);
-    this.client.on("voiceStateUpdate", (oldState, newState) =>
-      this.triggerVoiceStateUpdate(oldState, newState)
-    );
   }
 
   triggerVoiceStateUpdate(oldState: VoiceState, newState: VoiceState): void {

@@ -18,17 +18,7 @@ function isMessageWarned(message: Message): boolean {
 export default class WarnService implements Hook {
   name = "warn";
 
-  private client: Makibot;
-
-  constructor(client: Makibot) {
-    this.client = client;
-
-    this.client.on("messageReactionAdd", async (reaction, user) => {
-      const fetchedReaction = await reaction.fetch();
-      const fetchedUser = await user.fetch();
-      this.messageReactionAdd(fetchedReaction, fetchedUser);
-    });
-
+  constructor(private client: Makibot) {
     this.restoreOldTimeouts();
   }
 
@@ -48,7 +38,7 @@ export default class WarnService implements Hook {
     });
   }
 
-  private async messageReactionAdd(reaction: MessageReaction, user: User): Promise<void> {
+  async onMessageReactionAdd(reaction: MessageReaction, user: User): Promise<void> {
     await reaction.fetch();
     const message = reaction.message as Message;
 

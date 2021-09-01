@@ -4,7 +4,6 @@ import Member from "../lib/member";
 import { createToast } from "../lib/response";
 import applyWastebin from "../lib/wastebin";
 import applyWarn from "../lib/warn";
-import Makibot from "../Makibot";
 
 function generateFirstToast(message: Message): MessageEmbed {
   return createToast({
@@ -92,30 +91,10 @@ async function raisePing(member: Member): Promise<number> {
   return recentPings.length;
 }
 
-async function prefetchMessage(message: Message | PartialMessage): Promise<Message> {
-  if (message.partial) {
-    return message.fetch();
-  } else {
-    return message as Message;
-  }
-}
-
 export default class AntifloodService implements Hook {
   name = "antiflood";
 
-  constructor(private client: Makibot) {
-    client.on("message", (message) => this.handleMessage(message));
-    client.on("messageDelete", (message) =>
-      prefetchMessage(message).then((message) => this.handleDelete(message))
-    );
-    client.on("messageDeleteBulk", (messages) =>
-      messages.forEach((message) =>
-        prefetchMessage(message).then((message) => this.handleDelete(message))
-      )
-    );
-  }
-
-  private async handleDelete(message: Message): Promise<void> {
+  async onMessageDestroy(message: PartialMessage): Promise<void> {
     if (!message.member || !message.member.guild) {
       /* Webhooks will trigger this. */
       return;
@@ -130,7 +109,7 @@ export default class AntifloodService implements Hook {
     await tag.set(cleanHistory(history));
   }
 
-  private async handleMessage(message: Message): Promise<void> {
+  async onMessageCreate(message: Message): Promise<void> {
     if (!message.member || !message.member.guild) {
       /* Webhooks will trigger this. */
       return;

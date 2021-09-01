@@ -1,4 +1,4 @@
-import { Client, Message } from "discord.js";
+import { Message } from "discord.js";
 import { Hook } from "../lib/hook";
 import Member from "../lib/member";
 import { createToast } from "../lib/response";
@@ -20,6 +20,7 @@ import applyWarn from "../lib/warn";
 
 const TOKENS = [
   // Different variations of steamcommunity.
+  /steamcommmunlity.com/,
   /steamcommmunlity.com/,
   /steamcconuunity.co/,
   /steamcomminutiu.ru/,
@@ -55,6 +56,7 @@ const TOKENS = [
   /dlscord.pro/,
   /dlscord.nitro/,
   /discortnitosteam.online/,
+  /discortnitosteam.online/,
   /dlscord-nitro./,
   /gave-nitro./,
   /discord-help./,
@@ -69,14 +71,11 @@ const TOKENS = [
   /discordapp.link/,
 
   // I don't have time for this shit
-  /discodnitro.[a-z]/,
   /discorcl.[a-z]/,
   /dlscord.[a-z]/,
   /discordapp.([abd-mo-z]|c[a-n][p-z]|n[a-df-z])/,
 
   // risky, but i think worth
-  /free nudes/,
-  /free discord nitro/,
   /get 3 months/,
   /get 1 month/,
   /3 months of discord nitro/,
@@ -90,11 +89,6 @@ export function containsSpamLink(content: string) {
 
 export default class CsgoService implements Hook {
   name = "csgo";
-
-  constructor(private client: Client) {
-    this.handleMessage = this.handleMessage.bind(this);
-    this.client.on("message", this.handleMessage);
-  }
 
   private async handleMatch(message: Message, member: Member): Promise<void> {
     /* Warn and mute the participant. */
@@ -118,7 +112,7 @@ export default class CsgoService implements Hook {
     await message.delete();
   }
 
-  private async handleMessage(message: Message): Promise<void> {
+  async onMessageCreate(message: Message): Promise<void> {
     if (message.guild) {
       const server = new Server(message.guild);
       const member = await server.member(message.author.id);

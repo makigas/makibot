@@ -4,7 +4,6 @@ import getUrls from "get-urls";
 import Member from "../lib/member";
 import { WastebinModlogEvent } from "../lib/modlog";
 import Server from "../lib/server";
-import Makibot from "../Makibot";
 import { Hook } from "../lib/hook";
 import { createToast } from "../lib/response";
 
@@ -24,9 +23,7 @@ const ruleset: { [reason: string]: RegExp[] } = {
     /steamcommunity.com\/id\/\w+/, // Steam profile pages by vanity URL.
     /steamcommunity.com\/profiles\/\w+/, // Steam profile pages by ID.
   ],
-  "El enlace apunta a una tienda de aplicaciones": [
-    /play.google.com\/store\/apps\/details/,
-  ],
+  "El enlace apunta a una tienda de aplicaciones": [/play.google.com\/store\/apps\/details/],
   "El enlace apunta a un Google Doc": [
     /docs.google.com\/document\/d\//, // Google Docs
     /docs.google.com\/spreadsheets\/d\//, // Google Docs
@@ -84,19 +81,10 @@ function isAllowed(message: Message): boolean {
   }
 }
 
-const NOTIFY = "(Se ha retenido el mensaje de %s: %s.)";
-
 export default class AntispamService implements Hook {
   name = "antispam";
 
-  private client: Makibot;
-
-  constructor(client: Makibot) {
-    this.client = client;
-    this.client.on("message", (message) => this.message(message));
-  }
-
-  private async message(message: Message): Promise<void> {
+  async onMessageCreate(message: Message): Promise<void> {
     if (isAllowed(message)) {
       return; /* mod or bot */
     }
