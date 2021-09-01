@@ -1,4 +1,4 @@
-import { GuildMember } from "discord.js";
+import { GuildBan, GuildMember } from "discord.js";
 
 import { Hook } from "../lib/hook";
 import { JoinModlogEvent, LeaveModlogEvent, BanModlogEvent } from "../lib/modlog";
@@ -13,7 +13,7 @@ import logger from "../lib/logger";
 export default class RosterService implements Hook {
   name = "roster";
 
-  async onGuildMemberBan({guild, user}): Promise<void> {
+  async onGuildMemberBan({ guild, user }: GuildBan): Promise<void> {
     logger.debug(`[roster] announcing ban for ${user.tag}`);
     try {
       const server = new Server(guild);

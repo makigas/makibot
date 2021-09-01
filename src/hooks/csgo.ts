@@ -1,4 +1,4 @@
-import { Client, Message } from "discord.js";
+import { Message } from "discord.js";
 import { Hook } from "../lib/hook";
 import Member from "../lib/member";
 import { createToast } from "../lib/response";

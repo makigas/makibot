@@ -1,10 +1,9 @@
-import type { Message, MessageReaction, PartialMessage, Snowflake, TextChannel, User } from "discord.js";
+import type { Message, MessageReaction, PartialMessage, Snowflake, TextChannel } from "discord.js";
 import { Hook } from "../lib/hook";
 import logger from "../lib/logger";
 import { quoteMessage } from "../lib/response";
 import Server from "../lib/server";
 import type Tag from "../lib/tag";
-import type Makibot from "../Makibot";
 
 /* Get the tag that would persist the pin for this message. */
 function pinTag(message: Message | PartialMessage): Tag | null {
@@ -46,10 +45,9 @@ function delegatesToPin(reaction: MessageReaction): boolean {
 }
 
 export default class PinService implements Hook {
-
   name = "pin";
 
-  async onMessageReactionAdd(reaction: MessageReaction, _user: User): Promise<void> {
+  async onMessageReactionAdd(reaction: MessageReaction): Promise<void> {
     try {
       await reaction.fetch();
 
@@ -76,7 +74,7 @@ export default class PinService implements Hook {
     }
   }
 
-  async onMessageReactionDestroy(reaction: MessageReaction, _user: User): Promise<void> {
+  async onMessageReactionDestroy(reaction: MessageReaction): Promise<void> {
     try {
       await reaction.fetch();
       if (delegatesToPin(reaction) && reaction.count === 0) {

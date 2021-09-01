@@ -3,7 +3,7 @@ import { Hook } from "../lib/hook";
 import logger from "../lib/logger";
 import { quoteMessage } from "../lib/response";
 
-function permalink(content: string) {
+function permalink(content: string): RegExpMatchArray {
   const regex = /discord\.com\/channels\/([0-9]+)\/([0-9]+)\/([0-9]+)/;
   return content.match(regex);
 }
@@ -16,7 +16,7 @@ export default class QuoteService implements Hook {
       const ids = permalink(originalMessage.cleanContent);
       if (ids) {
         try {
-          const [_, guildId, channelId, messageId] = ids;
+          const [guildId, channelId, messageId] = ids.slice(1);
           if (originalMessage.guild || originalMessage.guild.id === guildId) {
             const channel = originalMessage.guild.channels.cache.get(channelId);
             if (channel) {

@@ -22,9 +22,7 @@ function isVerificationMessage(message: Message): boolean {
 export default class VerifyService implements Hook {
   name = "verify";
 
-  constructor(private client: Makibot) {
-    
-  }
+  constructor(private client: Makibot) {}
 
   async onMessageCreate(message: Message): Promise<void> {
     const server = new Server(message.guild);

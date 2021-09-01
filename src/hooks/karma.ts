@@ -1,10 +1,8 @@
 import {
-  Channel,
   GuildMember,
   Message,
   MessageReaction,
   PartialMessage,
-  PartialUser,
   TextBasedChannels,
   TextChannel,
   User,
@@ -18,23 +16,12 @@ import Server from "../lib/server";
 import { notifyPublicModlog } from "../lib/warn";
 import Makibot from "../Makibot";
 
-async function prefetchMessage(message: Message | PartialMessage): Promise<Message> {
-  if (message.partial) {
-    await message.fetch();
-  }
-  return message as Message;
-}
-
-async function prefetchUser(user: User | PartialUser): Promise<User> {
-  if (user.partial) {
-    return user.fetch();
-  } else {
-    return user as User;
-  }
-}
-
 function isTextChannel(channel: TextBasedChannels): channel is TextChannel {
-  return channel.type == "GUILD_TEXT" || channel.type == "GUILD_PUBLIC_THREAD" || channel.type === "GUILD_NEWS";
+  return (
+    channel.type == "GUILD_TEXT" ||
+    channel.type == "GUILD_PUBLIC_THREAD" ||
+    channel.type === "GUILD_NEWS"
+  );
 }
 
 const REACTIONS: { [reaction: string]: { kind: string; score: number } } = {
@@ -63,9 +50,7 @@ const REACTIONS: { [reaction: string]: { kind: string; score: number } } = {
 export default class KarmaService implements Hook {
   name = "karma";
 
-  constructor(private bot: Makibot) {
-    
-  }
+  constructor(private bot: Makibot) {}
 
   /* Made as a getter so that we can defer accessing the karma db until the very last moment. */
   private get karma(): KarmaDatabase {
