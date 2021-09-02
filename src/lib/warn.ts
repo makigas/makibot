@@ -88,6 +88,7 @@ export function notifyWarnExpiration(server: Server, member: Member): Promise<vo
 }
 
 export async function removeWarn(server: Server, member: Member): Promise<void> {
+  /* Expire the member from the warning queue for the future. */
   const warnList = server.tagbag.tag("warns");
   const activeWarns = warnList.get({});
   if (activeWarns[member.id]) {
@@ -95,9 +96,12 @@ export async function removeWarn(server: Server, member: Member): Promise<void> 
     warnList.set(activeWarns);
   }
 
-  await member.setWarned(false);
-  await member.setMuted(false);
-  await notifyWarnExpiration(server, member);
+  /* It only makes sense to continue with the unwarn if the member requires. */
+  if (member.warned || member.muted) {
+    await member.setWarned(false);
+    await member.setMuted(false);
+    await notifyWarnExpiration(server, member);
+  }
 }
 
 export default async function applyWarn(
