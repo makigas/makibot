@@ -65,6 +65,9 @@ export class HookManager {
     logger.debug("[hooks] finished registering services");
 
     client.on("messageCreate", (message: Message) => {
+      if (message.interaction) {
+        return;
+      }
       instances
         .filter((i) => !!i.onMessageCreate)
         .map((i) => {
@@ -75,6 +78,9 @@ export class HookManager {
     client.on(
       "messageUpdate",
       (oldMessage: Message | PartialMessage, newMessage: Message | PartialMessage) => {
+        if (oldMessage.interaction || newMessage.interaction) {
+          return;
+        }
         Promise.all([oldMessage.fetch(), newMessage.fetch()]).then(([oldMessage, newMessage]) => {
           instances
             .filter((i) => !!i.onMessageUpdate)
@@ -86,6 +92,9 @@ export class HookManager {
       }
     );
     client.on("messageDelete", (message: PartialMessage) => {
+      if (message.interaction) {
+        return;
+      }
       instances
         .filter((i) => !!i.onMessageDestroy)
         .map((i) => {
