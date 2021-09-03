@@ -6,6 +6,7 @@ import { WastebinModlogEvent } from "../lib/modlog";
 import Server from "../lib/server";
 import { Hook } from "../lib/hook";
 import { createToast } from "../lib/response";
+import applyWarn from "../lib/warn";
 
 const ruleset: { [reason: string]: RegExp[] } = {
   "El enlace contiene una invitación de Discord": [
@@ -88,6 +89,7 @@ export default class AntispamService implements Hook {
     if (isAllowed(message)) {
       return; /* mod or bot */
     }
+
     const match = testModeration(message);
     if (match) {
       const server = new Server(message.guild);
@@ -105,21 +107,46 @@ export default class AntispamService implements Hook {
           reason: "Spam",
         });
       } else {
+        const member = new Member(message.member);
         await message.delete();
-        const toast = createToast({
-          title: `@${message.member.user.username}, tu mensaje ha sido retenido por tener un enlace inapropiado`,
-          description: [
-            `Tu mensaje contenía un enlace que ha hecho saltar el filtro antispam.`,
-            `El filtro antispam ha dicho: ${match}.`,
-            `\n\n`,
-            `Tu mensaje ha sido reenviado a moderación para que lo revise y decida`,
-            `si ha sido un error del filtro o si debe dejar caer el martillo del ban`,
-            `sobre ti. Si no has incumplido las normas, no debes tener miedo.`,
-          ].join(" "),
-          severity: "error",
-          target: message.member.user,
-        });
-        await channel.send({ embeds: [toast] });
+        if (member.trippedAntispam) {
+          /* Okay, I warned you. */
+          await applyWarn(message.guild, {
+            duration: 86400 * 1000 * 7,
+            user: message.author,
+            reason: "Una cadena de texto prohibida por el sistema antispam ha sido interceptada",
+            message,
+          });
+          await member.setMuted(true);
+
+          /* Delete the original message with a tombstone. */
+          const toast = createToast({
+            title: "Mensaje interceptado como spam",
+            description:
+              "El sistema antispam ha eliminado un mensaje que ha identificado como positivo.",
+            severity: "error",
+            target: message.author,
+          });
+          await message.channel.send({ embeds: [toast] });
+        } else {
+          /* I'll remember this. */
+          await member.tripAntispam();
+
+          const toast = createToast({
+            title: `@${message.member.user.username}, tu mensaje ha sido retenido por tener un enlace inapropiado`,
+            description: [
+              `Tu mensaje contenía un enlace que ha hecho saltar el filtro antispam.`,
+              `El filtro antispam ha dicho: ${match}.`,
+              `\n\n`,
+              `Tu mensaje ha sido reenviado a moderación para que lo revise y decida`,
+              `si ha sido un error del filtro o si debe dejar caer el martillo del ban`,
+              `sobre ti. Si no has incumplido las normas, no debes tener miedo.`,
+            ].join(" "),
+            severity: "error",
+            target: message.member.user,
+          });
+          await channel.send({ embeds: [toast] });
+        }
       }
     }
   }

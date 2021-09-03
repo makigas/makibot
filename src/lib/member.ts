@@ -241,4 +241,15 @@ export default class Member {
       this.guildMember.ban();
     }
   }
+
+  async tripAntispam(): Promise<void> {
+    /* Put the current timestamp. */
+    await this.tagbag.tag("antispam:trippedAt").set(Date.now());
+  }
+
+  get trippedAntispam(): boolean {
+    const tag = this.tagbag.tag("antispam:trippedAt").get(0);
+    const sevenDaysAgo = Date.now() - (7 * 86400 * 1000);
+    return tag >= sevenDaysAgo;
+  }
 }

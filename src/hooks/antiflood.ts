@@ -13,8 +13,8 @@ interface AntifloodData {
 }
 
 interface AntifloodHistory {
-  [message: string]: AntifloodData
-};
+  [message: string]: AntifloodData;
+}
 
 function generateFirstToast(message: Message): MessageEmbed {
   return createToast({
@@ -161,9 +161,13 @@ export default class AntifloodService implements Hook {
 
             /* Delete the original message since the member has been muted. */
             try {
-              const originalChannel = await message.guild.channels.fetch(history[normalized].channel);
+              const originalChannel = await message.guild.channels.fetch(
+                history[normalized].channel
+              );
               if (originalChannel.isText()) {
-                const originalMessage = await originalChannel.messages.fetch(history[normalized].message);
+                const originalMessage = await originalChannel.messages.fetch(
+                  history[normalized].message
+                );
                 if (originalMessage) {
                   originalMessage.delete();
                 }
@@ -195,7 +199,7 @@ export default class AntifloodService implements Hook {
         channel: message.channel.id,
         message: message.id,
         expires: Date.now(),
-      }
+      },
     };
     tag.set(newTag);
   }
