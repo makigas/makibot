@@ -1,9 +1,20 @@
-import { Message, MessageEmbed, PartialMessage } from "discord.js";
+import { Message, MessageEmbed, PartialMessage, Snowflake } from "discord.js";
 import { Hook } from "../lib/hook";
 import Member from "../lib/member";
 import { createToast } from "../lib/response";
 import applyWastebin from "../lib/wastebin";
 import applyWarn from "../lib/warn";
+import logger from "../lib/logger";
+
+interface AntifloodData {
+  channel: Snowflake;
+  message: Snowflake;
+  expires: number;
+}
+
+interface AntifloodHistory {
+  [message: string]: AntifloodData
+};
 
 function generateFirstToast(message: Message): MessageEmbed {
   return createToast({
@@ -57,10 +68,10 @@ function words(message: string): string[] {
   return message.trim().replace(/\s+/g, " ").split(" ");
 }
 
-function cleanHistory(history: { [k: string]: number }): { [k: string]: number } {
+function cleanHistory(history: AntifloodHistory): AntifloodHistory {
   const threshold = Date.now() - 3600_000;
   return Object.entries(history).reduce((prev, [k, v]) => {
-    if (v >= threshold) {
+    if (v.expires >= threshold) {
       prev[k] = v;
     }
     return prev;
@@ -103,8 +114,8 @@ export default class AntifloodService implements Hook {
     const normalized = normalize(message.cleanContent);
 
     /* Forget about the message. */
-    const tag = member.tagbag.tag("antiflood:history");
-    const history = tag.get({});
+    const tag = member.tagbag.tag("antiflood:history2");
+    const history: AntifloodHistory = tag.get({});
     delete history[normalized];
     await tag.set(cleanHistory(history));
   }
@@ -126,10 +137,10 @@ export default class AntifloodService implements Hook {
     }
 
     /* Test if the message was posted recently. */
-    const tag = member.tagbag.tag("antiflood:history");
-    const history = tag.get({});
+    const tag = member.tagbag.tag("antiflood:history2");
+    const history: AntifloodHistory = tag.get({});
     if (normalized in history) {
-      const when = history[normalized];
+      const when = history[normalized].expires;
       if (Date.now() - when < 3600_000) {
         const alertCounter = await raisePing(member);
         if (alertCounter === 1) {
@@ -148,6 +159,19 @@ export default class AntifloodService implements Hook {
           } else {
             await member.setMuted(true);
 
+            /* Delete the original message since the member has been muted. */
+            try {
+              const originalChannel = await message.guild.channels.fetch(history[normalized].channel);
+              if (originalChannel.isText()) {
+                const originalMessage = await originalChannel.messages.fetch(history[normalized].message);
+                if (originalMessage) {
+                  originalMessage.delete();
+                }
+              }
+            } catch (e) {
+              logger.error("[antiflood] i cannot delete the message, i'm so sorry");
+            }
+
             const toast = generateMuteToast(message);
             await message.channel.send({ embeds: [toast] });
             await applyWastebin(message);
@@ -165,9 +189,14 @@ export default class AntifloodService implements Hook {
     }
 
     /* Update the history for this user. */
-    tag.set({
+    const newTag: AntifloodHistory = {
       ...cleanHistory(history),
-      [normalized]: Date.now(),
-    });
+      [normalized]: {
+        channel: message.channel.id,
+        message: message.id,
+        expires: Date.now(),
+      }
+    };
+    tag.set(newTag);
   }
 }
