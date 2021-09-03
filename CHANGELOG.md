@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.32.1](https://github.com/makigas/clank/compare/v0.32.0...v0.32.1) (2021-09-03)
+
+
+### Bug Fixes
+
+* **antispam:** disable accounts when they trip antispam twice ([b8a1214](https://github.com/makigas/clank/commit/b8a121427ecfd6ae17f1b59fe63e93475ffc4fa9))
+
 ## [0.32.0](https://github.com/makigas/clank/compare/v0.31.4...v0.32.0) (2021-09-03)
 
 
