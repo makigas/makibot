@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.32.2](https://github.com/makigas/clank/compare/v0.32.1...v0.32.2) (2021-09-03)
+
+
+### Bug Fixes
+
+* **voicerole:** not triggers ([860ac8d](https://github.com/makigas/clank/commit/860ac8d80fbedebc1ab2968e957a6006240220ba))
+
 ### [0.32.1](https://github.com/makigas/clank/compare/v0.32.0...v0.32.1) (2021-09-03)
 
 
