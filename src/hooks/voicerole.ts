@@ -24,7 +24,7 @@ export default class VoiceRoleService implements Hook {
     this.voicerole = new VoiceRole(voiceRoleConfig);
   }
 
-  triggerVoiceStateUpdate(oldState: VoiceState, newState: VoiceState): void {
+  onVoiceStateUpdate(oldState: VoiceState, newState: VoiceState): Promise<void> {
     if (oldState.member.id != newState.member.id) {
       logger.error(`Unexpected condition: ${tag(oldState)} != ${tag(newState)}`);
       return;
