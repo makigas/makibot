@@ -141,18 +141,25 @@ export default class AntifloodService implements Hook {
           await message.channel.send({ embeds: [toast] });
           await applyWastebin(message);
         } else if (alertCounter >= 3) {
-          const toast = generateMuteToast(message);
-          await message.channel.send({ embeds: [toast] });
-          await applyWastebin(message);
+          if (member.muted) {
+            await message.member.ban({
+              reason: "Antispam",
+            });
+          } else {
+            await member.setMuted(true);
 
-          /* Then warn + mute the member. */
-          await applyWarn(message.guild, {
-            user: message.author,
-            message: message,
-            reason: "El sistema antiflood ha saltado varias veces",
-            duration: 86400 * 1000,
-          });
-          await member.setMuted(true);
+            const toast = generateMuteToast(message);
+            await message.channel.send({ embeds: [toast] });
+            await applyWastebin(message);
+
+            /* Then warn + mute the member. */
+            await applyWarn(message.guild, {
+              user: message.author,
+              message: message,
+              reason: "El sistema antiflood ha saltado varias veces",
+              duration: 86400 * 1000,
+            });
+          }
         }
       }
     }
