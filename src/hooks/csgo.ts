@@ -80,6 +80,7 @@ const TOKENS = [
   /get 1 month/,
   /3 months of discord nitro/,
   /.ru\//,
+  /free nudes/,
   /.ru.com\//,
 ];
 
