@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.32.0](https://github.com/makigas/clank/compare/v0.31.4...v0.32.0) (2021-09-03)
+
+
+### Features
+
+* **antiflood:** ban muted members that trigger antiflood ([2cb4529](https://github.com/makigas/clank/commit/2cb45291acb5ea6e192dddece56aed8b9d892d05))
+* **antiflood:** delete original message on flood ([dddc9fd](https://github.com/makigas/clank/commit/dddc9fdef85ef940e3b7d56f94e80d76b3a0a6c4))
+
+
+### Bug Fixes
+
+* **csgo:** ban noodles again ([3179d00](https://github.com/makigas/clank/commit/3179d00d22101735d0f46c2ee6d7c6edfd7f1040))
+* **csgo:** trigger antispam on messageUpdate ([7df946d](https://github.com/makigas/clank/commit/7df946d88842ad08efcff6e0d133c7e94ba1233a))
+* **hooks:** interactions cause message events to fail ([887e580](https://github.com/makigas/clank/commit/887e5804e74ebeb738a0ebf5098de411f2f238dc))
+* **warn:** do not double unwarn unwarned people ([080951d](https://github.com/makigas/clank/commit/080951d929f679283f63f5c8f726045502ce6c57))
+
+
+### Refactor
+
+* clean the hooks ([#438](https://github.com/makigas/clank/issues/438)) ([7465661](https://github.com/makigas/clank/commit/74656618a0abb35d8f21ea823e9dd41e08d0b15e))
+
+
+### Chore
+
+* **csgo:** treat everyone plus link as spam ([3cefc4c](https://github.com/makigas/clank/commit/3cefc4c923b7d9c0afe79c826480188465a7a4ae))
+
 ### [0.31.4](https://github.com/makigas/clank/compare/v0.31.3...v0.31.4) (2021-09-01)
 
 
