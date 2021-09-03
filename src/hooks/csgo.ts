@@ -82,6 +82,10 @@ const TOKENS = [
   /.ru\//,
   /free nudes/,
   /.ru.com\//,
+
+  // bots like to mention everyone despite not being possible
+  /@everyone(.*)https?:\/\//,
+  /https?:\/\/(.*)@everyone/,
 ];
 
 export function containsSpamLink(content: string): boolean {
