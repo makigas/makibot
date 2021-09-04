@@ -17,7 +17,7 @@
     "big-integer": "^1.6.48",
     "discord.js": "^13.1.0",
     "discordjs-reaction-role": "^2.0.1",
-    "discordjs-voicerole": "^2.0.1",
+    "discordjs-voicerole": "^2.0.2",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "get-urls": "^10.0.0",

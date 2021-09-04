@@ -29,6 +29,10 @@ export default class VoiceRoleService implements Hook {
       logger.error(`Unexpected condition: ${tag(oldState)} != ${tag(newState)}`);
       return;
     }
+    if (oldState.channelId === newState.channelId) {
+      /* The user simply changed their local state without changing channels. */
+      return;
+    }
     if (oldState.channelId && newState.channelId) {
       logger.debug(
         `Member ${tag(oldState)} changes channel: ${channel(oldState)} => ${channel(newState)}`
