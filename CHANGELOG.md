@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.32.3](https://github.com/makigas/clank/compare/v0.32.2...v0.32.3) (2021-09-04)
+
+
+### Bug Fixes
+
+* **voicerole:** do not trigger state changes on mute ([5199248](https://github.com/makigas/clank/commit/5199248c47bafee9e60e65c4bd8a5a9bffec7503))
+
 ### [0.32.2](https://github.com/makigas/clank/compare/v0.32.1...v0.32.2) (2021-09-03)
 
 
