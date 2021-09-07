@@ -5,6 +5,7 @@ import {
   Message,
   TextChannel,
   User,
+  PartialGuildMember,
 } from "discord.js";
 import humanizeDuration from "humanize-duration";
 
@@ -19,14 +20,12 @@ export abstract class ModlogEvent {
     const options: MessageEmbedOptions = {
       color: this.color(),
       footer: {
-        // eslint-disable-next-line @typescript-eslint/camelcase
         icon_url:
           "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/page-with-curl_1f4c3.png",
         text: "Mensaje de moderación automática",
       },
       author: {
         name: this.title(),
-        // eslint-disable-next-line @typescript-eslint/camelcase
         icon_url: this.icon(),
       },
       fields: this.fields(),
@@ -118,7 +117,7 @@ export class VerifyModlogEvent extends ModlogEvent {
 }
 
 export class LeaveModlogEvent extends ModlogEvent {
-  constructor(private member: GuildMember) {
+  constructor(private member: PartialGuildMember) {
     super();
   }
 
@@ -147,10 +146,6 @@ export class LeaveModlogEvent extends ModlogEvent {
       {
         name: "Se unió a Discord",
         value: this.member.user.createdAt.toUTCString(),
-      },
-      {
-        name: "Se unió al servidor",
-        value: this.member.joinedAt ? this.member.joinedAt.toUTCString() : "!!",
       },
     ];
   }

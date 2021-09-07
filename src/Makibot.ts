@@ -36,7 +36,7 @@ export default class Makibot extends Client {
         Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
         Intents.FLAGS.GUILD_VOICE_STATES,
       ],
-      partials: ["MESSAGE", "REACTION"],
+      partials: ["MESSAGE", "REACTION", "GUILD_MEMBER"],
     });
 
     this.antiraid = new AntiRaid(this);

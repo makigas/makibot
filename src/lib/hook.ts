@@ -4,6 +4,7 @@ import {
   GuildMember,
   Message,
   MessageReaction,
+  PartialGuildMember,
   PartialMessage,
   User,
   VoiceState,
@@ -31,7 +32,7 @@ export interface Hook {
   onMessageReactionBulkDestroy?: (message: Message) => Promise<void>;
 
   onGuildMemberJoin?: (member: GuildMember) => Promise<void>;
-  onGuildMemberLeave?: (member: GuildMember) => Promise<void>;
+  onGuildMemberLeave?: (member: PartialGuildMember) => Promise<void>;
   onGuildMemberBan?: (ban: GuildBan) => Promise<void>;
 
   onVoiceStateUpdate?: (oldStatus: VoiceState, newStatus: VoiceState) => Promise<void>;
@@ -141,14 +142,12 @@ export class HookManager {
         });
     });
     client.on("guildMemberRemove", (member) => {
-      member.fetch().then((member) => {
-        instances
-          .filter((i) => !!i.onGuildMemberLeave)
-          .map((i) => {
-            logger.debug(`[hooks] processing guildMemberAdd via ${i.name}`);
-            return i.onGuildMemberLeave(member);
-          });
-      });
+      instances
+        .filter((i) => !!i.onGuildMemberLeave)
+        .map((i) => {
+          logger.debug(`[hooks] processing guildMemberAdd via ${i.name}`);
+          return i.onGuildMemberLeave(member as PartialGuildMember);
+        });
     });
     client.on("guildBanAdd", (ban) => {
       instances
@@ -168,7 +167,7 @@ export class HookManager {
     });
   }
 
-  restart(name: string) {
+  restart(name: string): void {
     logger.debug(`[hooks] restarting service ${name}...`);
     this.watchdog[name]?.restart();
   }
