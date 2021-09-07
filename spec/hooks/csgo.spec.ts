@@ -13,6 +13,7 @@ describe("antispam system", () => {
       expect(containsSpamLink("discordapp.com is a safe site")).to.be.false;
       expect(containsSpamLink("but media.discordapp.net should be safe")).to.be.false;
       expect(containsSpamLink("watch out for media.discordapp.nitro !!")).to.be.true;
+      expect(containsSpamLink("visit discord-app.com/foo for your prize")).to.be.true;
     });
 
     it("handles free text strings", () => {

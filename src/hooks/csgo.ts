@@ -49,6 +49,7 @@ const TOKENS = [
   /i'm tired of csgo/,
 
   // No one will give you nitro for free
+  /dicsord-nitro./,
   /dlscord.gifts/,
   /dlscord.help/,
   /dlscord.info/,
@@ -72,6 +73,7 @@ const TOKENS = [
 
   // I don't have time for this shit
   /discorcl.[a-z]/,
+  /discord-app./,
   /dlscord.[a-z]/,
   /discordapp.([abd-mo-z]|c[a-n][p-z]|n[a-df-z])/,
 
@@ -79,6 +81,8 @@ const TOKENS = [
   /get 3 months/,
   /get 1 month/,
   /3 months of discord nitro/,
+  /free steam give nitro/,
+  /nitro steam for free/,
   /.ru\//,
   /free nudes/,
   /.ru.com\//,
