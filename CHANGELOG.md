@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.32.4](https://github.com/makigas/clank/compare/v0.32.3...v0.32.4) (2021-09-07)
+
+
+### Bug Fixes
+
+* leaving GuildMembers are supposed to be partial ([596e134](https://github.com/makigas/clank/commit/596e134d79e8bd42c2e874ef00847c7d221b020c))
+
+
+### Refactor
+
+* **quote:** simplify and test code ([de6d1ee](https://github.com/makigas/clank/commit/de6d1ee1de32a3607e2696c8482c7776994336bf))
+
+
+### Chore
+
+* **csgo:** add more domains to the blocklist ([0a0cff7](https://github.com/makigas/clank/commit/0a0cff753e757dfb69c9b3b8ed2e205e94255bb3))
+
 ### [0.32.3](https://github.com/makigas/clank/compare/v0.32.2...v0.32.3) (2021-09-04)
 
 
