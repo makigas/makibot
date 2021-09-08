@@ -1,6 +1,6 @@
 import { CommandInteraction } from "discord.js";
 import type { CommandInteractionHandler } from "../../lib/interaction";
-import { createModReport, ModReport, renderMenuComponents } from "../../lib/modlog/report";
+import { createModReport, renderMenuComponents } from "../../lib/modlog/report";
 import { createToast } from "../../lib/response";
 import Server from "../../lib/server";
 
@@ -56,26 +56,15 @@ export default class ModRequestCommand implements CommandInteractionHandler {
       return;
     }
 
-    if (member.moderator) {
-      /* Create a tagpoint to remember about this message. */
-      const tag = server.tagbag.tag("modrequest:" + event.id);
-      const data = createModReport(event);
-      await tag.set(data);
+    /* Create a tagpoint to remember about this message. */
+    const tag = server.tagbag.tag("modrequest:" + event.id);
+    const data = createModReport({ event, sudo: member.moderator });
+    await tag.set(data);
 
-      /* Moderators can moderate. */
-      await event.editReply({
-        content: "Aplicar acción de moderación a este mensaje.",
-        components: renderMenuComponents(data),
-      });
-    } else {
-      // TODO
-      const toast = createToast({
-        title: "Todavía no es posible 🙏",
-        description:
-          "Pronto podrás reportar este mensaje usando este comando, pero por ahora no es posible.",
-        severity: "warning",
-      });
-      await event.editReply({ embeds: [toast] });
-    }
+    /* Start the report flow. */
+    await event.editReply({
+      content: "Informar de un problema con este mensaje",
+      components: renderMenuComponents(data),
+    });
   }
 }
