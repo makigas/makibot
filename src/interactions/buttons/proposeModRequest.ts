@@ -12,7 +12,11 @@ export default class ProposeModRequest implements ComponentInteractionHandler {
     const tag = server.tagbag.tag("modrequest:" + event.message.interaction.id);
     const data: ModReport = tag.get();
 
-    await server.logModlogEvent(new ReportModlogEvent(data));
+    if (data.interaction.alert[0] === "mods") {
+      await server.logModlogEvent(new ReportModlogEvent(data));
+    } else if (data.interaction.alert[0] === "admin") {
+      await server.logSensibleModlogEvent(new ReportModlogEvent(data));
+    }
 
     event.update({
       content:

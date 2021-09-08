@@ -42,6 +42,7 @@ export default function guildMiddleware(makibot: Makibot): express.Router {
   });
 
   /* Patch settings for the server. */
+  // eslint-disable-next-line @typescript-eslint/ban-types
   router.patch("/settings", async (req: express.Request<{}, {}, {}, {}, MiddlewareLocals>, res) => {
     const { server } = res.locals;
 
@@ -50,6 +51,9 @@ export default function guildMiddleware(makibot: Makibot): express.Router {
       "pin.emoji": (value) => server.settings.setPinEmoji(value),
       "modlog.webhookId": (value) => server.settings.setModlogWebhookId(value),
       "modlog.webhookToken": (value) => server.settings.setModlogWebhookToken(value),
+      "modlog.sensibleWebhookId": (value) => server.settings.setSensibleModlogWebhookId(value),
+      "modlog.sensibleWebhookToken": (value) =>
+        server.settings.setSensibleModlogWebhookToken(value),
       "roles.crew": (value) => server.settings.setRoleCrewId(value),
       "roles.tier1": (value) => server.settings.addTier(2, value),
       "roles.tier2": (value) => server.settings.addTier(5, value),
