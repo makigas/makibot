@@ -61,6 +61,7 @@ const TOKENS = [
   /dlscord-nitro./,
   /gave-nitro./,
   /discord-help./,
+  /discord.giveawey.com/,
 
   // Update
   /rust-way.com/,
