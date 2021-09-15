@@ -96,7 +96,7 @@ export default class AntispamService implements Hook {
 
       /* Send message to the modlog. */
       server
-        .logModlogEvent(newWastebinModlogEvent(message))
+        .logModlogEvent(newWastebinModlogEvent(message), "modlog")
         .catch((e) => console.error(`Error during wastebin handler: ${e}`));
 
       const channel = message.channel;

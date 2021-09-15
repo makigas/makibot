@@ -9,7 +9,7 @@ export default async function applyWastebin(message: Message): Promise<void> {
   /* Log the deletion event. */
   try {
     const server = new Server(message.guild);
-    await server.logModlogEvent(newWastebinModlogEvent(message));
+    await server.logModlogEvent(newWastebinModlogEvent(message), "modlog");
   } catch (e) {
     console.error(`Error during wastebin handler: ${e}`);
   }

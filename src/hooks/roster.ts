@@ -17,7 +17,7 @@ export default class RosterService implements Hook {
     logger.debug(`[roster] announcing ban for ${user.tag}`);
     try {
       const server = new Server(guild);
-      await server.logModlogEvent(newBanEvent(user));
+      await server.logModlogEvent(newBanEvent(user), "modlog");
     } catch (e) {
       logger.error(`[roster] error for ban: ${e}`);
     }
@@ -27,7 +27,7 @@ export default class RosterService implements Hook {
     logger.debug(`[roster] announcing join for ${member.user.tag}`);
     try {
       const server = new Server(member.guild);
-      await server.logModlogEvent(newJoinEvent(member));
+      await server.logModlogEvent(newJoinEvent(member), "modlog");
     } catch (e) {
       logger.error(`[roster] error for join: ${e}`);
     }
@@ -37,7 +37,7 @@ export default class RosterService implements Hook {
     logger.debug(`[roster] announcing leave for ${member.user.tag}`);
     try {
       const server = new Server(member.guild);
-      await server.logModlogEvent(newLeaveEvent(member));
+      await server.logModlogEvent(newLeaveEvent(member), "modlog");
     } catch (e) {
       logger.error(`[roster] error for leave ${e}`);
     }

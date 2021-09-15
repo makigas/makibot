@@ -59,7 +59,7 @@ export default class VerifyService implements Hook {
           });
           await message.channel.send({ embeds: [toast] });
           await member.setVerification(true);
-          await server.logModlogEvent(newVerifyEvent(message.member));
+          await server.logModlogEvent(newVerifyEvent(message.member), "modlog");
         }
       } else {
         const toast = createToast({

@@ -14,6 +14,8 @@ import type { ModlogEvent } from "./modlog";
 import Settings from "./settings";
 import TagBag from "./tagbag";
 
+export type ModlogType = "modlog" | "public";
+
 type RoleJSONSchema = {
   id: string;
   name: string;
@@ -118,43 +120,35 @@ export default class Server {
     }
   }
 
-  async logModlogEvent(event: ModlogEvent): Promise<Message> {
-    const webhookId = this.settings.modlogWebhookId;
-    const webhookToken = this.settings.modlogWebhookToken;
-    if (webhookId && webhookToken) {
-      const client = new WebhookClient({
-        id: webhookId,
-        token: webhookToken,
-      });
-      try {
-        const payload: WebhookMessageOptions = {
-          username: event.title,
-          avatarURL: event.icon,
-          embeds: [
-            {
-              color: event.color,
-              footer: {
-                iconURL:
-                  "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/page-with-curl_1f4c3.png",
-                text: "Mensaje de moderación automática",
-              },
-              author: {
-                name: event.title,
-                iconURL: event.icon,
-              },
-              fields: event.fields,
+  async logModlogEvent(event: ModlogEvent, modlog: ModlogType): Promise<void> {
+    const webhookURL = this.tagbag.tag("modlog:" + modlog).get(null);
+    if (webhookURL) {
+      const client = new WebhookClient({ url: webhookURL });
+      const payload: WebhookMessageOptions = {
+        username: event.title,
+        avatarURL: event.icon,
+        embeds: [
+          {
+            color: event.color,
+            footer: {
+              iconURL:
+                "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/page-with-curl_1f4c3.png",
+              text: "Mensaje de moderación automática",
             },
-          ],
-        };
-        logger.debug(`[webhook] attempting to send payload to webhook ${webhookId}`);
-        const message = await client.send(payload);
-        logger.debug(`[webhook] successfully sent webhook; handle ${message.id}`);
-      } catch (e) {
-        logger.error(`[webhook] failed to send the payload`);
-        throw e;
-      }
+            author: {
+              name: event.title,
+              iconURL: event.icon,
+            },
+            fields: event.fields,
+          },
+        ],
+      };
+      await client.send(payload);
+      console.log(`[webhook] sent a modlog event to ${modlog}`);
     } else {
-      return Promise.reject(`Configuration error: no modlog for ${this.guild.name}`);
+      console.error(
+        `[webhook] tried to send a modlog event to ${modlog}, but the server lacks the tag`
+      );
     }
   }
 

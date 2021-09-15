@@ -142,6 +142,6 @@ export default async function applyWarn(
   notifyPublicModlog(server, member, warnMessage, reason, duration);
 
   server
-    .logModlogEvent(newWarnEvent(memberToWarn, duration, { reason, message }))
+    .logModlogEvent(newWarnEvent(memberToWarn, duration, { reason, message }), "modlog")
     .catch((e) => console.error(`Error during warn: ${e}`));
 }
