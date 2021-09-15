@@ -3,7 +3,7 @@ import { Message } from "discord.js";
 import { Hook } from "../lib/hook";
 import Makibot from "../Makibot";
 import Server from "../lib/server";
-import { VerifyModlogEvent } from "../lib/modlog";
+import { newVerifyEvent } from "../lib/modlog";
 import Member from "../lib/member";
 import logger from "../lib/logger";
 import { createToast } from "../lib/response";
@@ -59,7 +59,7 @@ export default class VerifyService implements Hook {
           });
           await message.channel.send({ embeds: [toast] });
           await member.setVerification(true);
-          await server.logModlogEvent(new VerifyModlogEvent(message.member));
+          await server.logModlogEvent(newVerifyEvent(message.member));
         }
       } else {
         const toast = createToast({

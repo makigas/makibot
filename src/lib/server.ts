@@ -1,8 +1,16 @@
-import { Guild, Message, Role, TextChannel, UserResolvable, WebhookClient } from "discord.js";
+import {
+  Guild,
+  Message,
+  Role,
+  TextChannel,
+  UserResolvable,
+  WebhookClient,
+  WebhookMessageOptions,
+} from "discord.js";
 import Makibot from "../Makibot";
 import logger from "./logger";
 import Member from "./member";
-import { ModlogEvent } from "./modlog";
+import type { ModlogEvent } from "./modlog";
 import Settings from "./settings";
 import TagBag from "./tagbag";
 
@@ -119,10 +127,24 @@ export default class Server {
         token: webhookToken,
       });
       try {
-        const payload = {
-          username: event.title(),
-          avatarURL: event.icon(),
-          embeds: [event.toDiscordEmbed()],
+        const payload: WebhookMessageOptions = {
+          username: event.title,
+          avatarURL: event.icon,
+          embeds: [
+            {
+              color: event.color,
+              footer: {
+                iconURL:
+                  "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/page-with-curl_1f4c3.png",
+                text: "Mensaje de moderación automática",
+              },
+              author: {
+                name: event.title,
+                iconURL: event.icon,
+              },
+              fields: event.fields,
+            },
+          ],
         };
         logger.debug(`[webhook] attempting to send payload to webhook ${webhookId}`);
         const message = await client.send(payload);

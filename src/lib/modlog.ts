@@ -1,295 +1,176 @@
-import {
-  MessageEmbedOptions,
-  GuildMember,
-  MessageEmbed,
-  Message,
-  TextChannel,
-  User,
-  PartialGuildMember,
-} from "discord.js";
+import { GuildMember, Message, User, PartialGuildMember, EmbedField } from "discord.js";
+import { userMention, channelMention } from "@discordjs/builders";
 import humanizeDuration from "humanize-duration";
 
-interface EmbedField {
-  name: string;
-  value: string;
-  inline?: boolean;
+export interface ModlogEvent {
+  title: string;
+  icon: string;
+  color: number;
+  fields: EmbedField[];
 }
 
-export abstract class ModlogEvent {
-  public toDiscordEmbed(): MessageEmbed {
-    const options: MessageEmbedOptions = {
-      color: this.color(),
-      footer: {
-        icon_url:
-          "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/page-with-curl_1f4c3.png",
-        text: "Mensaje de moderación automática",
-      },
-      author: {
-        name: this.title(),
-        icon_url: this.icon(),
-      },
-      fields: this.fields(),
-    };
-    return new MessageEmbed(options);
-  }
+export const newJoinEvent = (member: GuildMember): ModlogEvent => ({
+  title: "Nuevo miembro del servidor",
+  icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/bright-button_1f506.png",
+  color: 0xfeaf40,
+  fields: [
+    {
+      name: "Miembro",
+      value: userMention(member.user.id),
+      inline: true,
+    },
+    {
+      name: "User ID",
+      value: member.user.id,
+      inline: true,
+    },
+  ],
+});
 
-  abstract title(): string;
+export const newVerifyEvent = (member: GuildMember): ModlogEvent => ({
+  title: "Miembro ha sido verificado",
+  icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/248/check-box-with-check_2611.png",
+  color: 0x5a7702,
+  fields: [
+    {
+      name: "Miembro",
+      value: userMention(member.user.id),
+      inline: true,
+    },
+    {
+      name: "User ID",
+      value: member.user.id,
+      inline: true,
+    },
+    {
+      name: "Se unió al servidor",
+      value: member.joinedAt?.toUTCString(),
+      inline: true,
+    },
+  ],
+});
 
-  abstract icon(): string;
+export const newLeaveEvent = (member: PartialGuildMember): ModlogEvent => ({
+  title: "Abandono del servidor",
+  icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/cross-mark_274c.png",
+  color: 0xdd3247,
+  fields: [
+    {
+      name: "Miembro",
+      value: userMention(member.user.id),
+      inline: true,
+    },
+    {
+      name: "User ID",
+      value: member.user.id,
+      inline: true,
+    },
+  ],
+});
 
-  abstract color(): number;
+export const newBanEvent = (user: User): ModlogEvent => ({
+  title: "Miembro ha sido baneado",
+  icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/248/hammer_1f528.png",
+  color: 0x3a3737,
+  fields: [
+    {
+      name: "Miembro",
+      value: userMention(user.id),
+      inline: true,
+    },
+    {
+      name: "User ID",
+      value: user.id,
+      inline: true,
+    },
+  ],
+});
 
-  abstract fields(): EmbedField[];
-}
+export const newWarnEvent = (
+  member: GuildMember,
+  duration: number,
+  { reason, message }: { reason: string; message: Message }
+): ModlogEvent => {
+  const fields: EmbedField[] = [
+    {
+      name: "Miembro",
+      value: userMention(member.id),
 
-export class JoinModlogEvent extends ModlogEvent {
-  constructor(private member: GuildMember) {
-    super();
-  }
-
-  title(): string {
-    return "Nuevo miembro del servidor";
-  }
-
-  icon(): string {
-    return "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/bright-button_1f506.png";
-  }
-
-  color(): number {
-    return 0xfeaf40;
-  }
-
-  fields(): EmbedField[] {
-    return [
-      {
-        name: "Handle",
-        value: this.member.user.tag,
-      },
-      {
-        name: "ID",
-        value: this.member.user.id,
-      },
-      {
-        name: "Se unió a Discord",
-        value: this.member.user.createdAt.toUTCString(),
-      },
-    ];
-  }
-}
-
-export class VerifyModlogEvent extends ModlogEvent {
-  constructor(private member: GuildMember) {
-    super();
-  }
-
-  title(): string {
-    return "Miembro ha sido verificado";
-  }
-
-  icon(): string {
-    return "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/248/check-box-with-check_2611.png";
-  }
-
-  color(): number {
-    return 0x5a7702;
-  }
-
-  fields(): EmbedField[] {
-    return [
-      {
-        name: "Handle",
-        value: this.member.user.tag,
-      },
-      {
-        name: "ID",
-        value: this.member.user.id,
-      },
-      {
-        name: "Se unió a Discord",
-        value: this.member.user.createdAt.toUTCString(),
-      },
-      {
-        name: "Se unió al servidor",
-        value: this.member.joinedAt ? this.member.joinedAt.toUTCString() : "!!",
-      },
-    ];
-  }
-}
-
-export class LeaveModlogEvent extends ModlogEvent {
-  constructor(private member: PartialGuildMember) {
-    super();
-  }
-
-  title(): string {
-    return "Abandono del servidor";
-  }
-
-  icon(): string {
-    return "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/cross-mark_274c.png";
-  }
-
-  color(): number {
-    return 0xdd3247;
-  }
-
-  fields(): EmbedField[] {
-    return [
-      {
-        name: "Handle",
-        value: this.member.user.tag,
-      },
-      {
-        name: "ID",
-        value: this.member.user.id,
-      },
-      {
-        name: "Se unió a Discord",
-        value: this.member.user.createdAt.toUTCString(),
-      },
-    ];
-  }
-}
-
-export class BanModlogEvent extends ModlogEvent {
-  constructor(private user: User) {
-    super();
-  }
-
-  title(): string {
-    return "Miembro ha sido baneado";
-  }
-
-  icon(): string {
-    return "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/248/hammer_1f528.png";
-  }
-
-  color(): number {
-    return 0x3a3737;
-  }
-
-  fields(): EmbedField[] {
-    return [
-      {
-        name: "Handle",
-        value: this.user.tag,
-      },
-      {
-        name: "ID",
-        value: this.user.id,
-      },
-      {
-        name: "Se unió a Discord",
-        value: this.user.createdAt.toUTCString(),
-      },
-    ];
-  }
-}
-
-export class WarnModlogEvent extends ModlogEvent {
-  constructor(
-    private member: GuildMember,
-    private reason: string,
-    private duration: number,
-    private message: Message
-  ) {
-    super();
-  }
-
-  title(): string {
-    return "Se ha aplicado un warn";
-  }
-
-  icon(): string {
-    return "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/warning_26a0.png";
-  }
-
-  color(): number {
-    return 0x9b59b6;
-  }
-
-  fields(): EmbedField[] {
-    const fields: EmbedField[] = [];
-    fields.push({
-      name: "Usuario",
-      value: this.member.user.tag,
-    });
-    fields.push({
+      inline: true,
+    },
+    {
       name: "Duración",
-      value: humanizeDuration(this.duration, {
+      value: humanizeDuration(duration, {
         language: "es",
         fallbacks: ["en"],
       }),
-    });
-    if (this.reason) {
-      fields.push({
-        name: "Razón",
-        value: this.reason,
-      });
-    }
-    if (this.message) {
-      fields.push({
-        name: "Mensaje",
-        value: this.message.cleanContent,
-      });
-      if (this.message.channel.type == "GUILD_TEXT") {
-        const textChannel = this.message.channel as TextChannel;
-        fields.push({
-          name: "Canal",
-          value: `#${textChannel.name}`,
-        });
-      }
-      fields.push({
-        name: "Fecha del mensaje",
-        value: this.message.createdAt.toISOString(),
-      });
-      fields.push({
-        name: "URL",
-        value: `https://discord.com/channels/${this.message.guild.id}/${this.message.channel.id}/${this.message.id}`,
-      });
-    }
-    return fields;
-  }
-}
-
-export class WastebinModlogEvent extends ModlogEvent {
-  constructor(private message: Message) {
-    super();
-  }
-
-  title(): string {
-    return "Se ha eliminado un mensaje";
-  }
-
-  icon(): string {
-    return "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/248/wastebasket_1f5d1.png";
-  }
-
-  color(): number {
-    return 0x9b9b9b;
-  }
-
-  fields(): EmbedField[] {
-    const fields: EmbedField[] = [];
+      inline: true,
+    },
+  ];
+  if (reason) {
     fields.push({
-      name: "Usuario",
-      value: this.message.author.tag,
+      name: "Razón",
+      value: reason,
+      inline: false,
     });
-    fields.push({
-      name: "Mensaje",
-      value: this.message.cleanContent,
-    });
-    if (this.message.channel.type == "GUILD_TEXT") {
-      const textChannel = this.message.channel as TextChannel;
-      fields.push({
+  }
+  if (message) {
+    fields.push(
+      {
         name: "Canal",
-        value: `#${textChannel.name}`,
-      });
-    }
-    fields.push({
-      name: "Fecha del mensaje",
-      value: this.message.createdAt.toISOString(),
-    });
-    return fields;
+        value: channelMention(message.channel.id),
+        inline: true,
+      },
+      {
+        name: "Fecha del mensaje",
+        value: message.createdAt.toISOString(),
+        inline: true,
+      },
+      {
+        name: "Mensaje",
+        value: message.cleanContent,
+        inline: false,
+      },
+      {
+        name: "URL",
+        value: `https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`,
+        inline: false,
+      }
+    );
   }
-}
+
+  return {
+    title: "Se ha aplicado un warn",
+    icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/warning_26a0.png",
+    color: 0x9b59b6,
+    fields,
+  };
+};
+
+export const newWastebinModlogEvent = (message: Message): ModlogEvent => ({
+  title: "Se ha eliminado un mensaje",
+  icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/248/wastebasket_1f5d1.png",
+  color: 0x9b9b9b,
+  fields: [
+    {
+      name: "Miembro",
+      value: userMention(message.member.id),
+      inline: true,
+    },
+    {
+      name: "Canal",
+      value: channelMention(message.channel.id),
+      inline: true,
+    },
+    {
+      name: "Mensaje",
+      value: message.cleanContent,
+      inline: false,
+    },
+    {
+      name: "Fecha del mensaje",
+      value: message.createdAt.toISOString(),
+      inline: true,
+    },
+  ],
+});

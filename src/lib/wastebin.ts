@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 import Server from "./server";
-import { WastebinModlogEvent } from "./modlog";
+import { newWastebinModlogEvent } from "./modlog";
 
 export default async function applyWastebin(message: Message): Promise<void> {
   /* Delete the message. */
@@ -9,7 +9,7 @@ export default async function applyWastebin(message: Message): Promise<void> {
   /* Log the deletion event. */
   try {
     const server = new Server(message.guild);
-    await server.logModlogEvent(new WastebinModlogEvent(message));
+    await server.logModlogEvent(newWastebinModlogEvent(message));
   } catch (e) {
     console.error(`Error during wastebin handler: ${e}`);
   }

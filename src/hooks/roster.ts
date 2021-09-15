@@ -1,7 +1,7 @@
 import { GuildBan, GuildMember, PartialGuildMember } from "discord.js";
 
 import { Hook } from "../lib/hook";
-import { JoinModlogEvent, LeaveModlogEvent, BanModlogEvent } from "../lib/modlog";
+import { newJoinEvent, newLeaveEvent, newBanEvent } from "../lib/modlog";
 import Server from "../lib/server";
 import logger from "../lib/logger";
 
@@ -17,7 +17,7 @@ export default class RosterService implements Hook {
     logger.debug(`[roster] announcing ban for ${user.tag}`);
     try {
       const server = new Server(guild);
-      await server.logModlogEvent(new BanModlogEvent(user));
+      await server.logModlogEvent(newBanEvent(user));
     } catch (e) {
       logger.error(`[roster] error for ban: ${e}`);
     }
@@ -27,7 +27,7 @@ export default class RosterService implements Hook {
     logger.debug(`[roster] announcing join for ${member.user.tag}`);
     try {
       const server = new Server(member.guild);
-      await server.logModlogEvent(new JoinModlogEvent(member));
+      await server.logModlogEvent(newJoinEvent(member));
     } catch (e) {
       logger.error(`[roster] error for join: ${e}`);
     }
@@ -37,7 +37,7 @@ export default class RosterService implements Hook {
     logger.debug(`[roster] announcing leave for ${member.user.tag}`);
     try {
       const server = new Server(member.guild);
-      await server.logModlogEvent(new LeaveModlogEvent(member));
+      await server.logModlogEvent(newLeaveEvent(member));
     } catch (e) {
       logger.error(`[roster] error for leave ${e}`);
     }

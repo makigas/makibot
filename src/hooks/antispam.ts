@@ -2,7 +2,7 @@ import { Message } from "discord.js";
 import getUrls from "get-urls";
 
 import Member from "../lib/member";
-import { WastebinModlogEvent } from "../lib/modlog";
+import { newWastebinModlogEvent } from "../lib/modlog";
 import Server from "../lib/server";
 import { Hook } from "../lib/hook";
 import { createToast } from "../lib/response";
@@ -96,7 +96,7 @@ export default class AntispamService implements Hook {
 
       /* Send message to the modlog. */
       server
-        .logModlogEvent(new WastebinModlogEvent(message))
+        .logModlogEvent(newWastebinModlogEvent(message))
         .catch((e) => console.error(`Error during wastebin handler: ${e}`));
 
       const channel = message.channel;

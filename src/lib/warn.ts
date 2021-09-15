@@ -1,6 +1,6 @@
 import { EmbedFieldData, Guild, Message, MessageEmbedOptions, User } from "discord.js";
 import Server from "./server";
-import { WarnModlogEvent } from "./modlog";
+import { newWarnEvent } from "./modlog";
 import Member from "./member";
 import humanizeDuration from "humanize-duration";
 
@@ -142,6 +142,6 @@ export default async function applyWarn(
   notifyPublicModlog(server, member, warnMessage, reason, duration);
 
   server
-    .logModlogEvent(new WarnModlogEvent(memberToWarn, reason, duration, message))
+    .logModlogEvent(newWarnEvent(memberToWarn, duration, { reason, message }))
     .catch((e) => console.error(`Error during warn: ${e}`));
 }
