@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.33.0](https://github.com/makigas/clank/compare/v0.32.4...v0.33.0) (2021-09-24)
+
+
+### Features
+
+* allow non-moderators to report messages ([#446](https://github.com/makigas/clank/issues/446)) ([d4ca858](https://github.com/makigas/clank/commit/d4ca85809fa155cfb146d9a40f99aed12fd08318))
+
+
+### Chore
+
+* **csgo:** add spamlink ([1c28f9f](https://github.com/makigas/clank/commit/1c28f9fb2900f3cab062d07f64dc5c09851f0d5c))
+
 ### [0.32.4](https://github.com/makigas/clank/compare/v0.32.3...v0.32.4) (2021-09-07)
 
 
