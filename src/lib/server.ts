@@ -110,21 +110,39 @@ export default class Server {
     }
   }
 
-  async logModlogEvent(event: ModlogEvent): Promise<Message> {
-    const webhookId = this.settings.modlogWebhookId;
-    const webhookToken = this.settings.modlogWebhookToken;
-    if (webhookId && webhookToken) {
-      const client = new WebhookClient({
-        id: webhookId,
-        token: webhookToken,
-      });
+  private getModlog(kind: string): WebhookClient | null {
+    if (kind === "default") {
+      const webhookId = this.settings.modlogWebhookId;
+      const webhookToken = this.settings.modlogWebhookToken;
+      if (webhookId && webhookToken) {
+        return new WebhookClient({
+          id: webhookId,
+          token: webhookToken,
+        });
+      }
+    } else if (kind === "sensible") {
+      const webhookId = this.settings.sensibleModlogWebhookId;
+      const webhookToken = this.settings.sensibleModlogWebhookToken;
+      if (webhookId && webhookToken) {
+        return new WebhookClient({
+          id: webhookId,
+          token: webhookToken,
+        });
+      }
+    }
+    return null;
+  }
+
+  private async doLogModlogEvent(event: ModlogEvent, kind: string): Promise<Message> {
+    const client = this.getModlog(kind);
+    if (client) {
       try {
         const payload = {
           username: event.title(),
           avatarURL: event.icon(),
           embeds: [event.toDiscordEmbed()],
         };
-        logger.debug(`[webhook] attempting to send payload to webhook ${webhookId}`);
+        logger.debug(`[webhook] attempting to send payload to webhook ${kind}`);
         const message = await client.send(payload);
         logger.debug(`[webhook] successfully sent webhook; handle ${message.id}`);
       } catch (e) {
@@ -134,6 +152,14 @@ export default class Server {
     } else {
       return Promise.reject(`Configuration error: no modlog for ${this.guild.name}`);
     }
+  }
+
+  async logModlogEvent(event: ModlogEvent): Promise<Message> {
+    return this.doLogModlogEvent(event, "default");
+  }
+
+  async logSensibleModlogEvent(event: ModlogEvent): Promise<Message> {
+    return this.doLogModlogEvent(event, "sensible");
   }
 
   get settings(): Settings {
