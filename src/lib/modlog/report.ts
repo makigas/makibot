@@ -15,6 +15,7 @@ const REASON_OPTIONS: MessageSelectOptionData[] = [
   { label: "Mensaje irrespetuoso o dañino", value: "unrespectful" },
   { label: "Es un copia y pega de un enunciado o de una práctica", value: "copypaste" },
   { label: "Este mensaje es de una calidad demasiado baja", value: "lowquality" },
+  { label: "Este mensaje se ha enviado a varios canales a la vez", value: "flood" },
   { label: "Este mensaje es explícito o NSFW", value: "nsfw" },
 ];
 
@@ -64,7 +65,7 @@ export interface ModReport {
 }
 
 function getMessage(event: CommandInteraction): Message {
-  let message = event.options.getMessage("message", true);
+  const message = event.options.getMessage("message", true);
   if (message instanceof Message) {
     return message;
   }
