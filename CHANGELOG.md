@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.34.0](https://github.com/makigas/clank/compare/v0.33.0...v0.34.0) (2021-10-01)
+
+
+### Features
+
+* **mod:** add flooding as a moderation type ([b19f040](https://github.com/makigas/clank/commit/b19f040e8abd5cf4ec4380293a8acdd74f64fd66))
+
+
+### Chore
+
+* **deps:** update dependencies ([5be77d1](https://github.com/makigas/clank/commit/5be77d1716308fec27215f6acec94f5a74b2075b))
+* **deps:** update Node.js engine ([898617f](https://github.com/makigas/clank/commit/898617f7b6ddfcf1ef3972cbfa2ecccc52b7db4b))
+
 ## [0.33.0](https://github.com/makigas/clank/compare/v0.32.4...v0.33.0) (2021-09-24)
 
 
