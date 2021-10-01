@@ -51,7 +51,7 @@ export default class Client {
     if (response.status !== 200) {
       throw new Error(`${response.statusText}: ${response.data}`);
     }
-    return response.data as MemberKarmaJSON;
+    return response.data as unknown as MemberKarmaJSON;
   }
 
   async raidModeStatus(): Promise<boolean> {
@@ -59,7 +59,7 @@ export default class Client {
     if (response.status !== 200) {
       throw new Error(`${response.statusText}: ${response.data}`);
     }
-    return response.data.antiraid as boolean;
+    return (response.data as any).antiraid as boolean;
   }
 
   async setRaidMode(mode: boolean): Promise<void> {

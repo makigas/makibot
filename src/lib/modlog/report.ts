@@ -1,8 +1,9 @@
-import type { APIEmbed, Snowflake } from "discord-api-types";
+import type { APIEmbed, APIMessage, Snowflake } from "discord-api-types/v9";
 import {
   CommandInteraction,
   MessageActionRow,
   MessageButton,
+  Message,
   MessageEmbed,
   MessageSelectMenu,
   MessageSelectOptionData,
@@ -43,7 +44,7 @@ export interface ModReport {
       username: string;
     };
     content: string;
-    embeds: MessageEmbed[] | APIEmbed[];
+    embeds: MessageEmbed[];
   };
   report: {
     sudo: boolean;
@@ -62,9 +63,18 @@ export interface ModReport {
   };
 }
 
+function getMessage(event: CommandInteraction): Message {
+  let message = event.options.getMessage("message", true);
+  if (message instanceof Message) {
+    return message;
+  }
+  return new Message(event.client, message);
+}
+
 export function createModReport(opt: { event: CommandInteraction; sudo: boolean }): ModReport {
   const { event, sudo } = opt;
-  const message = event.options.getMessage("message", true);
+  const message = getMessage(event);
+
   return {
     message: {
       id: message.id,

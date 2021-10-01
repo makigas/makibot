@@ -13,8 +13,8 @@
     "url": "https://github.com/makigas/clank/issues"
   },
   "dependencies": {
-    "axios": "^0.21.1",
-    "big-integer": "^1.6.48",
+    "axios": "^0.22.0",
+    "big-integer": "^1.6.49",
     "discord.js": "^13.1.0",
     "discordjs-reaction-role": "^2.0.1",
     "discordjs-voicerole": "^2.0.2",
@@ -27,36 +27,36 @@
     "sqlite": "^4.0.23",
     "sqlite3": "^5.0.2",
     "uws": "^200.0.0",
-    "yargs": "^17.1.1"
+    "yargs": "^17.2.1"
   },
   "description": "Discord bot for the makigas server",
   "devDependencies": {
-    "@types/chai": "^4.2.21",
+    "@types/chai": "^4.2.22",
     "@types/express": "^4.17.13",
     "@types/humanize-duration": "^3.25.1",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^16.7.10",
+    "@types/node": "^16.10.2",
     "@types/require-all": "^3.0.3",
-    "@types/sinon": "^10.0.2",
+    "@types/sinon": "^10.0.4",
     "@types/sinon-chai": "^3.2.5",
-    "@types/yargs": "^17.0.2",
-    "@typescript-eslint/eslint-plugin": "^4.30.0",
-    "@typescript-eslint/parser": "^4.30.0",
+    "@types/yargs": "^17.0.3",
+    "@typescript-eslint/eslint-plugin": "^4.32.0",
+    "@typescript-eslint/parser": "^4.32.0",
     "chai": "^4.3.4",
-    "discord-api-types": "^0.22.0",
+    "discord-api-types": "^0.23.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.2",
     "lint-staged": "^11.1.2",
-    "mocha": "^9.1.1",
-    "prettier": "^2.3.2",
+    "mocha": "^9.1.2",
+    "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
     "sinon": "^11.1.2",
     "sinon-chai": "^3.7.0",
     "standard-version": "^9.3.1",
     "ts-node": "^10.2.1",
-    "typescript": "^4.4.2"
+    "typescript": "^4.4.3"
   },
   "engines": {
     "node": ">=16.6 <17"
