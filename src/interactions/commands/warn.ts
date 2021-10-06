@@ -4,6 +4,18 @@ import { createToast } from "../../lib/response";
 import { CommandInteractionHandler } from "../../lib/interaction";
 import Server from "../../lib/server";
 
+function getDuration(value: string): number {
+  switch (value) {
+    case "hour":
+      return 3600 * 1000;
+    case "week":
+      return 86400 * 1000 * 7;
+    case "day":
+    default:
+      return 86400 * 1000;
+  }
+}
+
 export default class WarnCommand implements CommandInteractionHandler {
   name = "warn";
 
@@ -12,7 +24,10 @@ export default class WarnCommand implements CommandInteractionHandler {
       const server = new Server(event.guild);
       const target = String(event.options.get("target", true).value);
       const member = await server.member(target);
+
       const reason = event.options.getString("reason", false) || null;
+      const duration = event.options.getString("duration", false) || "day";
+      const realDuration = getDuration(duration);
 
       if (member.moderator) {
         const toast = createToast({
@@ -31,7 +46,11 @@ export default class WarnCommand implements CommandInteractionHandler {
         });
         return event.reply({ embeds: [toast], ephemeral: true });
       } else {
-        await applyWarn(event.guild, { user: member.user, reason, duration: 86400 * 1000 * 7 });
+        await applyWarn(event.guild, {
+          user: member.user,
+          reason,
+          duration: realDuration,
+        });
         const toast = createToast({
           title: "Warn aplicado",
           description: `Le has aplicado un warn a @${member.user.username}`,
