@@ -1,5 +1,6 @@
-# .husky/pre-commit (v6)
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
 
-npx lint-staged
+npm run lint:staged
 npm test
 npm run build
