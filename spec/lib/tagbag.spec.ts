@@ -11,8 +11,8 @@ import TagBag from "../../src/lib/tagbag";
 const expect = chai.expect;
 chai.use(sinonChai);
 
-function mockSettingProvider(returns: any = undefined): SettingProvider {
-  let fakeSettingProvider = {
+function mockSettingProvider<T>(returns: T = undefined): SettingProvider {
+  const fakeSettingProvider = {
     get: stub().returns(returns),
     set: stub().returns(Promise.resolve(returns)),
     remove: stub().returns(Promise.resolve()),
@@ -76,26 +76,6 @@ describe("TagBag", () => {
         "1122334455",
         "12345678901234567890:foobar",
         "default"
-      );
-    });
-  });
-
-  describe("#counter", () => {
-    it("can be used to access a counter bound to the snowflake", () => {
-      const provider = mockSettingProvider(5);
-      const bag = new TagBag(provider, "12345678901234567890");
-      expect(bag.counter("points", { initial: 0 }).get()).to.equal(5);
-      expect(provider.get).to.have.been.calledOnceWith("global", "12345678901234567890:points", 0);
-    });
-
-    it("can be used to access a counter bound to a specific guild", () => {
-      const provider = mockSettingProvider(5);
-      const bag = new TagBag(provider, "12345678901234567890", guild);
-      expect(bag.counter("points", { initial: 0 }).get()).to.equal(5);
-      expect(provider.get).to.have.been.calledOnceWith(
-        "1122334455",
-        "12345678901234567890:points",
-        0
       );
     });
   });
