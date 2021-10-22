@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.34.1](https://github.com/makigas/clank/compare/v0.34.0...v0.34.1) (2021-10-22)
+
+
+### Features
+
+* allow setting the duration in /warn command ([77e2e04](https://github.com/makigas/clank/commit/77e2e04abf3462f7d17c000718cbb4af7c8df615))
+
+
+### Bug Fixes
+
+* reply messages are not receiving karma ([8895067](https://github.com/makigas/clank/commit/8895067314cd86dda83e5434eca807fd42e7856a))
+
 ## [0.34.0](https://github.com/makigas/clank/compare/v0.33.0...v0.34.0) (2021-10-01)
 
 
