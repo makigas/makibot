@@ -58,7 +58,7 @@ export default class KarmaService implements Hook {
   }
 
   async onMessageCreate(message: Message): Promise<void> {
-    if (!canReceivePoints(message.member) || message.type !== "DEFAULT") {
+    if (!canReceivePoints(message.member) || (message.type !== "DEFAULT" && message.type !== "REPLY")) {
       return;
     }
     await this.karma.action({
