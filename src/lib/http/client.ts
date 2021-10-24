@@ -59,7 +59,7 @@ export default class Client {
     if (response.status !== 200) {
       throw new Error(`${response.statusText}: ${response.data}`);
     }
-    return (response.data as any).antiraid as boolean;
+    return (response.data as { antiraid: boolean }).antiraid;
   }
 
   async setRaidMode(mode: boolean): Promise<void> {
@@ -107,6 +107,29 @@ export default class Client {
       },
     });
     if (response.status !== 200) {
+      throw new Error(`${response.statusText}: ${response.data}`);
+    }
+  }
+  async getProviderSetting(guildId: string, tag: string): Promise<string> {
+    const response = await this.client.get(`/guilds/${guildId}/provider/${tag}`);
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error(`${response.statusText}: ${response.data}`);
+    }
+  }
+
+  async setProviderSetting(guildId: string, tag: string, value: string): Promise<void> {
+    const payload = { value };
+    const response = await this.client.put(`/guilds/${guildId}/provider/${tag}`, payload);
+    if (response.status !== 204) {
+      throw new Error(`${response.statusText}: ${response.data}`);
+    }
+  }
+
+  async deleteProviderSetting(guildId: string, tag: string): Promise<void> {
+    const response = await this.client.delete(`/guilds/${guildId}/provider/${tag}`);
+    if (response.status !== 204) {
       throw new Error(`${response.statusText}: ${response.data}`);
     }
   }

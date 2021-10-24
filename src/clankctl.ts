@@ -88,6 +88,60 @@ clankctl.command(
 );
 
 clankctl.command(
+  "get-tag <guild> <key>",
+  "get a preference from the setting provider",
+  () => ({}),
+  async (argv: { guild: string; key: string }) => {
+    client
+      .getProviderSetting(argv.guild, argv.key)
+      .then((value) => {
+        console.log(value);
+        process.exit(0);
+      })
+      .catch((e) => {
+        console.error("Error: " + e);
+        process.exit(1);
+      });
+  }
+);
+
+clankctl.command(
+  "put-tag <guild> <key> <value>",
+  "update or set a preference from the setting provider",
+  () => ({}),
+  async (argv: { guild: string; key: string; value: string }) => {
+    client
+      .setProviderSetting(argv.guild, argv.key, argv.value)
+      .then(() => {
+        console.log("OK");
+        process.exit(0);
+      })
+      .catch((e) => {
+        console.error("Error: " + e);
+        process.exit(1);
+      });
+  }
+);
+
+clankctl.command(
+  "delete-tag <guild> <key>",
+  "delete a preference from the setting provider",
+  () => ({}),
+  async (argv: { guild: string; key: string }) => {
+    client
+      .deleteProviderSetting(argv.guild, argv.key)
+      .then(() => {
+        console.log("OK");
+        process.exit(0);
+      })
+      .catch((e) => {
+        console.error("Error: " + e);
+        process.exit(1);
+      });
+  }
+);
+
+clankctl.command(
   "set-config <guild> <key> <value>",
   "update the configuration for a specific guild",
   () => ({}),
