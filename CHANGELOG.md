@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.35.0](https://github.com/makigas/clank/compare/v0.34.1...v0.35.0) (2021-10-26)
+
+
+### Features
+
+* add ctl for getting and putting KV settings ([0ff1c74](https://github.com/makigas/clank/commit/0ff1c74c039ebf08ff8d91afb9a3f32e0a5d8d26))
+* add role manager ([1a3c420](https://github.com/makigas/clank/commit/1a3c420f2193141711310af575ebe53b45f89e4b))
+* new moderation system ([738f187](https://github.com/makigas/clank/commit/738f1872720c44f9645990f2ffc62e4ea9d59f90))
+
+
+### Bug Fixes
+
+* **dev:** husky is not properly stopping on failure ([23a0896](https://github.com/makigas/clank/commit/23a0896cd04383dcc91d63d9de9ee269997b095a))
+
+
+### Refactor
+
+* counters are not being used ([8a145de](https://github.com/makigas/clank/commit/8a145de21a2b670a65d6b711545d7599417f89b6))
+
 ### [0.34.1](https://github.com/makigas/clank/compare/v0.34.0...v0.34.1) (2021-10-22)
 
 
