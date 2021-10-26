@@ -79,7 +79,12 @@ export class HookManager {
     client.on(
       "messageUpdate",
       (oldMessage: Message | PartialMessage, newMessage: Message | PartialMessage) => {
-        if (oldMessage.interaction || newMessage.interaction) {
+        if (
+          oldMessage.interaction ||
+          newMessage.interaction ||
+          oldMessage.flags.has("EPHEMERAL") ||
+          newMessage.flags.has("EPHEMERAL")
+        ) {
           return;
         }
         Promise.all([oldMessage.fetch(), newMessage.fetch()]).then(([oldMessage, newMessage]) => {
