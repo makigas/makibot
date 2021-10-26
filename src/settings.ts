@@ -35,7 +35,7 @@ function assertDirectoryExists(dir: string): Promise<void> {
 
 export async function getDatabase(): Promise<Database> {
   // The final location where the database file will be created.
-  const dbFile = resolve(getConfigDirectory(), "clank", "settings.db");
+  const dbFile = resolve(getConfigDirectory(), "makibot", "settings.db");
 
   // Need to make sure first that the file exists.
   const pathToDbFile = dirname(dbFile);
@@ -48,7 +48,7 @@ export async function getDatabase(): Promise<Database> {
 }
 
 export async function getKarmaDatabase(): Promise<string> {
-  const dbFile = resolve(getConfigDirectory(), "clank", "karma.db");
+  const dbFile = resolve(getConfigDirectory(), "makibot", "karma.db");
 
   // Need to make sure first that the file exists.
   const pathToDbFile = dirname(dbFile);

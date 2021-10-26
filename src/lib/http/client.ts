@@ -9,7 +9,7 @@ interface MemberKarmaJSON {
 }
 
 /**
- * Consumes a Makibot HTTP Server. Mainly designed to be used with clankctl.
+ * Consumes a Makibot HTTP Server. Mainly designed to be used with makibotctl.
  */
 export default class Client {
   private client: AxiosInstance;

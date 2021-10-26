@@ -1,10 +1,9 @@
 ---
 name: Bug report
-about: Create a bug report to help improve Clank
-title: ''
+about: Create a bug report to help improve Makibot
+title: ""
 labels: bug
-assignees: ''
-
+assignees: ""
 ---
 
 **Describe the bug**

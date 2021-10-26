@@ -1,8 +1,8 @@
 <p align="center">
-<img src="https://i.imgur.com/4Mc9y87.png" alt="clank">
+<img src="https://i.imgur.com/4Mc9y87.png" alt="makibot">
 </p>
 
-**Clank (formerly known as Makibot)** is the Discord bot for the [makigas Discord server](https://www.makigas.es/discord). It is not stable enough and it probably doesn't contain the most useful commands right now, but it works.
+**Makibot** is the Discord bot for the [makigas Discord server](https://www.makigas.es/discord). It is not stable enough and it probably doesn't contain the most useful commands right now, but it works.
 
 ## Requirements
 
@@ -18,11 +18,11 @@ Register a Discord bot if you haven't. Create a Discord app, then bundle a bot. 
 
 ### Set up the configuration file
 
-**Clank won't run unless you do this**. Copy `.env.example` to `.env`. This environment file contain several secret keys required to properly run the bot. Do not expose this file and keep it **secret**, specially your login token since it could allow anyone to impersonate as your bot.
+**Makibot won't run unless you do this**. Copy `.env.example` to `.env`. This environment file contain several secret keys required to properly run the bot. Do not expose this file and keep it **secret**, specially your login token since it could allow anyone to impersonate as your bot.
 
 - **BOT_TOKEN**: that's the bot token. Log in to Discord via browser, visit the [My Apps](https://discordapp.com/developers/applications/me) page, and click on your bot. Under the section _App Bot User_, your token will be revealed after you press 'Click to reveal'.
 
-- **BOT_OWNER**: that's your user ID. Clank will recognize the user having this ID as the administrator, as some commands will only be available to the bot owner. How to get your user ID:
+- **BOT_OWNER**: that's your user ID. Makibot will recognize the user having this ID as the administrator, as some commands will only be available to the bot owner. How to get your user ID:
 
   - Go to Settings > Appearance Settings and turn on Developer Mode (scroll down). Then, find a message sent by you in any conversation, right click your name and click Copy ID.
 

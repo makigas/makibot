@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import Makibot from "./Makibot";
-import serverFactory from "./lib/http/server";
+import Makibot from "../Makibot";
+import serverFactory from "../lib/http/server";
 
 const makibot = new Makibot();
 const server = serverFactory(makibot);

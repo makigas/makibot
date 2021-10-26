@@ -1,9 +1,9 @@
-# CLANK DOCKERFILE 🤖
+# MAKIBOT DOCKERFILE 🤖
 # made with ❤️ by your friends at makigas
 
 FROM node:16.10.0-alpine
-RUN mkdir /clank
-WORKDIR /clank
+RUN mkdir /makibot
+WORKDIR /makibot
 
 # Server dependencies
 RUN apk add --no-cache --update dumb-init
@@ -20,4 +20,4 @@ RUN apk add --virtual npm-deps --no-cache --update python3 build-base && \
 
 # Set entrypoint
 ENTRYPOINT ["dumb-init", "--"]
-CMD ["node", "dist/clankd.js"]
+CMD ["node", "dist/cmd/makibotd.js"]

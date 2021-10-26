@@ -5,12 +5,12 @@
     "url": "https://www.danirod.es"
   },
   "bin": {
-    "clankctl": "dist/clankctl.js",
-    "clankd": "dist/clankd.js"
+    "makibotctl": "dist/cmd/makibotctl.js",
+    "makibotd": "dist/cmd/makibotd.js"
   },
   "bugs": {
     "email": "makigastutoriales@gmail.com",
-    "url": "https://github.com/makigas/clank/issues"
+    "url": "https://github.com/makigas/makibot/issues"
   },
   "dependencies": {
     "axios": "^0.22.0",
@@ -65,7 +65,7 @@
     "contrib/",
     "dist/"
   ],
-  "homepage": "https://github.com/makigas/clank#readme",
+  "homepage": "https://github.com/makigas/makibot#readme",
   "keywords": [
     "bot",
     "discord",
@@ -78,16 +78,16 @@
     "*.ts": "eslint"
   },
   "main": "dist/Makibot.js",
-  "name": "@makigas/clank",
+  "name": "@makigas/makibot",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/makigas/clank.git"
+    "url": "git+https://github.com/makigas/makibot.git"
   },
   "scripts": {
     "build": "tsc",
-    "clean": "rimraf makigas-clank*.tgz dist",
-    "start": "ts-node -r dotenv/config src/clankd",
-    "clankctl": "ts-node -r dotenv/config src/clankctl",
+    "clean": "rimraf makigas-makibot*.tgz dist",
+    "start": "ts-node -r dotenv/config src/cmd/makibotd",
+    "makibotctl": "ts-node -r dotenv/config src/cmd/makibotctl",
     "lint": "eslint \"src/**/*.ts\"",
     "lint:staged": "lint-staged",
     "test": "mocha -r ts-node/register spec/**/*.spec.ts",

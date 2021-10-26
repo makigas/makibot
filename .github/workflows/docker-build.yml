@@ -9,4 +9,4 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Build Dockerfile
-        run: docker build -t docker.pkg.github.com/${{ github.repository }}/clank:latest .
+        run: docker build -t docker.pkg.github.com/${{ github.repository }}/makibot:latest .

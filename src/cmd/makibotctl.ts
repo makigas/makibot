@@ -1,11 +1,11 @@
 import * as yargs from "yargs";
-import Client from "./lib/http/client";
+import Client from "../lib/http/client";
 
 const client = new Client();
 
-const clankctl = yargs;
+const makibotctl = yargs;
 
-clankctl.command(
+makibotctl.command(
   "healthcheck",
   "check the status of the bot",
   () => ({}),
@@ -28,7 +28,7 @@ clankctl.command(
   }
 );
 
-clankctl.command(
+makibotctl.command(
   "guilds",
   "list all the guilds the bot is in",
   () => ({}),
@@ -39,7 +39,7 @@ clankctl.command(
   }
 );
 
-clankctl.command(
+makibotctl.command(
   "get-config <guild>",
   "get the config for a guild",
   () => ({}),
@@ -57,7 +57,7 @@ clankctl.command(
   }
 );
 
-clankctl.command(
+makibotctl.command(
   "antiraid [mode]",
   "enable or disable the antiraid mode",
   () => ({}),
@@ -87,7 +87,7 @@ clankctl.command(
   }
 );
 
-clankctl.command(
+makibotctl.command(
   "get-tag <guild> <key>",
   "get a preference from the setting provider",
   () => ({}),
@@ -105,7 +105,7 @@ clankctl.command(
   }
 );
 
-clankctl.command(
+makibotctl.command(
   "put-tag <guild> <key> <value>",
   "update or set a preference from the setting provider",
   () => ({}),
@@ -123,7 +123,7 @@ clankctl.command(
   }
 );
 
-clankctl.command(
+makibotctl.command(
   "delete-tag <guild> <key>",
   "delete a preference from the setting provider",
   () => ({}),
@@ -141,7 +141,7 @@ clankctl.command(
   }
 );
 
-clankctl.command(
+makibotctl.command(
   "set-config <guild> <key> <value>",
   "update the configuration for a specific guild",
   () => ({}),
@@ -158,7 +158,7 @@ clankctl.command(
   }
 );
 
-clankctl.command(
+makibotctl.command(
   "get-karma <guild> <member>",
   "get the karma information for a specific member",
   () => ({}),
@@ -176,7 +176,7 @@ clankctl.command(
   }
 );
 
-clankctl.command(
+makibotctl.command(
   "set-karma-offset <guild> <member> <offset>",
   "tune the karma offset for a specific user and update levels",
   () => ({}),
@@ -194,4 +194,4 @@ clankctl.command(
   }
 );
 
-clankctl.help().argv;
+makibotctl.help().argv;
