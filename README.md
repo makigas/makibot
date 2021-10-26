@@ -1,6 +1,5 @@
-![Discord](https://img.shields.io/discord/329487017916366850)
+[![Discord](https://img.shields.io/discord/329487017916366850)](https://discord.com/invite/Mq7TBAB)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/makigas/clank)
-[![GitHub license](https://img.shields.io/github/license/makigas/clank)](https://github.com/makigas/clank/blob/trunk/LICENSE)
 
 # makibot
 
