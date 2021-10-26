@@ -1,8 +1,10 @@
-<p align="center">
-<img src="https://i.imgur.com/4Mc9y87.png" alt="makibot">
-</p>
+![Discord](https://img.shields.io/discord/329487017916366850)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/makigas/clank)
+[![GitHub license](https://img.shields.io/github/license/makigas/clank)](https://github.com/makigas/clank/blob/trunk/LICENSE)
 
-**Makibot** is the Discord bot for the [makigas Discord server](https://www.makigas.es/discord). It is not stable enough and it probably doesn't contain the most useful commands right now, but it works.
+# makibot
+
+**makibot** is the Discord bot for the [makigas Discord server](https://www.makigas.es/discord). It is not stable enough and it probably doesn't contain the most useful commands right now, but it works.
 
 ## Requirements
 
