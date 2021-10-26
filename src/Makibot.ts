@@ -8,6 +8,7 @@ import { HookManager } from "./lib/hook";
 import { KarmaDatabase, openKarmaDatabase } from "./lib/karma/database";
 import { SettingProvider } from "./lib/provider";
 import { installCommandInteractionHandler } from "./lib/interaction";
+import { ModerationRepository, newModRepository } from "./lib/modlog/database";
 
 export default class Makibot extends Client {
   readonly antiraid: AntiRaid;
@@ -17,6 +18,8 @@ export default class Makibot extends Client {
   private _provider: SettingProvider;
 
   private _manager: HookManager;
+
+  private _modrepo: ModerationRepository;
 
   public get manager(): HookManager {
     return this._manager;
@@ -45,7 +48,8 @@ export default class Makibot extends Client {
 
     this.once("ready", () => {
       getDatabase()
-        .then((db) => {
+        .then(async (db) => {
+          this._modrepo = await newModRepository(db);
           this._provider = new SettingProvider(db, this);
           return this._provider.init();
         })
@@ -79,6 +83,10 @@ export default class Makibot extends Client {
 
   get provider(): SettingProvider {
     return this._provider;
+  }
+
+  get modrepo(): ModerationRepository {
+    return this._modrepo;
   }
 
   shutdown(exitCode = 0): void {
