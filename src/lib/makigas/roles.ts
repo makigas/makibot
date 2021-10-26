@@ -11,7 +11,7 @@ import {
  * this code, you should probably change this with the list of roles that you are using
  * for your server...
  */
-const ROLE_DEFINITIONS = [
+export const ROLE_DEFINITIONS = [
   {
     label: "Anuncios",
     description: "Te menciono cuando tenga algo que anunciar",

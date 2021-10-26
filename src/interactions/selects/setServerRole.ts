@@ -1,6 +1,6 @@
 import { MessageComponentInteraction, SelectMenuInteraction } from "discord.js";
 import { ComponentInteractionHandler } from "../../lib/interaction";
-import { createRolesMessage } from "../../lib/makigas/roles";
+import { createRolesMessage, ROLE_DEFINITIONS } from "../../lib/makigas/roles";
 
 function difference(a: string[], b: string[]): string[] {
   return a.filter((i) => !b.includes(i));
@@ -13,7 +13,10 @@ export default class ModMenuAlert implements ComponentInteractionHandler {
     if (event.inGuild()) {
       /* event.member might not contain the information we are interested in. */
       const member = await event.guild.members.fetch(event.user.id);
-      const currentRoles = member.roles.cache.map((role) => role.name);
+      const acceptableRoles = ROLE_DEFINITIONS.map((r) => r.label);
+      const currentRoles = member.roles.cache
+        .map((role) => role.name)
+        .filter((r) => acceptableRoles.includes(r));
       const desiredRoles = event.values;
 
       /* Set and unset roles that should not apply here. */
