@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.35.1](https://github.com/makigas/clank/compare/v0.35.0...v0.35.1) (2021-10-26)
+
+
+### Bug Fixes
+
+* /roles should not remove roles other than server roles ([7016eff](https://github.com/makigas/clank/commit/7016eff8d954e35b219b0773e252f571469b4f7d))
+
 ## [0.35.0](https://github.com/makigas/clank/compare/v0.34.1...v0.35.0) (2021-10-26)
 
 
