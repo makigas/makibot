@@ -1,7 +1,7 @@
 # MAKIBOT DOCKERFILE 🤖
 # made with ❤️ by your friends at makigas
 
-FROM node:16.10.0-alpine
+FROM node:16.13.0-alpine
 RUN mkdir /makibot
 WORKDIR /makibot
 
