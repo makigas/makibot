@@ -25,7 +25,7 @@ export default class ModRequestCommand implements CommandInteractionHandler {
     const server = new Server(event.guild);
     const member = await server.member(event.user);
 
-    const message = event.options.getMessage("message", true);
+    const message = event.options.get("message", true).message;
     if (member.id === message.author.id) {
       const toast = createToast({
         title: "No puedes reportar este mensaje",

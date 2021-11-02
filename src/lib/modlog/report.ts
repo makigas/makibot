@@ -45,7 +45,6 @@ export interface ModReport {
       username: string;
     };
     content: string;
-    embeds: MessageEmbed[];
   };
   report: {
     sudo: boolean;
@@ -64,17 +63,9 @@ export interface ModReport {
   };
 }
 
-function getMessage(event: CommandInteraction): Message {
-  const message = event.options.getMessage("message", true);
-  if (message instanceof Message) {
-    return message;
-  }
-  return new Message(event.client, message);
-}
-
 export function createModReport(opt: { event: CommandInteraction; sudo: boolean }): ModReport {
   const { event, sudo } = opt;
-  const message = getMessage(event);
+  const message = event.options.get("message", true).message;
 
   return {
     message: {
@@ -84,7 +75,6 @@ export function createModReport(opt: { event: CommandInteraction; sudo: boolean 
         username: message.author.username,
       },
       content: message.content,
-      embeds: message.embeds,
     },
     report: {
       sudo,

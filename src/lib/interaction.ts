@@ -1,4 +1,4 @@
-import type { CommandInteraction, Interaction, MessageComponentInteraction } from "discord.js";
+import type { CommandInteraction, ContextMenuInteraction, Interaction, MessageComponentInteraction } from "discord.js";
 import path from "path";
 import requireAll from "require-all";
 import type Makibot from "../Makibot";
@@ -6,7 +6,7 @@ import logger from "./logger";
 
 export interface CommandInteractionHandler {
   name: string;
-  handle(event: CommandInteraction): Promise<void>;
+  handle(event: CommandInteraction | ContextMenuInteraction): Promise<void>;
 }
 
 export interface ComponentInteractionHandler {

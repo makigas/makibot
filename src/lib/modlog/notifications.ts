@@ -1,5 +1,5 @@
 import { userMention, time } from "@discordjs/builders";
-import { APIMessage } from "@discordjs/builders/node_modules/discord-api-types";
+import { APIMessage } from "discord-api-types";
 import { WebhookClient } from "discord.js";
 
 import type Makibot from "../../Makibot";
