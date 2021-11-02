@@ -129,7 +129,7 @@ export default class AntifloodService implements Hook {
     const normalized = normalize(message.cleanContent);
 
     /* Some cases that are allowed. */
-    if (message.author.bot || !member.verified || member.moderator) {
+    if (message.author.bot || member.moderator) {
       return;
     }
     if (words(message.cleanContent).length <= 3) {

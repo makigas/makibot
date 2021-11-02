@@ -67,13 +67,11 @@ export default class Server {
       roles: {
         helper: roleToJSON(this.helperRole),
         mods: roleToJSON(this.modsRole),
-        verified: roleToJSON(this.verifiedRole),
         warn: roleToJSON(this.warnRole),
       },
       channels: {
         pinboard: channelToJSON(this.pinboardChannel),
         publicModlog: channelToJSON(this.publicModlogChannel),
-        captchas: channelToJSON(this.captchasChannel),
       },
     };
   }
@@ -180,11 +178,6 @@ export default class Server {
     return this.getRoleByName(modsRoleName);
   }
 
-  get verifiedRole(): Role {
-    const verifiedRoleName = process.env.VERIFY_ROLE || "verified";
-    return this.getRoleByName(verifiedRoleName);
-  }
-
   get muteRole(): Role {
     const mutedRoleName = process.env.MUTE_ROLE || "mute";
     return this.getRoleByName(mutedRoleName);
@@ -213,11 +206,6 @@ export default class Server {
   get publicModlogChannel(): TextChannel {
     const modlogChannelName = process.env.PUBLIC_MODLOG_CHANNEL || "public-modlog";
     return this.getTextChannelByName(modlogChannelName);
-  }
-
-  get captchasChannel(): TextChannel {
-    const captchasChannelName = process.env.VERIFY_CHANNEL || "captchas";
-    return this.getTextChannelByName(captchasChannelName);
   }
 
   get pinboardChannel(): TextChannel {

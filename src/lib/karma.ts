@@ -1,12 +1,7 @@
 import { GuildMember } from "discord.js";
-import Member from "./member";
 
 export function canReceivePoints(gm: GuildMember): boolean {
-  if (!gm) {
-    return false;
-  }
-  const member = new Member(gm);
-  return !gm.user.bot && member.verified;
+  return gm && !gm.user.bot;
 }
 
 export function getLevelV1(points: number): number {

@@ -72,14 +72,6 @@ export default class Member {
     return this._tagbag;
   }
 
-  get verified(): boolean {
-    if (process.env.REQUIRE_VERIFICATION) {
-      return this.hasRole(this.server.verifiedRole);
-    } else {
-      return true;
-    }
-  }
-
   get moderator(): boolean {
     return this.hasRole(this.server.modsRole);
   }
@@ -173,10 +165,6 @@ export default class Member {
       await this.tagbag.tag("karma:ver").set("v2");
       await this.setCrew(levelV2);
     }
-  }
-
-  async setVerification(value: boolean): Promise<boolean> {
-    return this.setRole(this.server.verifiedRole, value);
   }
 
   async setMuted(value: boolean): Promise<boolean> {
