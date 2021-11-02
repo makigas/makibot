@@ -22,7 +22,7 @@ interface KarmaStats {
 export default class Member {
   private guildMember: GuildMember;
 
-  private server: Server;
+  readonly server: Server;
 
   private _tagbag: TagBag;
 

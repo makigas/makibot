@@ -11,9 +11,9 @@ import { Hook } from "../lib/hook";
 import { canReceivePoints, getLevelV2 } from "../lib/karma";
 import { KarmaDatabase } from "../lib/karma/database";
 import Member from "../lib/member";
+import { applyAction } from "../lib/modlog/actions";
+import { notifyPublicModlog } from "../lib/modlog/notifications";
 import { createToast } from "../lib/response";
-import Server from "../lib/server";
-import { notifyPublicModlog } from "../lib/warn";
 import Makibot from "../Makibot";
 
 function isTextChannel(channel: TextBasedChannels): channel is TextChannel {
@@ -144,30 +144,39 @@ export default class KarmaService implements Hook {
     );
   }
 
+  /**
+   * When an account reaches a reputation that is too low, the account will be automatically
+   * muted. Muting an account prevents the account from sending more messages. It has to be
+   * manually unlocked by a moderator to allow the account to talk again.
+   *
+   * @param gm the guild member to mute due to low reputation.
+   */
+  private async muteLowReputation(member: Member): Promise<void> {
+    const alreadyMuted = member.tagbag.tag("karma:mutenotified");
+
+    if (!alreadyMuted.get(false)) {
+      const persisted = await applyAction(this.bot, {
+        createdAt: new Date(),
+        expiresAt: null,
+        expired: false,
+        type: "MUTE",
+        mod: this.bot.user.id,
+        reason: "(cuenta silenciada automáticamente debido al nivel de reputación)",
+        target: member.id,
+        guild: member.server.id,
+      });
+      await notifyPublicModlog(this.bot, persisted);
+      await alreadyMuted.set(true);
+    }
+  }
+
   private async assertLevel(gm: GuildMember, channel: TextChannel): Promise<void> {
     const member = new Member(gm);
     const karma = await member.getKarma();
 
-    /*
-     * Control mute for members with negative karma.
-     * TODO: This is an ugly patch. Negative levels should be fixed (and not return -1).
-     * Members with negative level should be the ones muted.
-     */
+    /* If an account reaches a very low reputation level, should be muted. */
     if (karma.points <= -3) {
-      /* First, make sure this person is silenced. */
-      await member.setMuted(true);
-
-      /* Then, notify the member about this unless already done. */
-      const alreadyWarnedTag = member.tagbag.tag("karma:mutenotified");
-      if (!alreadyWarnedTag.get(false)) {
-        notifyPublicModlog(
-          new Server(gm.guild),
-          member,
-          `Has sido silenciado automáticamente, <@${gm.user.id}>`,
-          "Silenciado automáticamente al tener karma excesivamente negativo"
-        );
-        await alreadyWarnedTag.set(true);
-      }
+      return this.muteLowReputation(member);
     }
 
     const currentLevel = member.tagbag.tag("karma:level");

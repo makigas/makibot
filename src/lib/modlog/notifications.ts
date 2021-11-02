@@ -23,7 +23,7 @@ const TEMPLATES = {
 function composeModlogMessage(event: ModEvent) {
   const target = userMention(event.target);
   const reason = event.reason || "(no se especificó razón)";
-  const expiration = event.expiresAt ? time(event.expiresAt, "R") : "";
+  const expiration = event.expiresAt ? time(event.expiresAt, "R") : "manualmente";
   const eventId = event.id ? ` - [#${event.id}]` : "";
   return (
     TEMPLATES[event.type]

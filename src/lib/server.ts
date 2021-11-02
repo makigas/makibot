@@ -47,6 +47,10 @@ export default class Server {
 
   constructor(private guild: Guild) {}
 
+  get id(): string {
+    return this.guild.id;
+  }
+
   get tagbag(): TagBag {
     if (!this._tagbag) {
       const client = this.guild.client as Makibot;
