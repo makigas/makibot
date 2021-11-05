@@ -1,8 +1,9 @@
-import type { CommandInteraction } from "discord.js";
+import { CommandInteraction, MessageActionRow } from "discord.js";
 import type { CommandInteractionHandler } from "../../lib/interaction";
 import { createKarmaToast } from "../../lib/karma";
 import { createToast } from "../../lib/response";
 import Server from "../../lib/server";
+import { getExplainButton } from "../buttons/karmaExplain";
 
 export default class ViewKarmaCommand implements CommandInteractionHandler {
   name = "Ver karma";
@@ -21,10 +22,19 @@ export default class ViewKarmaCommand implements CommandInteractionHandler {
         description: "Este usuario es un bot y no tiene karma",
         severity: "error",
       });
-      await event.editReply({ embeds: [toast] });
+      await event.editReply({
+        embeds: [toast],
+      });
     } else {
       const report = await createKarmaToast(member, dispatcher.moderator);
-      await event.editReply({ embeds: [report] });
+      await event.editReply({
+        embeds: [report],
+        components: [
+          new MessageActionRow({
+            components: [getExplainButton()],
+          }),
+        ],
+      });
     }
   }
 }

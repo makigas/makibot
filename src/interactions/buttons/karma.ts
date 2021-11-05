@@ -1,7 +1,8 @@
-import { ButtonInteraction } from "discord.js";
+import { ButtonInteraction, MessageActionRow } from "discord.js";
 import { ComponentInteractionHandler } from "../../lib/interaction";
 import { createKarmaToast } from "../../lib/karma";
 import Member from "../../lib/member";
+import { getExplainButton } from "./karmaExplain";
 
 export default class KarmaButton implements ComponentInteractionHandler {
   name = "karma_button";
@@ -12,6 +13,11 @@ export default class KarmaButton implements ComponentInteractionHandler {
     const toast = await createKarmaToast(member, member.moderator);
     await event.reply({
       embeds: [toast],
+      components: [
+        new MessageActionRow({
+          components: [getExplainButton()],
+        }),
+      ],
       ephemeral: true,
     });
   }
