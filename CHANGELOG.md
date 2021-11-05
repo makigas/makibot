@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.36.0](https://github.com/makigas/makibot/compare/v0.35.1...v0.36.0) (2021-11-05)
+
+
+### Features
+
+* add an explanation about the karma system ([0377000](https://github.com/makigas/makibot/commit/0377000990bedb4575d8848098ae522cf18cf60c))
+* add button handler to see karma ([73de7fa](https://github.com/makigas/makibot/commit/73de7fa1cabf54d8941f36537d9df437b11d7775))
+* simplify release policy ([6bb3a3f](https://github.com/makigas/makibot/commit/6bb3a3f4f20b7e5c8e8ce557e051bb52a817200b))
+
+
+### Bug Fixes
+
+* github actions, you never get it right the first time ([e07b918](https://github.com/makigas/makibot/commit/e07b9187283d3675e581fcb525d51df945dec13f))
+* plural/singular in propinas ([#463](https://github.com/makigas/makibot/issues/463)) ([beb0434](https://github.com/makigas/makibot/commit/beb04348a7aafe086ee4ad60c0b0d1e152dc1fec))
+* update binary distribution paths ([7f5a915](https://github.com/makigas/makibot/commit/7f5a9158829691959e00e43e11945eea6845ced3))
+
+
+### Chore
+
+* **deps:** unpin Node.js version to 16.x ([#462](https://github.com/makigas/makibot/issues/462)) ([c348ead](https://github.com/makigas/makibot/commit/c348ead9eda2fed93a1b0f40d458d1371bd5b625))
+* **deps:** update dependencies ([1e5a71e](https://github.com/makigas/makibot/commit/1e5a71e433ade386361a0178af3259e572c67960))
+* **doc:** chat tag should point to the server ([bfb751b](https://github.com/makigas/makibot/commit/bfb751baeebc7e80e30f33dc3c0dccfe9ccf4e27))
+* **doc:** show badges in README.md ([00e6ff8](https://github.com/makigas/makibot/commit/00e6ff8ca7689eb2ccc90dc58045598bc851fe53))
+* rebrand clank as makibot ([550da2c](https://github.com/makigas/makibot/commit/550da2c2c69af407b55dfbc8449bf400204735cc))
+
+
+### Refactor
+
+* **ops:** use new GitHub Action for building Docker ([c887213](https://github.com/makigas/makibot/commit/c88721314ef62968a130bccbb48b077339b04fb7))
+* refactor all the actions ([cd2f0ce](https://github.com/makigas/makibot/commit/cd2f0ceef8c218af0e4b9e8fe098cf391295c605))
+* remove old warn hook ([9fe99e2](https://github.com/makigas/makibot/commit/9fe99e2285eb21309bf395f3431907827be127f8))
+* remove verification process ([bd8597c](https://github.com/makigas/makibot/commit/bd8597c1c9e3a88bb025316c7f6c2003867543d8))
+* use new public modlog for automute ([ed13e88](https://github.com/makigas/makibot/commit/ed13e8839915c55e717ece1fac9c0c2ccbf3d1d8))
+
 ### [0.35.1](https://github.com/makigas/makibot/compare/v0.35.0...v0.35.1) (2021-10-26)
 
 ### Bug Fixes
