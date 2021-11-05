@@ -23,7 +23,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push latest version
-        if: ${{ github.event.action == 'push' }}
+        if: ${{ github.event_name == 'push' }}
         uses: docker/build-push-action@v2
         with:
           push: true
@@ -31,7 +31,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push stable version
-        if: ${{ github.event.action == 'release' }}
+        if: ${{ github.event_name == 'release' }}
         uses: docker/build-push-action@v2
         with:
           push: true
@@ -41,7 +41,7 @@ jobs:
   deploy:
     name: Deploy into my server
     needs: [release]
-    if: ${{ github.event.action == 'release' }}
+    if: ${{ github.event_name == 'release' }}
     runs-on: ubuntu-latest
     environment: public
     steps:
