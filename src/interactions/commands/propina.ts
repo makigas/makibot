@@ -116,7 +116,7 @@ async function handleGuildCommand(command: CommandInteraction): Promise<void> {
     embeds: [
       createToast({
         title: `¡@${originMember.user.username} ha enviado una propina a @${targetMember.user.username}!`,
-        description: `${amount} puntos han sido añadidos a la reputación de ${targetMember.user.username}.`,
+        description: `${amount} ${amount == 1 ? 'punto ha sido añadido' : 'puntos han sido añadidos'} a la reputación de ${targetMember.user.username}.`,
         severity: "success",
         target: targetMember.user,
       }),
