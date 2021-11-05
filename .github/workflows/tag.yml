@@ -19,10 +19,13 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Capture version code
+        id: version
+        run: echo ::set-output name=code::${GITHUB_REF#refs/*/}
       - name: Build and push stable version
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ghcr.io/${{ github.repository }}/makibot:${GITHUB_REF##*/}
+          tags: ghcr.io/${{ github.repository }}/makibot:${{ steps.version.outputs.code }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
