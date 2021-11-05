@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - trunk
-  release:
-    types:
-      - published
-
 jobs:
   release:
     name: Release Docker images
@@ -23,29 +19,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push latest version
-        if: ${{ github.event_name == 'push' }}
         uses: docker/build-push-action@v2
         with:
           push: true
           tags: ghcr.io/${{ github.repository }}/makibot:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      - name: Build and push stable version
-        if: ${{ github.event_name == 'release' }}
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          tags: ghcr.io/${{ github.repository }}/makibot:${GITHUB_REF##*/},ghcr.io/${{ github.repository }}/makibot:stable
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
   deploy:
     name: Deploy into my server
     needs: [release]
-    if: ${{ github.event_name == 'release' }}
     runs-on: ubuntu-latest
     environment: public
     steps:
-    - name: Execute a remote command
+    - name: Run docker-compose remotely
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -53,5 +39,5 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
-          docker-compose --project-directory docker/makibot pull
+          docker-compose --project-directory docker/makibot pull makibot
           docker-compose --project-directory docker/makibot up -d
