@@ -7,27 +7,33 @@
 
 ## Requirements
 
-- We target Node 16.
-- A Discord application that can behave as a bot.
-- A Discord server.
+- Node.js >= 16.8.0.
+- A Discord application behaving as a bot.
+- A Discord server to put the bot in.
 
 ## Setting up
 
 ### Create a bot
 
-Register a Discord bot if you haven't. Create a Discord app, then bundle a bot. [Here is a neat guide covering the process][1]. The guide also covers how to make the bot join the server, which is important if the bot is not public because it will need to be manually invited to the server.
+Register a Discord bot if you haven't. [Create a Discord app if you haven't done it yet](https://discord.com/developers/applications), then create a Bot for your application using the Bot tab in the application page.
 
-### Set up the configuration file
+To make the bot join your server, you can use the OAuth2 URL Generator in the OAuth tab of your application page. Check the "bot" checkbox in the "Scopes" section and play with the permissions in the Bot Permissions box. You should automatically see an URL to make the application join a server where you have appropiate rights.
 
-**Makibot won't run unless you do this**. Copy `.env.example` to `.env`. This environment file contain several secret keys required to properly run the bot. Do not expose this file and keep it **secret**, specially your login token since it could allow anyone to impersonate as your bot.
+### Set up the environment
 
-- **BOT_TOKEN**: that's the bot token. Log in to Discord via browser, visit the [My Apps](https://discordapp.com/developers/applications/me) page, and click on your bot. Under the section _App Bot User_, your token will be revealed after you press 'Click to reveal'.
+The bot is controlled via environment variables. You can manually provide them when starting the application, you can use the proper environment settings if running through Docker or Docker-Compose. If you are running locally using Node.js, you might create a file called .env containing the environment variables, using .env.example as an example to follow.
 
-- **BOT_OWNER**: that's your user ID. Makibot will recognize the user having this ID as the administrator, as some commands will only be available to the bot owner. How to get your user ID:
+Understood variables:
 
-  - Go to Settings > Appearance Settings and turn on Developer Mode (scroll down). Then, find a message sent by you in any conversation, right click your name and click Copy ID.
-
-  - Type `\@[your username]` into a Discord chat and press Enter. This will send a message with your user ID, and you will be able to see it on the history. Type your username as you'd type it to mention yourself, so if your username is `danirod#2667`, send a message with the contents `\@danirod`. Even if you changed your alias, type your username.
+- `BOT_TOKEN`: the authorization token to use with your bot. It is required in order to start the bot.
+- `BOT_OWNER`: the user ID of the main server administrator. While most commands and hooks understand the idea of "server mods", it is still required for some administrative actions to be issued by the server admin.
+- `INVITE_TOKEN`: if provided, will use this token to build the invite link when using the `/invite` command. Otherwise, it just links to http://discord.makigas.es.
+- `HELPER_ROLE`: the name of the role to use as helper in the server. Otherwise, it fallbacks to "helper".
+- `MODS_ROLE`: the name of the role to use for moderator members in the server. Otherwise, it fallbacks to "mods".
+- `MUTE_ROLE`: the name of the role to use for muted users. Otherwise, it fallbacks to "mute".
+- `WARN_ROLE`: the name of the role to use for warned users. Otherwise, it fallbacks to "warn".
+- `LINKS_DISABLE_ROLE`: the name of the role to use for members that are not allowed to post links. Otherwise, it fallbacks to "links-disabled"
+- `PUBLIC_MODLOG_CHANNEL`: (deprecated) channel ID to use when sending public modlog events. Otherwise, modlog events are not logged in a public modlog channel.
 
 ### Install and run
 
@@ -43,5 +49,3 @@ Have an idea? Found a bug? This is an open source project, so you are free to co
 - Don't work on top of trunk branch.
 
 By submitting an issue or a PR – I'd dare to say that by pressing the Fork button as well –, you declare that you have read and agree with the contents of this document.
-
-[1]: https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token
