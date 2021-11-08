@@ -4,7 +4,7 @@ import { applyAction } from "../../lib/modlog/actions";
 import { notifyPublicModlog } from "../../lib/modlog/notifications";
 import { ModEvent, ModEventType } from "../../lib/modlog/types";
 import { createToast } from "../../lib/response";
-import { tokenToDate } from "datetoken.js";
+import { tokenToDate } from "datetoken";
 import Server from "../../lib/server";
 import Makibot from "../../Makibot";
 
