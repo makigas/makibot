@@ -4,6 +4,7 @@ import { applyAction } from "../../lib/modlog/actions";
 import { notifyPublicModlog } from "../../lib/modlog/notifications";
 import { ModEvent, ModEventType } from "../../lib/modlog/types";
 import { createToast } from "../../lib/response";
+import { tokenToDate } from "datetoken.js";
 import Server from "../../lib/server";
 import Makibot from "../../Makibot";
 
@@ -41,15 +42,12 @@ function castModEventType(command: CommandInteraction): ModEventType {
  * @returns either the Date object with the expiration date, or null
  */
 function castExpirationDate(command: CommandInteraction): Date {
-  const keys = {
-    dia: 86400,
-    hora: 3600,
-    semana: 86400 * 7,
-  };
-  const givenDuration = command.options.getString("duracion", false) || "dia";
-  const duration = keys[givenDuration] || keys["dia"];
-  const expiresAt = Date.now() + duration * 1000;
-  return new Date(expiresAt);
+  const givenDuration = command.options.getString("duracion");
+  try {
+    return tokenToDate(givenDuration);
+  } catch (e) {
+    return tokenToDate("now+d"); // always fallback to a day.
+  }
 }
 
 /** Code to execute when invalid preconditions are met (user is not mod, etc). */
