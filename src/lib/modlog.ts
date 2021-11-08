@@ -6,6 +6,7 @@ import {
   TextChannel,
   User,
   PartialGuildMember,
+  PartialMessage,
 } from "discord.js";
 import { channelMention, userMention } from "@discordjs/builders";
 import humanizeDuration from "humanize-duration";
@@ -294,7 +295,7 @@ export class ReportModlogEvent extends ModlogEvent {
 }
 
 export class WastebinModlogEvent extends ModlogEvent {
-  constructor(private message: Message) {
+  constructor(private message: Message | PartialMessage) {
     super();
   }
 
@@ -319,6 +320,10 @@ export class WastebinModlogEvent extends ModlogEvent {
     fields.push({
       name: "Mensaje",
       value: this.message.cleanContent,
+    });
+    fields.push({
+      name: "Message UID",
+      value: this.message.id,
     });
     if (this.message.channel.type == "GUILD_TEXT") {
       const textChannel = this.message.channel as TextChannel;

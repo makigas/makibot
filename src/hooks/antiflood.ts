@@ -2,7 +2,6 @@ import { Message, MessageEmbed, PartialMessage, Snowflake } from "discord.js";
 import { Hook } from "../lib/hook";
 import Member from "../lib/member";
 import { createToast } from "../lib/response";
-import applyWastebin from "../lib/wastebin";
 import applyWarn from "../lib/warn";
 import logger from "../lib/logger";
 
@@ -146,11 +145,11 @@ export default class AntifloodService implements Hook {
         if (alertCounter === 1) {
           const toast = generateFirstToast(message);
           await message.channel.send({ embeds: [toast] });
-          await applyWastebin(message);
+          await message.delete();
         } else if (alertCounter === 2) {
           const toast = generateRepeatingToast(message);
           await message.channel.send({ embeds: [toast] });
-          await applyWastebin(message);
+          await message.delete();
         } else if (alertCounter >= 3) {
           if (member.muted) {
             await message.member.ban({
@@ -178,7 +177,7 @@ export default class AntifloodService implements Hook {
 
             const toast = generateMuteToast(message);
             await message.channel.send({ embeds: [toast] });
-            await applyWastebin(message);
+            await message.delete();
 
             /* Then warn + mute the member. */
             await applyWarn(message.guild, {
