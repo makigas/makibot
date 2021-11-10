@@ -8,3 +8,7 @@ dist/
 .env
 settings.db
 .node-version
+
+# Jekyll
+docs/_site
+docs/.jekyll-cache
