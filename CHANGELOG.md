@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.37.0](https://github.com/makigas/makibot/compare/v0.36.0...v0.37.0) (2021-11-10)
+
+
+### Features
+
+* add commands for threads management ([#466](https://github.com/makigas/makibot/issues/466)) ([08a4914](https://github.com/makigas/makibot/commit/08a4914a1b93d8467e4766c782a98df8d272f833))
+* add hook for logging deleted messages ([2486709](https://github.com/makigas/makibot/commit/2486709d380919d9242a02c82fe028adcbe0fd8b))
+* backport commands from the serverless bot ([36bc408](https://github.com/makigas/makibot/commit/36bc4080c9ad2c99d095b646e58b9a95cbc86e38))
+* design thread-only channels ([#465](https://github.com/makigas/makibot/issues/465)) ([afac477](https://github.com/makigas/makibot/commit/afac477b607621958afaa755d68737be10a84cae))
+
+
+### Bug Fixes
+
+* action not properly escaping variable ([c41e95d](https://github.com/makigas/makibot/commit/c41e95da02202dc9b297860c14b2ed431877023f))
+
+
+### Refactor
+
+* custom date tokens for mod durations ([095463e](https://github.com/makigas/makibot/commit/095463ef8baaaf8e3e743275439cffeb77badede))
+
+
+### Chore
+
+* **deps:** bump datetoken to 1.1.0 ([86c93f4](https://github.com/makigas/makibot/commit/86c93f4a3dd2cf579bab7bcdd2b155b0dca3e39b))
+
 ## [0.36.0](https://github.com/makigas/makibot/compare/v0.35.1...v0.36.0) (2021-11-05)
 
 
