@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.37.1](https://github.com/makigas/makibot/compare/v0.37.0...v0.37.1) (2021-11-17)
+
+
+### Bug Fixes
+
+* **mod:** prevent crash on expiration if member left ([b1fa498](https://github.com/makigas/makibot/commit/b1fa498da5a20791682fe28a71bda7158f304f73))
+* **primo:** reword some error messages ([7eccfe1](https://github.com/makigas/makibot/commit/7eccfe12f5063ad9b746a465fd7883ebdf9ad596))
+
+
+### Chore
+
+* **deps-dev:** bump @types/node from 16.11.6 to 16.11.7 ([#470](https://github.com/makigas/makibot/issues/470)) ([5e90e93](https://github.com/makigas/makibot/commit/5e90e9363ee6e39bfa5b9b2ba608bd79fde95627))
+* **deps-dev:** bump @typescript-eslint/eslint-plugin ([#469](https://github.com/makigas/makibot/issues/469)) ([0bc1f3a](https://github.com/makigas/makibot/commit/0bc1f3a41b69cf6a01a6a0f8c54cb648cdf8e0b1))
+* **deps-dev:** bump @typescript-eslint/parser from 5.3.0 to 5.4.0 ([#468](https://github.com/makigas/makibot/issues/468)) ([d88fbdd](https://github.com/makigas/makibot/commit/d88fbddcb7fb8f3c87a6c749be3e0437d811cb5b))
+* **deps-dev:** bump eslint from 8.1.0 to 8.2.0 ([#473](https://github.com/makigas/makibot/issues/473)) ([009bb36](https://github.com/makigas/makibot/commit/009bb369aa736461a3893f0ed4a6cd04071c410f))
+* **deps-dev:** bump lint-staged from 11.2.6 to 12.0.2 ([#467](https://github.com/makigas/makibot/issues/467)) ([72596ed](https://github.com/makigas/makibot/commit/72596ed621bfe097af4ed013ca056fc12d1b386a))
+* **deps-dev:** bump sinon from 11.1.2 to 12.0.1 ([#471](https://github.com/makigas/makibot/issues/471)) ([40df359](https://github.com/makigas/makibot/commit/40df359995744157c30137d89f1f920ee2ba272e))
+* **deps:** bump big-integer from 1.6.50 to 1.6.51 ([#472](https://github.com/makigas/makibot/issues/472)) ([b1c6f55](https://github.com/makigas/makibot/commit/b1c6f55f89f653141c96979b69477118d68273f5))
+* remove console.logs ([aad9dcd](https://github.com/makigas/makibot/commit/aad9dcd2b2ae41b42f996680ae10f968bcf1465d))
+
+
+### Refactor
+
+* cleanup logger ([4ba5e53](https://github.com/makigas/makibot/commit/4ba5e53426fd9fe425c51206f8d7b7490f885e01))
+
 ## [0.37.0](https://github.com/makigas/makibot/compare/v0.36.0...v0.37.0) (2021-11-10)
 
 
