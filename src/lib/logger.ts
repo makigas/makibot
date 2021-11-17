@@ -5,7 +5,7 @@ log4js.configure({
     stdout: { type: "stdout" },
   },
   categories: {
-    default: { appenders: ["stdout"], level: "debug" },
+    default: { appenders: ["stdout"], level: process.env.LOG_LEVEL || "debug" },
   },
 });
 

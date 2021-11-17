@@ -9,6 +9,7 @@ import { KarmaDatabase, openKarmaDatabase } from "./lib/karma/database";
 import { SettingProvider } from "./lib/provider";
 import { installCommandInteractionHandler } from "./lib/interaction";
 import { ModerationRepository, newModRepository } from "./lib/modlog/database";
+import logger from "./lib/logger";
 
 export default class Makibot extends Client {
   readonly antiraid: AntiRaid;
@@ -44,7 +45,9 @@ export default class Makibot extends Client {
 
     this.antiraid = new AntiRaid(this);
 
-    this.on("ready", () => console.log(`Logged in successfully as ${this.user.tag}.`));
+    this.on("ready", () => {
+      logger.info(`Logged in successfully as ${this.user.tag}.`);
+    });
 
     this.once("ready", () => {
       getDatabase()
@@ -90,9 +93,9 @@ export default class Makibot extends Client {
   }
 
   shutdown(exitCode = 0): void {
-    console.log("The bot was asked to shutdown.");
+    logger.info("The bot was asked to shutdown.");
     this.destroy();
-    console.log("Good night!");
+    logger.info("Good night!");
     process.exit(exitCode);
   }
 }
