@@ -18,7 +18,9 @@ export default class PrimoCommand implements CommandInteractionHandler {
     const n = command.options.getString("n", true);
     if (/^-?\d+$/g.test(n)) {
       const prime = bigInt(n);
-      if (this.isPrime(prime)) {
+      if (prime.lt(0)) {
+        return sendToast(command, `Vamos a dejarlo en que un negativo no debería ser primo`);
+      } else if (this.isPrime(prime)) {
         return sendToast(command, `Informamos que ${prime} es un número primo`);
       } else if (prime.mod(2).eq(0)) {
         return sendToast(command, `Deberías saber que un par nunca puede ser primo`);
@@ -26,7 +28,7 @@ export default class PrimoCommand implements CommandInteractionHandler {
         return sendToast(command, `No, ${prime} no es un número primo`);
       }
     } else {
-      return sendToast(command, `"${n}" no es exactamente un número`);
+      return sendToast(command, `"${n}" no es exactamente un número natural`);
     }
   }
 
