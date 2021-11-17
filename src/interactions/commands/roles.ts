@@ -8,7 +8,6 @@ export default class RolesCommand implements CommandInteractionHandler {
   async handle(event: CommandInteraction): Promise<void> {
     const member = await event.guild.members.fetch(event.user.id);
     const message = await createRolesMessage(member);
-    console.log(JSON.stringify(message));
     await event.reply({
       ...message,
       ephemeral: true,

@@ -140,7 +140,6 @@ class SqliteBaseModerationRepository implements ModerationRepository {
   }
 
   async evictAny(target: string, type: string): Promise<void> {
-    console.log(EXPIRE_ANY, [target, type]);
     await this.db.run(EXPIRE_ANY, [target, type]);
   }
 

@@ -47,7 +47,6 @@ export async function notifyPublicModlog(
   const guild = await client.guilds.fetch(event.guild);
   const server = new Server(guild);
   const webhookURL = server.tagbag.tag("webhook:publicmod").get(null);
-  console.log({ webhookURL });
   if (webhookURL) {
     const webhookClient = new WebhookClient({ url: webhookURL });
     return webhookClient.send({ content: message });
