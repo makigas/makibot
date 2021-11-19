@@ -5,6 +5,9 @@ FROM node:16-alpine
 RUN mkdir /makibot
 WORKDIR /makibot
 
+ARG VERSION_TAG
+ENV VERSION_TAG=${VERSION_TAG}
+
 # Server dependencies
 RUN apk add --no-cache --update dumb-init
 

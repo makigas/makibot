@@ -50,6 +50,9 @@ export default class Makibot extends Client {
     });
 
     this.once("ready", () => {
+      if (process.env.VERSION_TAG) {
+        this.user.setActivity({ name: process.env.VERSION_TAG });
+      }
       getDatabase()
         .then(async (db) => {
           this._modrepo = await newModRepository(db);
