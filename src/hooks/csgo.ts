@@ -49,19 +49,25 @@ const TOKENS = [
   /i'm tired of csgo/,
 
   // No one will give you nitro for free
-  /dicsord-nitro./,
-  /dlscord.gifts/,
-  /dlscord.help/,
+  //Alphabetical ordered list
+  //[a-z]
   /dlscord.info/,
   /dlscord.ink/,
-  /dlscord.pro/,
+  /dlscord.gifts/,
+  /discord.giveawey.com/,
   /dlscord.nitro/,
+  /dlscord.help/,
+  /dlscord.pro/,
   /discortnitosteam.online/,
   /discortnitosteam.online/,
+  //[-]
+  /discorcd-apps.com/,
+  /discord-help./,
+  /dicsord-nitro./,
   /dlscord-nitro./,
   /gave-nitro./,
-  /discord-help./,
-  /discord.giveawey.com/,
+  
+  
 
   // Update
   /rust-way.com/,
