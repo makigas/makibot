@@ -1,93 +1,119 @@
-import type { CommandInteraction, ContextMenuInteraction, Interaction, MessageComponentInteraction } from "discord.js";
+import type {
+  ButtonInteraction,
+  CommandInteraction,
+  ContextMenuInteraction,
+  Interaction,
+  SelectMenuInteraction,
+} from "discord.js";
 import path from "path";
-import requireAll from "require-all";
 import type Makibot from "../Makibot";
 import logger from "./logger";
+import { Index, mapBy } from "./utils/functional";
+import { requireAllModules } from "./utils/loader";
 
-export interface CommandInteractionHandler {
+/**
+ * An interaction handler is a class that manages the logic for a Discord
+ * Interaction. Interactions are the new system proposed by Discord so that
+ * users can request actions to happen from bots, instead of using text
+ * messages or reactions.
+ */
+interface BaseInteractionHandler {
+  /**
+   * The name of the interaction handler. It is supposed to be unique per
+   * interaction from withing the same kind (command, context, button,
+   * select...). Depending on the interaction kind, it will mean something
+   * different.
+   *
+   * - For command interactions, it is the name of the slash command.
+   * - For context menus, it is the label presented in the menu.
+   * - For components, it is the internal name sent in the payload.
+   */
   name: string;
-  handle(event: CommandInteraction | ContextMenuInteraction): Promise<void>;
 }
 
-export interface ComponentInteractionHandler {
-  name: string;
-  handle(event: MessageComponentInteraction): Promise<void>;
+export interface CommandInteractionHandler extends BaseInteractionHandler {
+  handle(event: CommandInteraction): Promise<void>;
 }
 
-function loadInteractions(path: string): any[] {
-  const interactions = requireAll({
-    dirname: path,
-    filter: /^([^.].*)\.[jt]s$/,
-  });
+export interface ContextMenuInteractionHandler extends BaseInteractionHandler {
+  handle(event: ContextMenuInteraction): Promise<void>;
+}
 
-  return Object.values(interactions).map((interaction) => {
-    if (interaction.default && typeof interaction.default === "function") {
-      /* close ES module resolution. */
-      interaction = interaction.default;
+export interface ButtonInteractionHandler extends BaseInteractionHandler {
+  handle(event: ButtonInteraction): Promise<void>;
+}
+
+export interface SelectMenuInteractionHandler extends BaseInteractionHandler {
+  handle(event: SelectMenuInteraction): Promise<void>;
+}
+
+function loadInteractions<T extends BaseInteractionHandler>(path: string): { [k: string]: T } {
+  const handlers = requireAllModules(path).map<T>((HandlerClass) => {
+    if (typeof HandlerClass === "function") {
+      const handler = new (HandlerClass as { new (): T })();
+      logger.debug(`[interactions] loaded interaction for ${handler.name}`);
+      return handler;
     }
-    return interaction;
   });
+  return mapBy(handlers, "name");
 }
 
-function loadCommandInteractions(path: string): { [name: string]: CommandInteractionHandler } {
-  logger.debug("[interactions] loading command interactions...");
-  const handlers = loadInteractions(path).map((interaction) => {
-    const instance: CommandInteractionHandler = new interaction();
-    logger.debug(`[interactions] loading command interaction: ${instance.name}`);
-    return [instance.name, instance];
-  });
-  logger.debug("[interactions] finished loading command interactions");
-  return Object.fromEntries(handlers);
-}
+export class InteractionManager {
+  private commands: Index<CommandInteractionHandler>;
+  private menus: Index<ContextMenuInteractionHandler>;
+  private selects: Index<SelectMenuInteractionHandler>;
+  private buttons: Index<ButtonInteractionHandler>;
 
-function loadComponentInteractions(path: string): { [name: string]: ComponentInteractionHandler } {
-  logger.debug("[interactions] loading component interactions...");
-  const handlers = loadInteractions(path).map((interaction) => {
-    const instance: ComponentInteractionHandler = new interaction();
-    logger.debug(`[interactions] loading component interaction: ${instance.name}`);
-    return [instance.name, instance];
-  });
-  logger.debug("[interactions] finished loading component interactions");
-  return Object.fromEntries(handlers);
-}
-
-export function installCommandInteractionHandler(root: string, client: Makibot): void {
-  const commands = loadCommandInteractions(path.join(root, "commands"));
-  const menus = loadCommandInteractions(path.join(root, "menus"));
-  const selects = loadComponentInteractions(path.join(root, "selects"));
-  const buttons = loadComponentInteractions(path.join(root, "buttons"));
-
-  function getCommandHandler(interaction: Interaction): CommandInteractionHandler | null {
-    if (interaction.isCommand()) {
-      return commands[interaction.commandName];
-    } else if (interaction.isContextMenu()) {
-      return menus[interaction.commandName];
-    }
-    return null;
+  constructor(readonly root: string, private readonly client: Makibot) {
+    this.commands = loadInteractions(path.join(root, "commands"));
+    this.menus = loadInteractions(path.join(root, "menus"));
+    this.selects = loadInteractions(path.join(root, "selects"));
+    this.buttons = loadInteractions(path.join(root, "buttons"));
+    client.on("interactionCreate", this.handleInteraction.bind(this));
   }
 
-  function getComponentHandler(interaction: Interaction): ComponentInteractionHandler | null {
-    if (interaction.isSelectMenu()) {
-      return selects[interaction.customId];
-    } else if (interaction.isButton()) {
-      return buttons[interaction.customId];
-    }
-    return null;
-  }
-
-  client.on("interactionCreate", (interaction) => {
+  private async handleInteraction(interaction: Interaction): Promise<void> {
     logger.debug("[interactions] received interaction", interaction);
 
-    if (interaction.isCommand() || interaction.isContextMenu()) {
-      const handler = getCommandHandler(interaction);
-      if (handler) {
-        handler.handle(interaction);
-      }
-    } else if (interaction.isSelectMenu() || interaction.isButton()) {
-      const handler = getComponentHandler(interaction);
-      if (handler) {
-        handler.handle(interaction);
-      }
+    if (interaction.isCommand()) {
+      await this.handleCommandInteraction(interaction);
     }
-  });
+    if (interaction.isContextMenu()) {
+      await this.handleContextMenuInteraction(interaction);
+    }
+    if (interaction.isSelectMenu()) {
+      await this.handleSelectMenuInteraction(interaction);
+    }
+    if (interaction.isButton()) {
+      await this.handleButtonInteraction(interaction);
+    }
+  }
+
+  private async handleCommandInteraction(interaction: CommandInteraction): Promise<void> {
+    const handler = this.commands[interaction.commandName];
+    if (handler) {
+      await handler.handle(interaction);
+    }
+  }
+
+  private async handleContextMenuInteraction(interaction: ContextMenuInteraction): Promise<void> {
+    const handler = this.menus[interaction.commandName];
+    if (handler) {
+      await handler.handle(interaction);
+    }
+  }
+
+  private async handleSelectMenuInteraction(interaction: SelectMenuInteraction): Promise<void> {
+    const handler = this.selects[interaction.customId];
+    if (handler) {
+      await handler.handle(interaction);
+    }
+  }
+
+  private async handleButtonInteraction(interaction: ButtonInteraction): Promise<void> {
+    const handler = this.buttons[interaction.customId];
+    if (handler) {
+      await handler.handle(interaction);
+    }
+  }
 }

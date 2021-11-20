@@ -1,7 +1,7 @@
 import { ButtonInteraction } from "discord.js";
-import { ComponentInteractionHandler } from "../../lib/interaction";
+import { ButtonInteractionHandler } from "../../lib/interaction";
 
-export default class CancelModRequest implements ComponentInteractionHandler {
+export default class CancelModRequest implements ButtonInteractionHandler {
   name = "keepMessageModRequest";
 
   async handle(event: ButtonInteraction): Promise<void> {

@@ -7,7 +7,7 @@ import AntiRaid from "./lib/antiraid";
 import { HookManager } from "./lib/hook";
 import { KarmaDatabase, openKarmaDatabase } from "./lib/karma/database";
 import { SettingProvider } from "./lib/provider";
-import { installCommandInteractionHandler } from "./lib/interaction";
+import { InteractionManager } from "./lib/interaction";
 import { ModerationRepository, newModRepository } from "./lib/modlog/database";
 import logger from "./lib/logger";
 
@@ -18,12 +18,13 @@ export default class Makibot extends Client {
 
   private _provider: SettingProvider;
 
-  private _manager: HookManager;
+  private _hooks: HookManager;
+  private _interactions: InteractionManager;
 
   private _modrepo: ModerationRepository;
 
   public get manager(): HookManager {
-    return this._manager;
+    return this._hooks;
   }
 
   public constructor() {
@@ -65,8 +66,8 @@ export default class Makibot extends Client {
             .then((db) => (this._karma = db));
         })
         .then(() => {
-          this._manager = new HookManager(path.join(__dirname, "hooks"), this);
-          installCommandInteractionHandler(path.join(__dirname, "interactions"), this);
+          this._hooks = new HookManager(path.join(__dirname, "hooks"), this);
+          this._interactions = new InteractionManager(path.join(__dirname, "interactions"), this);
         })
         .then(() => {
           // Init the antiraid engine.

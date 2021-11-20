@@ -1,10 +1,10 @@
 import { MessageComponentInteraction, SelectMenuInteraction } from "discord.js";
-import { ComponentInteractionHandler } from "../../lib/interaction";
+import { SelectMenuInteractionHandler } from "../../lib/interaction";
 import { ModReport, renderMenuComponents } from "../../lib/modlog/report";
 import { createToast } from "../../lib/response";
 import Server from "../../lib/server";
 
-export default class ModMenuAlert implements ComponentInteractionHandler {
+export default class ModMenuAlert implements SelectMenuInteractionHandler {
   name = "modmenu_alert";
 
   async handle(event: SelectMenuInteraction): Promise<void> {

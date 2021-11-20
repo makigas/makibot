@@ -1,10 +1,10 @@
 import { ButtonInteraction, MessageActionRow } from "discord.js";
-import { ComponentInteractionHandler } from "../../lib/interaction";
+import { ButtonInteractionHandler } from "../../lib/interaction";
 import { createKarmaToast } from "../../lib/karma";
 import Member from "../../lib/member";
 import { getExplainButton } from "./karmaExplain";
 
-export default class KarmaButton implements ComponentInteractionHandler {
+export default class KarmaButton implements ButtonInteractionHandler {
   name = "karma_button";
 
   async handle(event: ButtonInteraction): Promise<void> {
