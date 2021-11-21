@@ -54,28 +54,6 @@ export default class Client {
     return response.data as unknown as MemberKarmaJSON;
   }
 
-  async raidModeStatus(): Promise<boolean> {
-    const response = await this.client.get("/antiraid");
-    if (response.status !== 200) {
-      throw new Error(`${response.statusText}: ${response.data}`);
-    }
-    return (response.data as { antiraid: boolean }).antiraid;
-  }
-
-  async setRaidMode(mode: boolean): Promise<void> {
-    if (mode) {
-      const response = await this.client.post("/antiraid");
-      if (response.status !== 200) {
-        throw new Error(`${response.statusText}: ${response.data}`);
-      }
-    } else {
-      const response = await this.client.delete("/antiraid");
-      if (response.status !== 200) {
-        throw new Error(`${response.statusText}: ${response.data}`);
-      }
-    }
-  }
-
   async guilds(): Promise<Partial<ServerJSONSchema>[]> {
     const response = await this.client.get("/guilds");
     return response.data as Partial<ServerJSONSchema>[];

@@ -3,7 +3,6 @@ import { Client, Intents } from "discord.js";
 
 import ConfigSchema from "./ConfigSchema";
 import { getDatabase, getKarmaDatabase } from "./settings";
-import AntiRaid from "./lib/antiraid";
 import { HookManager } from "./lib/hook";
 import { KarmaDatabase, openKarmaDatabase } from "./lib/karma/database";
 import { SettingProvider } from "./lib/provider";
@@ -12,8 +11,6 @@ import { ModerationRepository, newModRepository } from "./lib/modlog/database";
 import logger from "./lib/logger";
 
 export default class Makibot extends Client {
-  readonly antiraid: AntiRaid;
-
   private _karma: KarmaDatabase;
 
   private _provider: SettingProvider;
@@ -44,8 +41,6 @@ export default class Makibot extends Client {
       partials: ["MESSAGE", "REACTION", "GUILD_MEMBER"],
     });
 
-    this.antiraid = new AntiRaid(this);
-
     this.on("ready", () => {
       logger.info(`Logged in successfully as ${this.user.tag}.`);
     });
@@ -68,10 +63,6 @@ export default class Makibot extends Client {
         .then(() => {
           this._hooks = new HookManager(path.join(__dirname, "hooks"), this);
           this._interactions = new InteractionManager(path.join(__dirname, "interactions"), this);
-        })
-        .then(() => {
-          // Init the antiraid engine.
-          this.antiraid.init();
         })
         .catch(console.log);
     });

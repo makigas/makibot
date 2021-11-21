@@ -1,7 +1,6 @@
 import express from "express";
 import Makibot from "../../Makibot";
 
-import antiraidMiddleware from "./middlewares/antiraid";
 import guildMiddleware from "./middlewares/guild";
 
 /**
@@ -39,7 +38,6 @@ export default function serverFactory(makibot: Makibot): express.Express {
     );
   });
 
-  app.use("/antiraid", antiraidMiddleware(makibot));
   app.use("/guilds/:guild", guildMiddleware(makibot));
 
   return app;
