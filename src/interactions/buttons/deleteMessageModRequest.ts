@@ -1,9 +1,9 @@
 import { ButtonInteraction, TextBasedChannels } from "discord.js";
-import { ComponentInteractionHandler } from "../../lib/interaction";
+import { ButtonInteractionHandler } from "../../lib/interaction";
 import { ModReport } from "../../lib/modlog/report";
 import Server from "../../lib/server";
 
-export default class CancelModRequest implements ComponentInteractionHandler {
+export default class CancelModRequest implements ButtonInteractionHandler {
   name = "deleteMessageModRequest";
 
   async handle(event: ButtonInteraction): Promise<void> {

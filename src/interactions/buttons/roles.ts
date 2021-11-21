@@ -1,8 +1,8 @@
 import { ButtonInteraction } from "discord.js";
-import { ComponentInteractionHandler } from "../../lib/interaction";
+import { ButtonInteractionHandler } from "../../lib/interaction";
 import { createRolesMessage } from "../../lib/makigas/roles";
 
-export default class RolesButton implements ComponentInteractionHandler {
+export default class RolesButton implements ButtonInteractionHandler {
   name = "roles_button";
 
   async handle(event: ButtonInteraction): Promise<void> {

@@ -1,10 +1,10 @@
 import { ButtonInteraction } from "discord.js";
-import { ComponentInteractionHandler } from "../../lib/interaction";
+import { ButtonInteractionHandler } from "../../lib/interaction";
 import { ReportModlogEvent } from "../../lib/modlog";
 import { ModReport } from "../../lib/modlog/report";
 import Server from "../../lib/server";
 
-export default class ProposeModRequest implements ComponentInteractionHandler {
+export default class ProposeModRequest implements ButtonInteractionHandler {
   name = "proposeModRequest";
 
   async handle(event: ButtonInteraction): Promise<void> {

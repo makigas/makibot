@@ -1,12 +1,12 @@
 import { ButtonInteraction, MessageActionRow, MessageButton, TextBasedChannels } from "discord.js";
-import { ComponentInteractionHandler } from "../../lib/interaction";
+import { ButtonInteractionHandler } from "../../lib/interaction";
 import { getReportReason, ModReport } from "../../lib/modlog/report";
 import Server from "../../lib/server";
 import applyWarn from "../../lib/warn";
 import { userMention } from "@discordjs/builders";
 import { createToast } from "../../lib/response";
 
-export default class CancelModRequest implements ComponentInteractionHandler {
+export default class CancelModRequest implements ButtonInteractionHandler {
   name = "applyModRequest";
 
   async handle(event: ButtonInteraction): Promise<void> {

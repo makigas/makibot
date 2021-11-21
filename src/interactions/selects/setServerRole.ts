@@ -1,12 +1,12 @@
-import { MessageComponentInteraction, SelectMenuInteraction } from "discord.js";
-import { ComponentInteractionHandler } from "../../lib/interaction";
+import { SelectMenuInteraction } from "discord.js";
+import { SelectMenuInteractionHandler } from "../../lib/interaction";
 import { createRolesMessage, ROLE_DEFINITIONS } from "../../lib/makigas/roles";
 
 function difference(a: string[], b: string[]): string[] {
   return a.filter((i) => !b.includes(i));
 }
 
-export default class ModMenuAlert implements ComponentInteractionHandler {
+export default class ModMenuAlert implements SelectMenuInteractionHandler {
   name = "Set server role";
 
   async handle(event: SelectMenuInteraction): Promise<void> {

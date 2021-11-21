@@ -1,5 +1,5 @@
 import { ButtonInteraction, MessageButton } from "discord.js";
-import { ComponentInteractionHandler } from "../../lib/interaction";
+import { ButtonInteractionHandler } from "../../lib/interaction";
 import { createToast } from "../../lib/response";
 
 const TEXT = `
@@ -40,7 +40,7 @@ export function getExplainButton(): MessageButton {
   });
 }
 
-export default class KarmaButton implements ComponentInteractionHandler {
+export default class KarmaButton implements ButtonInteractionHandler {
   name = "karma_explain_button";
 
   async handle(event: ButtonInteraction): Promise<void> {

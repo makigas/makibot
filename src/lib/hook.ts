@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import {
   GuildBan,
   GuildMember,
@@ -11,9 +10,9 @@ import {
   User,
   VoiceState,
 } from "discord.js";
-import requireAll from "require-all";
 import Makibot from "../Makibot";
 import logger from "./logger";
+import { requireAllModules } from "./utils/loader";
 
 export interface Hook {
   /* The identifier of the hook. */
@@ -43,33 +42,9 @@ export interface Hook {
   onVoiceStateUpdate?: (oldStatus: VoiceState, newStatus: VoiceState) => Promise<void>;
 }
 
-/**
- * This function will require and prepare the hooks in the given directory.
- * It will return an array with all the loaded classes that are available to
- * use within the hook manager.
- */
-function requireAllHooks(client: Makibot, path: string): Hook[] {
-  const required = requireAll({
-    dirname: path,
-    filter: /^([^.].*)\.[jt]s$/,
-  });
-  return Object.entries(required)
-    .map(([id, klass]) => {
-      try {
-        if (klass.default && typeof klass.default === "function") {
-          /* This is an ES Module, close the definition. */
-          klass = klass.default;
-        }
-        const instance: Hook = new klass(client);
-        logger.debug(`[hooks] loaded hook: ${instance.name}`);
-        return instance;
-      } catch (e) {
-        logger.error(`[hooks] failed load hook ${id}: ${e}`);
-        return null;
-      }
-    })
-    .filter(Boolean);
-}
+type HookConstructor = {
+  new (client?: Makibot): Hook;
+};
 
 /**
  * Filters the message to validate if it is safe to process. Messages coming from bots,
@@ -81,13 +56,57 @@ function requireAllHooks(client: Makibot, path: string): Hook[] {
  * @returns true unless the message comes from an unprocessable agent
  */
 function isProcessableMessage(message: Message | PartialMessage): boolean {
-  return !(message.author.bot || !!message.interaction || message.flags.has("EPHEMERAL"));
+  return !message.interaction && !message.webhookId && !message.flags.has("EPHEMERAL");
+}
+
+/**
+ * This function looks weird, but it serves the purpose of testing that this is a valid
+ * hook (in other words, no weird file has been added in src/hooks by mistake), and also
+ * is useful to coerce types so that TypeScript does not complain.
+ */
+function isValidHookConstructor(object: unknown): object is HookConstructor {
+  return object && typeof object === "function";
+}
+
+/**
+ * Loads all the hooks in order to setup the hook manager.
+ * @param client the instance of Makibot - will be passed to service constructors
+ * @param path the path where the services are stored in the source code
+ * @returns an array with all the loaded services that can be used
+ */
+function requireAllHooks(client: Makibot, path: string): Hook[] {
+  const modules = requireAllModules(path);
+  return modules
+    .map((Service) => {
+      if (isValidHookConstructor(Service)) {
+        const instance: Hook = new Service(client);
+        logger.debug(`[hooks] loaded hook ${instance.name}`);
+        return instance;
+      }
+    })
+    .filter(Boolean);
 }
 
 export class HookManager {
   private watchdog: { [name: string]: Hook } = {};
 
   private services: Hook[];
+
+  constructor(path: string, client: Makibot) {
+    this.services = requireAllHooks(client, path);
+    logger.debug("[hooks] finished registering services");
+
+    /* Register global entrypoints. */
+    client.on("messageCreate", this.onMessageCreate.bind(this));
+    client.on("messageUpdate", this.onMessageUpdate.bind(this));
+    client.on("messageDelete", this.onMessageDelete.bind(this));
+    client.on("messageReactionAdd", this.onMessageReactionAdd.bind(this));
+    client.on("messageReactionRemove", this.onMessageReactionRemove.bind(this));
+    client.on("messageReactionRemoveAll", this.onMessageReactionRemoveAll.bind(this));
+    client.on("guildMemberAdd", this.onGuildMemberAdd.bind(this));
+    client.on("guildMemberRemove", this.onGuildMemberRemove.bind(this));
+    client.on("voiceStateUpdate", this.onVoiceStateUpdate.bind(this));
+  }
 
   /**
    * Filters the list of services looking for the ones that implement a specific function.
@@ -194,22 +213,6 @@ export class HookManager {
       logger.debug(`[hooks] processing ${handler.name}(onVoiceStateUpdate)`);
       await handler.onVoiceStateUpdate(oldState, newState);
     }
-  }
-
-  constructor(path: string, client: Makibot) {
-    this.services = requireAllHooks(client, path);
-    logger.debug("[hooks] finished registering services");
-
-    /* Register global entrypoints. */
-    client.on("messageCreate", this.onMessageCreate.bind(this));
-    client.on("messageUpdate", this.onMessageUpdate.bind(this));
-    client.on("messageDelete", this.onMessageDelete.bind(this));
-    client.on("messageReactionAdd", this.onMessageReactionAdd.bind(this));
-    client.on("messageReactionRemove", this.onMessageReactionRemove.bind(this));
-    client.on("messageReactionRemoveAll", this.onMessageReactionRemoveAll.bind(this));
-    client.on("guildMemberAdd", this.onGuildMemberAdd.bind(this));
-    client.on("guildMemberRemove", this.onGuildMemberRemove.bind(this));
-    client.on("voiceStateUpdate", this.onVoiceStateUpdate.bind(this));
   }
 
   restart(name: string): void {
