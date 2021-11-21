@@ -5,6 +5,9 @@ nav_order: 2
 parent: Desarrollo
 ---
 
+1. Tabla de contenidos
+{:toc}
+
 ## Cómo funcionan las interacciones
 
 Las interacciones es el sistema que Discord desea que los bots usen para comportarse en servidores de aquí a futuro.

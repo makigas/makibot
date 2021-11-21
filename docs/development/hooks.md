@@ -5,6 +5,9 @@ nav_order: 1
 parent: Desarrollo
 ---
 
+1. Tabla de contenidos
+{:toc}
+
 ## ¿Qué es un hook?
 
 Un hook es una clase que contiene cierta lógica que debe dispararse en momentos puntuales dentro del ciclo de vida del bot.
