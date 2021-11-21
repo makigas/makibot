@@ -1,8 +1,23 @@
 import { expect } from "chai";
 import "mocha";
-import { containsSpamLink } from "../../src/hooks/csgo";
+import { containsSpamLink, isAirdrop } from "../../src/hooks/csgo";
 
 describe("antispam system", () => {
+  describe("isAirdrop", () => {
+    it("catches examples", () => {
+      const cases = [
+        "@everyone NEW Discord nitro AIRDROP FROM STEAM - https://discord.com",
+        "@everyone\nAirdrop Discord NITRO with Steam\nhttps://discord.com",
+        "@everyone Discord Nitro for Free - Steam Store Discord nitro distribution Get 3 monts of Discord Nitro. Offer ends September 5, 2021 at 11 am EDT, Personalize your profile, screen share in HD, upgrade your emojis, and more!https://discord.com",
+        "@everyone\nDistribution of nitro from STEAM.\nGet 3 Months of Nitro Discord. Hurry up the offer ends on August 31, 2021 at 11:00 am ET. Customize your profile, share your HD screen, boost your server, update your emojis, and more! https://discord.com",
+      ];
+
+      for (const strcase of cases) {
+        expect(isAirdrop(strcase)).to.be.true;
+      }
+    });
+  });
+
   describe("trigger rules", () => {
     it("catches obvious", () => {
       expect(containsSpamLink("for example dlscord.gifts is spam")).to.be.true;

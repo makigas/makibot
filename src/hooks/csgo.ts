@@ -1,6 +1,8 @@
+import { tokenToDate } from "datetoken";
 import { Message } from "discord.js";
 import { Hook } from "../lib/hook";
 import Member from "../lib/member";
+import { ModEvent, ModEventType } from "../lib/modlog/types";
 import { createToast } from "../lib/response";
 import Server from "../lib/server";
 import applyWarn from "../lib/warn";
@@ -66,8 +68,6 @@ const TOKENS = [
   /dicsord-nitro./,
   /dlscord-nitro./,
   /gave-nitro./,
-  
-  
 
   // Update
   /rust-way.com/,
@@ -99,12 +99,77 @@ const TOKENS = [
   /https?:\/\/(.*)@everyone/,
 ];
 
+/**
+ * Test whether the message is a classic "Nitro airdrop" spam message.
+ * Research shows that these kind of messages usually mention "@everyone"
+ * or "@here", and also contain the following words: Discord, Nitro,
+ * Steam, and a link.
+ *
+ * @param message the message contents that we have just received.
+ */
+export function isAirdrop(message: string) {
+  const contains = (word: string): boolean => message.toLowerCase().indexOf(word) > -1;
+  const mentions = ["@everyone", "@here"].some(contains);
+  const containsMagicWords = ["discord", "nitro", "steam"].every(contains);
+  const hasLink = ["http://", "https://"].some(contains);
+  return mentions && containsMagicWords && hasLink;
+}
+
 export function containsSpamLink(content: string): boolean {
   return TOKENS.some((token) => token.test(content));
 }
 
+function castExpirationDate(expires?: string): Date {
+  try {
+    return tokenToDate(expires);
+  } catch (e) {
+    return null; // do not expire - handles null too
+  }
+}
+
+const newModEvent = (
+  message: Message,
+  type: ModEventType,
+  reason: string,
+  expires?: string
+): ModEvent => ({
+  createdAt: new Date(),
+  expired: false,
+  guild: message.guildId,
+  type,
+  mod: message.client.user.id,
+  reason,
+  target: message.author.id,
+  expiresAt: castExpirationDate(expires),
+});
+
+async function author(message: Message): Promise<Member> {
+  const server = new Server(message.guild);
+  return await server.member(message.author.id);
+}
+
+async function verifiedAuthor(member: Member): Promise<boolean> {
+  if (member.moderator || member.user.bot) {
+    return true;
+  }
+  const karma = await member.getKarma();
+  return karma.level >= 10;
+}
+
 export default class CsgoService implements Hook {
   name = "csgo";
+
+  async onPremoderateMessage(message: Message): Promise<ModEvent | null> {
+    const member = await author(message);
+    const verified = await verifiedAuthor(member);
+    if (!verified) {
+      const content = message.cleanContent;
+      if (isAirdrop(content)) {
+        return newModEvent(message, "BAN", "Airdrop spam");
+      }
+    }
+    return null;
+  }
 
   private async handleMatch(message: Message, member: Member): Promise<void> {
     /* Warn and mute the participant. */

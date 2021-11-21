@@ -115,6 +115,7 @@ export default class MyHook implements Hook {
 Esta es una lista de las funciones y los prototipos de referencia:
 
 * `onMessageCreate(message)`: Se ejecuta cuando se recibe un mensaje nuevo, en un servidor o por mensaje privado. Recibe como parámetro el mensaje.
+* `onPremoderateMessage(message)`: Se ejecuta cuando se recibe un mensaje nuevo antes de llamar a onMessageCreate, para aquellos servicios que lo implementen. Esta función debe devolver una promesa que resuelva a null si el mensaje es seguro. Si un servicio detecta que un mensaje debe ser moderado automáticamente (porque tiene spam), debe devolver directamente un payload ModEvent. Cuando una función devuelve un ModEvent, el mensaje se modera automáticamente y es eliminado, sin llamar a onMessageCreate.
 * `onMessageUpdate(oldMessage, newMessage)`: Se ejecuta cuando se modifica un mensaje que el bot previamente haya podido ver. Recibe como parámetros el viejo mensaje y el nuevo mensaje. Por ejemplo, si ha cambiado de contenido, podrá comparar `oldMessage.cleanContent` con `newMessage.cleanContent`.
 * `onmessageDestroy(message)`: Se ejecuta cuando se elimina un mensaje que el bot previamente haya recibido haya sido eliminado. **El mensaje es parcial**. No trates de hacer un `fetch()` porque la API te va a devolver HTTP 404.
 * `onMessageReactionAdd(reaction, user)`: Se ejecuta cuando un usuario (`user`) reacciona (`reaction`) a un mensaje (`reaction.message`).

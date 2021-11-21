@@ -12,6 +12,9 @@ import {
 } from "discord.js";
 import Makibot from "../Makibot";
 import logger from "./logger";
+import { applyAction } from "./modlog/actions";
+import { notifyPublicModlog } from "./modlog/notifications";
+import { ModEvent } from "./modlog/types";
 import { requireAllModules } from "./utils/loader";
 
 export interface Hook {
@@ -23,6 +26,8 @@ export interface Hook {
 
   /** Callback to ask the hook to restart itself. */
   restart?: () => void;
+
+  onPremoderateMessage?: (message: Message) => Promise<ModEvent | null>;
 
   onMessageCreate?: (message: Message) => Promise<void>;
   onMessageUpdate?: (
@@ -92,7 +97,7 @@ export class HookManager {
 
   private services: Hook[];
 
-  constructor(path: string, client: Makibot) {
+  constructor(path: string, private client: Makibot) {
     this.services = requireAllHooks(client, path);
     logger.debug("[hooks] finished registering services");
 
@@ -119,11 +124,38 @@ export class HookManager {
 
   async onMessageCreate(message: Message): Promise<void> {
     if (isProcessableMessage(message)) {
-      const handlers = this.filterServices("onMessageCreate");
-      for (const handler of handlers) {
-        logger.debug(`[hooks] processing ${handler.name}(messageCreate)`);
-        await handler.onMessageCreate(message);
+      const modEvent = await this.scanMessage(message);
+      if (modEvent) {
+        logger.info("[hooks] message prescreening found a positive. moderating...");
+
+        /* Report message. */
+        const persistedEvent = await applyAction(this.client, modEvent);
+        await message.delete();
+        await notifyPublicModlog(this.client, persistedEvent);
+      } else {
+        /* Message is safe. Continue. */
+        await this.onSafeMessageCreate(message);
       }
+    }
+  }
+
+  private async scanMessage(message: Message): Promise<ModEvent | null> {
+    const handlers = this.filterServices("onPremoderateMessage");
+    for (const handler of handlers) {
+      logger.debug(`[hooks] processing ${handler.name}(onPremoderateMessage)`);
+      const output = await handler.onPremoderateMessage(message);
+      if (output) {
+        return output;
+      }
+    }
+    return null;
+  }
+
+  private async onSafeMessageCreate(message: Message): Promise<void> {
+    const handlers = this.filterServices("onMessageCreate");
+    for (const handler of handlers) {
+      logger.debug(`[hooks] processing ${handler.name}(messageCreate)`);
+      await handler.onMessageCreate(message);
     }
   }
 
