@@ -1,6 +1,4 @@
-import { GuildMember, MessageEmbed } from "discord.js";
-import Member, { KarmaStats } from "./member";
-import { createToast } from "./response";
+import { GuildMember } from "discord.js";
 
 export function canReceivePoints(gm: GuildMember): boolean {
   return gm && !gm.user.bot;
@@ -72,54 +70,4 @@ export function getLevelV2(points: number): number {
   } while (pts <= points);
 
   return level - 1;
-}
-
-function getKarmaPrivileges(stats: KarmaStats): string {
-  const boolToEmoji = (bool: boolean) => bool ? "✅" : "❌";
-  const privileges: [name: string, status: boolean][] = [
-    ["Envío de mensajes (requiere nivel 0)", stats.level >= 0],
-    ["Confianza del sistema antispam (requiere nivel 2)", stats.level >= 2],
-    ["Enviar mensajes en #hice-esto (requiere nivel 2)", stats.level >= 2],
-    ["Enviar enlaces a #enlaces (requiere nivel 5)", stats.level >= 5],
-  ];
-  return "**Privilegios**:\n" + privileges.map(([name, status]) => `${boolToEmoji(status)} ${name}`).join('\n');
-}
-
-export async function createKarmaToast(member: Member, sudo = false): Promise<MessageEmbed> {
-  const stats = await member.getKarma();
-  const nextLevel = getPointsForLevelV2(stats.level + 1);
-
-  const baseStats = [
-    `**🪙 Puntos**: ${stats.points}`,
-    `**🏅 Nivel**: ${stats.level}`,
-    `**🔜 Próximo nivel en**: ${nextLevel - stats.points}`,
-  ].join('\n');
-
-  const sudoStats = [
-    "**Modo depuración**",
-    `**💬 Mensajes**: ${stats.messages}`,
-    `**⏩ Offset**: ${stats.offset}`,
-    `**Reacciones**: ` + [
-      `👍 ${stats.upvotes}`,
-      `👎 ${stats.downvotes}`,
-      `⭐ ${stats.stars}`,
-      `❤️ ${stats.hearts}`,
-      `👋 ${stats.waves}`,
-    ].join(" / "),
-  ].join('\n');
-
-  const privileges = getKarmaPrivileges(stats);
-
-  const description = [
-    baseStats,
-    sudo && sudoStats,
-    privileges,
-  ].filter(Boolean).join('\n\n');
-
-  return createToast({
-    title: `Reputación de @${member.user.username}`,
-    target: member.user,
-    severity: "info",
-    description,
-  });
 }

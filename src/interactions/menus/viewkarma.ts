@@ -1,40 +1,21 @@
-import { CommandInteraction, MessageActionRow } from "discord.js";
+import { CommandInteraction } from "discord.js";
 import type { CommandInteractionHandler } from "../../lib/interaction";
-import { createKarmaToast } from "../../lib/karma";
+import { handleKarmaInteraction } from "../../lib/karma/interaction";
 import { createToast } from "../../lib/response";
-import Server from "../../lib/server";
-import { getExplainButton } from "../buttons/karmaExplain";
 
 export default class ViewKarmaCommand implements CommandInteractionHandler {
   name = "Ver karma";
 
   async handle(event: CommandInteraction): Promise<void> {
-    await event.deferReply({ ephemeral: true });
-
-    const value = String(event.options.get("user").value);
-    const server = new Server(event.guild);
-    const member = await server.member(value);
-    const dispatcher = await server.member(event.member.user.id);
-
-    if (member.user.bot) {
-      const toast = createToast({
-        title: `Balance de karma de @${member.user.username}`,
-        description: "Este usuario es un bot y no tiene karma",
-        severity: "error",
-      });
-      await event.editReply({
-        embeds: [toast],
-      });
-    } else {
-      const report = await createKarmaToast(member, dispatcher.moderator);
-      await event.editReply({
-        embeds: [report],
-        components: [
-          new MessageActionRow({
-            components: [getExplainButton()],
-          }),
-        ],
-      });
+    if (event.inGuild()) {
+      const value = String(event.options.get("user").value);
+      return handleKarmaInteraction(event, value);
     }
+    const toast = createToast({
+      title: "Comando no apto para DM",
+      description: "Este comando sólo se puede usar en una guild",
+      severity: "error",
+    });
+    return event.reply({ embeds: [toast] });
   }
 }
