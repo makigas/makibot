@@ -1,16 +1,20 @@
 import { ButtonInteraction } from "discord.js";
 import { ButtonInteractionHandler } from "../../lib/interaction";
-import { createRolesMessage } from "../../lib/makigas/roles";
+import { startRoleManager } from "../../lib/makigas/roles";
+import { createToast } from "../../lib/response";
 
 export default class RolesButton implements ButtonInteractionHandler {
   name = "roles_button";
 
   async handle(event: ButtonInteraction): Promise<void> {
-    const member = await event.guild.members.fetch(event.user.id);
-    const message = await createRolesMessage(member);
-    await event.reply({
-      ...message,
-      ephemeral: true,
+    if (event.inGuild()) {
+      return startRoleManager(event);
+    }
+    const toast = createToast({
+      title: "Comando no apto para DM",
+      description: "Este comando sólo se puede usar en una guild",
+      severity: "error",
     });
+    return event.reply({ embeds: [toast] });
   }
 }
