@@ -25,10 +25,12 @@ describe("antispam system", () => {
 
     it("handles odd domains", () => {
       expect(containsSpamLink("discordapp.click is a fake site")).to.be.true;
+      expect(containsSpamLink("discordapp-click is a fake site")).to.be.false;
       expect(containsSpamLink("discordapp.com is a safe site")).to.be.false;
       expect(containsSpamLink("but media.discordapp.net should be safe")).to.be.false;
       expect(containsSpamLink("watch out for media.discordapp.nitro !!")).to.be.true;
       expect(containsSpamLink("visit discord-app.com/foo for your prize")).to.be.true;
+      expect(containsSpamLink("visit discord-appAcom/foo for your prize")).to.be.false;
     });
 
     it("handles free text strings", () => {
@@ -37,6 +39,7 @@ describe("antispam system", () => {
 
     it("bans any domain containing .ru", () => {
       expect(containsSpamLink("checkout http://example.ru/spam")).to.be.true;
+      expect(containsSpamLink("checkout http://example.guru/spam")).to.be.false;
     });
   });
 });
