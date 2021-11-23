@@ -3,7 +3,6 @@ import type {
   CommandInteraction,
   ContextMenuInteraction,
   Interaction,
-  SelectMenuInteraction,
 } from "discord.js";
 import path from "path";
 import type Makibot from "../Makibot";
@@ -43,10 +42,6 @@ export interface ButtonInteractionHandler extends BaseInteractionHandler {
   handle(event: ButtonInteraction): Promise<void>;
 }
 
-export interface SelectMenuInteractionHandler extends BaseInteractionHandler {
-  handle(event: SelectMenuInteraction): Promise<void>;
-}
-
 function loadInteractions<T extends BaseInteractionHandler>(path: string): { [k: string]: T } {
   const handlers = requireAllModules(path).map<T>((HandlerClass) => {
     if (typeof HandlerClass === "function") {
@@ -61,13 +56,11 @@ function loadInteractions<T extends BaseInteractionHandler>(path: string): { [k:
 export class InteractionManager {
   private commands: Index<CommandInteractionHandler>;
   private menus: Index<ContextMenuInteractionHandler>;
-  private selects: Index<SelectMenuInteractionHandler>;
   private buttons: Index<ButtonInteractionHandler>;
 
   constructor(readonly root: string, private readonly client: Makibot) {
     this.commands = loadInteractions(path.join(root, "commands"));
     this.menus = loadInteractions(path.join(root, "menus"));
-    this.selects = loadInteractions(path.join(root, "selects"));
     this.buttons = loadInteractions(path.join(root, "buttons"));
     client.on("interactionCreate", this.handleInteraction.bind(this));
   }
@@ -80,9 +73,6 @@ export class InteractionManager {
     }
     if (interaction.isContextMenu()) {
       await this.handleContextMenuInteraction(interaction);
-    }
-    if (interaction.isSelectMenu()) {
-      await this.handleSelectMenuInteraction(interaction);
     }
     if (interaction.isButton()) {
       await this.handleButtonInteraction(interaction);
@@ -98,13 +88,6 @@ export class InteractionManager {
 
   private async handleContextMenuInteraction(interaction: ContextMenuInteraction): Promise<void> {
     const handler = this.menus[interaction.commandName];
-    if (handler) {
-      await handler.handle(interaction);
-    }
-  }
-
-  private async handleSelectMenuInteraction(interaction: SelectMenuInteraction): Promise<void> {
-    const handler = this.selects[interaction.customId];
     if (handler) {
       await handler.handle(interaction);
     }

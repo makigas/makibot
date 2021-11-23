@@ -8,9 +8,7 @@ import {
   PartialGuildMember,
   PartialMessage,
 } from "discord.js";
-import { channelMention, userMention } from "@discordjs/builders";
 import humanizeDuration from "humanize-duration";
-import { getReportReason, ModReport } from "./modlog/report";
 
 interface EmbedField {
   name: string;
@@ -252,45 +250,6 @@ export class WarnModlogEvent extends ModlogEvent {
       });
     }
     return fields;
-  }
-}
-
-export class ReportModlogEvent extends ModlogEvent {
-  constructor(private report: ModReport) {
-    super();
-  }
-
-  title(): string {
-    return "Se ha alertado sobre un mensaje inapropiado";
-  }
-
-  icon(): string {
-    return "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/twitter/282/triangular-flag_1f6a9.png";
-  }
-
-  color(): number {
-    return 0xde2a42;
-  }
-
-  fields(): EmbedField[] {
-    return [
-      {
-        name: "Usuario",
-        value: userMention(this.report.message.author.id) + " " + this.report.message.author.id,
-      },
-      {
-        name: "Mensaje",
-        value: this.report.message.content,
-      },
-      {
-        name: "Canal",
-        value: channelMention(this.report.report.channel),
-      },
-      {
-        name: "Razón",
-        value: getReportReason(this.report.interaction.reason[0]),
-      },
-    ];
   }
 }
 

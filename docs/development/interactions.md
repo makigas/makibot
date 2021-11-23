@@ -30,14 +30,12 @@ Para crear una interacción, hay que depositar en alguna de las subcarpetas del 
 * Los comandos van en `src/interactions/commands`.
 * Los menús contextuales van en `src/interactions/menus`.
 * Los botones van en `src/interactions/buttons`.
-* Los menús de selección van en `src/interactions/selects`.
 
 Dentro de cada archivo hay que exportar una clase que debe extender a alguna de las cuatro clases superiores:
 
 * Los comandos se procesan con clases que extienden `CommandInteractionHandler`.
 * Los menús contextuales se procesan con clases que extienden `ContextMenuInteractionHandler`.
 * Los botones se procesan con clases que extienden `ButtonInteractionHandler`.
-* Los menús de selección se procesan con clases que extienden `SelectMenuInteractionHandler`.
 
 Estas interfaces están definidas en `src/lib/interactions`, y como se ve, implementan todas una función llamada `handle`. La diferencia está en el primer parámetro, que siempre será la propia interacción recibida, pero que en cada caso será del tipo que corresponda:
 
@@ -52,9 +50,5 @@ export interface ContextMenuInteractionHandler extends BaseInteractionHandler {
 
 export interface ButtonInteractionHandler extends BaseInteractionHandler {
   handle(event: ButtonInteraction): Promise<void>;
-}
-
-export interface SelectMenuInteractionHandler extends BaseInteractionHandler {
-  handle(event: SelectMenuInteraction): Promise<void>;
 }
 ```

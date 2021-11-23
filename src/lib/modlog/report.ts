@@ -1,193 +1,69 @@
-import type { APIEmbed, APIMessage, Snowflake } from "discord-api-types/v9";
-import {
-  CommandInteraction,
-  MessageActionRow,
-  MessageButton,
-  Message,
-  MessageEmbed,
-  MessageSelectMenu,
-  MessageSelectOptionData,
-} from "discord.js";
+import { Message, MessageEmbedOptions, TextChannel, WebhookClient } from "discord.js";
+import { userMention, hyperlink } from "@discordjs/builders";
+import Makibot from "../../Makibot";
+import Server from "../server";
 
-const REASON_OPTIONS: MessageSelectOptionData[] = [
-  { label: "Contiene spam y está fuera de un canal aceptable", value: "spam" },
-  { label: "Va en contra de las normas de Discord", value: "tos" },
-  { label: "Mensaje irrespetuoso o dañino", value: "unrespectful" },
-  { label: "Es un copia y pega de un enunciado o de una práctica", value: "copypaste" },
-  { label: "Este mensaje es de una calidad demasiado baja", value: "lowquality" },
-  { label: "Este mensaje se ha enviado a varios canales a la vez", value: "flood" },
-  { label: "Este mensaje es explícito o NSFW", value: "nsfw" },
-];
-
-const ACTION_OPTIONS: MessageSelectOptionData[] = [
-  { label: "Avisar amistosamente (sin represaliar)", value: "remind" },
-  { label: "Aplicar warn (60 minutos)", value: "warn.hour" },
-  { label: "Aplicar warn (24 horas)", value: "warn.day" },
-  { label: "Aplicar warn (7 días)", value: "warn.week" },
-  { label: "Echar (podrá volver a entrar)", value: "kick" },
-  { label: "Banear (no podrá volver a entrar)", value: "ban" },
-];
-
-const ALERT_OPTIONS: MessageSelectOptionData[] = [
-  { label: "Reporte normal: avisar a moderadores", value: "mods" },
-  { label: "Reporte sensible: avisar sólo a administradores", value: "admin" },
-];
-
-export function getReportReason(value: string): string {
-  return REASON_OPTIONS.find((reason) => reason.value === value).label;
-}
-
-export interface ModReport {
-  message: {
-    id: Snowflake;
-    author: {
-      id: Snowflake;
-      username: string;
-    };
-    content: string;
-  };
-  report: {
-    sudo: boolean;
-    author: {
-      id: Snowflake;
-      username: string;
-    };
-    guild: Snowflake;
-    channel: Snowflake;
-  };
-  interaction: {
-    reason: string[];
-    action: string[];
-    alert: string[];
-    sent: boolean;
-  };
-}
-
-export function createModReport(opt: { event: CommandInteraction; sudo: boolean }): ModReport {
-  const { event, sudo } = opt;
-  const message = event.options.get("message", true).message;
-
+function buildModReport(message: Message, reason: string): MessageEmbedOptions {
   return {
-    message: {
-      id: message.id,
-      author: {
-        id: message.author.id,
-        username: message.author.username,
+    footer: {
+      iconURL:
+        "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/page-with-curl_1f4c3.png",
+      text: "Mensaje de moderación automática",
+    },
+    color: 0xde2a42,
+    author: {
+      iconURL:
+        "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/twitter/282/triangular-flag_1f6a9.png",
+      name: "Se ha alertado sobre un mensaje inapropiado",
+    },
+    fields: [
+      {
+        name: "Usuario",
+        value: `${userMention(message.author.id)} (${message.author.id})`,
       },
-      content: message.content,
-    },
-    report: {
-      sudo,
-      author: {
-        id: event.user.id,
-        username: event.user.username,
+      {
+        name: "UID de mensaje",
+        value: `${hyperlink(message.id, message.url)}`,
       },
-      guild: event.guildId,
-      channel: event.channel.id,
-    },
-    interaction: {
-      reason: [],
-      action: [],
-      alert: [],
-      sent: false,
-    },
+      {
+        name: "Canal",
+        value: `${hyperlink((message.channel as TextChannel).name, message.url)}`,
+      },
+      {
+        name: "Razón",
+        value: reason,
+      },
+    ],
   };
 }
 
-export function renderMenuComponents(tag: ModReport): MessageActionRow[] {
-  if (tag.report.sudo) {
-    return renderSudoMenuComponents(tag);
+function getWebhookClient(server: Server, modlog: "default" | "sensible") {
+  const tags = {
+    default: "webhook:defaultmod",
+    sensible: "webhook:sensiblemod",
+  };
+  const webhookURL = server.tagbag.tag(tags[modlog]).get(null);
+  if (webhookURL) {
+    return new WebhookClient({ url: webhookURL });
   } else {
-    return renderRegularMenuComponents(tag);
+    return null;
   }
 }
 
-function renderRegularMenuComponents(tag: ModReport): MessageActionRow[] {
-  const reasons = REASON_OPTIONS.map((reason) => {
-    return { ...reason, default: tag.interaction.reason.indexOf(reason.value) >= 0 };
-  });
-  const alerts = ALERT_OPTIONS.map((alert) => {
-    return { ...alert, default: tag.interaction.alert.indexOf(alert.value) >= 0 };
-  });
-  const canSubmit = tag.interaction.reason.length > 0 && tag.interaction.alert.length > 0;
-  return [
-    new MessageActionRow({
-      components: [
-        new MessageSelectMenu({
-          placeholder: "Razón por la que se aplica la acción",
-          options: reasons,
-          customId: "modmenu_reason",
-        }),
-      ],
-    }),
-    new MessageActionRow({
-      components: [
-        new MessageSelectMenu({
-          placeholder: "¿A quién se le debería informar?",
-          options: alerts,
-          customId: "modmenu_alert",
-        }),
-      ],
-    }),
-    new MessageActionRow({
-      components: [
-        new MessageButton({
-          customId: "proposeModRequest",
-          label: "Informar sobre este mensaje",
-          style: "PRIMARY",
-          disabled: !canSubmit,
-        }),
-        new MessageButton({
-          customId: "cancelModRequest",
-          label: "Cancelar",
-          style: "DANGER",
-        }),
-      ],
-    }),
-  ];
-}
-
-function renderSudoMenuComponents(tag: ModReport): MessageActionRow[] {
-  const reasons = REASON_OPTIONS.map((reason) => {
-    return { ...reason, default: tag.interaction.reason.indexOf(reason.value) >= 0 };
-  });
-  const actions = ACTION_OPTIONS.map((action) => {
-    return { ...action, default: tag.interaction.action.indexOf(action.value) >= 0 };
-  });
-  const canSubmit = tag.interaction.reason.length > 0 && tag.interaction.action.length > 0;
-  return [
-    new MessageActionRow({
-      components: [
-        new MessageSelectMenu({
-          placeholder: "Razón por la que se aplica la acción",
-          options: reasons,
-          customId: "modmenu_reason",
-        }),
-      ],
-    }),
-    new MessageActionRow({
-      components: [
-        new MessageSelectMenu({
-          placeholder: "Tipo de acción de moderación a tomar",
-          options: actions,
-          customId: "modmenu_action",
-        }),
-      ],
-    }),
-    new MessageActionRow({
-      components: [
-        new MessageButton({
-          customId: "applyModRequest",
-          label: "Moderar mensaje",
-          style: "PRIMARY",
-          disabled: !canSubmit,
-        }),
-        new MessageButton({
-          customId: "cancelModRequest",
-          label: "Cancelar",
-          style: "DANGER",
-        }),
-      ],
-    }),
-  ];
+export function proposeReport(
+  client: Makibot,
+  message: Message,
+  reason: string,
+  target: "default" | "sensible" = "default"
+) {
+  const embed = buildModReport(message, reason);
+  const server = new Server(message.guild);
+  const webhook = getWebhookClient(server, target);
+  if (webhook) {
+    return webhook.send({
+      embeds: [embed],
+      username: embed.author.name,
+      avatarURL: embed.author.iconURL,
+    });
+  }
 }
