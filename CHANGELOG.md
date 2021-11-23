@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.38.0](https://github.com/makigas/makibot/compare/v0.37.1...v0.38.0) (2021-11-23)
+
+
+### Features
+
+* Added a new Discord nitro domain ([#475](https://github.com/makigas/makibot/issues/475)) ([aebf64b](https://github.com/makigas/makibot/commit/aebf64b3a0ef238bc29d1cfc661bf21404ed139f))
+* detect airdrop spammers ([b5a13fd](https://github.com/makigas/makibot/commit/b5a13fd340439c6b414d63ecb228f3ad62dd2b4c))
+* present version name when the bot runs ([6eac465](https://github.com/makigas/makibot/commit/6eac465ee0943613d7b4403b239f07168841bcea))
+
+
+### Bug Fixes
+
+* **antispam:** properly escape dots in URLs ([b9bc5c0](https://github.com/makigas/makibot/commit/b9bc5c0aa62f631c145ef8651865c8125e3f02a0))
+
+
+### Chore
+
+* add case for 0 in prime test ([#474](https://github.com/makigas/makibot/issues/474)) ([52f7b5d](https://github.com/makigas/makibot/commit/52f7b5debdb4d781941120ce5701660c5b86d952))
+
+
+### Refactor
+
+* make /roles use collectors ([0b92aca](https://github.com/makigas/makibot/commit/0b92acab50baa79ec689b7dfe05f62e7ec3c5733))
+* new mass-requirer ([#476](https://github.com/makigas/makibot/issues/476)) ([776e8fe](https://github.com/makigas/makibot/commit/776e8fe56170bcd4dfe787ac0bb100e851e54194))
+* remove traces of old antiraid system ([366a841](https://github.com/makigas/makibot/commit/366a841370abf22e11ad4427dfdc76b0f5268275))
+* reorganize and document HookManager ([94b4b54](https://github.com/makigas/makibot/commit/94b4b54f7121242e8441ae4b19c595aff46379a4))
+* rewrite /karma to use collectors ([ac764e5](https://github.com/makigas/makibot/commit/ac764e5bf173009a808d900adb780caa511e3ea7))
+* rewrite /report menu to use collectors ([baf3e91](https://github.com/makigas/makibot/commit/baf3e91beda497e5c517ea6d429cf97e533c0050))
+
 ### [0.37.1](https://github.com/makigas/makibot/compare/v0.37.0...v0.37.1) (2021-11-17)
 
 
