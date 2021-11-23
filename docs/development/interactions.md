@@ -52,3 +52,17 @@ export interface ButtonInteractionHandler extends BaseInteractionHandler {
   handle(event: ButtonInteraction): Promise<void>;
 }
 ```
+
+## Interacciones avanzadas con colectores
+
+Algunas interacciones presentan flujos complejos donde la respuesta de la interacción es interactiva.
+
+* En el comando /roles, se puede modificar la lista de roles del desplegable que se muestra.
+* En el comando /karma, se puede obtener más información pulsando los botones.
+* Con la opción de menú Reportar, se puede rellenar todo un formulario con un reporte.
+
+Antes, estos elementos asociados a la interacción original se gestionaban de una manera mucho más complicada: cada botón y cada select tenía su propia interacción asociada, y mediante un sistema de persistencia se almacenaba el identificador de la interacción original para poder persistir un estado que compartir entre interacciones.
+
+Sin embargo, [Discord.js 13 tiene colectores](https://discordjs.guide/popular-topics/collectors.html#interaction-collectors), que es una clase que permite crear oyentes de interacción ad-hoc. Con esto, cada vez que se inicia una interacción que va a requerir más interactividad (por ejemplo, las descritas), se crea un listener específico para escuchar más interacciones de alguno de los tipos como "Pulsar botón Enviar en el reporte de error" o "Actualizar los roles en el desplegable de roles", que se ocupa de la lógica adicional.
+
+La principal ventaja de este sistema es que esa lógica la podemos meter, ya no sólo en el mismo InteractionHandler que la de la interacción principal, sino que a menudo también la vamos a poder meter en una closure dentro del propio handler, para crear un listener por cada acción, que nos permitirá simplificar mucho la lógica, porque tenemos acceso a todos los identificadores de la interacción principal.
