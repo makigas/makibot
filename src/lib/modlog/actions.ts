@@ -1,3 +1,5 @@
+import { tokenToDate } from "datetoken";
+import { Message } from "discord.js";
 import Makibot from "../../Makibot";
 import Server from "../server";
 import { ModEvent, ModEventType } from "./types";
@@ -22,6 +24,10 @@ interface ActionHooks {
 }
 
 const actions: { [type in ModEventType]: ActionHooks } = {
+  DELETE: {
+    apply: () => null,
+    validate: () => null,
+  },
   WARN: {
     async validate(client, event) {
       const guild = await client.guilds.fetch(event.guild);
@@ -136,3 +142,27 @@ export async function applyAction(client: Makibot, event: ModEvent): Promise<Mod
   hooks.apply(client, cleanEvent);
   return cleanEvent;
 }
+
+function castExpirationDate(expires?: string): Date {
+  try {
+    return tokenToDate(expires);
+  } catch (e) {
+    return null; // do not expire - handles null too
+  }
+}
+
+export const modEventBuilder = (
+  message: Message,
+  type: ModEventType,
+  reason: string,
+  expires?: string
+): ModEvent => ({
+  createdAt: new Date(),
+  expired: false,
+  guild: message.guildId,
+  type,
+  mod: message.client.user.id,
+  reason,
+  target: message.author.id,
+  expiresAt: castExpirationDate(expires),
+});

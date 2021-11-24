@@ -2,8 +2,8 @@ import { Message, MessageEmbed, PartialMessage, Snowflake } from "discord.js";
 import { Hook } from "../lib/hook";
 import Member from "../lib/member";
 import { createToast } from "../lib/response";
-import applyWarn from "../lib/warn";
-import logger from "../lib/logger";
+import { ModEvent } from "../lib/modlog/types";
+import { modEventBuilder } from "../lib/modlog/actions";
 
 interface AntifloodData {
   channel: Snowflake;
@@ -101,6 +101,54 @@ async function raisePing(member: Member): Promise<number> {
   return recentPings.length;
 }
 
+function isRecentlySaid(message: Message): boolean {
+  const member = new Member(message.member);
+  const history: AntifloodHistory = member.tagbag.tag("antiflood:history2").get({});
+  const normalized = normalize(message.cleanContent);
+  if (normalized in history) {
+    const when = history[normalized].expires;
+    return Date.now() - when < 3600_000;
+  }
+  return false;
+}
+
+async function handleFlood(member: Member, message: Message): Promise<ModEvent> {
+  const alertCounter = await raisePing(member);
+  if (alertCounter === 1) {
+    const toast = generateFirstToast(message);
+    await message.channel.send({ embeds: [toast] });
+    return modEventBuilder(message, "DELETE", "Mensaje duplicado");
+  } else if (alertCounter === 2) {
+    const toast = generateRepeatingToast(message);
+    await message.channel.send({ embeds: [toast] });
+    return modEventBuilder(message, "DELETE", "Mensaje duplicado");
+  } else if (alertCounter >= 3) {
+    const toast = generateMuteToast(message);
+    await message.channel.send({ embeds: [toast] });
+    return modEventBuilder(message, "MUTE", "Mensaje duplicado demasiadas veces");
+  }
+}
+
+function isExceptionable(member: Member, message: Message): boolean {
+  return message.author.bot || member.moderator || words(message.cleanContent).length <= 3;
+}
+
+async function trackMessageInHistory(message: Message): Promise<void> {
+  const member = new Member(message.member);
+  const tag = member.tagbag.tag("antiflood:history2");
+  const history = tag.get({});
+  const normalized = normalize(message.cleanContent);
+  const newTag: AntifloodHistory = {
+    ...cleanHistory(history),
+    [normalized]: {
+      channel: message.channel.id,
+      message: message.id,
+      expires: Date.now(),
+    },
+  };
+  tag.set(newTag);
+}
+
 export default class AntifloodService implements Hook {
   name = "antiflood";
 
@@ -110,96 +158,33 @@ export default class AntifloodService implements Hook {
       return;
     }
     const member = new Member(message.member);
-    const normalized = normalize(message.cleanContent);
 
-    /* Forget about the message. */
-    const tag = member.tagbag.tag("antiflood:history2");
-    const history: AntifloodHistory = tag.get({});
-    delete history[normalized];
-    await tag.set(cleanHistory(history));
+    /* Do not delete messages from history if they tripped antispam. */
+    if (member.tagbag.tag("antiflood:floods").get([]).indexOf(message.id) === -1) {
+      const normalized = normalize(message.cleanContent);
+
+      /* Forget about the message. */
+      const tag = member.tagbag.tag("antiflood:history2");
+      const history: AntifloodHistory = tag.get({});
+      delete history[normalized];
+      await tag.set(cleanHistory(history));
+    }
   }
 
-  async onMessageCreate(message: Message): Promise<void> {
-    if (!message.member || !message.member.guild) {
-      /* Webhooks will trigger this. */
-      return;
-    }
+  async onPremoderateMessage(message: Message): Promise<ModEvent | null> {
     const member = new Member(message.member);
-    const normalized = normalize(message.cleanContent);
-
-    /* Some cases that are allowed. */
-    if (message.author.bot || member.moderator) {
-      return;
+    const tripsFlood = isRecentlySaid(message);
+    trackMessageInHistory(message);
+    if (tripsFlood && !isExceptionable(member, message)) {
+      await rememberFloodedMessage(message);
+      return handleFlood(member, message);
     }
-    if (words(message.cleanContent).length <= 3) {
-      return;
-    }
-
-    /* Test if the message was posted recently. */
-    const tag = member.tagbag.tag("antiflood:history2");
-    const history: AntifloodHistory = tag.get({});
-    if (normalized in history) {
-      const when = history[normalized].expires;
-      if (Date.now() - when < 3600_000) {
-        const alertCounter = await raisePing(member);
-        if (alertCounter === 1) {
-          const toast = generateFirstToast(message);
-          await message.channel.send({ embeds: [toast] });
-          await message.delete();
-        } else if (alertCounter === 2) {
-          const toast = generateRepeatingToast(message);
-          await message.channel.send({ embeds: [toast] });
-          await message.delete();
-        } else if (alertCounter >= 3) {
-          if (member.muted) {
-            await message.member.ban({
-              reason: "Antispam",
-            });
-          } else {
-            await member.setMuted(true);
-
-            /* Delete the original message since the member has been muted. */
-            try {
-              const originalChannel = await message.guild.channels.fetch(
-                history[normalized].channel
-              );
-              if (originalChannel.isText()) {
-                const originalMessage = await originalChannel.messages.fetch(
-                  history[normalized].message
-                );
-                if (originalMessage) {
-                  originalMessage.delete();
-                }
-              }
-            } catch (e) {
-              logger.error("[antiflood] i cannot delete the message, i'm so sorry");
-            }
-
-            const toast = generateMuteToast(message);
-            await message.channel.send({ embeds: [toast] });
-            await message.delete();
-
-            /* Then warn + mute the member. */
-            await applyWarn(message.guild, {
-              user: message.author,
-              message: message,
-              reason: "El sistema antiflood ha saltado varias veces",
-              duration: 86400 * 1000,
-            });
-          }
-        }
-      }
-    }
-
-    /* Update the history for this user. */
-    const newTag: AntifloodHistory = {
-      ...cleanHistory(history),
-      [normalized]: {
-        channel: message.channel.id,
-        message: message.id,
-        expires: Date.now(),
-      },
-    };
-    tag.set(newTag);
+    return null;
   }
+}
+
+async function rememberFloodedMessage(message: Message): Promise<void> {
+  const member = new Member(message.member);
+  const tag = member.tagbag.tag("antiflood:floods");
+  await tag.set([...tag.get([]), message.id]);
 }

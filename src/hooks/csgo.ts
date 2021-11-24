@@ -1,11 +1,9 @@
-import { tokenToDate } from "datetoken";
 import { Message } from "discord.js";
 import { Hook } from "../lib/hook";
 import Member from "../lib/member";
-import { ModEvent, ModEventType } from "../lib/modlog/types";
-import { createToast } from "../lib/response";
+import { modEventBuilder } from "../lib/modlog/actions";
+import { ModEvent } from "../lib/modlog/types";
 import Server from "../lib/server";
-import applyWarn from "../lib/warn";
 
 /**
  * TODO: Rename this to something different. I called it csgo.ts because the
@@ -119,30 +117,6 @@ export function containsSpamLink(content: string): boolean {
   return TOKENS.some((token) => token.test(content));
 }
 
-function castExpirationDate(expires?: string): Date {
-  try {
-    return tokenToDate(expires);
-  } catch (e) {
-    return null; // do not expire - handles null too
-  }
-}
-
-const newModEvent = (
-  message: Message,
-  type: ModEventType,
-  reason: string,
-  expires?: string
-): ModEvent => ({
-  createdAt: new Date(),
-  expired: false,
-  guild: message.guildId,
-  type,
-  mod: message.client.user.id,
-  reason,
-  target: message.author.id,
-  expiresAt: castExpirationDate(expires),
-});
-
 async function author(message: Message): Promise<Member> {
   const server = new Server(message.guild);
   return await server.member(message.author.id);
@@ -165,62 +139,15 @@ export default class CsgoService implements Hook {
     if (!verified) {
       const content = message.cleanContent;
       if (isAirdrop(content)) {
-        return newModEvent(message, "BAN", "Airdrop spam");
+        return modEventBuilder(message, "BAN", "Airdrop spam");
+      } else if (containsSpamLink(content)) {
+        return modEventBuilder(
+          message,
+          "MUTE",
+          "Cadena de texto prohibida por el sistema antispam"
+        );
       }
     }
     return null;
-  }
-
-  private async handleMatch(message: Message, member: Member): Promise<void> {
-    /* Warn and mute the participant. */
-    await applyWarn(message.guild, {
-      duration: 86400 * 1000 * 7,
-      user: message.author,
-      reason: "Una cadena de texto prohibida por el sistema antispam ha sido interceptada",
-      message,
-    });
-    await member.setMuted(true);
-
-    /* Delete the original message with a tombstone. */
-    const toast = createToast({
-      title: "Mensaje interceptado como spam",
-      description: "El sistema antispam ha eliminado un mensaje que ha identificado como positivo.",
-      severity: "error",
-      target: message.author,
-    });
-    await message.channel.send({ embeds: [toast] });
-    await message.delete();
-  }
-
-  async onMessageCreate(message: Message): Promise<void> {
-    if (message.guild) {
-      const server = new Server(message.guild);
-      const member = await server.member(message.author.id);
-      if (message.author.bot || member.moderator) {
-        return;
-      }
-
-      const content = message.cleanContent.toLowerCase();
-      if (TOKENS.some((token) => token.test(content))) {
-        /* We have a match! */
-        return this.handleMatch(message, member);
-      }
-    }
-  }
-
-  async onMessageUpdate(oldMessage: Message, newMessage: Message): Promise<void> {
-    if (oldMessage.guild) {
-      const server = new Server(newMessage.guild);
-      const member = await server.member(newMessage.author.id);
-      if (newMessage.author.bot || member.moderator) {
-        return;
-      }
-
-      const content = newMessage.cleanContent.toLowerCase();
-      if (TOKENS.some((token) => token.test(content))) {
-        /* We have a match! */
-        return this.handleMatch(newMessage, member);
-      }
-    }
   }
 }

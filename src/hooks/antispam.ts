@@ -2,11 +2,10 @@ import { Message } from "discord.js";
 import getUrls from "get-urls";
 
 import Member from "../lib/member";
-import { WastebinModlogEvent } from "../lib/modlog";
-import Server from "../lib/server";
 import { Hook } from "../lib/hook";
 import { createToast } from "../lib/response";
-import applyWarn from "../lib/warn";
+import { ModEvent } from "../lib/modlog/types";
+import { modEventBuilder } from "../lib/modlog/actions";
 
 const ruleset: { [reason: string]: RegExp[] } = {
   "El enlace contiene una invitación de Discord": [
@@ -82,64 +81,46 @@ function isAllowed(message: Message): boolean {
   }
 }
 
+async function followUp(message: Message, match: string): Promise<void> {
+  const toast = createToast({
+    title: `@${message.member.user.username}, tu mensaje ha sido retenido por tener un enlace inapropiado`,
+    description: [
+      `Tu mensaje contenía un enlace que ha hecho saltar el filtro antispam.`,
+      `El filtro antispam ha dicho: ${match}.`,
+      `\n\n`,
+      `Tu mensaje ha sido reenviado a moderación para que lo revise y decida`,
+      `si ha sido un error del filtro o si debe dejar caer el martillo del ban`,
+      `sobre ti. Si no has incumplido las normas, no debes tener miedo.`,
+    ].join(" "),
+    severity: "error",
+    target: message.member.user,
+  });
+  await message.channel.send({ embeds: [toast] });
+}
+
+async function moderateMessage(message: Message, reason: string): Promise<ModEvent> {
+  const member = new Member(message.member);
+  if (member.trippedAntispam) {
+    return modEventBuilder(
+      message,
+      "MUTE",
+      "El sistema antispam ha eliminado un mensaje que ha identificado como positivo."
+    );
+  } else {
+    await member.tripAntispam();
+    await followUp(message, reason);
+    return modEventBuilder(message, "DELETE", "Mensaje contiene enlace no apropiado: " + reason);
+  }
+}
+
 export default class AntispamService implements Hook {
   name = "antispam";
 
-  async onMessageCreate(message: Message): Promise<void> {
-    if (isAllowed(message)) {
-      return; /* mod or bot */
-    }
-
+  async onPremoderateMessage(message: Message): Promise<ModEvent | null> {
     const match = testModeration(message);
-    if (match) {
-      const server = new Server(message.guild);
-
-      /* Send message to the modlog. */
-      server
-        .logModlogEvent(new WastebinModlogEvent(message))
-        .catch((e) => console.error(`Error during wastebin handler: ${e}`));
-
-      const channel = message.channel;
-      const member = new Member(message.member);
-      await message.delete();
-      if (member.trippedAntispam) {
-        /* Okay, I warned you. */
-        await applyWarn(message.guild, {
-          duration: 86400 * 1000 * 7,
-          user: message.author,
-          reason: "Una cadena de texto prohibida por el sistema antispam ha sido interceptada",
-          message,
-        });
-        await member.setMuted(true);
-
-        /* Delete the original message with a tombstone. */
-        const toast = createToast({
-          title: "Mensaje interceptado como spam",
-          description:
-            "El sistema antispam ha eliminado un mensaje que ha identificado como positivo.",
-          severity: "error",
-          target: message.author,
-        });
-        await message.channel.send({ embeds: [toast] });
-      } else {
-        /* I'll remember this. */
-        await member.tripAntispam();
-
-        const toast = createToast({
-          title: `@${message.member.user.username}, tu mensaje ha sido retenido por tener un enlace inapropiado`,
-          description: [
-            `Tu mensaje contenía un enlace que ha hecho saltar el filtro antispam.`,
-            `El filtro antispam ha dicho: ${match}.`,
-            `\n\n`,
-            `Tu mensaje ha sido reenviado a moderación para que lo revise y decida`,
-            `si ha sido un error del filtro o si debe dejar caer el martillo del ban`,
-            `sobre ti. Si no has incumplido las normas, no debes tener miedo.`,
-          ].join(" "),
-          severity: "error",
-          target: message.member.user,
-        });
-        await channel.send({ embeds: [toast] });
-      }
+    if (match && !isAllowed(message)) {
+      return moderateMessage(message, match);
     }
+    return null;
   }
 }

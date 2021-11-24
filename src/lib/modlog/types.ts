@@ -1,6 +1,6 @@
 import { Snowflake } from "discord-api-types";
 
-export type ModEventType = "WARN" | "UNWARN" | "MUTE" | "UNMUTE" | "KICK" | "BAN";
+export type ModEventType = "DELETE" | "WARN" | "UNWARN" | "MUTE" | "UNMUTE" | "KICK" | "BAN";
 
 /**
  * A moderation event as created and managed by the system.

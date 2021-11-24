@@ -7,6 +7,7 @@ import Server from "../server";
 import type { ModEvent } from "./types";
 
 const TEMPLATES = {
+  DELETE: ":wastebasket: Se ha eliminado un mensaje de $TARGET$. Razón: `$REASON$`",
   WARN: ":warning: Se llamó la atención a $TARGET$. Razón: `$REASON$`. Expira: $EXP$",
   UNWARN: ":ballot_box_with_check: Ha expirado la llamada de atención a $TARGET$",
   MUTE: ":mute: Se ha silenciado a $TARGET$. Razón: `$REASON$`. Expira: $EXP$",
