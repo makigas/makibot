@@ -17,7 +17,6 @@
     "big-integer": "^1.6.51",
     "datetoken": "^1.1.0",
     "discord.js": "^13.1.0",
-    "discordjs-reaction-role": "^2.0.1",
     "discordjs-voicerole": "^2.0.2",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",

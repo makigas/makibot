@@ -3,7 +3,6 @@ import express from "express";
 
 import Makibot from "../../../Makibot";
 import Server from "../../server";
-import autorolesMiddleware from "./autoroles";
 import memberMiddleware from "./member";
 import providerMiddleware from "./provider";
 import voiceRoleMiddleware from "./voiceroles";
@@ -34,7 +33,6 @@ export default function guildMiddleware(makibot: Makibot): express.Router {
   });
 
   router.use("/members/:member", memberMiddleware(makibot));
-  router.use("/roles/reactions", autorolesMiddleware(makibot));
   router.use("/roles/voices", voiceRoleMiddleware(makibot));
   router.use("/provider/:tag", providerMiddleware(makibot));
 
