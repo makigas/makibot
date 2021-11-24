@@ -43,7 +43,7 @@ Un Hook es una interfaz que implementa una serie de métodos opcionales. Cualqui
 
 ```ts
 interface Hook {
-  onMessageCreate?: (message: Message): Promise<void>;
+  onMessageCreate?: (message: Message) => Promise<void>;
   onGuildMemberJoin?: (member: GuildMember) => Promise<void>;
   onGuildMemberBan?: (ban: GuildBan) => Promise<void>;
 }
