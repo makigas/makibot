@@ -1,6 +1,6 @@
 import { Hook } from "../lib/hook";
 import { applyAction } from "../lib/modlog/actions";
-import { notifyPublicModlog } from "../lib/modlog/notifications";
+import { notifyModlog } from "../lib/modlog/notifications";
 import { ModEvent, ModEventType } from "../lib/modlog/types";
 import Makibot from "../Makibot";
 
@@ -38,7 +38,7 @@ export default class ModService implements Hook {
     expired.forEach(async (event) => {
       const reverseEvent = revertEvent(event);
       const persisted = await applyAction(this.client, reverseEvent);
-      await notifyPublicModlog(this.client, persisted);
+      await notifyModlog(this.client, persisted);
     });
   }
 }

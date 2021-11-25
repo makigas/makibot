@@ -13,7 +13,7 @@ import {
 import Makibot from "../Makibot";
 import logger from "./logger";
 import { applyAction } from "./modlog/actions";
-import { notifyPublicModlog } from "./modlog/notifications";
+import { notifyModlog } from "./modlog/notifications";
 import { ModEvent } from "./modlog/types";
 import { requireAllModules } from "./utils/loader";
 
@@ -131,7 +131,7 @@ export class HookManager {
         /* Report message. */
         const persistedEvent = await applyAction(this.client, modEvent);
         await message.delete();
-        await notifyPublicModlog(this.client, persistedEvent);
+        await notifyModlog(this.client, persistedEvent);
       } else {
         /* Message is safe. Continue. */
         await this.onSafeMessageCreate(message);

@@ -1,8 +1,40 @@
-import { PartialMessage } from "discord.js";
+import { MessageEmbedOptions, PartialMessage } from "discord.js";
 import { Hook } from "../lib/hook";
 import logger from "../lib/logger";
-import { WastebinModlogEvent } from "../lib/modlog";
+import { createModlogNotification } from "../lib/modlog/notifications";
 import Server from "../lib/server";
+import {
+  channelIdentifier,
+  dateIdentifier,
+  messageIdentifier,
+  userIdentifier,
+} from "../lib/utils/format";
+
+const createDeleteEvent = (message: PartialMessage): MessageEmbedOptions => ({
+  author: {
+    name: "Se ha eliminado un mensaje",
+    iconURL:
+      "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/248/wastebasket_1f5d1.png",
+  },
+  footer: {
+    iconURL:
+      "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/page-with-curl_1f4c3.png",
+    text: "Mensaje de moderación automática",
+  },
+  color: 0x9b9b9b,
+  description: [
+    `**Usuario**: ${userIdentifier(message.author)}`,
+    `**Mensaje**: ${messageIdentifier(message)}`,
+    `**Canal**: ${channelIdentifier(message.channel)}`,
+    `**Fecha**: ${dateIdentifier(message.createdAt)}`,
+  ].join("\n"),
+  fields: [
+    {
+      name: "Contenido",
+      value: message.cleanContent,
+    },
+  ],
+});
 
 /**
  * A hook that triggers whenever a message is deleted, in order to log the deletion
@@ -21,9 +53,17 @@ export default class DeleteService implements Hook {
     /* Log to the modlog the fact that a message was deleted. */
     try {
       const server = new Server(message.guild);
-      await server.logModlogEvent(new WastebinModlogEvent(message));
+      const client = server.defaultModlog;
+      if (client) {
+        const embed = createModlogNotification(createDeleteEvent(message));
+        await client.send({
+          username: embed.author.name,
+          avatarURL: embed.author.iconURL,
+          embeds: [embed],
+        });
+      }
     } catch (e) {
-      logger.error(e);
+      logger.error(`[delete] error during message logging`, e);
     }
   }
 }

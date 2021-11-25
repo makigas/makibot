@@ -12,14 +12,6 @@ export type SettingsJSONSchema = {
     emoji: string;
     pinboard: string;
   };
-  modlog: {
-    webhookId: string;
-    webhookToken: string;
-  };
-  sensibleModlog: {
-    webhookId: string;
-    webhookToken: string;
-  };
   karmaTiers: KarmaTierJSONSchema[];
 };
 
@@ -38,10 +30,6 @@ export default class Settings {
     this.tags = {
       pinEmoji: new Tag(this.client.provider, "Pin.Emoji", { guild }),
       pinChannel: new Tag(this.client.provider, "Pin.Pinboard", { guild }),
-      modlogWebhookId: new Tag(this.client.provider, "Webhook.Id", { guild }),
-      modlogWebhookToken: new Tag(this.client.provider, "Webhook.Token", { guild }),
-      sensibleModlogWebhookId: new Tag(this.client.provider, "PrivateModlog.Id", { guild }),
-      sensibleModlogWebhookToken: new Tag(this.client.provider, "PrivateModlog.Token", { guild }),
       karmaTiers: new Tag(this.client.provider, "Karma.Tiers", { guild }),
     };
   }
@@ -53,14 +41,6 @@ export default class Settings {
         pinboard: this.pinPinboard,
       },
       karmaTiers: this.karmaTiers,
-      modlog: {
-        webhookId: this.modlogWebhookId,
-        webhookToken: this.modlogWebhookToken,
-      },
-      sensibleModlog: {
-        webhookId: this.sensibleModlogWebhookId,
-        webhookToken: this.sensibleModlogWebhookToken,
-      },
     };
   }
 
@@ -78,22 +58,6 @@ export default class Settings {
 
   async setPinPinboard(pinboard: string): Promise<void> {
     await this.tags.pinChannel.set(pinboard);
-  }
-
-  get modlogWebhookId(): Snowflake {
-    return this.tags.modlogWebhookId.get();
-  }
-
-  get modlogWebhookToken(): string {
-    return this.tags.modlogWebhookToken.get();
-  }
-
-  get sensibleModlogWebhookId(): Snowflake {
-    return this.tags.sensibleModlogWebhookId.get();
-  }
-
-  get sensibleModlogWebhookToken(): string {
-    return this.tags.sensibleModlogWebhookToken.get();
   }
 
   get karmaTiers(): KarmaTier[] {
@@ -119,21 +83,5 @@ export default class Settings {
 
   async setRoleCrewId(id: string): Promise<void> {
     await this.tags.crewRoleId.set(id);
-  }
-
-  async setModlogWebhookId(id: string): Promise<void> {
-    await this.tags.modlogWebhookId.set(id);
-  }
-
-  async setModlogWebhookToken(token: string): Promise<void> {
-    await this.tags.modlogWebhookToken.set(token);
-  }
-
-  async setSensibleModlogWebhookId(id: string): Promise<void> {
-    await this.tags.sensibleModlogWebhookId.set(id);
-  }
-
-  async setSensibleModlogWebhookToken(token: string): Promise<void> {
-    await this.tags.sensibleModlogWebhookToken.set(token);
   }
 }

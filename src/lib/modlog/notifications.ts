@@ -1,12 +1,11 @@
-import { userMention, time } from "@discordjs/builders";
-import { APIMessage } from "discord-api-types";
-import { WebhookClient } from "discord.js";
-
+import { time, userMention } from "@discordjs/builders";
+import { Guild, MessageEmbedOptions } from "discord.js";
 import type Makibot from "../../Makibot";
 import Server from "../server";
+import { dateIdentifier, userIdentifier } from "../utils/format";
 import type { ModEvent } from "./types";
 
-const TEMPLATES = {
+const PUBLIC_TEMPLATES = {
   DELETE: ":wastebasket: Se ha eliminado un mensaje de $TARGET$. Razón: `$REASON$`",
   WARN: ":warning: Se llamó la atención a $TARGET$. Razón: `$REASON$`. Expira: $EXP$",
   UNWARN: ":ballot_box_with_check: Ha expirado la llamada de atención a $TARGET$",
@@ -16,22 +15,136 @@ const TEMPLATES = {
   BAN: ":hammer: Se baneó a $TARGET$ del servidor. Razón: `$REASON$`.",
 };
 
+const PRIVATE_TEMPLATES = {
+  WARN: {
+    color: 0xffcd4c,
+    name: "Se ha aplicado un warn",
+    icon: "https://makigas.github.io/makibot/images/warning.png",
+    fields: (event: ModEvent): string =>
+      [
+        `**Objetivo**: ${userIdentifier(event.target)}`,
+        `**Mod**: ${userIdentifier(event.mod)}`,
+        `**Razón**: ${event.reason}`,
+        `**Expiración**: ${event.expiresAt ? dateIdentifier(event.expiresAt) : "manualmente"}`,
+      ].join("\n"),
+  },
+  UNWARN: {
+    color: 0x15669b,
+    name: "Ha expirado un warn",
+    icon: "https://makigas.github.io/makibot/images/checkbox.png",
+    fields: (event: ModEvent): string =>
+      [
+        `**Objetivo**: ${userIdentifier(event.target)}`,
+        `**Mod**: ${userIdentifier(event.mod)}`,
+      ].join("\n"),
+  },
+  MUTE: {
+    color: 0x899aa8,
+    name: "Se ha aplicado un mute",
+    icon: "https://makigas.github.io/makibot/images/mute.png",
+    fields: (event: ModEvent): string =>
+      [
+        `**Objetivo**: ${userIdentifier(event.target)}`,
+        `**Mod**: ${userIdentifier(event.mod)}`,
+        `**Razón**: ${event.reason}`,
+        `**Expiración**: ${event.expiresAt ? dateIdentifier(event.expiresAt) : "manualmente"}`,
+      ].join("\n"),
+  },
+  UNMUTE: {
+    color: 0x899aa8,
+    name: "Ha expirado un mute",
+    icon: "https://makigas.github.io/makibot/images/speaker.png",
+    fields: (event: ModEvent): string =>
+      [
+        `**Objetivo**: ${userIdentifier(event.target)}`,
+        `**Mod**: ${userIdentifier(event.mod)}`,
+      ].join("\n"),
+  },
+  KICK: {
+    color: 0xdf2540,
+    name: "Se ha echado del servidor",
+    icon: "https://makigas.github.io/makibot/images/shoe.png",
+    fields: (event: ModEvent): string =>
+      [
+        `**Objetivo**: ${userIdentifier(event.target)}`,
+        `**Mod**: ${userIdentifier(event.mod)}`,
+        `**Razón**: ${event.reason}`,
+      ].join("\n"),
+  },
+  BAN: {
+    color: 0x667680,
+    name: "Se ha aplicado ban",
+    icon: "https://makigas.github.io/makibot/images/hammer.png",
+    fields: (event: ModEvent): string =>
+      [
+        `**Objetivo**: ${userIdentifier(event.target)}`,
+        `**Mod**: ${userIdentifier(event.mod)}`,
+        `**Razón**: ${event.reason}`,
+      ].join("\n"),
+  },
+};
+
+export function createModlogNotification(payload: MessageEmbedOptions): MessageEmbedOptions {
+  return {
+    ...payload,
+    footer: {
+      iconURL:
+        "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/page-with-curl_1f4c3.png",
+      text: "Mensaje de moderación automática",
+    },
+  };
+}
+
 /**
  * Converts an event into the formatted string that should be sent to the modlog.
  * @param event the event to transform into a string to be used in modlogs.
  * @returns the string to be sent to the proper modlog channel
  */
-function composeModlogMessage(event: ModEvent) {
+function composePublicModlogMessage(event: ModEvent): string {
   const target = userMention(event.target);
   const reason = event.reason || "(no se especificó razón)";
   const expiration = event.expiresAt ? time(event.expiresAt, "R") : "manualmente";
   const eventId = event.id ? ` - [#${event.id}]` : "";
   return (
-    TEMPLATES[event.type]
+    PUBLIC_TEMPLATES[event.type]
       .replace("$TARGET$", target)
       .replace("$REASON$", reason)
       .replace("$EXP$", expiration) + eventId
   );
+}
+
+function composePrivateModlogMessage(event: ModEvent): MessageEmbedOptions {
+  const template = PRIVATE_TEMPLATES[event.type];
+  return createModlogNotification({
+    color: template.color,
+    author: {
+      name: template.name,
+      iconURL: template.icon,
+    },
+    description: template.fields(event),
+  });
+}
+
+async function sendToPublicModlog(guild: Guild, event: ModEvent): Promise<void> {
+  const server = new Server(guild);
+  const client = server.publicModlog;
+  if (client) {
+    const message = composePublicModlogMessage(event);
+    await client.send(message);
+  }
+}
+
+async function sendToPrivateModlog(guild: Guild, event: ModEvent): Promise<void> {
+  const server = new Server(guild);
+  const client = server.defaultModlog;
+  if (client) {
+    const message = composePrivateModlogMessage(event);
+    await client.send({
+      username: message.author.name,
+      avatarURL: message.author.iconURL,
+      embeds: [message],
+    });
+  }
 }
 
 /**
@@ -40,18 +153,7 @@ function composeModlogMessage(event: ModEvent) {
  * @param client the client (to fetch the guilds and parameters)
  * @param event the event to submit to the public modlog
  */
-export async function notifyPublicModlog(
-  client: Makibot,
-  event: ModEvent
-): Promise<APIMessage | null> {
-  const message = composeModlogMessage(event);
+export async function notifyModlog(client: Makibot, event: ModEvent): Promise<void> {
   const guild = await client.guilds.fetch(event.guild);
-  const server = new Server(guild);
-  const webhookURL = server.tagbag.tag("webhook:publicmod").get(null);
-  if (webhookURL) {
-    const webhookClient = new WebhookClient({ url: webhookURL });
-    return webhookClient.send({ content: message });
-  } else {
-    return null;
-  }
+  await Promise.all([sendToPublicModlog(guild, event), sendToPrivateModlog(guild, event)]);
 }

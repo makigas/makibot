@@ -15,7 +15,7 @@ import { userMention } from "@discordjs/builders";
 import type { ContextMenuInteractionHandler } from "../../lib/interaction";
 import Member from "../../lib/member";
 import { applyAction } from "../../lib/modlog/actions";
-import { notifyPublicModlog } from "../../lib/modlog/notifications";
+import { notifyModlog } from "../../lib/modlog/notifications";
 import { ModEvent, ModEventType } from "../../lib/modlog/types";
 import { createToast } from "../../lib/response";
 import Server from "../../lib/server";
@@ -183,7 +183,7 @@ class ModerationRequest {
     } else {
       const event = this.buildModEvent();
       const persistedEvent = await applyAction(this.interaction.client as Makibot, event);
-      await notifyPublicModlog(this.interaction.client as Makibot, persistedEvent);
+      await notifyModlog(this.interaction.client as Makibot, persistedEvent);
     }
     if (this.form.delete === "delete") {
       await this.message.delete();

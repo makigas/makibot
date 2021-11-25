@@ -12,7 +12,7 @@ import { canReceivePoints, getLevelV2 } from "../lib/karma";
 import { KarmaDatabase } from "../lib/karma/database";
 import Member from "../lib/member";
 import { applyAction } from "../lib/modlog/actions";
-import { notifyPublicModlog } from "../lib/modlog/notifications";
+import { notifyModlog } from "../lib/modlog/notifications";
 import { createToast } from "../lib/response";
 import Makibot from "../Makibot";
 
@@ -58,7 +58,10 @@ export default class KarmaService implements Hook {
   }
 
   async onMessageCreate(message: Message): Promise<void> {
-    if (!canReceivePoints(message.member) || (message.type !== "DEFAULT" && message.type !== "REPLY")) {
+    if (
+      !canReceivePoints(message.member) ||
+      (message.type !== "DEFAULT" && message.type !== "REPLY")
+    ) {
       return;
     }
     await this.karma.action({
@@ -165,7 +168,7 @@ export default class KarmaService implements Hook {
         target: member.id,
         guild: member.server.id,
       });
-      await notifyPublicModlog(this.bot, persisted);
+      await notifyModlog(this.bot, persisted);
       await alreadyMuted.set(true);
     }
   }

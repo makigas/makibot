@@ -49,11 +49,6 @@ export default function guildMiddleware(makibot: Makibot): express.Router {
     const settings: { [prop: string]: (value: string) => Promise<void> } = {
       "pin.pinboard": (value) => server.settings.setPinPinboard(value),
       "pin.emoji": (value) => server.settings.setPinEmoji(value),
-      "modlog.webhookId": (value) => server.settings.setModlogWebhookId(value),
-      "modlog.webhookToken": (value) => server.settings.setModlogWebhookToken(value),
-      "modlog.sensibleWebhookId": (value) => server.settings.setSensibleModlogWebhookId(value),
-      "modlog.sensibleWebhookToken": (value) =>
-        server.settings.setSensibleModlogWebhookToken(value),
       "roles.crew": (value) => server.settings.setRoleCrewId(value),
       "roles.tier1": (value) => server.settings.addTier(2, value),
       "roles.tier2": (value) => server.settings.addTier(5, value),

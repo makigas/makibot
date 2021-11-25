@@ -1,7 +1,7 @@
 import { CommandInteraction } from "discord.js";
 import { CommandInteractionHandler } from "../../lib/interaction";
 import { applyAction } from "../../lib/modlog/actions";
-import { notifyPublicModlog } from "../../lib/modlog/notifications";
+import { notifyModlog } from "../../lib/modlog/notifications";
 import { ModEvent, ModEventType } from "../../lib/modlog/types";
 import { createToast } from "../../lib/response";
 import { tokenToDate } from "datetoken";
@@ -121,7 +121,7 @@ export default class ModCommand implements CommandInteractionHandler {
       const modEvent = translateInteractionToModEvent(event);
       await applyAction(event.client as Makibot, modEvent)
         .then(async (persisted) => {
-          await notifyPublicModlog(event.client as Makibot, persisted);
+          await notifyModlog(event.client as Makibot, persisted);
           replyModerator(event);
         })
         .catch((e: Error) => replyValidationError(event, e.message));

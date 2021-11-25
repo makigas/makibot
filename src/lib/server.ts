@@ -1,8 +1,6 @@
-import { Guild, Message, Role, TextChannel, UserResolvable, WebhookClient } from "discord.js";
+import { Guild, Role, TextChannel, UserResolvable, WebhookClient } from "discord.js";
 import Makibot from "../Makibot";
-import logger from "./logger";
 import Member from "./member";
-import { ModlogEvent } from "./modlog";
 import Settings from "./settings";
 import TagBag from "./tagbag";
 
@@ -71,9 +69,28 @@ export default class Server {
       },
       channels: {
         pinboard: channelToJSON(this.pinboardChannel),
-        publicModlog: channelToJSON(this.publicModlogChannel),
       },
     };
+  }
+
+  private modlog(kind: string): WebhookClient {
+    const url = this.tagbag.tag(kind).get(null);
+    if (url) {
+      return new WebhookClient({ url: url });
+    }
+    return null;
+  }
+
+  get publicModlog(): WebhookClient {
+    return this.modlog("webhook:publicmod");
+  }
+
+  get defaultModlog(): WebhookClient {
+    return this.modlog("webhook:defaultmod");
+  }
+
+  get sensibleModlog(): WebhookClient {
+    return this.modlog("webhook:sensiblemod");
   }
 
   private getRoleByName(name: string): Role {
@@ -110,58 +127,6 @@ export default class Server {
         return null;
       }
     }
-  }
-
-  private getModlog(kind: string): WebhookClient | null {
-    if (kind === "default") {
-      const webhookId = this.settings.modlogWebhookId;
-      const webhookToken = this.settings.modlogWebhookToken;
-      if (webhookId && webhookToken) {
-        return new WebhookClient({
-          id: webhookId,
-          token: webhookToken,
-        });
-      }
-    } else if (kind === "sensible") {
-      const webhookId = this.settings.sensibleModlogWebhookId;
-      const webhookToken = this.settings.sensibleModlogWebhookToken;
-      if (webhookId && webhookToken) {
-        return new WebhookClient({
-          id: webhookId,
-          token: webhookToken,
-        });
-      }
-    }
-    return null;
-  }
-
-  private async doLogModlogEvent(event: ModlogEvent, kind: string): Promise<Message> {
-    const client = this.getModlog(kind);
-    if (client) {
-      try {
-        const payload = {
-          username: event.title(),
-          avatarURL: event.icon(),
-          embeds: [event.toDiscordEmbed()],
-        };
-        logger.debug(`[webhook] attempting to send payload to webhook ${kind}`);
-        const message = await client.send(payload);
-        logger.debug(`[webhook] successfully sent webhook; handle ${message.id}`);
-      } catch (e) {
-        logger.error(`[webhook] failed to send the payload`);
-        throw e;
-      }
-    } else {
-      return Promise.reject(`Configuration error: no modlog for ${this.guild.name}`);
-    }
-  }
-
-  async logModlogEvent(event: ModlogEvent): Promise<Message> {
-    return this.doLogModlogEvent(event, "default");
-  }
-
-  async logSensibleModlogEvent(event: ModlogEvent): Promise<Message> {
-    return this.doLogModlogEvent(event, "sensible");
   }
 
   get settings(): Settings {
@@ -201,11 +166,6 @@ export default class Server {
       }
       return obj;
     }, {});
-  }
-
-  get publicModlogChannel(): TextChannel {
-    const modlogChannelName = process.env.PUBLIC_MODLOG_CHANNEL || "public-modlog";
-    return this.getTextChannelByName(modlogChannelName);
   }
 
   get pinboardChannel(): TextChannel {

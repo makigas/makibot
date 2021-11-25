@@ -35,7 +35,6 @@ Understood variables:
 - `MUTE_ROLE`: the name of the role to use for muted users. Otherwise, it fallbacks to "mute".
 - `WARN_ROLE`: the name of the role to use for warned users. Otherwise, it fallbacks to "warn".
 - `LINKS_DISABLE_ROLE`: the name of the role to use for members that are not allowed to post links. Otherwise, it fallbacks to "links-disabled"
-- `PUBLIC_MODLOG_CHANNEL`: (deprecated) channel ID to use when sending public modlog events. Otherwise, modlog events are not logged in a public modlog channel.
 
 ### Install and run
 

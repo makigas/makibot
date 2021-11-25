@@ -1,5 +1,5 @@
-import { Message, MessageEmbedOptions, TextChannel, WebhookClient } from "discord.js";
-import { userMention, hyperlink } from "@discordjs/builders";
+import { hyperlink, userMention } from "@discordjs/builders";
+import { Message, MessageEmbedOptions, TextChannel } from "discord.js";
 import Makibot from "../../Makibot";
 import Server from "../server";
 
@@ -37,19 +37,6 @@ function buildModReport(message: Message, reason: string): MessageEmbedOptions {
   };
 }
 
-function getWebhookClient(server: Server, modlog: "default" | "sensible") {
-  const tags = {
-    default: "webhook:defaultmod",
-    sensible: "webhook:sensiblemod",
-  };
-  const webhookURL = server.tagbag.tag(tags[modlog]).get(null);
-  if (webhookURL) {
-    return new WebhookClient({ url: webhookURL });
-  } else {
-    return null;
-  }
-}
-
 export function proposeReport(
   client: Makibot,
   message: Message,
@@ -58,7 +45,7 @@ export function proposeReport(
 ) {
   const embed = buildModReport(message, reason);
   const server = new Server(message.guild);
-  const webhook = getWebhookClient(server, target);
+  const webhook = target === "default" ? server.defaultModlog : server.sensibleModlog;
   if (webhook) {
     return webhook.send({
       embeds: [embed],
