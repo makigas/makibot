@@ -10,8 +10,8 @@ import Makibot from "../../src/Makibot";
 const expect = chai.expect;
 chai.use(sinonChai);
 
-function mockSettingProvider(returns: any = undefined): SettingProvider {
-  let fakeSettingProvider = {
+function mockSettingProvider<T>(returns: T = undefined): SettingProvider {
+  const fakeSettingProvider = {
     get: stub().returns(returns),
     set: stub().returns(Promise.resolve(returns)),
     remove: stub().returns(Promise.resolve()),
@@ -35,7 +35,7 @@ describe("Member", () => {
 
   describe("#tagbag", () => {
     it("can be used to bind tags to the member", () => {
-      let member = new Member(fakeGuildMember);
+      const member = new Member(fakeGuildMember);
       expect(member.tagbag.tag("score").get(5)).to.equal(10);
       expect(fakeClient.provider.get).to.have.been.calledOnceWith("g112233", "gm112233:score", 5);
     });

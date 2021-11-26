@@ -86,7 +86,7 @@
     "clean": "rimraf makigas-makibot*.tgz dist",
     "start": "ts-node -r dotenv/config src/cmd/makibotd",
     "makibotctl": "ts-node -r dotenv/config src/cmd/makibotctl",
-    "lint": "eslint \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\" \"spec/**/*.ts\"",
     "lint:staged": "lint-staged",
     "test": "mocha -r ts-node/register spec/**/*.spec.ts",
     "release": "standard-version"

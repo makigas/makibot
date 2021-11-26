@@ -1,6 +1,5 @@
-import { CommandInteraction, MessageEmbedOptions } from "discord.js";
+import { CommandInteraction } from "discord.js";
 import { CommandInteractionHandler } from "../../lib/interaction";
-import { userMention } from "@discordjs/builders";
 
 export default class PreguntasCommand implements CommandInteractionHandler {
   name = "invite";

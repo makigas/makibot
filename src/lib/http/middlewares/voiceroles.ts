@@ -14,14 +14,14 @@ export default function voiceRoleMiddleware(makibot: Makibot): Router {
 
   router.post("/", async (req, res) => {
     const channelId = req.body.channel;
-    let roleId = req.body.role;
+    const roleId = req.body.role;
 
     if (!channelId || !roleId) {
       return res.status(400).send("Invalid parameters");
     }
 
-    let config = getConfig();
-    let prevConfig = config[channelId];
+    const config = getConfig();
+    const prevConfig = config[channelId];
     let newConfig;
 
     if (!prevConfig) {
@@ -49,8 +49,8 @@ export default function voiceRoleMiddleware(makibot: Makibot): Router {
       return res.status(400).send("Invalid parameters");
     }
 
-    let config = getConfig();
-    let prevConfig = config[channelId];
+    const config = getConfig();
+    const prevConfig = config[channelId];
     let newConfig: object;
 
     if (prevConfig) {

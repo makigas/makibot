@@ -52,7 +52,7 @@ export default class Makibot extends Client {
       getDatabase()
         .then(async (db) => {
           this._modrepo = await newModRepository(db);
-          this._provider = new SettingProvider(db, this);
+          this._provider = new SettingProvider(db);
           return this._provider.init();
         })
         .then(() => {

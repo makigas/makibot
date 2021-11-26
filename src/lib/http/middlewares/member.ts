@@ -1,25 +1,23 @@
 import { GuildMember, Snowflake } from "discord.js";
 import express from "express";
-
-import { MiddlewareLocals as GuildMiddlewareLocals } from "./guild";
-
-import Member from "../../member";
 import Makibot from "../../../Makibot";
 import { getLevelV1, getLevelV2 } from "../../karma";
+import Member from "../../member";
+import { MiddlewareLocals as GuildMiddlewareLocals } from "./guild";
 
 export interface MiddlewareLocals extends GuildMiddlewareLocals {
   guildMember: GuildMember;
   member: Member;
 }
 
-type RouterRequest<ReqBody = {}, ResBody = {}> = express.Request<
+type RouterRequest<ReqBody = unknown, ResBody = unknown> = express.Request<
   {
     member: Snowflake;
     guild: Snowflake;
   },
   ResBody,
   ReqBody,
-  {},
+  unknown,
   MiddlewareLocals
 >;
 

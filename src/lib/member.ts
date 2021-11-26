@@ -237,7 +237,7 @@ export default class Member {
 
   get trippedAntispam(): boolean {
     const tag = this.tagbag.tag("antispam:trippedAt").get(0);
-    const sevenDaysAgo = Date.now() - (7 * 86400 * 1000);
+    const sevenDaysAgo = Date.now() - 7 * 86400 * 1000;
     return tag >= sevenDaysAgo;
   }
 }

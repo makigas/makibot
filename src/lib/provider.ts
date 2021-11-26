@@ -1,4 +1,4 @@
-import { Client, Snowflake } from "discord.js";
+import { Snowflake } from "discord.js";
 import { Database } from "sqlite";
 
 function guildToDatabaseName(guild: string): string {
@@ -12,7 +12,7 @@ function guildToCacheName(guild: string): string {
 export class SettingProvider {
   private cache: { [server: string]: object };
 
-  constructor(private db: Database, private client: Client) {
+  constructor(private db: Database) {
     this.cache = {};
   }
 
@@ -31,12 +31,12 @@ export class SettingProvider {
     );
   }
 
-  get(guild: Snowflake | "global", key: string, defaultValue: any = undefined): any {
+  get<T>(guild: Snowflake | "global", key: string, defaultValue: T = undefined): T {
     const settings = this.cache[guildToCacheName(guild)];
     return settings && settings[key] ? settings[key] : defaultValue;
   }
 
-  async set(guild: Snowflake | "global", key: string, value: any): Promise<any> {
+  async set<T>(guild: Snowflake | "global", key: string, value: T): Promise<T> {
     const guildKey = guildToCacheName(guild);
     this.cache[guildKey] ||= {};
     this.cache[guildKey][key] = value;
@@ -48,7 +48,7 @@ export class SettingProvider {
     return value;
   }
 
-  async remove(guild: Snowflake | "global", key: string): Promise<any> {
+  async remove(guild: Snowflake | "global", key: string): Promise<void> {
     const guildKey = guildToCacheName(guild);
     this.cache[guildKey] ||= {};
     delete this.cache[guildKey][key];

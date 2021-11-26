@@ -1,11 +1,4 @@
-import {
-  GuildMember,
-  Message,
-  NewsChannel,
-  TextBasedChannels,
-  TextChannel,
-  User,
-} from "discord.js";
+import { GuildMember, Message, NewsChannel, TextBasedChannels, TextChannel } from "discord.js";
 import { Hook } from "../lib/hook";
 import Server from "../lib/server";
 

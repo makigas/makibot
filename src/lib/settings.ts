@@ -1,4 +1,4 @@
-import { Guild, Snowflake } from "discord.js";
+import { Guild } from "discord.js";
 import Makibot from "../Makibot";
 import Tag from "./tag";
 
