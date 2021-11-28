@@ -3,6 +3,7 @@
 import Makibot from "../Makibot";
 import serverFactory from "../lib/http/server";
 import logger from "../lib/logger";
+import * as Sentry from "@sentry/node";
 
 logger.info(".88b  d88.  .d8b.  db   dD d888888b d8888b.  .d88b.  d888888b ");
 logger.info("88'YbdP`88 d8' `8b 88 ,8P'   `88'   88  `8D .8P  Y8. `~~88~~' ");
@@ -11,6 +12,9 @@ logger.info("88  88  88 88~~~88 88`8b      88    88~~~b. 88    88    88    ");
 logger.info("88  88  88 88   88 88 `88.   .88.   88   8D `8b  d8'    88    ");
 logger.info("YP  YP  YP YP   YP YP   YD Y888888P Y8888P'  `Y88P'     YP    ");
 logger.info("");
+
+/* Feed me: SENTRY_DSN, SENTRY_ENVIRONMENT, SENTRY_RELEASE */
+Sentry.init();
 
 const makibot = new Makibot();
 const server = serverFactory(makibot);

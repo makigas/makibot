@@ -13,6 +13,7 @@
     "url": "https://github.com/makigas/makibot/issues"
   },
   "dependencies": {
+    "@sentry/node": "^6.15.0",
     "axios": "^0.24.0",
     "big-integer": "^1.6.51",
     "datetoken": "^1.1.0",
