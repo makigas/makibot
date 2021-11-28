@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.38.1](https://github.com/makigas/makibot/compare/v0.38.0...v0.38.1) (2021-11-28)
+
+
+### Bug Fixes
+
+* missing arrow function in interface ([#477](https://github.com/makigas/makibot/issues/477)) ([262e49f](https://github.com/makigas/makibot/commit/262e49f4defc97fed5066e748f59ef484e41d6be))
+* **ops:** should not deploy unless CI passes ([024b8b8](https://github.com/makigas/makibot/commit/024b8b8b7922e483b7894fe405ed43e783e01661))
+
+
+### Refactor
+
+* migrate modlog to webhooks ([d276e37](https://github.com/makigas/makibot/commit/d276e37359c7d66d240905873d42ac47a5318c5a))
+* remove old warning system ([54f1da1](https://github.com/makigas/makibot/commit/54f1da1ef315d09cd09e121e02b9b4c7589c9b17))
+* remove unused autorole hook ([f9bd3fc](https://github.com/makigas/makibot/commit/f9bd3fc8ded16fe1bfe6064c211e9aa1baa028b9))
+
+
+### Chore
+
+* install Sentry integration ([ba55f6c](https://github.com/makigas/makibot/commit/ba55f6cfc9c903dcd8f5aa3e6bde7a488d5899b8))
+* **lint:** pass eslint ([954d429](https://github.com/makigas/makibot/commit/954d42921b5ea8832c53da2d88a7876a6316a665))
+
 ## [0.38.0](https://github.com/makigas/makibot/compare/v0.37.1...v0.38.0) (2021-11-23)
 
 
