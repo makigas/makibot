@@ -1,11 +1,15 @@
 name: CD
-
 on:
-  push:
+  workflow_run:
+    workflows:
+      - CI
     branches:
       - trunk
+    types:
+      - completed
 jobs:
   release:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Release Docker images
     runs-on: ubuntu-latest
     steps:
