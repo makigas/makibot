@@ -97,21 +97,6 @@ export default class Member {
     return !this.hasRole(this.server.linksDisabledRole);
   }
 
-  get cooldown(): boolean {
-    return this.cooldownSeconds === 0;
-  }
-
-  get cooldownSeconds(): number {
-    if (!this.guildMember.joinedAt) {
-      /* Happens when the user account is deleted. */
-      return 0;
-    }
-
-    const timeSinceJoined = Date.now() - this.guildMember.joinedAt.getTime();
-    const cooldownPeriod = 60 * 5 * 1000;
-    return Math.max(0, cooldownPeriod - timeSinceJoined);
-  }
-
   async getKarma(): Promise<KarmaStats> {
     const results = await Promise.all([
       this.client.karma.count(this.id),
