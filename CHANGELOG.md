@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.39.0](https://github.com/makigas/makibot/compare/v0.38.1...v0.39.0) (2021-12-02)
+
+
+### Features
+
+* add bless subcommand to /mod ([0f04f50](https://github.com/makigas/makibot/commit/0f04f50cefad6abc32faf27d32d86359850a72ec))
+
+
+### Bug Fixes
+
+* do not crash if modevent cannot be evicted ([d23365d](https://github.com/makigas/makibot/commit/d23365dbf87d6ac57e5b2cd4422483e95b025bf4))
+* don't crash on private modlog errors ([516b996](https://github.com/makigas/makibot/commit/516b99668b6df1dba411f0f5705a71e8ab829117))
+
+
+### Refactor
+
+* cleanup unused cooldown properties ([3e33e79](https://github.com/makigas/makibot/commit/3e33e79df524a1bd051ff22ded7ed1248e5cf666))
+
+
+### Chore
+
+* **deps-dev:** bump discord-api-types from 0.24.0 to 0.25.2 ([#482](https://github.com/makigas/makibot/issues/482)) ([b2b12a3](https://github.com/makigas/makibot/commit/b2b12a3938c6dde5c549c9d9f88e61fb65b13c65))
+* **deps-dev:** bump prettier from 2.4.1 to 2.5.0 ([#483](https://github.com/makigas/makibot/issues/483)) ([1e12186](https://github.com/makigas/makibot/commit/1e12186d3c1dc71ad0b6bfcf1772c51ebca767c4))
+* **deps:** update dependencies ([629a61f](https://github.com/makigas/makibot/commit/629a61fd61b8a6188e3a27469a1a93639275efcb))
+* **lint:** measure cyclomatic complexity ([4d13e41](https://github.com/makigas/makibot/commit/4d13e415d5b0a2e2d9160c6fb81946cc7c15354a))
+
 ### [0.38.1](https://github.com/makigas/makibot/compare/v0.38.0...v0.38.1) (2021-11-28)
 
 
