@@ -1,3 +1,4 @@
+import { logger } from "@sentry/utils";
 import { Hook } from "../lib/hook";
 import { applyAction } from "../lib/modlog/actions";
 import { notifyModlog } from "../lib/modlog/notifications";
@@ -37,8 +38,13 @@ export default class ModService implements Hook {
     const expired = await this.client.modrepo.retrieveExpired();
     expired.forEach(async (event) => {
       const reverseEvent = revertEvent(event);
-      const persisted = await applyAction(this.client, reverseEvent);
-      await notifyModlog(this.client, persisted);
+      try {
+        const persisted = await applyAction(this.client, reverseEvent);
+        await notifyModlog(this.client, persisted);
+      } catch (e) {
+        logger.warn("[mod] cannot automatically clean event", e);
+        this.client.modrepo.evict(event.id);
+      }
     });
   }
 }
