@@ -115,14 +115,17 @@ function composePublicModlogMessage(event: ModEvent): string {
 
 function composePrivateModlogMessage(event: ModEvent): MessageEmbedOptions {
   const template = PRIVATE_TEMPLATES[event.type];
-  return createModlogNotification({
-    color: template.color,
-    author: {
-      name: template.name,
-      iconURL: template.icon,
-    },
-    description: template.fields(event),
-  });
+  if (template) {
+    return createModlogNotification({
+      color: template.color,
+      author: {
+        name: template.name,
+        iconURL: template.icon,
+      },
+      description: template.fields(event),
+    });
+  }
+  return null;
 }
 
 async function sendToPublicModlog(guild: Guild, event: ModEvent): Promise<void> {
@@ -139,11 +142,13 @@ async function sendToPrivateModlog(guild: Guild, event: ModEvent): Promise<void>
   const client = server.defaultModlog;
   if (client) {
     const message = composePrivateModlogMessage(event);
-    await client.send({
-      username: message.author.name,
-      avatarURL: message.author.iconURL,
-      embeds: [message],
-    });
+    if (message) {
+      await client.send({
+        username: message.author.name,
+        avatarURL: message.author.iconURL,
+        embeds: [message],
+      });
+    }
   }
 }
 
