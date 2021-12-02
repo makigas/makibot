@@ -19,5 +19,7 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["@typescript-eslint"],
-  rules: {},
+  rules: {
+    complexity: ["warn", { max: 10 }],
+  },
 };
