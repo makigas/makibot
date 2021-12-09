@@ -29,6 +29,7 @@ const ruleset: { [reason: string]: RegExp[] } = {
     /docs\.google\.com\/spreadsheets\/d\//, // Google Docs
     /docs\.google\.com\/presentations\/d\//, // Google Docs
     /docs\.google\.com\/forms\/d\//, // Google Forms
+    /forms.gle\/\w+/, // Google Forms shortlink
   ],
 };
 
