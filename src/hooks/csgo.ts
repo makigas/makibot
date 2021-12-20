@@ -65,6 +65,7 @@ const TOKENS = [
   /discord-help\./,
   /dicsord-nitro\./,
   /dlscord-nitro\./,
+  /discrode-gift\./,
   /gave-nitro\./,
 
   // Update
