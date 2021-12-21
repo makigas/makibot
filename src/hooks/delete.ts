@@ -53,7 +53,7 @@ export default class DeleteService implements Hook {
     /* Log to the modlog the fact that a message was deleted. */
     try {
       const server = new Server(message.guild);
-      const client = server.defaultModlog;
+      const client = server.deletionModlog;
       if (client) {
         const embed = createModlogNotification(createDeleteEvent(message));
         await client.send({

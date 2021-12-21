@@ -93,6 +93,10 @@ export default class Server {
     return this.modlog("webhook:sensiblemod");
   }
 
+  get deletionModlog(): WebhookClient {
+    return this.modlog("webhook:deletemod");
+  }
+
   private getRoleByName(name: string): Role {
     if (!name) {
       return null;
