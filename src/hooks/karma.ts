@@ -195,9 +195,9 @@ export default class KarmaService implements Hook {
           const toast = createToast({
             title: `¡Es el primer mensaje de @${gm.user.username}!`,
             description: [
-              `Parece que este es el primer mensaje de @${gm.user.username} en este servidor.`,
-              "¡Te damos la bienvenida, este servidor es mejor ahora que estás aquí!",
-              "Pásalo bien y disfruta en la comunidad.",
+              `¡Ey! Este es el primer mensaje de @${gm.user.username} en este servidor.`,
+              "¡Te damos la bienvenida, esperamos que estés bien y te damos la gracias por",
+              "participar en este servidor!",
             ].join(" "),
             severity: "success",
             target: gm.user,
