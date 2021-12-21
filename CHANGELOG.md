@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.39.1](https://github.com/makigas/makibot/compare/v0.39.0...v0.39.1) (2021-12-21)
+
+
+### Features
+
+* **antispam:** block links pointing to forms.gle ([3cc500d](https://github.com/makigas/makibot/commit/3cc500d27490a4e9bfe30084de59ccc3f08a1296))
+* **csgo:** add spam link ([6271cf0](https://github.com/makigas/makibot/commit/6271cf004dcc186f439febfcfcb0b42d5681b561))
+* separate defaultMod from deleteMod ([6030ae0](https://github.com/makigas/makibot/commit/6030ae07aa066eb433354dadc56799f652ee1822))
+
+
+### Chore
+
+* **karma:** better welcome message ([43c855f](https://github.com/makigas/makibot/commit/43c855f9dcaadbda69504ee8cdd6af5cf6e41ca0))
+
 ## [0.39.0](https://github.com/makigas/makibot/compare/v0.38.1...v0.39.0) (2021-12-02)
 
 
