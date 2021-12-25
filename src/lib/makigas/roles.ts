@@ -37,6 +37,11 @@ const ROLE_DEFINITIONS = [
     description: "Te hace mencionable y te señala como alguien que ayuda",
     emoji: "✨",
   },
+  {
+    label: "Archivo",
+    description: "Muestra los canales del servidor que han sido archivados",
+    emoji: "💾",
+  },
 ];
 
 /**
