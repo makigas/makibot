@@ -10,6 +10,7 @@ describe("antispam system", () => {
         "@everyone\nAirdrop Discord NITRO with Steam\nhttps://discord.com",
         "@everyone Discord Nitro for Free - Steam Store Discord nitro distribution Get 3 monts of Discord Nitro. Offer ends September 5, 2021 at 11 am EDT, Personalize your profile, screen share in HD, upgrade your emojis, and more!https://discord.com",
         "@everyone\nDistribution of nitro from STEAM.\nGet 3 Months of Nitro Discord. Hurry up the offer ends on August 31, 2021 at 11:00 am ET. Customize your profile, share your HD screen, boost your server, update your emojis, and more! https://discord.com",
+        "airdrop discord nitro by steam, take it https://example.com/spambot",
       ];
 
       for (const strcase of cases) {

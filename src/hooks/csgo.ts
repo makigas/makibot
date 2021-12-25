@@ -64,6 +64,7 @@ const TOKENS = [
   /discorcd-apps\.com/,
   /discord-help\./,
   /dicsord-nitro\./,
+  /discord-nitre\./,
   /dlscord-nitro\./,
   /discrode-gift\./,
   /gave-nitro\./,
@@ -108,10 +109,11 @@ const TOKENS = [
  */
 export function isAirdrop(message: string) {
   const contains = (word: string): boolean => message.toLowerCase().indexOf(word) > -1;
+  const score = (vals: boolean[]) => vals.map(Number).reduce((a, b) => a + b);
   const mentions = ["@everyone", "@here"].some(contains);
-  const containsMagicWords = ["discord", "nitro", "steam"].every(contains);
+  const magicWords = score(["discord", "nitro", "steam", "airdrop"].map(contains)) >= 3;
   const hasLink = ["http://", "https://"].some(contains);
-  return mentions && containsMagicWords && hasLink;
+  return score([mentions, magicWords, hasLink]) >= 2;
 }
 
 export function containsSpamLink(content: string): boolean {
