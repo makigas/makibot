@@ -7,9 +7,11 @@ import {
   MessageActionRow,
   MessageComponentInteraction,
   MessageSelectMenu,
+  MessageButton,
   MessageSelectOptionData,
   SelectMenuInteraction,
   Snowflake,
+  ButtonInteraction,
 } from "discord.js";
 
 function getHelperRolesList(guild: Guild): string[] {
@@ -40,18 +42,25 @@ function difference(a: string[], b: string[]): string[] {
 }
 
 class HelperManager {
-  private collector: InteractionCollector<SelectMenuInteraction>;
+  private menuCollector: InteractionCollector<SelectMenuInteraction>;
+  private buttonCollector: InteractionCollector<ButtonInteraction>;
 
   constructor(
     private interaction: BaseCommandInteraction | MessageComponentInteraction,
     private member: GuildMember,
     private parentId: Snowflake
   ) {
-    this.collector = this.interaction.channel.createMessageComponentCollector({
+    this.menuCollector = this.interaction.channel.createMessageComponentCollector({
       componentType: "SELECT_MENU",
       filter: (event) => event.message.id === this.parentId,
     });
-    this.collector.on("collect", this.handleCollector.bind(this));
+    this.menuCollector.on("collect", this.handleMenuCollector.bind(this));
+
+    this.buttonCollector = this.interaction.channel.createMessageComponentCollector({
+      componentType: "BUTTON",
+      filter: (event) => event.message.id === this.parentId,
+    });
+    this.buttonCollector.on("collect", this.handleButtonCollector.bind(this));
   }
 
   render(): InteractionReplyOptions {
@@ -62,11 +71,20 @@ class HelperManager {
         new MessageActionRow({
           components: [createDropdown(this.member)],
         }),
+        new MessageActionRow({
+          components: [
+            new MessageButton({
+              customId: "helper:delete",
+              label: "Quítame todo",
+              style: "DANGER",
+            }),
+          ],
+        }),
       ],
     };
   }
 
-  private async handleCollector(event: SelectMenuInteraction): Promise<void> {
+  private async handleMenuCollector(event: SelectMenuInteraction): Promise<void> {
     /* Set and unset roles that should not apply here. */
     await this.member.roles.add(
       difference(event.values, this.currentMemberRoles).map((r) =>
@@ -80,6 +98,13 @@ class HelperManager {
     );
 
     /* Update the message. */
+    await event.update(this.render());
+  }
+
+  private async handleButtonCollector(event: ButtonInteraction): Promise<void> {
+    await this.member.roles.remove(
+      this.currentMemberRoles.map((r) => this.member.guild.roles.cache.find((p) => p.name === r))
+    );
     await event.update(this.render());
   }
 
