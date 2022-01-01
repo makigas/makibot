@@ -1,4 +1,4 @@
-import { GuildMember, Message, NewsChannel, TextBasedChannels, TextChannel } from "discord.js";
+import { GuildMember, Message, NewsChannel, TextBasedChannel, TextChannel } from "discord.js";
 import { Hook } from "../lib/hook";
 import Server from "../lib/server";
 
@@ -24,7 +24,7 @@ export default class ThreadChannelService implements Hook {
 type ThreadableChannel = TextChannel | NewsChannel;
 
 /** Test if the channel can be managed and coerces into a threadable channel. */
-function isThreadableChannel(channel: TextBasedChannels): channel is ThreadableChannel {
+function isThreadableChannel(channel: TextBasedChannel): channel is ThreadableChannel {
   return ["GUILD_TEXT", "GUILD_NEWS"].includes(channel.type);
 }
 

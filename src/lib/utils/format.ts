@@ -1,5 +1,5 @@
 import { hyperlink, channelMention, userMention, time } from "@discordjs/builders";
-import { Snowflake, Message, PartialMessage, TextBasedChannels, User } from "discord.js";
+import { Snowflake, Message, PartialMessage, TextBasedChannel, User } from "discord.js";
 
 /**
  * Formats an user as: `@mention (handle#1234, 123412341234)`.
@@ -39,6 +39,6 @@ export function messageIdentifier(message: Message | PartialMessage): string {
  * @param channel the channel to link.
  * @returns the formatted string representation of the channel
  */
-export function channelIdentifier(channel: TextBasedChannels): string {
+export function channelIdentifier(channel: TextBasedChannel): string {
   return channelMention(channel.id);
 }

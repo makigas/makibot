@@ -2,7 +2,7 @@ import {
   GuildMember,
   Message,
   NewsChannel,
-  TextBasedChannels,
+  TextBasedChannel,
   TextChannel,
   ThreadChannel,
 } from "discord.js";
@@ -46,7 +46,7 @@ function isAcceptableUser(gm: GuildMember): boolean {
 }
 
 /** Tests and coerces this channel into an acceptable channel type we monitor. */
-function isLinkableChannel(channel: TextBasedChannels): channel is LinkableChannel {
+function isLinkableChannel(channel: TextBasedChannel): channel is LinkableChannel {
   const types = ["GUILD_NEWS", "GUILD_TEXT"];
   return types.includes(channel.type);
 }

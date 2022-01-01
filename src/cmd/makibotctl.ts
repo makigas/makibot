@@ -39,11 +39,11 @@ makibotctl.command(
   }
 );
 
-makibotctl.command(
+makibotctl.command<{ guild: string }>(
   "get-config <guild>",
   "get the config for a guild",
   () => ({}),
-  async (argv: { guild: string }) => {
+  async (argv) => {
     client
       .guildSettings(argv.guild)
       .then((settings) => {
@@ -57,11 +57,11 @@ makibotctl.command(
   }
 );
 
-makibotctl.command(
+makibotctl.command<{ guild: string; key: string }>(
   "get-tag <guild> <key>",
   "get a preference from the setting provider",
   () => ({}),
-  async (argv: { guild: string; key: string }) => {
+  async (argv) => {
     client
       .getProviderSetting(argv.guild, argv.key)
       .then((value) => {
@@ -75,11 +75,11 @@ makibotctl.command(
   }
 );
 
-makibotctl.command(
+makibotctl.command<{ guild: string; key: string; value: string }>(
   "put-tag <guild> <key> <value>",
   "update or set a preference from the setting provider",
   () => ({}),
-  async (argv: { guild: string; key: string; value: string }) => {
+  async (argv) => {
     client
       .setProviderSetting(argv.guild, argv.key, argv.value)
       .then(() => {
@@ -93,11 +93,11 @@ makibotctl.command(
   }
 );
 
-makibotctl.command(
+makibotctl.command<{ guild: string; key: string }>(
   "delete-tag <guild> <key>",
   "delete a preference from the setting provider",
   () => ({}),
-  async (argv: { guild: string; key: string }) => {
+  async (argv) => {
     client
       .deleteProviderSetting(argv.guild, argv.key)
       .then(() => {
@@ -111,11 +111,11 @@ makibotctl.command(
   }
 );
 
-makibotctl.command(
+makibotctl.command<{ guild: string; key: string; value: string }>(
   "set-config <guild> <key> <value>",
   "update the configuration for a specific guild",
   () => ({}),
-  async (argv: { guild: string; key: string; value: string }) => {
+  async (argv) => {
     client
       .setSetting(argv.guild, argv.key, argv.value)
       .then(() => {
@@ -128,11 +128,11 @@ makibotctl.command(
   }
 );
 
-makibotctl.command(
+makibotctl.command<{ guild: string; member: string }>(
   "get-karma <guild> <member>",
   "get the karma information for a specific member",
   () => ({}),
-  async (argv: { guild: string; member: string }) => {
+  async (argv) => {
     try {
       const karma = await client.getKarma(argv.guild, argv.member);
       console.log("Points: " + karma.points);
@@ -146,11 +146,11 @@ makibotctl.command(
   }
 );
 
-makibotctl.command(
+makibotctl.command<{ guild: string; member: string; offset: number }>(
   "set-karma-offset <guild> <member> <offset>",
   "tune the karma offset for a specific user and update levels",
   () => ({}),
-  async (argv: { guild: string; member: string; offset: number }) => {
+  async (argv) => {
     try {
       const karma = await client.setKarmaOffset(argv.guild, argv.member, argv.offset);
       console.log("Points: " + karma.points);

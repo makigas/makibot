@@ -3,7 +3,7 @@ import {
   Message,
   MessageReaction,
   PartialMessage,
-  TextBasedChannels,
+  TextBasedChannel,
   TextChannel,
   User,
 } from "discord.js";
@@ -16,7 +16,7 @@ import { notifyModlog } from "../lib/modlog/notifications";
 import { createToast } from "../lib/response";
 import Makibot from "../Makibot";
 
-function isTextChannel(channel: TextBasedChannels): channel is TextChannel {
+function isTextChannel(channel: TextBasedChannel): channel is TextChannel {
   return (
     channel.type == "GUILD_TEXT" ||
     channel.type == "GUILD_PUBLIC_THREAD" ||
