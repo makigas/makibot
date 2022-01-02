@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.39.2](https://github.com/makigas/makibot/compare/v0.39.1...v0.39.2) (2022-01-02)
+
+
+### Features
+
+* **csgo:** airdrop scammers not always mention ([013b7e9](https://github.com/makigas/makibot/commit/013b7e90c08b1a0bc08d6d7f958b80e2e351d28a))
+* **roles:** add Archivist role ([90a5fe2](https://github.com/makigas/makibot/commit/90a5fe2db05930d0626c6a2c8101b72366363ce6))
+
+
+### Bug Fixes
+
+* **types:** broken types after updating deps ([1cba099](https://github.com/makigas/makibot/commit/1cba0998cecf639abd215fe94f702e5b2949e946))
+
+
+### Chore
+
+* **csgo:** new spam detected ([#487](https://github.com/makigas/makibot/issues/487)) ([810930c](https://github.com/makigas/makibot/commit/810930ce65f549b919a7feacf5bb681f601f0e1a))
+* **deps:** bump dependencies ([dd272b6](https://github.com/makigas/makibot/commit/dd272b632a2e723542d7ee01b6ed2412b2c92dd5))
+* **deps:** update dependencies ([caff47d](https://github.com/makigas/makibot/commit/caff47d11a16c1d8eccc08d4e1332d9cebeff9be))
+
 ### [0.39.1](https://github.com/makigas/makibot/compare/v0.39.0...v0.39.1) (2021-12-21)
 
 
