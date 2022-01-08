@@ -78,6 +78,8 @@ const TOKENS = [
   /discorcl\.click/,
   /discordapp\.click/,
   /discordapp\.link/,
+  /discgrd\./,
+  /disczrd\./,
 
   // I don't have time for this shit
   /discorcl\.[a-z]/,
