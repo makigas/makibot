@@ -21,13 +21,11 @@ function generateFirstToast(message: Message): MessageEmbed {
     severity: "warning",
     target: message.member.user,
     description: [
-      "Ponte de acuerdo y elige un canal en el que mandar tu mensaje.",
-      "No mandes el mismo mensaje a múltiples canales porque puede ser",
-      "confuso para las personas que te pueden estar intentando echar",
-      "una mano, ¿no crees?",
+      "Por favor, ponte de acuerdo y no envíes un mismo mensaje a varios canales.",
       "\n\n",
-      "Tendrás que borrar el mensaje del otro canal si quieres mandarlo",
-      "aquí, o esperar una hora para que el mensaje se enfríe.",
+      "Hacerlo es confuso para la gente que te está intentando echar una mano,",
+      "¿no crees? Por favor, manten la conversación donde la empezaste o",
+      "elimina antes el viejo hilo si quieres empezar aquí.",
     ].join(" "),
   });
 }
@@ -38,9 +36,13 @@ function generateRepeatingToast(message: Message): MessageEmbed {
     severity: "error",
     target: message.member.user,
     description: [
-      "Has faltado varias veces a esta norma. Si vuelves a copiar y pegar un",
-      "mensaje en otro canal en vez de simplemente mantener la conversación",
-      "en un único canal, se te SILENCIARÁ.",
+      "Por favor, ponte de acuerdo y no envíes un mismo mensaje a varios canales.",
+      "\n\n",
+      "Hacerlo es confuso para la gente que te está intentando echar una mano,",
+      "¿no crees? Por favor, manten la conversación donde la empezaste o",
+      "elimina antes el viejo hilo si quieres empezar aquí.",
+      "\n\n",
+      "Este es el **segundo aviso** que se te da.",
     ].join(" "),
   });
 }
@@ -51,9 +53,13 @@ function generateMuteToast(message: Message): MessageEmbed {
     severity: "error",
     target: message.member.user,
     description: [
-      "Se te ha pedido en varias ocasiones que no copies y pegues un mensaje",
-      "en múltiples canales, pero claramente se ve que tienes algún problema",
-      "de comprensión lectora.",
+      "Por favor, ponte de acuerdo y no envíes un mismo mensaje a varios canales.",
+      "\n\n",
+      "Hacerlo es confuso para la gente que te está intentando echar una mano,",
+      "¿no crees? Por favor, manten la conversación donde la empezaste o",
+      "elimina antes el viejo hilo si quieres empezar aquí.",
+      "\n\n",
+      "Este es el **tercer aviso** que se te da, tu cuenta recibirá mute.",
     ].join(" "),
   });
 }
@@ -107,7 +113,8 @@ function isRecentlySaid(message: Message): boolean {
   const normalized = normalize(message.cleanContent);
   if (normalized in history) {
     const when = history[normalized].expires;
-    return Date.now() - when < 3600_000;
+    const where = history[normalized].channel;
+    return Date.now() - when < 3600_000 && where != message.channelId;
   }
   return false;
 }
