@@ -91,9 +91,14 @@ interface NotificationOptions {
 export function createToast(options: NotificationOptions): MessageEmbed {
   const embed = new MessageEmbed();
   if (options.target) {
-    embed.setAuthor(options.title, options.target.avatarURL());
+    embed.setAuthor({
+      name: options.title,
+      iconURL: options.target.avatarURL(),
+    });
   } else {
-    embed.setAuthor(options.title);
+    embed.setAuthor({
+      name: options.title,
+    });
   }
   if (options.description) {
     embed.setDescription(options.description);
