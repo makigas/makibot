@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/makigas/makibot/compare/v0.39.2...v1.0.0) (2022-01-17)
+
+
+### Features
+
+* add button to manage helper roles ([ba66988](https://github.com/makigas/makibot/commit/ba6698838f6181038fcd941b33c85e476f026d79))
+* add button to remove all roles or helpers ([ebf58c0](https://github.com/makigas/makibot/commit/ebf58c0627f9683e091c6a97a738abef6d04c554))
+* add helper manager (command) ([84aa1ed](https://github.com/makigas/makibot/commit/84aa1ed74f130879baf0cd2f88be2e0205b79212))
+
+
+### Bug Fixes
+
+* **antiflood:** do not treat as flood the same channel ([d75c222](https://github.com/makigas/makibot/commit/d75c222c94873491577b01330f3d7c1d0d433fb7))
+* **antispam:** exception for VODs and clips ([70284bc](https://github.com/makigas/makibot/commit/70284bc8b17dd1f18ad9bc6a82130f888cbfd3ea))
+* downgrade to get-urls 10 to fix ESM modules ([5d2a438](https://github.com/makigas/makibot/commit/5d2a438609c5c489659786ff8df899e38f421dce))
+
+
+### Chore
+
+* **csgo:** add spam filters ([#494](https://github.com/makigas/makibot/issues/494)) ([65b261e](https://github.com/makigas/makibot/commit/65b261e36e5952b3f0dcf148dcca13bbfa8f3ade))
+* **deps:** update dependencies ([50275e7](https://github.com/makigas/makibot/commit/50275e7b2bf2ad8f354e5453daace1064a1d8790))
+* **deps:** update vulnerable dependencies ([cfcc244](https://github.com/makigas/makibot/commit/cfcc24421c82c27590f4aeabe9bf517a330713ac))
+* handle deprecations ([d32e62a](https://github.com/makigas/makibot/commit/d32e62acae1be27171e7735abcc5a491e6c30118))
+
+
+### Refactor
+
+* **antispam:** better error messages ([ead53a8](https://github.com/makigas/makibot/commit/ead53a8742b8492e1cd5e56579cb592464896106))
+
 ### [0.39.2](https://github.com/makigas/makibot/compare/v0.39.1...v0.39.2) (2022-01-02)
 
 
