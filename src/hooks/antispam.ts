@@ -33,8 +33,7 @@ const ruleset: { [reason: string]: RegExp[] } = {
   ],
 };
 
-const disabledLinksReason =
-  "A este perfil se le ha retirado el permiso para enviar mensajes con enlaces en este servidor";
+const disabledLinksReason = "Al perfil se le quitó el permiso para enviar enlaces al servidor";
 
 export function matchesUrlInRuleset(message: string): string | undefined {
   return Object.keys(ruleset).find((rule) => {
@@ -86,12 +85,14 @@ async function followUp(message: Message, match: string): Promise<void> {
   const toast = createToast({
     title: `@${message.member.user.username}, tu mensaje ha sido retenido por tener un enlace inapropiado`,
     description: [
-      `Tu mensaje contenía un enlace que ha hecho saltar el filtro antispam.`,
-      `El filtro antispam ha dicho: ${match}.`,
+      `¡Hola! El mensaje que has enviado contiene un mensaje que tiene un enlace`,
+      `que no está permitido con tu nivel de reputación actual. El filtro`,
+      `ha dicho: ${match}.`,
       `\n\n`,
-      `Tu mensaje ha sido reenviado a moderación para que lo revise y decida`,
-      `si ha sido un error del filtro o si debe dejar caer el martillo del ban`,
-      `sobre ti. Si no has incumplido las normas, no debes tener miedo.`,
+      `Un evento de moderación se ha generado para que pueda revisar tu enlace`,
+      `y te otorgue permiso si da por aprobado el enlace. Por favor, no trates`,
+      `de reenviar otro enlace hasta entonces para que el sistema antispam`,
+      `no te confunda con un bot (o con un spammer).`,
     ].join(" "),
     severity: "error",
     target: message.member.user,
@@ -102,15 +103,15 @@ async function followUp(message: Message, match: string): Promise<void> {
 async function moderateMessage(message: Message, reason: string): Promise<ModEvent> {
   const member = new Member(message.member);
   if (member.trippedAntispam) {
-    return modEventBuilder(
-      message,
-      "MUTE",
-      "El sistema antispam ha eliminado un mensaje que ha identificado como positivo."
-    );
+    return modEventBuilder(message, "MUTE", "Mensaje con un enlace no permitido por el filtro");
   } else {
     await member.tripAntispam();
     await followUp(message, reason);
-    return modEventBuilder(message, "DELETE", "Mensaje contiene enlace no apropiado: " + reason);
+    return modEventBuilder(
+      message,
+      "DELETE",
+      "Mensaje con un enlace no permitido por el filtro: " + reason
+    );
   }
 }
 
