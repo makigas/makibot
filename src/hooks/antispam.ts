@@ -19,7 +19,7 @@ const ruleset: { [reason: string]: RegExp[] } = {
     /facebook\.com\/groups\/[\w._]+/, // intentionally also capture permalinks for posts in the group
     /facebook\.com\/pages\/[\w._]+\/\d+/,
     /twitter\.com\/\w+\/?(\?.+)?$/, // intentionally allow status because sharing tweets is common
-    /twitch\.tv\/\w+/, // Twitch pages,
+    /https:\/\/(www\.)?twitch.tv\/[a-zA-Z0-9_-]+\/?(videos)?\s/, // Twitch pages,
     /steamcommunity\.com\/id\/\w+/, // Steam profile pages by vanity URL.
     /steamcommunity\.com\/profiles\/\w+/, // Steam profile pages by ID.
   ],
@@ -36,7 +36,7 @@ const ruleset: { [reason: string]: RegExp[] } = {
 const disabledLinksReason =
   "A este perfil se le ha retirado el permiso para enviar mensajes con enlaces en este servidor";
 
-function matchesUrlInRuleset(message: string): string | undefined {
+export function matchesUrlInRuleset(message: string): string | undefined {
   return Object.keys(ruleset).find((rule) => {
     const regexps = ruleset[rule];
     return regexps.some((regexp) => regexp.test(message));
