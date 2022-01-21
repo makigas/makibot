@@ -23,7 +23,7 @@
     "express": "^4.17.2",
     "follow-redirects": ">=1.14.7",
     "get-urls": "^10.0.0",
-    "log4js": "^6.3.0",
+    "log4js": "^6.4.0",
     "require-all": "^3.0.0",
     "sqlite": "^4.0.23",
     "sqlite3": "^5.0.2",
