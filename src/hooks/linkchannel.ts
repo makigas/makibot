@@ -8,6 +8,7 @@ import {
 } from "discord.js";
 import { userMention } from "@discordjs/builders";
 import getUrls from "get-urls";
+import og from "open-graph";
 import { Hook } from "../lib/hook";
 import { quoteMessage } from "../lib/response";
 import Server from "../lib/server";
@@ -65,7 +66,7 @@ async function handleMessage(msg: Message): Promise<void> {
   const firstUrl = getFirstLink(msg);
   if (firstUrl) {
     /* Message has a link, AOK. */
-    await startThread(msg);
+    await startThread(msg, firstUrl);
   } else {
     if (msg.reference?.messageId) {
       /* Message references another message, let's try to embed it. */
@@ -85,10 +86,38 @@ function getFirstLink(msg: Message): string | null {
   }
 }
 
+async function getTitle(url: string): Promise<string | null> {
+  return new Promise((resolve, reject) => {
+    og(url, function (err, meta) {
+      if (err) {
+        reject(err);
+      } else {
+        if (meta.title) {
+          resolve(meta.title as string);
+        } else {
+          resolve(null);
+        }
+      }
+    });
+  });
+}
+
 /** Handler when the message is valid and should start a thread. */
-function startThread(msg: Message): Promise<ThreadChannel> {
-  const name = `${msg.id}`;
-  return msg.startThread({ name });
+function startThread(msg: Message, url: string): Promise<ThreadChannel> {
+  return getTitle(url).then((title) => {
+    if (title) {
+      if (title.length > 80) {
+        const name = `${title.substring(0, 80)}... (comentarios)`;
+        return msg.startThread({ name });
+      } else {
+        const name = `${title} (comentarios)`;
+        return msg.startThread({ name });
+      }
+    } else {
+      const name = `${msg.id} (comentarios)`;
+      return msg.startThread({ name });
+    }
+  });
 }
 
 /** Handler when the message was replied to, to try to put the reply in the thread. */
