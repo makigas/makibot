@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/makigas/makibot/compare/v1.0.0...v1.1.0) (2022-01-30)
+
+
+### Features
+
+* **linkchannel:** try to get link title using Open Graph ([3e8ec4d](https://github.com/makigas/makibot/commit/3e8ec4d6c4233d0149a15a7f584d3d5cae35f9f5))
+
+
+### Chore
+
+* **deps:** bump log4js from 6.3.0 to 6.4.0 ([#496](https://github.com/makigas/makibot/issues/496)) ([28cbb27](https://github.com/makigas/makibot/commit/28cbb274eb3e910bbf938b0e0ea755e4caaae420))
+* **deps:** update dependencies ([3ddaf17](https://github.com/makigas/makibot/commit/3ddaf1794a8ca77e283882d7b67147d6883cc669))
+
 ## [1.0.0](https://github.com/makigas/makibot/compare/v0.39.2...v1.0.0) (2022-01-17)
 
 
