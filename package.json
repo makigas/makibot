@@ -19,7 +19,7 @@
     "datetoken": "^1.1.1",
     "discord.js": "^13.6.0",
     "discordjs-voicerole": "^2.0.3",
-    "dotenv": "^14.3.2",
+    "dotenv": "^15.0.0",
     "express": "^4.17.2",
     "follow-redirects": ">=1.14.7",
     "get-urls": "<11.0.0",
