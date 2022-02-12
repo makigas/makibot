@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/makigas/makibot/compare/v1.1.0...v1.1.1) (2022-02-12)
+
+
+### Bug Fixes
+
+* **antiflood:** ignore messages that start thread ([e2e58fa](https://github.com/makigas/makibot/commit/e2e58facae12fbc33afbbbc5ce0d891c4a91830a))
+
+
+### Chore
+
+* **deps:** update dependencies ([2fcb15b](https://github.com/makigas/makibot/commit/2fcb15b43fa02614e23cb7c066bdd7920925ea71))
+
 ## [1.1.0](https://github.com/makigas/makibot/compare/v1.0.0...v1.1.0) (2022-01-30)
 
 
