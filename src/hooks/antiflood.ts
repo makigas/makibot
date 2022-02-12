@@ -179,6 +179,11 @@ export default class AntifloodService implements Hook {
   }
 
   async onPremoderateMessage(message: Message): Promise<ModEvent | null> {
+    if (message.channel.isThread() && message.channel.messageCount == 0) {
+      // It is possible that a bug in mobile apps creates double threads.
+      // In the time being, let's ignore messages that start a thread.
+      return null;
+    }
     const member = new Member(message.member);
     const tripsFlood = isRecentlySaid(message);
     trackMessageInHistory(message);
