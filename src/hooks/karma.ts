@@ -182,14 +182,16 @@ export default class KarmaService implements Hook {
       return this.muteLowReputation(member);
     }
 
-    const currentLevel = member.tagbag.tag("karma:level");
+    const currentLevelTag = member.tagbag.tag("karma:level");
     const expectedLevel = getLevelV2(karma.points);
-    if (currentLevel.get(0) != expectedLevel) {
-      await currentLevel.set(expectedLevel);
+    const currentLevel = await currentLevelTag.get(0);
+    if (currentLevel != expectedLevel) {
+      await currentLevelTag.set(expectedLevel);
 
-      const highScoreLevel = member.tagbag.tag("karma:max");
-      if (highScoreLevel.get(0) < expectedLevel) {
-        await highScoreLevel.set(expectedLevel);
+      const highScoreTag = member.tagbag.tag("karma:max");
+      const highScoreValue = await highScoreTag.get(0);
+      if (highScoreValue < expectedLevel) {
+        await highScoreTag.set(expectedLevel);
         if (expectedLevel === 1) {
           /* First message. */
           const toast = createToast({
@@ -214,7 +216,14 @@ export default class KarmaService implements Hook {
       }
     }
 
-    /* Update presence in the tiers. */
-    await member.setCrew(currentLevel.get(0));
+    // Always do this, even if the level does not change, in case the user
+    // has lost the color for some reason or mistake in the server.
+    await this.checkMemberLevel(member);
+  }
+
+  private async checkMemberLevel(member: Member): Promise<void> {
+    const currentLevelTag = member.tagbag.tag("karma:level");
+    const currentLevel = await currentLevelTag.get(0);
+    await member.setCrew(currentLevel);
   }
 }

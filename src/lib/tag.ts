@@ -41,11 +41,11 @@ export default class Tag {
     }
   }
 
-  get<T>(defVal?: T): T {
+  get<T>(defVal?: T): Promise<T> {
     if (this.isExpired) {
-      return defVal;
+      return Promise.resolve(defVal);
     }
-    return this.provider.get(this.guildId, this.key, defVal);
+    return Promise.resolve(this.provider.get(this.guildId, this.key, defVal));
   }
 
   async set<T>(value: T): Promise<T> {

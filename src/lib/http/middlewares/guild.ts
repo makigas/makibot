@@ -28,8 +28,8 @@ export default function guildMiddleware(makibot: Makibot): express.Router {
   });
 
   /* Print information about the server. */
-  router.get("/", (req, res) => {
-    res.json(res.locals.server.toJSON());
+  router.get("/", async (req, res) => {
+    res.json(await res.locals.server.toJSON());
   });
 
   router.use("/members/:member", memberMiddleware(makibot));
@@ -37,8 +37,8 @@ export default function guildMiddleware(makibot: Makibot): express.Router {
   router.use("/provider/:tag", providerMiddleware(makibot));
 
   /* Print current settings for the server. */
-  router.get("/settings", (req, res) => {
-    res.json(res.locals.server.settings.toJSON());
+  router.get("/settings", async (req, res) => {
+    res.json(await res.locals.server.settings.toJSON());
   });
 
   /* Patch settings for the server. */
@@ -61,7 +61,7 @@ export default function guildMiddleware(makibot: Makibot): express.Router {
       .filter((key) => settings[key])
       .map((key) => settings[key](req.body[key]));
     await Promise.all(promises);
-    res.status(200).json(server.settings.toJSON());
+    res.status(200).json(await server.settings.toJSON());
   });
 
   return router;

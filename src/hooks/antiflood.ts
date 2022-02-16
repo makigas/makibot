@@ -95,7 +95,7 @@ function cleanHistory(history: AntifloodHistory): AntifloodHistory {
 async function raisePing(member: Member): Promise<number> {
   /* There is a tag per user that will remember this. */
   const tag = member.tagbag.tag("antiflood:pings");
-  const pings: number[] = tag.get([]);
+  const pings: number[] = await tag.get([]);
 
   /* Clean pings older than 7 days. */
   const now = Math.floor(Date.now() / 1000);
@@ -107,9 +107,9 @@ async function raisePing(member: Member): Promise<number> {
   return recentPings.length;
 }
 
-function isRecentlySaid(message: Message): boolean {
+async function isRecentlySaid(message: Message): Promise<boolean> {
   const member = new Member(message.member);
-  const history: AntifloodHistory = member.tagbag.tag("antiflood:history2").get({});
+  const history: AntifloodHistory = await member.tagbag.tag("antiflood:history2").get({});
   const normalized = normalize(message.cleanContent);
   if (normalized in history) {
     const when = history[normalized].expires;
@@ -143,7 +143,7 @@ function isExceptionable(member: Member, message: Message): boolean {
 async function trackMessageInHistory(message: Message): Promise<void> {
   const member = new Member(message.member);
   const tag = member.tagbag.tag("antiflood:history2");
-  const history = tag.get({});
+  const history = await tag.get({});
   const normalized = normalize(message.cleanContent);
   const newTag: AntifloodHistory = {
     ...cleanHistory(history),
@@ -167,12 +167,13 @@ export default class AntifloodService implements Hook {
     const member = new Member(message.member);
 
     /* Do not delete messages from history if they tripped antispam. */
-    if (member.tagbag.tag("antiflood:floods").get([]).indexOf(message.id) === -1) {
+    const floods = await member.tagbag.tag("antiflood:floods").get([]);
+    if (floods.indexOf(message.id) === -1) {
       const normalized = normalize(message.cleanContent);
 
       /* Forget about the message. */
       const tag = member.tagbag.tag("antiflood:history2");
-      const history: AntifloodHistory = tag.get({});
+      const history: AntifloodHistory = await tag.get({});
       delete history[normalized];
       await tag.set(cleanHistory(history));
     }
@@ -185,7 +186,7 @@ export default class AntifloodService implements Hook {
       return null;
     }
     const member = new Member(message.member);
-    const tripsFlood = isRecentlySaid(message);
+    const tripsFlood = await isRecentlySaid(message);
     trackMessageInHistory(message);
     if (tripsFlood && !isExceptionable(member, message)) {
       await rememberFloodedMessage(message);
@@ -198,5 +199,6 @@ export default class AntifloodService implements Hook {
 async function rememberFloodedMessage(message: Message): Promise<void> {
   const member = new Member(message.member);
   const tag = member.tagbag.tag("antiflood:floods");
-  await tag.set([...tag.get([]), message.id]);
+  const prevFlood = await tag.get([]);
+  await tag.set([...prevFlood, message.id]);
 }

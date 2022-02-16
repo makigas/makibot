@@ -37,7 +37,7 @@ function buildModReport(message: Message, reason: string): MessageEmbedOptions {
   };
 }
 
-export function proposeReport(
+export async function proposeReport(
   client: Makibot,
   message: Message,
   reason: string,
@@ -45,7 +45,8 @@ export function proposeReport(
 ) {
   const embed = buildModReport(message, reason);
   const server = new Server(message.guild);
-  const webhook = target === "default" ? server.defaultModlog : server.sensibleModlog;
+  const webhook =
+    target === "default" ? await server.defaultModlog() : await server.sensibleModlog();
   if (webhook) {
     return webhook.send({
       embeds: [embed],

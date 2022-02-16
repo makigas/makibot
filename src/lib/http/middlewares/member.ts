@@ -75,7 +75,7 @@ export default function memberMiddleware(makibot: Makibot): express.Router {
       res.status(400).contentType("text/plain").send("Offset must be a positive number");
     } else {
       /* Generation. */
-      const karmagen = res.locals.member.tagbag.tag("karma:ver").get<string>("v1");
+      const karmagen = await res.locals.member.tagbag.tag("karma:ver").get<string>("v1");
       const levelFormulas = {
         v1: getLevelV1,
         v2: getLevelV2,
@@ -101,7 +101,7 @@ export default function memberMiddleware(makibot: Makibot): express.Router {
         }
 
         /* Update tier presence. */
-        res.locals.member.setCrew(currentLevel.get(0));
+        res.locals.member.setCrew(await currentLevel.get(0));
       }
 
       res.json({

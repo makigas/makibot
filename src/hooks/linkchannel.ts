@@ -31,7 +31,7 @@ export default class LinkChannel implements Hook {
   async onMessageCreate(msg: Message): Promise<void> {
     if (
       isLinkableChannel(msg.channel) &&
-      isManagedLinkChannel(msg.channel) &&
+      (await isManagedLinkChannel(msg.channel)) &&
       isAcceptableUser(msg.member)
     ) {
       return handleMessage(msg);
@@ -53,10 +53,10 @@ function isLinkableChannel(channel: TextBasedChannel): channel is LinkableChanne
 }
 
 /** Tests whether the given channel should behave as a link-based channel. */
-function isManagedLinkChannel(channel: LinkableChannel) {
+async function isManagedLinkChannel(channel: LinkableChannel): Promise<boolean> {
   if (channel.guild) {
     const server = new Server(channel.guild);
-    const linkables = server.tagbag.tag("linkchannels").get([]);
+    const linkables = await server.tagbag.tag("linkchannels").get([]);
     return linkables.includes(channel.id);
   }
   return false;

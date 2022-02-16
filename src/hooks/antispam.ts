@@ -102,7 +102,7 @@ async function followUp(message: Message, match: string): Promise<void> {
 
 async function moderateMessage(message: Message, reason: string): Promise<ModEvent> {
   const member = new Member(message.member);
-  if (member.trippedAntispam) {
+  if (await member.trippedAntispam()) {
     return modEventBuilder(message, "MUTE", "Mensaje con un enlace no permitido por el filtro");
   } else {
     await member.tripAntispam();

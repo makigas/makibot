@@ -57,7 +57,7 @@ export default class Server {
     return this._tagbag;
   }
 
-  toJSON(): ServerJSONSchema {
+  async toJSON(): Promise<ServerJSONSchema> {
     return {
       id: this.guild.id,
       name: this.guild.name,
@@ -68,32 +68,32 @@ export default class Server {
         warn: roleToJSON(this.warnRole),
       },
       channels: {
-        pinboard: channelToJSON(this.pinboardChannel),
+        pinboard: await channelToJSON(await this.pinboardChannel()),
       },
     };
   }
 
-  private modlog(kind: string): WebhookClient {
-    const url = this.tagbag.tag(kind).get(null);
+  private async modlog(kind: string): Promise<WebhookClient> {
+    const url = await this.tagbag.tag(kind).get(null);
     if (url) {
       return new WebhookClient({ url: url });
     }
     return null;
   }
 
-  get publicModlog(): WebhookClient {
+  async publicModlog(): Promise<WebhookClient> {
     return this.modlog("webhook:publicmod");
   }
 
-  get defaultModlog(): WebhookClient {
+  async defaultModlog(): Promise<WebhookClient> {
     return this.modlog("webhook:defaultmod");
   }
 
-  get sensibleModlog(): WebhookClient {
+  async sensibleModlog(): Promise<WebhookClient> {
     return this.modlog("webhook:sensiblemod");
   }
 
-  get deletionModlog(): WebhookClient {
+  async deletionModlog(): Promise<WebhookClient> {
     return this.modlog("webhook:deletemod");
   }
 
@@ -162,8 +162,8 @@ export default class Server {
     return this.getRoleByName(linksDisabledRole);
   }
 
-  get karmaTiersRole(): { [level: number]: Role } {
-    return this.settings.karmaTiers.reduce((obj, tier) => {
+  async karmaTiersRole(): Promise<{ [level: number]: Role }> {
+    return (await this.settings.karmaTiers()).reduce((obj, tier) => {
       const role = this.getRoleByID(tier.roleId);
       if (role) {
         obj[tier.minLevel] = role;
@@ -172,8 +172,8 @@ export default class Server {
     }, {});
   }
 
-  get pinboardChannel(): TextChannel {
-    const pinboardChannelName = this.settings.pinPinboard;
+  async pinboardChannel(): Promise<TextChannel> {
+    const pinboardChannelName = await this.settings.getPinBoard();
     return this.getTextChannelByName(pinboardChannelName);
   }
 

@@ -15,10 +15,10 @@ function pinTag(message: Message | PartialMessage): Tag | null {
 }
 
 /* Get the pin channel behind the given guild message. */
-function getPinChannel(message: Message | PartialMessage): TextChannel | null {
+function getPinChannel(message: Message | PartialMessage): Promise<TextChannel> | null {
   if (message.guild) {
     const server = new Server(message.guild);
-    return server.pinboardChannel;
+    return server.pinboardChannel();
   } else {
     return null;
   }
@@ -28,17 +28,17 @@ function getPinChannel(message: Message | PartialMessage): TextChannel | null {
 function isPinneable(message: Message | PartialMessage): boolean {
   if (message.guild) {
     const server = new Server(message.guild);
-    return !!server.pinboardChannel && !!server.settings.pinEmoji;
+    return !!server.pinboardChannel && !!server.settings.getPinEmoji;
   } else {
     return false;
   }
 }
 
 /* For a message to be pineable, the reaction must be the configured. */
-function delegatesToPin(reaction: MessageReaction): boolean {
+async function delegatesToPin(reaction: MessageReaction): Promise<boolean> {
   if (isPinneable(reaction.message)) {
     const server = new Server(reaction.message.guild);
-    return reaction.emoji.name === server.settings.pinEmoji;
+    return reaction.emoji.name === (await server.settings.getPinEmoji());
   } else {
     return false;
   }
@@ -55,12 +55,12 @@ export default class PinService implements Hook {
       const message = reaction.message as Message;
 
       /* Only pin messages in a properly configured guild will be delegated. */
-      if (delegatesToPin(reaction)) {
+      if (await delegatesToPin(reaction)) {
         const tag = pinTag(message);
 
         /* Past-proof: legacy pins will not have a tag but will already exist. */
         if (!tag.get(null) && reaction.count === 1) {
-          const channel = getPinChannel(message);
+          const channel = await getPinChannel(message);
           const pins = await channel.send(quoteMessage(message)).then((pins) => {
             /* Should not happen, but just in case: coerce to array. */
             return Array.isArray(pins) ? pins : [pins];
@@ -77,7 +77,7 @@ export default class PinService implements Hook {
   async onMessageReactionDestroy(reaction: MessageReaction): Promise<void> {
     try {
       await reaction.fetch();
-      if (delegatesToPin(reaction) && reaction.count === 0) {
+      if ((await delegatesToPin(reaction)) && reaction.count === 0) {
         await this.deletePinMessage(reaction.message);
       }
     } catch (e) {
@@ -98,9 +98,10 @@ export default class PinService implements Hook {
 
   private async deletePinMessage(message: Message | PartialMessage) {
     const tag = pinTag(message);
-    const channel = getPinChannel(message);
+    const channel = await getPinChannel(message);
+    const pinIds: Snowflake[] = await tag.get([]);
     await Promise.all(
-      tag.get([] as Snowflake[]).map(async (pinId) => {
+      pinIds.map(async (pinId) => {
         try {
           const message = await channel.messages.fetch(pinId);
           return message.delete();

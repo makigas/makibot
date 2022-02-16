@@ -13,7 +13,7 @@ export default class ThreadChannelService implements Hook {
   async onMessageCreate(msg: Message): Promise<void> {
     if (
       isThreadableChannel(msg.channel) &&
-      isManagedThreadChannel(msg.channel) &&
+      (await isManagedThreadChannel(msg.channel)) &&
       isAcceptableUser(msg.member)
     ) {
       await startThread(msg);
@@ -29,10 +29,10 @@ function isThreadableChannel(channel: TextBasedChannel): channel is ThreadableCh
 }
 
 /** Tests whether the given channel should behave as a thread-based channel. */
-function isManagedThreadChannel(channel: ThreadableChannel) {
+async function isManagedThreadChannel(channel: ThreadableChannel): Promise<boolean> {
   if (channel.guild) {
     const server = new Server(channel.guild);
-    const linkables = server.tagbag.tag("threadchannels").get([]);
+    const linkables = await server.tagbag.tag("threadchannels").get([]);
     return linkables.includes(channel.id);
   }
   return false;
