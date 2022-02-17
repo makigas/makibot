@@ -28,7 +28,7 @@ function tombstoneTag(channel: TextChannel): Tag {
  */
 async function getTombstone(channel: TextChannel): Promise<Message | null> {
   const tombstone = tombstoneTag(channel),
-    id = tombstone.get(null);
+    id = await tombstone.get(null);
   if (!id) {
     return null;
   }
@@ -76,7 +76,7 @@ export default class TombstoneService implements Hook {
     }
 
     /* Discard a message if it is actually a tombstone. */
-    if (tombstoneTag(channel).get(null) === message.id) {
+    if ((await tombstoneTag(channel).get(null)) === message.id) {
       await tombstoneTag(channel).delete();
       return;
     }

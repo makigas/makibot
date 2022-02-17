@@ -130,7 +130,7 @@ function composePrivateModlogMessage(event: ModEvent): MessageEmbedOptions {
 
 async function sendToPublicModlog(guild: Guild, event: ModEvent): Promise<void> {
   const server = new Server(guild);
-  const client = server.publicModlog;
+  const client = await server.publicModlog();
   if (client) {
     const message = composePublicModlogMessage(event);
     await client.send(message);
@@ -139,7 +139,7 @@ async function sendToPublicModlog(guild: Guild, event: ModEvent): Promise<void> 
 
 async function sendToPrivateModlog(guild: Guild, event: ModEvent): Promise<void> {
   const server = new Server(guild);
-  const client = server.defaultModlog;
+  const client = await server.defaultModlog();
   if (client) {
     const message = composePrivateModlogMessage(event);
     if (message) {

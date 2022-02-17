@@ -108,9 +108,9 @@ export default class Member {
       this.client.karma.count(this.id, { kind: "wave" }),
     ]);
     const [total, messages, upvotes, downvotes, stars, hearts, waves] = results;
-    const offset = this.tagbag.tag("karma:offset").get(0);
-    const level = this.tagbag.tag("karma:level").get(0);
-    const version = this.tagbag.tag("karma:ver").get<string>("v1");
+    const offset = await this.tagbag.tag("karma:offset").get(0);
+    const level = await this.tagbag.tag("karma:level").get(0);
+    const version = await this.tagbag.tag("karma:ver").get<string>("v1");
     const points = offset + total;
 
     /* Upgrade to the latest version of the karma formula. */
@@ -136,12 +136,12 @@ export default class Member {
   }
 
   async upgradeKarma(): Promise<void> {
-    const version = this.tagbag.tag("karma:ver").get<string>("v1");
+    const version = await this.tagbag.tag("karma:ver").get<string>("v1");
 
     if (version === "v1") {
       /* Upgrade to v2. */
       const total = await this.client.karma.count(this.id);
-      const offset = this.tagbag.tag("karma:offset").get(0);
+      const offset = await this.tagbag.tag("karma:offset").get(0);
       const points = total + offset;
 
       const levelV2 = getLevelV2(points);
@@ -237,8 +237,8 @@ export default class Member {
     await this.tagbag.tag("antispam:trippedAt").set(Date.now());
   }
 
-  get trippedAntispam(): boolean {
-    const tag = this.tagbag.tag("antispam:trippedAt").get(0);
+  async trippedAntispam(): Promise<boolean> {
+    const tag = await this.tagbag.tag("antispam:trippedAt").get(0);
     const sevenDaysAgo = Date.now() - 7 * 86400 * 1000;
     return tag >= sevenDaysAgo;
   }

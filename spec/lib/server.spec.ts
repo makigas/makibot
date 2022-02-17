@@ -30,7 +30,7 @@ describe("Server", () => {
   describe("#tagbag", () => {
     it("can be used to bind tags to a server", () => {
       const server = new Server(fakeGuild);
-      expect(server.tagbag.tag("users").get(5)).to.equal(10);
+      expect(server.tagbag.tag("users").get(5)).to.eventually.equal(10);
       expect(fakeClient.provider.get).to.have.been.calledOnceWith("g112233", "g112233:users", 5);
     });
   });

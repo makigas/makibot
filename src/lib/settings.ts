@@ -34,17 +34,17 @@ export default class Settings {
     };
   }
 
-  public toJSON(): SettingsJSONSchema {
+  public async toJSON(): Promise<SettingsJSONSchema> {
     return {
       pin: {
-        emoji: this.pinEmoji,
-        pinboard: this.pinPinboard,
+        emoji: await this.getPinEmoji(),
+        pinboard: await this.getPinBoard(),
       },
-      karmaTiers: this.karmaTiers,
+      karmaTiers: await this.karmaTiers(),
     };
   }
 
-  get pinEmoji(): string {
+  async getPinEmoji(): Promise<string> {
     return this.tags.pinEmoji.get("\u2b50");
   }
 
@@ -52,7 +52,7 @@ export default class Settings {
     await this.tags.pinEmoji.set(emoji);
   }
 
-  get pinPinboard(): string {
+  async getPinBoard(): Promise<string> {
     return this.tags.pinChannel.get();
   }
 
@@ -60,12 +60,12 @@ export default class Settings {
     await this.tags.pinChannel.set(pinboard);
   }
 
-  get karmaTiers(): KarmaTier[] {
+  karmaTiers(): Promise<KarmaTier[]> {
     return this.tags.karmaTiers.get([]);
   }
 
   async addTier(minLevel: number, roleId: string): Promise<void> {
-    const tiers = this.karmaTiers;
+    const tiers = await this.karmaTiers();
 
     /* Make sure that we don't add the level more than once. */
     const cleanTiers = tiers.filter((tier) => tier.minLevel != minLevel);
@@ -76,7 +76,7 @@ export default class Settings {
   }
 
   async removeTier(minLevel: number): Promise<void> {
-    const tiers = this.karmaTiers;
+    const tiers = await this.karmaTiers();
     const cleanTiers = tiers.filter((tier) => tier.minLevel != minLevel);
     await this.tags.karmaTiers.set(cleanTiers);
   }

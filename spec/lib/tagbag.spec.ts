@@ -13,7 +13,7 @@ chai.use(sinonChai);
 
 function mockSettingProvider<T>(returns: T = undefined): SettingProvider {
   const fakeSettingProvider = {
-    get: stub().returns(returns),
+    get: stub().returns(Promise.resolve(returns)),
     set: stub().returns(Promise.resolve(returns)),
     remove: stub().returns(Promise.resolve()),
   };
@@ -29,7 +29,7 @@ describe("TagBag", () => {
     it("can be used to access a tag bound to the snowflake", () => {
       const provider = mockSettingProvider(5);
       const bag = new TagBag(provider, "12345678901234567890");
-      expect(bag.tag("foobar").get("default")).to.equal(5);
+      expect(bag.tag("foobar").get("default")).to.eventually.equal(5);
       expect(provider.get).to.have.been.calledOnceWith(
         "global",
         "12345678901234567890:foobar",
@@ -40,8 +40,8 @@ describe("TagBag", () => {
     it("memoizes tags but still allows accessing them multiple times", () => {
       const provider = mockSettingProvider(5);
       const bag = new TagBag(provider, "12345678901234567890");
-      expect(bag.tag("foobar").get("default")).to.equal(5);
-      expect(bag.tag("foobar").get("newDefault")).to.equal(5);
+      expect(bag.tag("foobar").get("default")).to.eventually.equal(5);
+      expect(bag.tag("foobar").get("newDefault")).to.eventually.equal(5);
       expect(provider.get).to.have.been.calledTwice;
       expect(provider.get).to.have.been.calledWith(
         "global",
@@ -58,7 +58,7 @@ describe("TagBag", () => {
     it("can modify the value of a tag", async () => {
       const provider = mockSettingProvider(5);
       const bag = new TagBag(provider, "12345678901234567890");
-      expect(bag.tag("foobar").get("default")).to.equal(5);
+      expect(bag.tag("foobar").get("default")).to.eventually.equal(5);
       await bag.tag("foobar").set(10);
       expect(provider.get).to.have.been.calledOnceWith(
         "global",
@@ -71,7 +71,7 @@ describe("TagBag", () => {
     it("can be used to access a tag bound to a specific guild", () => {
       const provider = mockSettingProvider(5);
       const bag = new TagBag(provider, "12345678901234567890", guild);
-      expect(bag.tag("foobar").get("default")).to.equal(5);
+      expect(bag.tag("foobar").get("default")).to.eventually.equal(5);
       expect(provider.get).to.have.been.calledOnceWith(
         "1122334455",
         "12345678901234567890:foobar",

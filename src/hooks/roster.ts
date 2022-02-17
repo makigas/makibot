@@ -34,7 +34,7 @@ export const createLeaveEvent = (member: PartialGuildMember): MessageEmbedOption
 async function sendEvent(guild: Guild, embed: MessageEmbedOptions): Promise<void> {
   try {
     const server = new Server(guild);
-    const client = server.defaultModlog;
+    const client = await server.defaultModlog();
     if (client) {
       await client.send({
         username: embed.author.name,
