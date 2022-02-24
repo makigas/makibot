@@ -52,16 +52,13 @@ export default class DeleteService implements Hook {
   async onMessageDestroy(message: PartialMessage): Promise<void> {
     /* Log to the modlog the fact that a message was deleted. */
     try {
+      const embed = createModlogNotification(createDeleteEvent(message));
       const server = new Server(message.guild);
-      const client = await server.deletionModlog();
-      if (client) {
-        const embed = createModlogNotification(createDeleteEvent(message));
-        await client.send({
-          username: embed.author.name,
-          avatarURL: embed.author.iconURL,
-          embeds: [embed],
-        });
-      }
+      await server.sendToModlog("delete", {
+        username: embed.author.name,
+        avatarURL: embed.author.iconURL,
+        embeds: [embed],
+      });
     } catch (e) {
       logger.error(`[delete] error during message logging`, e);
     }

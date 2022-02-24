@@ -129,27 +129,21 @@ function composePrivateModlogMessage(event: ModEvent): MessageEmbedOptions {
 }
 
 async function sendToPublicModlog(guild: Guild, event: ModEvent): Promise<void> {
+  const message = composePublicModlogMessage(event);
   const server = new Server(guild);
-  const client = await server.publicModlog();
-  if (client) {
-    const message = composePublicModlogMessage(event);
-    await client.send(message);
-  }
+  await server.sendToModlog("public", {
+    content: message,
+  });
 }
 
 async function sendToPrivateModlog(guild: Guild, event: ModEvent): Promise<void> {
+  const message = composePrivateModlogMessage(event);
   const server = new Server(guild);
-  const client = await server.defaultModlog();
-  if (client) {
-    const message = composePrivateModlogMessage(event);
-    if (message) {
-      await client.send({
-        username: message.author.name,
-        avatarURL: message.author.iconURL,
-        embeds: [message],
-      });
-    }
-  }
+  await server.sendToModlog("default", {
+    username: message.author.name,
+    avatarURL: message.author.iconURL,
+    embeds: [message],
+  });
 }
 
 /**

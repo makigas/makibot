@@ -1,4 +1,12 @@
-import { Guild, Role, TextChannel, UserResolvable, WebhookClient } from "discord.js";
+import { APIMessage } from "discord-api-types";
+import {
+  Guild,
+  Role,
+  TextChannel,
+  UserResolvable,
+  WebhookClient,
+  WebhookMessageOptions,
+} from "discord.js";
 import Makibot from "../Makibot";
 import Member from "./member";
 import Settings from "./settings";
@@ -73,28 +81,15 @@ export default class Server {
     };
   }
 
-  private async modlog(kind: string): Promise<WebhookClient> {
-    const url = await this.tagbag.tag(kind).get(null);
+  async sendToModlog(
+    kind: "default" | "sensible" | "delete" | "public",
+    payload: WebhookMessageOptions
+  ): Promise<APIMessage> {
+    const url = await this.tagbag.tag(`webhook:${kind}mod`).get(null);
     if (url) {
-      return new WebhookClient({ url: url });
+      const client = new WebhookClient({ url });
+      return client.send(payload);
     }
-    return null;
-  }
-
-  async publicModlog(): Promise<WebhookClient> {
-    return this.modlog("webhook:publicmod");
-  }
-
-  async defaultModlog(): Promise<WebhookClient> {
-    return this.modlog("webhook:defaultmod");
-  }
-
-  async sensibleModlog(): Promise<WebhookClient> {
-    return this.modlog("webhook:sensiblemod");
-  }
-
-  async deletionModlog(): Promise<WebhookClient> {
-    return this.modlog("webhook:deletemod");
   }
 
   private getRoleByName(name: string): Role {

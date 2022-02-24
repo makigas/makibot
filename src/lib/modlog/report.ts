@@ -45,13 +45,9 @@ export async function proposeReport(
 ) {
   const embed = buildModReport(message, reason);
   const server = new Server(message.guild);
-  const webhook =
-    target === "default" ? await server.defaultModlog() : await server.sensibleModlog();
-  if (webhook) {
-    return webhook.send({
-      embeds: [embed],
-      username: embed.author.name,
-      avatarURL: embed.author.iconURL,
-    });
-  }
+  return server.sendToModlog(target, {
+    embeds: [embed],
+    username: embed.author.name,
+    avatarURL: embed.author.iconURL,
+  });
 }

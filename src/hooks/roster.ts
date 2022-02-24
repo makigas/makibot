@@ -34,14 +34,11 @@ export const createLeaveEvent = (member: PartialGuildMember): MessageEmbedOption
 async function sendEvent(guild: Guild, embed: MessageEmbedOptions): Promise<void> {
   try {
     const server = new Server(guild);
-    const client = await server.defaultModlog();
-    if (client) {
-      await client.send({
-        username: embed.author.name,
-        avatarURL: embed.author.iconURL,
-        embeds: [embed],
-      });
-    }
+    await server.sendToModlog("default", {
+      username: embed.author.name,
+      avatarURL: embed.author.iconURL,
+      embeds: [embed],
+    });
   } catch (e) {
     logger.error(`[roster] error during event handling`, e);
   }
