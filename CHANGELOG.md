@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/makigas/makibot/compare/v1.1.1...v2.0.0) (2022-02-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* wrap all the modlogs into a common send
+
+### Features
+
+* restore karma when member joins server ([f03fb4e](https://github.com/makigas/makibot/commit/f03fb4e5774885660fa88d9c1cdc216776c62b8a))
+
+
+### Bug Fixes
+
+* messages are not being sent to the pinboard ([1e88aad](https://github.com/makigas/makibot/commit/1e88aad040882cfbac2817b1c93439f6cc9a192f))
+* mods cannot close a thread with /archivar ([e17d18c](https://github.com/makigas/makibot/commit/e17d18c5b4c79a24d1d40f530a56fc5387b0c460))
+* roles are not being triggered when message are sent ([1a69343](https://github.com/makigas/makibot/commit/1a693434e06527d34fc4706a8cf802cc0b9615f3))
+
+
+### Refactor
+
+* use promises in the SettingProvider ([#502](https://github.com/makigas/makibot/issues/502)) ([e9cbb9a](https://github.com/makigas/makibot/commit/e9cbb9ac8cf476f18a961c225fc4f704ba5cd86a))
+* wrap all the modlogs into a common send ([d9dc509](https://github.com/makigas/makibot/commit/d9dc509563422554654c5dd4d0f819acd5dc5adc))
+
+
+### Chore
+
+* **deps:** bump node-fetch from 2.6.6 to 2.6.7 ([#497](https://github.com/makigas/makibot/issues/497)) ([d168201](https://github.com/makigas/makibot/commit/d168201f6ace93abccf1b1f90cb2ba4b9b5447ef))
+
 ### [1.1.1](https://github.com/makigas/makibot/compare/v1.1.0...v1.1.1) (2022-02-12)
 
 
