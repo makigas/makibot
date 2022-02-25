@@ -60,8 +60,12 @@ export default class Settings {
     await this.tags.pinChannel.set(pinboard);
   }
 
-  karmaTiers(): Promise<KarmaTier[]> {
-    return this.tags.karmaTiers.get([]);
+  async karmaTiers(): Promise<KarmaTier[]> {
+    const tiers = await this.tags.karmaTiers.get([]);
+    if (typeof tiers === "string") {
+      return JSON.parse(tiers);
+    }
+    return tiers as KarmaTier[];
   }
 
   async addTier(minLevel: number, roleId: string): Promise<void> {

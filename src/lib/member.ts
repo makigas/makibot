@@ -161,7 +161,7 @@ export default class Member {
   }
 
   async setCrew(level: number): Promise<boolean> {
-    const tiers = this.server.karmaTiersRole;
+    const tiers = await this.server.karmaTiersRole();
 
     if (Object.keys(tiers).length == 0) {
       /* Return if the server doesn't have configured any tier. */
@@ -183,10 +183,11 @@ export default class Member {
       const shouldHaveThisLevel = parseInt(level) == assignableLevel;
 
       const tierTag = this.tagbag.tag("karma:tier:" + level);
-      if (!shouldHaveThisLevel && tierTag.get(false)) {
+      const inThisTierTag = await tierTag.get(false);
+      if (!shouldHaveThisLevel && inThisTierTag) {
         this.setRole(tiers[level], false);
         await tierTag.set(false);
-      } else if (shouldHaveThisLevel && !tierTag.get(false)) {
+      } else if (shouldHaveThisLevel && !inThisTierTag) {
         this.setRole(tiers[level], true);
         await tierTag.set(true);
       }

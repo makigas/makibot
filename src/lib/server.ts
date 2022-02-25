@@ -158,7 +158,8 @@ export default class Server {
   }
 
   async karmaTiersRole(): Promise<{ [level: number]: Role }> {
-    return (await this.settings.karmaTiers()).reduce((obj, tier) => {
+    const tiers = await this.settings.karmaTiers();
+    return tiers.reduce((obj, tier) => {
       const role = this.getRoleByID(tier.roleId);
       if (role) {
         obj[tier.minLevel] = role;
