@@ -14,6 +14,7 @@ import Member from "../lib/member";
 import { applyAction } from "../lib/modlog/actions";
 import { notifyModlog } from "../lib/modlog/notifications";
 import { createToast } from "../lib/response";
+import Server from "../lib/server";
 import Makibot from "../Makibot";
 
 function isTextChannel(channel: TextBasedChannel): channel is TextChannel {
@@ -55,6 +56,12 @@ export default class KarmaService implements Hook {
   /* Made as a getter so that we can defer accessing the karma db until the very last moment. */
   private get karma(): KarmaDatabase {
     return this.bot.karma;
+  }
+
+  async onGuildMemberJoin(member: GuildMember): Promise<void> {
+    const server = new Server(member.guild);
+    const serverMember = await server.member(member);
+    await this.checkMemberLevel(serverMember);
   }
 
   async onMessageCreate(message: Message): Promise<void> {

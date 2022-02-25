@@ -184,10 +184,11 @@ export default class Member {
 
       const tierTag = this.tagbag.tag("karma:tier:" + level);
       const inThisTierTag = await tierTag.get(false);
-      if (!shouldHaveThisLevel && inThisTierTag) {
+      const actuallyHasTier = this.hasRole(tiers[level]);
+      if (!shouldHaveThisLevel && (inThisTierTag || actuallyHasTier)) {
         this.setRole(tiers[level], false);
         await tierTag.set(false);
-      } else if (shouldHaveThisLevel && !inThisTierTag) {
+      } else if (shouldHaveThisLevel && (!inThisTierTag || !actuallyHasTier)) {
         this.setRole(tiers[level], true);
         await tierTag.set(true);
       }
