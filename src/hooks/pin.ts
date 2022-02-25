@@ -59,7 +59,7 @@ export default class PinService implements Hook {
         const tag = pinTag(message);
 
         /* Past-proof: legacy pins will not have a tag but will already exist. */
-        if (!tag.get(null) && reaction.count === 1) {
+        if (!(await tag.get(null)) && reaction.count === 1) {
           const channel = await getPinChannel(message);
           const pins = await channel.send(quoteMessage(message)).then((pins) => {
             /* Should not happen, but just in case: coerce to array. */
