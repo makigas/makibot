@@ -21,6 +21,8 @@ Register a Discord bot if you haven't. [Create a Discord app if you haven't done
 
 To make the bot join your server, you can use the OAuth2 URL Generator in the OAuth tab of your application page. Check the "bot" checkbox in the "Scopes" section and play with the permissions in the Bot Permissions box. You should automatically see an URL to make the application join a server where you have appropiate rights.
 
+To use this bot you will need to activate the "Server Member Intent" in the "Privileged Gateway Intents" in the "Bot" section.
+
 ### Set up the environment
 
 The bot is controlled via environment variables. You can manually provide them when starting the application, you can use the proper environment settings if running through Docker or Docker-Compose. If you are running locally using Node.js, you might create a file called .env containing the environment variables, using .env.example as an example to follow.
