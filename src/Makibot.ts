@@ -67,11 +67,13 @@ export default class Makibot extends Client {
         .catch(console.log);
     });
 
-    this.on("shardDisconnect", (e:CloseEvent) => {
+    this.on("shardDisconnect", (e: CloseEvent) => {
       console.error(`The bot has been disconnected.`);
       console.error(`> Reason: ${e.reason} Code: ${e.code}`);
-      if(e.code == 4014){
-          console.error(`> Suggestion: Active the "Privileged Gateway Intents" in your control panel\n`)
+      if (e.code == 4014) {
+        console.error(
+          `> Suggestion: Active the "Privileged Gateway Intents" in your control panel\n`
+        );
       }
       this.shutdown(1);
     });
