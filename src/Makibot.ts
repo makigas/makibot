@@ -70,7 +70,7 @@ export default class Makibot extends Client {
     this.on("shardDisconnect", (e: CloseEvent) => {
       console.error(`The bot has been disconnected.`);
       console.error(`> Reason: ${e.reason} Code: ${e.code}`);
-      if (e.code == 4014) {
+      if (e.code == 4014 /* DISALLOWED_INTENTS */) {
         console.error(
           `> Suggestion: Active the "Privileged Gateway Intents" in your control panel\n`
         );
