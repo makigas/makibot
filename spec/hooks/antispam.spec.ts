@@ -1,8 +1,31 @@
 import { expect } from "chai";
+import { Message } from "discord.js";
 import "mocha";
-import { matchesUrlInRuleset } from "../../src/hooks/antispam";
+import { isRussianPropaganda, matchesUrlInRuleset } from "../../src/hooks/antispam";
+
+function genMessage(str: string): Message {
+  return { content: str, cleanContent: str } as Message;
+}
 
 describe("antispam", () => {
+  describe("#isRussianPropaganda", () => {
+    it("catches URLs", () => {
+      const trueCases = [
+        "lo podeis ver aqui https://actualidad.rt.com/1234",
+        "yo me informo desde https://actualidad.rt.com",
+        "mira esto https://mundo.sputniknews.com/12345",
+        "linking in english to http://rt.com",
+      ];
+      const falseCases = ["has probado a buscar en https://google.com"];
+      for (const trueCase of trueCases) {
+        expect(isRussianPropaganda(genMessage(trueCase))).to.be.true;
+      }
+      for (const falseCase of falseCases) {
+        expect(isRussianPropaganda(genMessage(falseCase))).to.be.false;
+      }
+    });
+  });
+
   describe("#matchesUrlInRuleset", () => {
     describe("for Twitch", () => {
       it("detects passing links to channels", () => {

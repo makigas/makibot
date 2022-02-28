@@ -115,10 +115,42 @@ async function moderateMessage(message: Message, reason: string): Promise<ModEve
   }
 }
 
+/**
+ * The difference for this function is that it will override the isAllowed() call, thus leveled
+ * members, moderators and even bots will have this function evaluate to true. The purposes of
+ * the function should be pretty clear.
+ *
+ * @param msg message to analyze
+ */
+export function isRussianPropaganda(msg: Message) {
+  const content = normalizeMessageContent(msg);
+  if (messageContainsURL(content)) {
+    const crappyPropagandaSites = [
+      "mundo.sputniknews.com",
+      "actualidad.rt.com",
+      "rt.com",
+      "sputniknews.com",
+    ];
+    for (const site of crappyPropagandaSites) {
+      if (content.indexOf(`http://${site}`) > -1 || content.indexOf(`https://${site}`) > -1) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 export default class AntispamService implements Hook {
   name = "antispam";
 
   async onPremoderateMessage(message: Message): Promise<ModEvent | null> {
+    if (isRussianPropaganda(message)) {
+      return modEventBuilder(
+        message,
+        "DELETE",
+        "Enlaza a sitio web sospechoso de compartir noticias falsas -- sin efecto de moderación"
+      );
+    }
     const match = testModeration(message);
     if (match && !isAllowed(message)) {
       return moderateMessage(message, match);
