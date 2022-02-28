@@ -78,7 +78,9 @@ export default class Makibot extends Client {
       this.shutdown(1);
     });
 
-    this.login(ConfigSchema.token);
+    this.login(ConfigSchema.token).catch(({ code }) => {
+      logger.error(code);
+    });
   }
 
   get karma(): KarmaDatabase {
