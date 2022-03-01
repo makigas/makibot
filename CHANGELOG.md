@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/makigas/makibot/compare/v2.0.0...v2.1.0) (2022-03-01)
+
+
+### Features
+
+* add more information onto the shardDisconnect dispatch event, and document it ([#512](https://github.com/makigas/makibot/issues/512)) ([095b3ca](https://github.com/makigas/makibot/commit/095b3caa5383e229d6562e44ba14c0ace3005a7e))
+* **antispam:** disallow linking to RT.com ([3181fa1](https://github.com/makigas/makibot/commit/3181fa11da2ae5ce02ae1a0e1d4058b62a263bda))
+* present the error code using the logger ([#514](https://github.com/makigas/makibot/issues/514)) ([00a33bb](https://github.com/makigas/makibot/commit/00a33bb55c6e9b0c02c347e5d7f4fd6371c7dfa0))
+
+
+### Chore
+
+* **deps:** bump nokogiri from 1.12.5 to 1.13.3 in /docs ([#506](https://github.com/makigas/makibot/issues/506)) ([4ead52d](https://github.com/makigas/makibot/commit/4ead52d96511bee8f7d4fbc80cbebfbc1ebd1763))
+* **deps:** update dependencies ([9b95440](https://github.com/makigas/makibot/commit/9b95440c51bf5be16e6f465f4f68d80b35468f73))
+
 ## [2.0.0](https://github.com/makigas/makibot/compare/v1.1.1...v2.0.0) (2022-02-25)
 
 
