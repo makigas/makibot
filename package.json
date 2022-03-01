@@ -21,7 +21,7 @@
     "discordjs-voicerole": "^2.0.3",
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
-    "follow-redirects": ">=1.14.8",
+    "follow-redirects": ">=1.14.9",
     "get-urls": "<11.0.0",
     "log4js": "^6.4.1",
     "open-graph": "^0.2.6",
