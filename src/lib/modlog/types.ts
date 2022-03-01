@@ -1,4 +1,4 @@
-import { Snowflake } from "discord-api-types";
+import { Snowflake } from "discord-api-types/v9";
 
 export type ModEventType = "DELETE" | "WARN" | "UNWARN" | "MUTE" | "UNMUTE" | "KICK" | "BAN";
 

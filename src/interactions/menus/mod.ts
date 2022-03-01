@@ -1,5 +1,5 @@
 import { tokenToDate } from "datetoken";
-import { Snowflake } from "discord-api-types";
+import { Snowflake } from "discord-api-types/v9";
 import {
   ButtonInteraction,
   ContextMenuInteraction,

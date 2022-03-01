@@ -1,4 +1,4 @@
-import { APIMessage } from "discord-api-types";
+import { APIMessage } from "discord-api-types/v9";
 import {
   Guild,
   Role,
@@ -84,11 +84,11 @@ export default class Server {
   async sendToModlog(
     kind: "default" | "sensible" | "delete" | "public",
     payload: WebhookMessageOptions
-  ): Promise<APIMessage> {
+  ): Promise<void> {
     const url = await this.tagbag.tag(`webhook:${kind}mod`).get(null);
     if (url) {
       const client = new WebhookClient({ url });
-      return client.send(payload);
+      await client.send(payload);
     }
   }
 
