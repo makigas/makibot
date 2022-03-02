@@ -189,7 +189,7 @@ export default class SearchMakigasESCommand implements CommandInteractionHandler
   createToastError(): MessageEmbed {
     return createToast({
       title: "Error",
-      description: "No se logro obtener los datos en este momento",
+      description: "No se logró obtener los datos en este momento",
       severity: "error",
     });
   }
