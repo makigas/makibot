@@ -119,6 +119,18 @@ export function isAirdrop(message: string) {
   return score([mentions, magicWords, hasLink]) >= 2;
 }
 
+/**
+ * SkyBlade is the current bait message for the Bby Stealer virus that is spreading these days
+ * via Discord. This function uses an heuristic to test if the message looks like Bby Stealer.
+ * Bby Stealer is a RAT that will steal the execution tokens to compromise accounts:
+ * https://www.reddit.com/r/discordapp/comments/s1f1vs/the_recent_try_my_game_discord_scam_explained/
+ */
+export function isSkyblade(message: string) {
+  const contains = (word: string): boolean => message.toLowerCase().indexOf(word) > -1;
+  const tokens = ["password: ", "SkyBlade", "raw/main", "my first game", "test my game", ":)"];
+  return tokens.filter((t) => contains(t)).length >= 3;
+}
+
 export function containsSpamLink(content: string): boolean {
   return TOKENS.some((token) => token.test(content));
 }
@@ -146,6 +158,8 @@ export default class CsgoService implements Hook {
       const content = message.cleanContent;
       if (isAirdrop(content)) {
         return modEventBuilder(message, "BAN", "Airdrop spam");
+      } else if (isSkyblade(content)) {
+        return modEventBuilder(message, "BAN", "SkyBlade virus");
       } else if (containsSpamLink(content)) {
         return modEventBuilder(
           message,

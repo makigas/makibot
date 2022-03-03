@@ -1,8 +1,21 @@
 import { expect } from "chai";
 import "mocha";
-import { containsSpamLink, isAirdrop } from "../../src/hooks/csgo";
+import { containsSpamLink, isAirdrop, isSkyblade } from "../../src/hooks/csgo";
 
 describe("antispam system", () => {
+  describe("isSkyblade", () => {
+    it("catches examples", () => {
+      const cases = [
+        // Domains have been stripped for security reasons
+        "Hi guys Can someone test my first game? :) https://example.com/Skyblade password: test", // 947499261992525874
+        "Hi, can you test my first game? :) https://example.com/raw/main/SkyBlade/ password: test", // 948906959812321280
+      ];
+      for (const strcase of cases) {
+        expect(isSkyblade(strcase)).to.be.true;
+      }
+    });
+  });
+
   describe("isAirdrop", () => {
     it("catches examples", () => {
       const cases = [
