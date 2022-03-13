@@ -50,10 +50,5 @@ describe("antispam system", () => {
     it("handles free text strings", () => {
       expect(containsSpamLink("click here to get 3 months for free")).to.be.true;
     });
-
-    it("bans any domain containing .ru", () => {
-      expect(containsSpamLink("checkout http://example.ru/spam")).to.be.true;
-      expect(containsSpamLink("checkout http://example.guru/spam")).to.be.false;
-    });
   });
 });

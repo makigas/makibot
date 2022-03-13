@@ -44,7 +44,6 @@ const TOKENS = [
   /steamcommunity\.link/,
 
   // There is this CSGO scam-bot
-  /https:\/\/prnt\.sc\//,
   /i will accept all trades/,
   /i'm tired of csgo/,
 
@@ -93,13 +92,7 @@ const TOKENS = [
   /3 months of discord nitro/,
   /free steam give nitro/,
   /nitro steam for free/,
-  /\.ru\//,
   /free nudes/,
-  /\.ru\.com\//,
-
-  // bots like to mention everyone despite not being possible
-  /@everyone(.*)https?:\/\//,
-  /https?:\/\/(.*)@everyone/,
 ];
 
 /**
