@@ -205,7 +205,7 @@ export default class KarmaService implements Hook {
             title: `¡Es el primer mensaje de @${gm.user.username}!`,
             description: [
               `¡Ey! Este es el primer mensaje de @${gm.user.username} en este servidor.`,
-              "¡Te damos la bienvenida, esperamos que estés bien y te damos la gracias por",
+              "¡Te damos la bienvenida, esperamos que estés bien y te damos las gracias por",
               "participar en este servidor!",
             ].join(" "),
             severity: "success",
