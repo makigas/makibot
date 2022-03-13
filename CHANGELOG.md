@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/makigas/makibot/compare/v2.1.0...v2.2.0) (2022-03-13)
+
+
+### Features
+
+* command to search in makigas.es and bbs ([#521](https://github.com/makigas/makibot/issues/521)) ([4933ad5](https://github.com/makigas/makibot/commit/4933ad557312fc8a8dbd6bfcae612bd6e7a63d4b)), closes [makigas#7](https://github.com/makigas/makigas/issues/7)
+* **csgo:** remove dead rules ([1de0102](https://github.com/makigas/makibot/commit/1de010212da55ea501dd46e47655727c4e823164))
+* **csgo:** start intercepting BbyStealer virus ([d5f0980](https://github.com/makigas/makibot/commit/d5f0980ffb5f530d02ab5bdf1075ea90e30ff831))
+
+
+### Bug Fixes
+
+* **karma:** typo in welcome message ([4a9229f](https://github.com/makigas/makibot/commit/4a9229f82232ad0406c01007f5c773ea36976db4))
+
 ## [2.1.0](https://github.com/makigas/makibot/compare/v2.0.0...v2.1.0) (2022-03-01)
 
 
