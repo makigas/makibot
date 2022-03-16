@@ -1,4 +1,11 @@
-import { GuildMember, Message, NewsChannel, TextBasedChannel, TextChannel } from "discord.js";
+import {
+  GuildMember,
+  Message,
+  NewsChannel,
+  PartialMessage,
+  TextBasedChannel,
+  TextChannel,
+} from "discord.js";
 import { Hook } from "../lib/hook";
 import Server from "../lib/server";
 
@@ -17,6 +24,18 @@ export default class ThreadChannelService implements Hook {
       isAcceptableUser(msg.member)
     ) {
       await startThread(msg);
+    }
+  }
+
+  async onMessageDestroy?(msg: PartialMessage): Promise<void> {
+    if (
+      isThreadableChannel(msg.channel) &&
+      (await isManagedThreadChannel(msg.channel)) &&
+      isAcceptableUser(msg.member) &&
+      msg.hasThread
+    ) {
+      await msg.thread.setLocked(true, "Original message got deleted");
+      await msg.thread.setArchived(true, "Original message got deleted");
     }
   }
 }

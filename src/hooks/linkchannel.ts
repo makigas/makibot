@@ -2,6 +2,7 @@ import {
   GuildMember,
   Message,
   NewsChannel,
+  PartialMessage,
   TextBasedChannel,
   TextChannel,
   ThreadChannel,
@@ -35,6 +36,18 @@ export default class LinkChannel implements Hook {
       isAcceptableUser(msg.member)
     ) {
       return handleMessage(msg);
+    }
+  }
+
+  async onMessageDestroy?(msg: PartialMessage): Promise<void> {
+    if (
+      isLinkableChannel(msg.channel) &&
+      (await isManagedLinkChannel(msg.channel)) &&
+      isAcceptableUser(msg.member) &&
+      msg.hasThread
+    ) {
+      await msg.thread.setLocked(true, "Original message got deleted");
+      await msg.thread.setArchived(true, "Original message got deleted");
     }
   }
 }
@@ -112,15 +125,19 @@ async function getTitle(url: string): Promise<string | null> {
 function startThread(msg: Message, url: string): Promise<ThreadChannel> {
   return getTitle(url).then((title) => {
     if (title) {
+      console.log({ title, length: title.length });
       if (title.length > 80) {
         const name = `${title.substring(0, 80)}... (comentarios)`;
+        console.log({ name, on: "first" });
         return msg.startThread({ name });
       } else {
         const name = `${title} (comentarios)`;
+        console.log({ name, on: "second" });
         return msg.startThread({ name });
       }
     } else {
       const name = `${msg.id} (comentarios)`;
+      console.log({ name, on: "third" });
       return msg.startThread({ name });
     }
   });
