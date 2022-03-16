@@ -1,6 +1,6 @@
 import { CommandInteraction, MessageEmbedOptions } from "discord.js";
 import { CommandInteractionHandler } from "../../lib/interaction";
-import { userMention } from "@discordjs/builders";
+import { SlashCommandBuilder, userMention } from "@discordjs/builders";
 
 const ANONYMOUS_GREETING = "¡Buenas! 👋";
 
@@ -30,6 +30,13 @@ const embed: MessageEmbedOptions = {
 
 export default class PreguntasCommand implements CommandInteractionHandler {
   name = "pregunta";
+
+  build() {
+    return new SlashCommandBuilder()
+      .setName("pregunta")
+      .setDescription("Lanza un recordatorio amistoso para invitar a preguntar mejor")
+      .addUserOption((option) => option.setName("cuenta").setDescription("A quién le recordamos"));
+  }
 
   async handle(event: CommandInteraction): Promise<void> {
     /* Check if there is someone to mention. */

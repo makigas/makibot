@@ -3,6 +3,7 @@ import { CommandInteractionHandler } from "../../lib/interaction";
 import axios, { AxiosResponse } from "axios";
 import { createToast } from "../../lib/response";
 import logger from "../../lib/logger";
+import { SlashCommandBuilder } from "@discordjs/builders";
 
 /*
 Videos API
@@ -13,42 +14,6 @@ Resquest: https://www.makigas.es/videos.json?q=:q
 BBS API
 Command: `/makigas bbs [q]`
 https://bbs.makigas.es/api/discussions?filter[q]=:q
-
-
-https://discord.com/api/v9/applications/{application.id}/commands
--H "autorization: Bot {bot token}"
-
-End point body:
-{
-   "name": "makigas",
-   "type": 1,
-   "description": "Buscador de makigas",
-   "options": [
-      {
-         "name": "busqueda",
-         "description": "Tipo de búsqueda",
-         "type": 3,
-         "required": true,
-         "choices": [
-            {
-               "name": "Vídeo",
-               "value": "video"
-            },
-            {
-               "name": "BBS",
-               "value": "bbs"
-            }
-         ]
-      },
-      {
-         "name": "q",
-         "description": "¿Qué deseas buscar?",
-         "type": 3,
-         "required": true
-      }
-   ]
-}
-
 */
 
 const MAX_SEARCH_RESULT_VIDEOAPI = 3;
@@ -92,6 +57,25 @@ class BBS {
 
 export default class SearchMakigasESCommand implements CommandInteractionHandler {
   name = "makigas";
+
+  build() {
+    return new SlashCommandBuilder()
+      .setName("makigas")
+      .setDescription("Buscador de makigas")
+      .addStringOption((o) =>
+        o
+          .setName("busqueda")
+          .setDescription("Tipo de búsqueda")
+          .setChoices([
+            ["Vídeo", "video"],
+            ["BBS", "bbs"],
+          ])
+          .setRequired(true)
+      )
+      .addStringOption((o) =>
+        o.setName("q").setDescription("¿Qué deseas buscar?").setRequired(true)
+      );
+  }
 
   async handle(command: CommandInteraction<CacheType>): Promise<void> {
     return this.command(command);

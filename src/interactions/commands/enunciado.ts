@@ -1,6 +1,6 @@
 import { CommandInteraction } from "discord.js";
 import { CommandInteractionHandler } from "../../lib/interaction";
-import { userMention } from "@discordjs/builders";
+import { SlashCommandBuilder, userMention } from "@discordjs/builders";
 
 const ANONYMOUS_GREETING = "¡Buenas! 👋";
 
@@ -15,6 +15,15 @@ const TEXT = [
 
 export default class EnunciadoCommand implements CommandInteractionHandler {
   name = "enunciado";
+
+  build() {
+    return new SlashCommandBuilder()
+      .setName("enunciado")
+      .setDescription(
+        "Lanza un recordatorio amistoso para invitar a borrar un mensaje que contiene un enunciado"
+      )
+      .addUserOption((option) => option.setName("cuenta").setDescription("A quién mencionamos"));
+  }
 
   async handle(event: CommandInteraction): Promise<void> {
     /* Check if there is someone to mention. */

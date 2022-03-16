@@ -8,6 +8,7 @@ import { tokenToDate } from "datetoken";
 import Server from "../../lib/server";
 import Makibot from "../../Makibot";
 import Member from "../../lib/member";
+import { SlashCommandBuilder } from "@discordjs/builders";
 
 /**
  * Will coerce the subcommand of this command interaction into a valid type.
@@ -115,6 +116,120 @@ function replyValidationError(event: CommandInteraction, error: string): Promise
 
 export default class ModCommand implements CommandInteractionHandler {
   name = "mod";
+
+  build() {
+    return new SlashCommandBuilder()
+      .setName("mod")
+      .setDescription("Ejecutar una acción de moderación")
+      .setDefaultPermission(false)
+      .addSubcommand((command) =>
+        command
+          .setName("bless")
+          .setDescription("Limpia el estado de moderación de una cuenta")
+          .addUserOption((option) =>
+            option
+              .setName("cuenta")
+              .setDescription("La cuenta que será llamada la atención")
+              .setRequired(true)
+          )
+      )
+      .addSubcommand((command) =>
+        command
+          .setName("mute")
+          .setDescription("Silencia una cuenta en este servidor")
+          .addUserOption((option) =>
+            option
+              .setName("cuenta")
+              .setDescription("La cuenta que será silenciada")
+              .setRequired(true)
+          )
+          .addStringOption((option) =>
+            option.setName("razon").setDescription("La razón por la que se silencia a esta cuenta")
+          )
+          .addStringOption((option) =>
+            option
+              .setName("duracion")
+              .setDescription("El vencimiento de este silencio")
+              .addChoice("hora", "now+h")
+              .addChoice("dia", "now+d")
+              .addChoice("semana", "now+w")
+          )
+      )
+      .addSubcommand((command) =>
+        command
+          .setName("unmute")
+          .setDescription("Anula un silencio en este servidor")
+          .addUserOption((option) =>
+            option
+              .setName("cuenta")
+              .setDescription("La cuenta a la que se le quita el silencio")
+              .setRequired(true)
+          )
+      )
+      .addSubcommand((command) =>
+        command
+          .setName("ban")
+          .setDescription("Banea a una persona del servidor (ya no puede entrar)")
+          .addUserOption((option) =>
+            option
+              .setName("cuenta")
+              .setDescription("La cuenta a la que se va a echar del servidor")
+              .setRequired(true)
+          )
+          .addStringOption((option) =>
+            option.setName("razon").setDescription("La razón por la que se banea a esta persona")
+          )
+      )
+      .addSubcommand((command) =>
+        command
+          .setName("kick")
+          .setDescription("Echa a una persona del servidor (puede volver a entrar)")
+          .addUserOption((option) =>
+            option
+              .setName("cuenta")
+              .setDescription("La cuenta a la que se va a echar del servidor")
+              .setRequired(true)
+          )
+          .addStringOption((option) =>
+            option.setName("razon").setDescription("La razón por la que se echa a esta persona")
+          )
+      )
+      .addSubcommand((command) =>
+        command
+          .setName("warn")
+          .setDescription("Llama la atención a una cuenta de este servidor")
+          .addUserOption((option) =>
+            option
+              .setName("cuenta")
+              .setDescription("La cuenta que será llamada la atención")
+              .setRequired(true)
+          )
+          .addStringOption((option) =>
+            option
+              .setName("razon")
+              .setDescription("La razón por la que se llama la atención a esta cuenta")
+          )
+          .addStringOption((option) =>
+            option
+              .setName("duracion")
+              .setDescription("El vencimiento de esta llamada de atención")
+              .addChoice("hora", "now+h")
+              .addChoice("dia", "now+d")
+              .addChoice("semana", "now+w")
+          )
+      )
+      .addSubcommand((command) =>
+        command
+          .setName("unwarn")
+          .setDescription("Anula una llamada de atención en este servidor")
+          .addUserOption((option) =>
+            option
+              .setName("cuenta")
+              .setDescription("La cuenta a la que se le quita la llamada de atención")
+              .setRequired(true)
+          )
+      );
+  }
 
   handle(event: CommandInteraction): Promise<void> {
     if (isModerationCommand(event)) {

@@ -1,5 +1,5 @@
 import { tokenToDate } from "datetoken";
-import { Snowflake } from "discord-api-types/v9";
+import { ApplicationCommandType, Snowflake } from "discord-api-types/v9";
 import {
   ButtonInteraction,
   ContextMenuInteraction,
@@ -11,7 +11,7 @@ import {
   MessageSelectOptionData,
   SelectMenuInteraction,
 } from "discord.js";
-import { userMention } from "@discordjs/builders";
+import { ContextMenuCommandBuilder, userMention } from "@discordjs/builders";
 import type { ContextMenuInteractionHandler } from "../../lib/interaction";
 import Member from "../../lib/member";
 import { applyAction } from "../../lib/modlog/actions";
@@ -357,6 +357,10 @@ class ModerationRequest {
 
 export default class ModRequestCommand implements ContextMenuInteractionHandler {
   name = "Aplicar o pedir moderación";
+
+  build() {
+    return new ContextMenuCommandBuilder().setName("Aplicar o pedir moderación").setType(3);
+  }
 
   async handle(event: ContextMenuInteraction): Promise<void> {
     const parent = await event.deferReply({ ephemeral: true, fetchReply: true });

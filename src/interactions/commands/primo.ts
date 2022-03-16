@@ -1,3 +1,4 @@
+import { SlashCommandBuilder } from "@discordjs/builders";
 import bigInt, { BigInteger } from "big-integer";
 import type { CommandInteraction } from "discord.js";
 import { CommandInteractionHandler } from "../../lib/interaction";
@@ -13,6 +14,18 @@ function sendToast(event: CommandInteraction, title: string): Promise<void> {
 
 export default class PrimoCommand implements CommandInteractionHandler {
   name = "primo";
+
+  build() {
+    return new SlashCommandBuilder()
+      .setName("primo")
+      .setDescription("Determina si un número es primo o no")
+      .addNumberOption((option) =>
+        option
+          .setName("n")
+          .setDescription("El valor que queremos testear como primo")
+          .setRequired(true)
+      );
+  }
 
   handle(command: CommandInteraction): Promise<void> {
     const n = command.options.getString("n", true);

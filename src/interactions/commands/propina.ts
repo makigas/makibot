@@ -1,6 +1,7 @@
 import { CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
 import { CommandInteractionHandler } from "../../lib/interaction";
 import { getLevelV2 } from "../../lib/karma";
+import { SlashCommandBuilder } from "@discordjs/builders";
 
 import Member from "../../lib/member";
 import { createToast } from "../../lib/response";
@@ -183,6 +184,21 @@ async function handleGuildCommand(command: CommandInteraction): Promise<void> {
 
 export default class PropinaCommand implements CommandInteractionHandler {
   name = "propina";
+
+  build() {
+    return new SlashCommandBuilder()
+      .setName("propina")
+      .setDescription("Regala una parte de tu karma a otra persona")
+      .addUserOption((option) =>
+        option.setName("target").setDescription("A quién le regalamos el karma").setRequired(true)
+      )
+      .addNumberOption((option) =>
+        option
+          .setName("valor")
+          .setDescription("La cantidad de karma que le vamos a entregar")
+          .setRequired(true)
+      );
+  }
 
   async handle(command: CommandInteraction): Promise<void> {
     if (command.inGuild()) {

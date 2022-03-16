@@ -1,3 +1,4 @@
+import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import { CommandInteractionHandler } from "../../lib/interaction";
 import { handleKarmaInteraction } from "../../lib/karma/interaction";
@@ -5,6 +6,12 @@ import { createToast } from "../../lib/response";
 
 export default class KarmaCommand implements CommandInteractionHandler {
   name = "karma";
+
+  build() {
+    return new SlashCommandBuilder()
+      .setName("karma")
+      .setDescription("Consulta la reputación y nivel");
+  }
 
   async handle(event: CommandInteraction): Promise<void> {
     if (event.inGuild()) {

@@ -1,12 +1,18 @@
-import { CommandInteraction } from "discord.js";
-import type { CommandInteractionHandler } from "../../lib/interaction";
+import { ContextMenuCommandBuilder } from "@discordjs/builders";
+import { ApplicationCommandType } from "discord-api-types/v9";
+import { ContextMenuInteraction } from "discord.js";
+import type { ContextMenuInteractionHandler } from "../../lib/interaction";
 import { handleKarmaInteraction } from "../../lib/karma/interaction";
 import { createToast } from "../../lib/response";
 
-export default class ViewKarmaCommand implements CommandInteractionHandler {
+export default class ViewKarmaCommand implements ContextMenuInteractionHandler {
   name = "Ver karma";
 
-  async handle(event: CommandInteraction): Promise<void> {
+  build() {
+    return new ContextMenuCommandBuilder().setName("Ver karma").setType(2);
+  }
+
+  async handle(event: ContextMenuInteraction): Promise<void> {
     if (event.inGuild()) {
       const value = String(event.options.get("user").value);
       return handleKarmaInteraction(event, value);

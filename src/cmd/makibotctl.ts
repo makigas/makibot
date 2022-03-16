@@ -1,5 +1,10 @@
+import { REST } from "@discordjs/rest";
+import { Routes } from "discord-api-types/v9";
+import path from "path";
 import * as yargs from "yargs";
 import Client from "../lib/http/client";
+import { CommandInteractionHandler, ContextMenuInteractionHandler } from "../lib/interaction";
+import { requireAllModules } from "../lib/utils/loader";
 
 const client = new Client();
 
@@ -23,6 +28,53 @@ makibotctl.command(
       })
       .catch((e) => {
         console.error(e);
+        process.exit(1);
+      });
+  }
+);
+
+makibotctl.command<{ app: string }>(
+  "deploy-commands <app>",
+  "deploy global commands for this application",
+  () => ({}),
+  (argv) => {
+    if (!process.env.BOT_TOKEN) {
+      console.error("Please, provide the bot token in the BOT_TOKEN env variable");
+      process.exit(1);
+    }
+
+    /* Compose the payloads for commands and menus. */
+    const commandsDir = path.join(__dirname, "../interactions/commands");
+    const menusDir = path.join(__dirname, "../interactions/menus");
+
+    const commandPayloads = requireAllModules(commandsDir).map((HandlerClass) => {
+      if (typeof HandlerClass == "function") {
+        const handler = new (HandlerClass as {
+          new (): CommandInteractionHandler;
+        })();
+        return handler.build().toJSON();
+      }
+    });
+    const menuPayloads = requireAllModules(menusDir).map((HandlerClass) => {
+      if (typeof HandlerClass == "function") {
+        const handler = new (HandlerClass as {
+          new (): ContextMenuInteractionHandler;
+        })();
+        return handler.build().toJSON();
+      }
+    });
+    const payloads = [...commandPayloads, ...menuPayloads];
+
+    /* Send the payloads. */
+    const restClient = new REST({ version: "9" });
+    restClient.setToken(process.env.BOT_TOKEN);
+    restClient
+      .put(Routes.applicationCommands(argv.app), { body: payloads })
+      .then(() => {
+        console.log("Done");
+        process.exit(0);
+      })
+      .catch(() => {
         process.exit(1);
       });
   }

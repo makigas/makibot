@@ -1,3 +1,4 @@
+import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import { CommandInteractionHandler } from "../../lib/interaction";
 import { createToast } from "../../lib/response";
@@ -11,6 +12,18 @@ import { createToast } from "../../lib/response";
  */
 export default class RenombrarCommand implements CommandInteractionHandler {
   name = "renombrar";
+
+  build() {
+    return new SlashCommandBuilder()
+      .setName("renombrar")
+      .setDescription("Renombrar un hilo que hayas o te hayan abierto")
+      .addStringOption((option) =>
+        option
+          .setName("titulo")
+          .setDescription("Nuevo título que le damos a este hilo")
+          .setRequired(true)
+      );
+  }
 
   async handle(event: CommandInteraction): Promise<void> {
     if (event.channel.isThread()) {

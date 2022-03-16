@@ -1,3 +1,4 @@
+import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import { CommandInteractionHandler } from "../../lib/interaction";
 import { createToast } from "../../lib/response";
@@ -11,6 +12,12 @@ import Server from "../../lib/server";
  */
 export default class ArchivarCommand implements CommandInteractionHandler {
   name = "archivar";
+
+  build() {
+    return new SlashCommandBuilder()
+      .setName("archivar")
+      .setDescription("Archiva un hilo abierto por ti o abierto en uno de tus mensajes");
+  }
 
   async handle(event: CommandInteraction): Promise<void> {
     if (event.channel.isThread()) {

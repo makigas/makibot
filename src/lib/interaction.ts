@@ -1,3 +1,8 @@
+import {
+  ContextMenuCommandBuilder,
+  SlashCommandBuilder,
+  SlashCommandSubcommandsOnlyBuilder,
+} from "@discordjs/builders";
 import type {
   ButtonInteraction,
   CommandInteraction,
@@ -32,10 +37,15 @@ interface BaseInteractionHandler {
 
 export interface CommandInteractionHandler extends BaseInteractionHandler {
   handle(event: CommandInteraction): Promise<void>;
+  build():
+    | SlashCommandBuilder
+    | SlashCommandSubcommandsOnlyBuilder
+    | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
 }
 
 export interface ContextMenuInteractionHandler extends BaseInteractionHandler {
   handle(event: ContextMenuInteraction): Promise<void>;
+  build(): ContextMenuCommandBuilder;
 }
 
 export interface ButtonInteractionHandler extends BaseInteractionHandler {
