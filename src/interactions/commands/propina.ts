@@ -1,5 +1,6 @@
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import { CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
 import { CommandInteractionHandler } from "../../lib/interaction";
+import { getLevelV2 } from "../../lib/karma";
 
 import Member from "../../lib/member";
 import { createToast } from "../../lib/response";
@@ -41,6 +42,59 @@ function validatesAmount(amount: number): MessageEmbed | null {
     });
   }
   return null;
+}
+
+async function checkMemberLevel(member: Member): Promise<void> {
+  const currentLevelTag = member.tagbag.tag("karma:level");
+  const currentLevel = await currentLevelTag.get(0);
+  await member.setCrew(currentLevel);
+}
+
+async function assertLevel(member: Member, channel: TextChannel): Promise<void> {
+  const karma = await member.getKarma();
+
+  /* If an account reaches a very low reputation level, should be muted. */
+  if (karma.points <= -3) {
+    return this.muteLowReputation(member);
+  }
+
+  const currentLevelTag = member.tagbag.tag("karma:level");
+  const expectedLevel = getLevelV2(karma.points);
+  const currentLevel = await currentLevelTag.get(0);
+  if (currentLevel != expectedLevel) {
+    await currentLevelTag.set(expectedLevel);
+
+    const highScoreTag = member.tagbag.tag("karma:max");
+    const highScoreValue = await highScoreTag.get(0);
+    if (highScoreValue < expectedLevel) {
+      await highScoreTag.set(expectedLevel);
+      if (expectedLevel === 1) {
+        /* First message. */
+        const toast = createToast({
+          title: `¡Es el primer mensaje de @${member.user.username}!`,
+          description: [
+            `¡Ey! Este es el primer mensaje de @${member.user.username} en este servidor.`,
+            "¡Te damos la bienvenida, esperamos que estés bien y te damos las gracias por",
+            "participar en este servidor!",
+          ].join(" "),
+          severity: "success",
+          target: member.user,
+        });
+        await channel.send({ embeds: [toast] });
+      } else {
+        const toast = createToast({
+          title: `¡@${member.user.username} ha subido al nivel ${expectedLevel}!`,
+          severity: "success",
+          target: member.user,
+        });
+        await channel.send({ embeds: [toast] });
+      }
+    }
+  }
+
+  // Always do this, even if the level does not change, in case the user
+  // has lost the color for some reason or mistake in the server.
+  await checkMemberLevel(member);
 }
 
 async function handleGuildCommand(command: CommandInteraction): Promise<void> {
@@ -112,6 +166,7 @@ async function handleGuildCommand(command: CommandInteraction): Promise<void> {
 
   /* Valid, proceed with the donation. */
   await client.karma.bounty(command.id, originMember.id, targetMember.id, amount);
+  assertLevel(targetMember, command.channel as TextChannel);
   return command.reply({
     embeds: [
       createToast({
