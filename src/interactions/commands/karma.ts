@@ -10,12 +10,14 @@ export default class KarmaCommand implements CommandInteractionHandler {
   build() {
     return new SlashCommandBuilder()
       .setName("karma")
-      .setDescription("Consulta la reputación y nivel");
+      .setDescription("Consulta la reputación y nivel")
+      .addUserOption((o) => o.setName("cuenta").setDescription("¿De quién miramos el karma?"));
   }
 
   async handle(event: CommandInteraction): Promise<void> {
     if (event.inGuild()) {
-      return handleKarmaInteraction(event, event.user.id);
+      const userId = event.options.getUser("cuenta", false)?.id || event.user.id;
+      return handleKarmaInteraction(event, userId);
     }
     const toast = createToast({
       title: "Comando no apto para DM",
