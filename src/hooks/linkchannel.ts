@@ -93,7 +93,13 @@ async function getTitle(url: string): Promise<string | null> {
         reject(err);
       } else {
         if (meta.title) {
-          resolve(meta.title as string);
+          if (Array.isArray(meta.title)) {
+            resolve(meta.title[0] as string);
+          } else if (typeof meta.title === "string") {
+            resolve(meta.title as string);
+          } else {
+            resolve(null);
+          }
         } else {
           resolve(null);
         }
