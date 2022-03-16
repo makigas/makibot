@@ -125,19 +125,15 @@ async function getTitle(url: string): Promise<string | null> {
 function startThread(msg: Message, url: string): Promise<ThreadChannel> {
   return getTitle(url).then((title) => {
     if (title) {
-      console.log({ title, length: title.length });
       if (title.length > 80) {
         const name = `${title.substring(0, 80)}... (comentarios)`;
-        console.log({ name, on: "first" });
         return msg.startThread({ name });
       } else {
         const name = `${title} (comentarios)`;
-        console.log({ name, on: "second" });
         return msg.startThread({ name });
       }
     } else {
       const name = `${msg.id} (comentarios)`;
-      console.log({ name, on: "third" });
       return msg.startThread({ name });
     }
   });
