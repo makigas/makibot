@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/makigas/makibot/compare/v2.2.0...v2.3.0) (2022-03-16)
+
+
+### Features
+
+* allow the /karma command to receive an user ([e501812](https://github.com/makigas/makibot/commit/e5018127fa3c1d91fbdf1e6e6c7172e5e2899637))
+* deploy commands using the bot itself ([5b8b32b](https://github.com/makigas/makibot/commit/5b8b32b90418335a967c0a13775e8b3a25c41db2))
+
+
+### Bug Fixes
+
+* autoarchive deleted linkchannel and threadchannel messages ([0a8700a](https://github.com/makigas/makibot/commit/0a8700a112026580d086ff29c5606019561f2558))
+* coerce OpenGraph title into string ([f3accf8](https://github.com/makigas/makibot/commit/f3accf8956f589258b24a336dc43db82f0697245))
+* recompute the karma when bounties are given ([2023b30](https://github.com/makigas/makibot/commit/2023b305e2b0b73740bcabe6e989b7eef0eaf9c5))
+
+
+### Chore
+
+* **deps:** update dependencies ([d246336](https://github.com/makigas/makibot/commit/d246336e9f78db64788109a140ea9b4ddb695ad2))
+* **deps:** update more dependencies ([b8d0401](https://github.com/makigas/makibot/commit/b8d0401ace9592b15aa0893254ea735c625d111e))
+* remove unnecessary console.log ([0eac3cd](https://github.com/makigas/makibot/commit/0eac3cdd25e32f8ca38980a77aee3984b8f6bcbe))
+
 ## [2.2.0](https://github.com/makigas/makibot/compare/v2.1.0...v2.2.0) (2022-03-13)
 
 
