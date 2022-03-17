@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.1](https://github.com/makigas/makibot/compare/v2.3.0...v2.3.1) (2022-03-17)
+
+
+### Bug Fixes
+
+* **bounties:** cannot coerce number into integer ([ca98ca4](https://github.com/makigas/makibot/commit/ca98ca417fa87ab3102a63e1b953f66c222af774))
+* **deps:** don't treat discord-api-types as a devDependency ([2155611](https://github.com/makigas/makibot/commit/21556115ea6aba04ec1644d46639abfdeac50a09))
+
 ## [2.3.0](https://github.com/makigas/makibot/compare/v2.2.0...v2.3.0) (2022-03-16)
 
 
