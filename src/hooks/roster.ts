@@ -1,4 +1,4 @@
-import { Guild, GuildMember, MessageEmbedOptions, PartialGuildMember } from "discord.js";
+import { Guild, GuildMember, MessageEmbedOptions, PartialGuildMember, User } from "discord.js";
 import { Hook } from "../lib/hook";
 import logger from "../lib/logger";
 import { createModlogNotification } from "../lib/modlog/notifications";
@@ -29,6 +29,43 @@ export const createLeaveEvent = (member: PartialGuildMember): MessageEmbedOption
     `**Usuario**: ${userIdentifier(member.user)}`,
     `**Se unió a Discord**: ${dateIdentifier(member.user.createdAt)}`,
   ].join("\n"),
+});
+
+export const createTimeoutEvent = (
+  member: GuildMember,
+  reason?: string,
+  source?: User,
+  until?: Date
+): MessageEmbedOptions => ({
+  color: 0xde2a42,
+  author: {
+    name: "Se ha aislado una cuenta",
+    iconURL:
+      "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/322/stop-sign_1f6d1.png",
+  },
+  description: [
+    `**Usuario**: ${userIdentifier(member.user)}`,
+    reason ? `**Razón**: ${reason}` : `(No se ha proporcionado una razón)`,
+    until ? `**Expira**: ${dateIdentifier(until)}` : false,
+    source ? `**Aplicado por**: ${userIdentifier(source)}` : false,
+  ]
+    .filter(Boolean)
+    .join("\n"),
+});
+
+export const createEndTimeoutEvent = (member: GuildMember, source?: User): MessageEmbedOptions => ({
+  color: 0xde2a42,
+  author: {
+    name: "Se ha levantado un aislamiento",
+    iconURL:
+      "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/322/stop-sign_1f6d1.png",
+  },
+  description: [
+    `**Usuario**: ${userIdentifier(member.user)}`,
+    source ? `**Levantado por**: ${userIdentifier(source)}` : false,
+  ]
+    .filter(Boolean)
+    .join("\n"),
 });
 
 export const createNicknameEvent = (
@@ -65,6 +102,63 @@ async function sendEvent(guild: Guild, embed: MessageEmbedOptions): Promise<void
   }
 }
 
+function handleMemberUpdateNickname(prev: GuildMember, next: GuildMember): Promise<void> {
+  /* The member has changed nicknames. */
+  logger.debug(`[roster] has: changed nickname`);
+  const event = createNicknameEvent(prev, next);
+  return sendEvent(next.guild, event);
+}
+
+async function handleTimeout(prev: GuildMember, next: GuildMember): Promise<void> {
+  const server = new Server(next.guild);
+
+  /* NOTE: We do not receive events when a timeout decays naturally. */
+  if (
+    next.communicationDisabledUntilTimestamp &&
+    next.communicationDisabledUntilTimestamp > Date.now()
+  ) {
+    /* We applied a timeout. */
+    let reason = null,
+      executor = null;
+    try {
+      const audit = await server.queryAuditLogEvent(
+        "MEMBER_UPDATE",
+        (event) =>
+          event.target.id === next.user.id &&
+          event.changes.some((change) => change.key === "communication_disabled_until")
+      );
+      if (audit) {
+        reason = audit.reason;
+        executor = audit.executor;
+      }
+    } catch (e) {
+      logger.warn(`[roster] error on queryAuditLogEvent: ${e}`);
+    }
+    const event = createTimeoutEvent(next, reason, executor, next.communicationDisabledUntil);
+    return sendEvent(next.guild, event);
+  } else if (!next.communicationDisabledUntil) {
+    /* We manually lifted a timeout. */
+    let executor = null;
+    try {
+      const audit = await server.queryAuditLogEvent(
+        "MEMBER_UPDATE",
+        (event) =>
+          event.target.id === next.user.id &&
+          event.changes.some(
+            (change) => change.key === "communication_disabled_until" && !change.new
+          )
+      );
+      if (audit) {
+        executor = audit.executor;
+      }
+    } catch (e) {
+      logger.warn(`[roster] error on queryAuditLogEvent: ${e}`);
+    }
+    const event = createEndTimeoutEvent(next, executor);
+    return sendEvent(next.guild, event);
+  }
+}
+
 /**
  * The roster sends announces to the modlog channel as a result of some events,
  * such as members joining or leaving the server, or members being banned, in the
@@ -80,14 +174,19 @@ export default class RosterService implements Hook {
   }
 
   async onGuildMemberUpdate(oldMember: GuildMember, newMember: GuildMember): Promise<void> {
-    logger.debug(`[roster] evaluating member changes`);
+    logger.debug(`[roster] evaluating member changes for ${newMember.id}`);
+
     const promises = [];
     if (oldMember.nickname != newMember.nickname) {
-      /* The member has changed nicknames. */
-      logger.debug(`[roster] has: changed nickname`);
-      const event = createNicknameEvent(oldMember, newMember);
-      promises.push(sendEvent(newMember.guild, event));
+      promises.push(handleMemberUpdateNickname(oldMember, newMember));
     }
+
+    if (
+      oldMember.communicationDisabledUntilTimestamp != newMember.communicationDisabledUntilTimestamp
+    ) {
+      promises.push(handleTimeout(oldMember, newMember));
+    }
+
     await Promise.all(promises);
   }
 

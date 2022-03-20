@@ -1,6 +1,7 @@
-import { APIMessage } from "discord-api-types/v9";
 import {
   Guild,
+  GuildAuditLogsEntry,
+  GuildAuditLogsResolvable,
   Role,
   TextChannel,
   UserResolvable,
@@ -52,6 +53,14 @@ export default class Server {
   private _tagbag: TagBag;
 
   constructor(private guild: Guild) {}
+
+  async queryAuditLogEvent<T extends GuildAuditLogsResolvable>(
+    type: T,
+    finder: (event: GuildAuditLogsEntry<T>) => boolean
+  ): Promise<GuildAuditLogsEntry<T>> {
+    const events = await this.guild.fetchAuditLogs({ type });
+    return events.entries.find((event) => finder(event));
+  }
 
   get id(): string {
     return this.guild.id;
