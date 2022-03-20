@@ -31,6 +31,27 @@ export const createLeaveEvent = (member: PartialGuildMember): MessageEmbedOption
   ].join("\n"),
 });
 
+export const createNicknameEvent = (
+  oldMember: GuildMember,
+  newMember: GuildMember
+): MessageEmbedOptions => ({
+  color: 0xffda84,
+  author: {
+    name: "Cambio de nickname local",
+    iconURL:
+      "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/322/label_1f3f7-fe0f.png",
+  },
+  description: [
+    `**Usuario**: ${userIdentifier(newMember.user)}`,
+    oldMember.nickname
+      ? `**Anterior nickname**: ${oldMember.nickname}`
+      : "Antes no tenía nickname local",
+    newMember.nickname
+      ? `**Nuevo nickname**: ${newMember.nickname}`
+      : "Ahora no tiene nickname local",
+  ].join("\n"),
+});
+
 async function sendEvent(guild: Guild, embed: MessageEmbedOptions): Promise<void> {
   try {
     const server = new Server(guild);
@@ -56,6 +77,18 @@ export default class RosterService implements Hook {
     logger.debug(`[roster] announcing join for ${member.user.tag}`);
     const event = createModlogNotification(createJoinEvent(member));
     return sendEvent(member.guild, event);
+  }
+
+  async onGuildMemberUpdate(oldMember: GuildMember, newMember: GuildMember): Promise<void> {
+    logger.debug(`[roster] evaluating member changes`);
+    const promises = [];
+    if (oldMember.nickname != newMember.nickname) {
+      /* The member has changed nicknames. */
+      logger.debug(`[roster] has: changed nickname`);
+      const event = createNicknameEvent(oldMember, newMember);
+      promises.push(sendEvent(newMember.guild, event));
+    }
+    await Promise.all(promises);
   }
 
   async onGuildMemberLeave(member: PartialGuildMember): Promise<void> {

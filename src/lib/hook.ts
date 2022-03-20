@@ -41,6 +41,7 @@ export interface Hook {
   onMessageReactionBulkDestroy?: (message: Message) => Promise<void>;
 
   onGuildMemberJoin?: (member: GuildMember) => Promise<void>;
+  onGuildMemberUpdate?: (prev: GuildMember, next: GuildMember) => Promise<void>;
   onGuildMemberLeave?: (member: GuildMember | PartialGuildMember) => Promise<void>;
   onGuildMemberBan?: (ban: GuildBan) => Promise<void>;
 
@@ -110,6 +111,7 @@ export class HookManager {
     client.on("messageReactionRemoveAll", this.onMessageReactionRemoveAll.bind(this));
     client.on("guildMemberAdd", this.onGuildMemberAdd.bind(this));
     client.on("guildMemberRemove", this.onGuildMemberRemove.bind(this));
+    client.on("guildMemberUpdate", this.onGuildMemberUpdate.bind(this));
     client.on("voiceStateUpdate", this.onVoiceStateUpdate.bind(this));
   }
 
@@ -228,6 +230,14 @@ export class HookManager {
     for (const handler of handlers) {
       logger.debug(`[hooks] processing ${handler.name}(onGuildMemberLeave)`);
       await handler.onGuildMemberLeave(member);
+    }
+  }
+
+  async onGuildMemberUpdate(oldMember: GuildMember, newMember: GuildMember): Promise<void> {
+    const handlers = this.filterServices("onGuildMemberUpdate");
+    for (const handler of handlers) {
+      logger.debug(`[hooks] processing ${handler.name}(onGuildMemberUpdate)`);
+      await handler.onGuildMemberUpdate(oldMember, newMember);
     }
   }
 
