@@ -28,7 +28,7 @@ client.on("message", (message) => {
 });
 
 client.on("messageReactionAdd", (react) => {
-  /* 
+  /*
    * Eliminar el mensaje si la persona que reacciona
    * tiene rol de mod y el emoji es el cubo de basura.
    */
@@ -122,6 +122,7 @@ Esta es una lista de las funciones y los prototipos de referencia:
 * `onMessageReactionDestroy(reaction, user)`: Se ejecuta cuando un usuario (`user`) elimina su reacción (`reaction`) de un mensaje (`reaction.message`).
 * `onMessageReactionBulkDestroy(message)`: Se ejecuta cuando todas las reacciones de un mensaje (`message`) son eliminadas.
 * `onGuildMemberJoin(member)`: Se ejecuta cuando un miembro se une al servidor.
+* `onGuildMemberUpdate(prev, next)`: Se ejecuta cuando un miembro actualiza algo sobre ello. Depende mucho del evento que dispara la API de Discord. Te proporciona el estado anterior del usuario y el nuevo estado del usuario y ya es cosa tuya hacer el diff y detectar qué ha cambiado.
 * `onGuildMemberLeave(member)`: Se ejecuta cuando un miembro abandona el servidor. El `member` podría ser parcial. Cuidado con hacer un `fetch()`, porque el evento se puede recibir en cuentas que se eliminan (por ejemplo, el usuario borra su cuenta de Discord, o se trata de una cuenta temporal que Discord borra). En ese caso, hacer un `fetch()` provocará un error HTTP 404 en la API de Discord.
 * `onBuildMemberBan(ban)`: se ejecuta cuando un miembro es baneado. La información está disponible a través del objeto `ban`.
 * `onVoiceStateUpdate(oldState, newState)`: se ejecuta cuando un miembro interactúa con un canal de voz: conectándose, desconectándose, cambiando de canal, actualizando su estado (mute, deafen...). Cuando se conecta a un canal de voz, `oldState` vale null. Cuando se desconecta de cualquier canal de voz, `newState` vale null. Cuando salta de un canal a otro, puedes comparar el viejo canal con el nuevo canal mirando ambas variables para ver de dónde ha saltado. Lo mismo si apaga o enciende su micrófono o si silencia sus auriculares o quita el silencio.
