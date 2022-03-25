@@ -1,4 +1,4 @@
-import { CommandInteraction, UserResolvable } from "discord.js";
+import { CommandInteraction, UserResolvable, Permissions, TextChannel } from "discord.js";
 import { CommandInteractionHandler } from "../../lib/interaction";
 import { applyAction } from "../../lib/modlog/actions";
 import { notifyModlog } from "../../lib/modlog/notifications";
@@ -9,6 +9,13 @@ import Server from "../../lib/server";
 import Makibot from "../../Makibot";
 import Member from "../../lib/member";
 import { SlashCommandBuilder } from "@discordjs/builders";
+
+const LOCKDOWN_PERMISSIONS = [
+  Permissions.FLAGS.SEND_MESSAGES,
+  Permissions.FLAGS.SEND_MESSAGES_IN_THREADS,
+  Permissions.FLAGS.CREATE_PUBLIC_THREADS,
+  Permissions.FLAGS.CREATE_PRIVATE_THREADS,
+];
 
 /**
  * Will coerce the subcommand of this command interaction into a valid type.
@@ -228,6 +235,12 @@ export default class ModCommand implements CommandInteractionHandler {
               .setDescription("La cuenta a la que se le quita la llamada de atención")
               .setRequired(true)
           )
+      )
+      .addSubcommand((command) =>
+        command.setName("lockdown").setDescription("Bloquea la escritura en un canal o un servidor")
+      )
+      .addSubcommand((command) =>
+        command.setName("lift-lockdown").setDescription("Leventar el bloqueo en el servidor")
       );
   }
 
@@ -236,7 +249,44 @@ export default class ModCommand implements CommandInteractionHandler {
       return this.handleModeration(event);
     } else if (isBlessCommand(event)) {
       return this.handleBless(event);
+    } else if (this.isLockdownCommand(event)) {
+      return this.handleLockdown(event);
+    } else if (this.isLockdownFreeCommand(event)) {
+      return this.handleLockdownFreeCommand(event);
     }
+  }
+
+  private isLockdownCommand(event: CommandInteraction): boolean {
+    return event.options.getSubcommand(true) === "lockdown";
+  }
+
+  private isLockdownFreeCommand(event: CommandInteraction): boolean {
+    return event.options.getSubcommand(true) === "lift-lockdown";
+  }
+
+  private async handleLockdownFreeCommand(event: CommandInteraction): Promise<void> {
+    const newBitmap = event.guild.roles.everyone.permissions.add(LOCKDOWN_PERMISSIONS);
+    await event.guild.roles.everyone.setPermissions(newBitmap);
+    const toast = createToast({
+      title: "Lockdown levantado correctamente",
+      description: "Se ha levantado la política de seguridad previamente aplicada.",
+      severity: "success",
+    });
+    await event.reply({
+      embeds: [toast],
+      ephemeral: true,
+    });
+  }
+
+  private async handleLockdown(event: CommandInteraction): Promise<void> {
+    const newBitmap = event.guild.roles.everyone.permissions.remove(LOCKDOWN_PERMISSIONS);
+    await event.guild.roles.everyone.setPermissions(newBitmap);
+    const toast = createToast({
+      title: "Lockdown aplicado correctamente",
+      description: "Ya no se puede escribir según las reglas que me has dado",
+      severity: "warning",
+    });
+    return event.reply({ embeds: [toast], ephemeral: true });
   }
 
   private async handleModeration(event: CommandInteraction): Promise<void> {
