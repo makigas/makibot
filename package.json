@@ -33,7 +33,7 @@
     "sqlite3": "^5.0.2",
     "tar": ">=6.1.11",
     "uws": "^200.0.0",
-    "yargs": "^17.3.1"
+    "yargs": "^17.4.0"
   },
   "description": "Discord bot for the makigas server",
   "devDependencies": {
