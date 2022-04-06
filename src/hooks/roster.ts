@@ -200,9 +200,32 @@ export default class RosterService implements Hook {
   }
 
   async onGuildMemberLeave(member: PartialGuildMember): Promise<void> {
-    logger.debug(`[roster] announcing leave for ${member.user.tag}`);
-    const event = createModlogNotification(createLeaveEvent(member));
-    return sendEvent(member.guild, event);
+    // Check if the member left on their own, or if it was a kick.
+    const server = new Server(member.guild);
+
+    const kickEvent = await server.queryAuditLogEvent(
+      "MEMBER_KICK",
+      (e) => e.target.id === member.id
+    );
+
+    if (kickEvent && member.joinedAt && kickEvent.createdAt > member.joinedAt) {
+      // It was a kick.
+      const kickNotificationEvent: ModEvent = {
+        createdAt: new Date(),
+        expired: false,
+        guild: member.guild.id,
+        type: "KICK",
+        mod: kickEvent.executor.id,
+        reason: kickEvent.reason,
+        target: kickEvent.target.id,
+      };
+      await notifyModlog(member.client as Makibot, kickNotificationEvent);
+    } else {
+      // It was a normal leave
+      logger.debug(`[roster] announcing leave for ${member.user.tag}`);
+      const event = createModlogNotification(createLeaveEvent(member));
+      return sendEvent(member.guild, event);
+    }
   }
 
   async onGuildMemberBan(ban: GuildBan): Promise<void> {

@@ -295,7 +295,7 @@ export default class ModCommand implements CommandInteractionHandler {
       const modEvent = translateInteractionToModEvent(event);
       await applyAction(event.client as Makibot, modEvent)
         .then(async (persisted) => {
-          if (modEvent.type !== "BAN") {
+          if (modEvent.type !== "BAN" && modEvent.type !== "KICK") {
             await notifyModlog(event.client as Makibot, persisted);
           }
           replyModerator(event);

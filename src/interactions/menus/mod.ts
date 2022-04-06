@@ -183,7 +183,7 @@ class ModerationRequest {
     } else {
       const event = this.buildModEvent();
       const persistedEvent = await applyAction(this.interaction.client as Makibot, event);
-      if (persistedEvent.type !== "BAN") {
+      if (persistedEvent.type !== "BAN" && persistedEvent.type !== "KICK") {
         await notifyModlog(this.interaction.client as Makibot, persistedEvent);
       }
     }

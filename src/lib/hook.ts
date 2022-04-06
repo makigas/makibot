@@ -134,7 +134,7 @@ export class HookManager {
         /* Report message. */
         const persistedEvent = await applyAction(this.client, modEvent);
         await message.delete();
-        if (persistedEvent.type !== "BAN") {
+        if (persistedEvent.type !== "BAN" && persistedEvent.type !== "KICK") {
           await notifyModlog(this.client, persistedEvent);
         }
       } else {
