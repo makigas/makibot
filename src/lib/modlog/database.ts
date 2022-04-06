@@ -45,7 +45,7 @@ const RETRIEVE_EXPIRED = `
   SELECT created_at, evicted, expires_at, guild_id, mod_id, target_id, kind, id, reason
   FROM events
   WHERE expires_at < datetime('now')
-  AND kind in ('WARN', 'MUTE')
+  AND kind in ('WARN', 'MUTE', 'TIMEOUT')
   AND evicted = false
 `;
 
@@ -84,7 +84,16 @@ export interface ModerationRepository {
 }
 
 function isValidModEventType(type: string): type is ModEventType {
-  const types: string[] = ["WARN", "UNWARN", "MUTE", "UNMUTE", "KICK", "BAN"];
+  const types: string[] = [
+    "WARN",
+    "UNWARN",
+    "MUTE",
+    "UNMUTE",
+    "KICK",
+    "BAN",
+    "TIMEOUT",
+    "UNTIMEOUT",
+  ];
   return types.indexOf(type) >= 0;
 }
 

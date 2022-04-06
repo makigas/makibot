@@ -28,6 +28,16 @@ const actions: { [type in ModEventType]: ActionHooks } = {
     apply: () => null,
     validate: () => null,
   },
+  TIMEOUT: {
+    apply: () => null,
+    validate: () => null,
+  },
+  UNTIMEOUT: {
+    async apply(client, event) {
+      await client.modrepo.evictAny(event.target, "TIMEOUT");
+    },
+    validate: () => null,
+  },
   WARN: {
     async validate(client, event) {
       const guild = await client.guilds.fetch(event.guild);

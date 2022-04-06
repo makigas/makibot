@@ -1,13 +1,7 @@
-import {
-  Guild,
-  GuildBan,
-  GuildMember,
-  MessageEmbedOptions,
-  PartialGuildMember,
-  User,
-} from "discord.js";
+import { Guild, GuildBan, GuildMember, MessageEmbedOptions, PartialGuildMember } from "discord.js";
 import { Hook } from "../lib/hook";
 import logger from "../lib/logger";
+import { applyAction } from "../lib/modlog/actions";
 import { createModlogNotification, notifyModlog } from "../lib/modlog/notifications";
 import { ModEvent } from "../lib/modlog/types";
 import Server from "../lib/server";
@@ -38,43 +32,6 @@ export const createLeaveEvent = (member: PartialGuildMember): MessageEmbedOption
     `**Usuario**: ${userIdentifier(member.user)}`,
     `**Se unió a Discord**: ${dateIdentifier(member.user.createdAt)}`,
   ].join("\n"),
-});
-
-export const createTimeoutEvent = (
-  member: GuildMember,
-  reason?: string,
-  source?: User,
-  until?: Date
-): MessageEmbedOptions => ({
-  color: 0xde2a42,
-  author: {
-    name: "Se ha aislado una cuenta",
-    iconURL:
-      "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/322/stop-sign_1f6d1.png",
-  },
-  description: [
-    `**Usuario**: ${userIdentifier(member.user)}`,
-    reason ? `**Razón**: ${reason}` : `(No se ha proporcionado una razón)`,
-    until ? `**Expira**: ${dateIdentifier(until)}` : false,
-    source ? `**Aplicado por**: ${userIdentifier(source)}` : false,
-  ]
-    .filter(Boolean)
-    .join("\n"),
-});
-
-export const createEndTimeoutEvent = (member: GuildMember, source?: User): MessageEmbedOptions => ({
-  color: 0xde2a42,
-  author: {
-    name: "Se ha levantado un aislamiento",
-    iconURL:
-      "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/322/stop-sign_1f6d1.png",
-  },
-  description: [
-    `**Usuario**: ${userIdentifier(member.user)}`,
-    source ? `**Levantado por**: ${userIdentifier(source)}` : false,
-  ]
-    .filter(Boolean)
-    .join("\n"),
 });
 
 export const createNicknameEvent = (
@@ -143,8 +100,20 @@ async function handleTimeout(prev: GuildMember, next: GuildMember): Promise<void
     } catch (e) {
       logger.warn(`[roster] error on queryAuditLogEvent: ${e}`);
     }
-    const event = createTimeoutEvent(next, reason, executor, next.communicationDisabledUntil);
-    return sendEvent(next.guild, event);
+
+    const timeoutEvent: ModEvent = {
+      createdAt: new Date(),
+      expiresAt: next.communicationDisabledUntil,
+      expired: false,
+      guild: next.guild.id,
+      type: "TIMEOUT",
+      mod: executor?.id,
+      reason: reason,
+      target: next.id,
+    };
+
+    const persisted = await applyAction(next.client as Makibot, timeoutEvent);
+    await notifyModlog(next.client as Makibot, persisted);
   } else if (!next.communicationDisabledUntil) {
     /* We manually lifted a timeout. */
     let executor = null;
@@ -163,8 +132,18 @@ async function handleTimeout(prev: GuildMember, next: GuildMember): Promise<void
     } catch (e) {
       logger.warn(`[roster] error on queryAuditLogEvent: ${e}`);
     }
-    const event = createEndTimeoutEvent(next, executor);
-    return sendEvent(next.guild, event);
+
+    const untimeoutEvent: ModEvent = {
+      createdAt: new Date(),
+      expired: true,
+      guild: next.guild.id,
+      type: "UNTIMEOUT",
+      mod: executor?.id,
+      target: next.id,
+    };
+
+    const persisted = await applyAction(next.client as Makibot, untimeoutEvent);
+    await notifyModlog(next.client as Makibot, persisted);
   }
 }
 

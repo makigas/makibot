@@ -13,9 +13,33 @@ const PUBLIC_TEMPLATES = {
   UNMUTE: ":speaker: Ha expirado el silencio a $TARGET$",
   KICK: ":athletic_shoe: Se echó a $TARGET$ del servidor, Razón: `$REASON$`.",
   BAN: ":hammer: Se baneó a $TARGET$ del servidor. Razón: `$REASON$`.",
+  TIMEOUT: ":stop_sign: $TARGET$ tiene limitada la cuenta. Expira: $EXP$. Razón: $REASON$.",
+  UNTIMEOUT: ":white_check_mark: Ha expirado las limitaciones de cuenta de $TARGET$.",
 };
 
 const PRIVATE_TEMPLATES = {
+  TIMEOUT: {
+    color: 0xde2a42,
+    name: "Se ha aislado una cuenta",
+    icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/322/stop-sign_1f6d1.png",
+    fields: (event: ModEvent): string =>
+      [
+        `**Objetivo**: ${userIdentifier(event.target)}`,
+        `**Mod**: ${userIdentifier(event.mod)}`,
+        `**Razón**: ${event.reason}`,
+        `**Expiración**: ${event.expiresAt ? dateIdentifier(event.expiresAt) : "manualmente"}`,
+      ].join("\n"),
+  },
+  UNTIMEOUT: {
+    color: 0x79b553,
+    name: "Se ha levantado un aislamiento",
+    icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/twitter/322/check-mark-button_2705.png",
+    fields: (event: ModEvent): string =>
+      [
+        `**Objetivo**: ${userIdentifier(event.target)}`,
+        event.mod ? `**Mod**: ${userIdentifier(event.mod)}` : "Expiró de forma natural",
+      ].join("\n"),
+  },
   WARN: {
     color: 0xffcd4c,
     name: "Se ha aplicado un warn",
