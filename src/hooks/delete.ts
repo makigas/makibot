@@ -50,6 +50,10 @@ export default class DeleteService implements Hook {
   name = "delete";
 
   async onMessageDestroy(message: PartialMessage): Promise<void> {
+    if (message.cleanContent.startsWith(";;")) {
+      logger.info("[delete] skipping a fred command");
+      return;
+    }
     /* Log to the modlog the fact that a message was deleted. */
     try {
       const embed = createModlogNotification(createDeleteEvent(message));
