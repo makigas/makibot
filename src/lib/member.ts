@@ -228,9 +228,11 @@ export default class Member {
     await Promise.all(tags.map((t) => this.tagbag.tag(t).delete()));
   }
 
-  async ban(): Promise<void> {
+  async ban(reason?: string): Promise<void> {
     if (this.guildMember.bannable) {
-      this.guildMember.ban();
+      this.guildMember.ban({
+        reason,
+      });
     }
   }
 

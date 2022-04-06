@@ -115,7 +115,7 @@ const actions: { [type in ModEventType]: ActionHooks } = {
       const guild = await client.guilds.fetch(event.guild);
       const server = new Server(guild);
       const member = await server.member(event.target);
-      await member.ban();
+      await member.ban(event.reason);
     },
   },
 };

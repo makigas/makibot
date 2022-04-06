@@ -1,9 +1,18 @@
-import { Guild, GuildMember, MessageEmbedOptions, PartialGuildMember, User } from "discord.js";
+import {
+  Guild,
+  GuildBan,
+  GuildMember,
+  MessageEmbedOptions,
+  PartialGuildMember,
+  User,
+} from "discord.js";
 import { Hook } from "../lib/hook";
 import logger from "../lib/logger";
-import { createModlogNotification } from "../lib/modlog/notifications";
+import { createModlogNotification, notifyModlog } from "../lib/modlog/notifications";
+import { ModEvent } from "../lib/modlog/types";
 import Server from "../lib/server";
 import { dateIdentifier, userIdentifier } from "../lib/utils/format";
+import Makibot from "../Makibot";
 
 export const createJoinEvent = (member: GuildMember): MessageEmbedOptions => ({
   color: 0xfeaf40,
@@ -194,5 +203,23 @@ export default class RosterService implements Hook {
     logger.debug(`[roster] announcing leave for ${member.user.tag}`);
     const event = createModlogNotification(createLeaveEvent(member));
     return sendEvent(member.guild, event);
+  }
+
+  async onGuildMemberBan(ban: GuildBan): Promise<void> {
+    const server = new Server(ban.guild);
+    const event = await server.queryAuditLogEvent(
+      "MEMBER_BAN_ADD",
+      (e) => e.target.id == ban.user.id
+    );
+    const banEvent: ModEvent = {
+      createdAt: new Date(),
+      expired: false,
+      guild: ban.guild.id,
+      type: "BAN",
+      mod: event.executor.id,
+      reason: event.reason,
+      target: event.target.id,
+    };
+    await notifyModlog(ban.client as Makibot, banEvent);
   }
 }

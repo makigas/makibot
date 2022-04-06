@@ -183,7 +183,9 @@ class ModerationRequest {
     } else {
       const event = this.buildModEvent();
       const persistedEvent = await applyAction(this.interaction.client as Makibot, event);
-      await notifyModlog(this.interaction.client as Makibot, persistedEvent);
+      if (persistedEvent.type !== "BAN") {
+        await notifyModlog(this.interaction.client as Makibot, persistedEvent);
+      }
     }
     if (this.form.delete === "delete") {
       await this.message.delete();

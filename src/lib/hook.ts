@@ -112,6 +112,7 @@ export class HookManager {
     client.on("guildMemberAdd", this.onGuildMemberAdd.bind(this));
     client.on("guildMemberRemove", this.onGuildMemberRemove.bind(this));
     client.on("guildMemberUpdate", this.onGuildMemberUpdate.bind(this));
+    client.on("guildBanAdd", this.onGuildMemberBan.bind(this));
     client.on("voiceStateUpdate", this.onVoiceStateUpdate.bind(this));
   }
 
@@ -133,7 +134,9 @@ export class HookManager {
         /* Report message. */
         const persistedEvent = await applyAction(this.client, modEvent);
         await message.delete();
-        await notifyModlog(this.client, persistedEvent);
+        if (persistedEvent.type !== "BAN") {
+          await notifyModlog(this.client, persistedEvent);
+        }
       } else {
         /* Message is safe. Continue. */
         await this.onSafeMessageCreate(message);
