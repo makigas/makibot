@@ -1,5 +1,5 @@
 import { REST } from "@discordjs/rest";
-import { Routes } from "discord-api-types/v9";
+import { RESTGetAPIApplicationGuildCommandsResult, Routes } from "discord-api-types/v9";
 import path from "path";
 import * as yargs from "yargs";
 import Client from "../lib/http/client";
@@ -33,8 +33,8 @@ makibotctl.command(
   }
 );
 
-makibotctl.command<{ app: string }>(
-  "deploy-commands <app>",
+makibotctl.command<{ app: string; local?: string }>(
+  "deploy-commands <app> <local>",
   "deploy global commands for this application",
   () => ({}),
   (argv) => {
@@ -68,14 +68,46 @@ makibotctl.command<{ app: string }>(
     /* Send the payloads. */
     const restClient = new REST({ version: "9" });
     restClient.setToken(process.env.BOT_TOKEN);
+    if (argv.local) {
+      restClient
+        .put(Routes.applicationGuildCommands(argv.app, argv.local), { body: payloads })
+        .then(() => {
+          console.log("Done");
+          process.exit(0);
+        })
+        .catch(() => {
+          process.exit(1);
+        });
+    } else {
+      restClient
+        .put(Routes.applicationCommands(argv.app), { body: payloads })
+        .then(() => {
+          console.log("Done");
+          process.exit(0);
+        })
+        .catch(() => {
+          process.exit(1);
+        });
+    }
+  }
+);
+
+makibotctl.command<{ app: string; local: string }>(
+  "clean-local-commands <app> <local>",
+  "Remove deployed commands for a local guild",
+  () => ({}),
+  async (argv) => {
+    const restClient = new REST({ version: "9" });
+    restClient.setToken(process.env.BOT_TOKEN);
+
+    /* Fetch the commands. */
     restClient
-      .put(Routes.applicationCommands(argv.app), { body: payloads })
-      .then(() => {
-        console.log("Done");
-        process.exit(0);
-      })
-      .catch(() => {
-        process.exit(1);
+      .get(Routes.applicationGuildCommands(argv.app, argv.local))
+      .then(async (commands: RESTGetAPIApplicationGuildCommandsResult) => {
+        for (const command of commands) {
+          console.log(`Deleting local command ${command.name}`);
+          await restClient.delete(Routes.applicationGuildCommand(argv.app, argv.local, command.id));
+        }
       });
   }
 );
