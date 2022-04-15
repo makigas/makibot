@@ -20,7 +20,7 @@
     "big-integer": "^1.6.51",
     "datetoken": "^1.1.1",
     "discord.js": "^13.6.0",
-    "discord-api-types": "^0.29.0",
+    "discord-api-types": "^0.31.0",
     "discordjs-voicerole": "^2.0.3",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
