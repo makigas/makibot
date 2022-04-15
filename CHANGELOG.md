@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/makigas/makibot/compare/v2.3.1...v2.4.0) (2022-04-15)
+
+
+### Features
+
+* add lockdown commands ([830d5c1](https://github.com/makigas/makibot/commit/830d5c19ce97cdf589bc1305737f40b31b037b7f))
+* announce bans generated outside /mod ban ([0cf2604](https://github.com/makigas/makibot/commit/0cf26040e821358c100b09be46cec8a04989e3f4))
+* log kick events if they come outside /mod kick ([3aab28b](https://github.com/makigas/makibot/commit/3aab28bca14beddcfb9e4388880fbb11f192e5ad))
+* properly log timeouts and untimeouts ([c498956](https://github.com/makigas/makibot/commit/c49895610a59ce470a333b1bb8b351150ca4b122))
+* **roster:** detect nickname changes ([d22a4fc](https://github.com/makigas/makibot/commit/d22a4fc3356f549e67382acd4e6f61caa1f67365))
+* **roster:** log timeouts and manual timeout evicts ([5920bc4](https://github.com/makigas/makibot/commit/5920bc4e45c37d70a3802f9c9e4d56db6f29c754))
+
+
+### Bug Fixes
+
+* skip logging fred events ([e5bc4c0](https://github.com/makigas/makibot/commit/e5bc4c0dacc15daa373e64fc247b8aecd46c1054))
+
 ### [2.3.1](https://github.com/makigas/makibot/compare/v2.3.0...v2.3.1) (2022-03-17)
 
 
