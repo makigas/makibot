@@ -11,6 +11,7 @@ export default class LockdownCommand implements CommandInteractionHandler {
     return new SlashCommandBuilder()
       .setName("lift")
       .setDescription("Elimina un bloqueo previamente puesto servidor o canal")
+      .setDefaultPermission(false)
       .addSubcommand((i) => i.setName("server").setDescription("Activa todo el servidor"))
       .addSubcommand((i) => i.setName("channel").setDescription("Activa este canal"));
   }

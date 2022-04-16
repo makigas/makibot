@@ -11,6 +11,7 @@ export default class LockdownCommand implements CommandInteractionHandler {
     return new SlashCommandBuilder()
       .setName("lockdown")
       .setDescription("Impide enviar mensajes al servidor o canal")
+      .setDefaultPermission(false)
       .addSubcommand((i) => i.setName("server").setDescription("Bloquea todo el servidor"))
       .addSubcommand((i) => i.setName("channel").setDescription("Bloquea este canal"));
   }
