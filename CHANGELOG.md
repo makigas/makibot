@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/makigas/makibot/compare/v2.4.0...v2.5.0) (2022-04-19)
+
+
+### Features
+
+* add lockdown and lift commands ([999e385](https://github.com/makigas/makibot/commit/999e385752bbb745998ae946516be2b499c3024b))
+* **makibotctl:** deploy commands locally ([b7e30a2](https://github.com/makigas/makibot/commit/b7e30a28c5d0b20fe388cf81b3b29c84d491985d))
+
+
+### Bug Fixes
+
+* **deps:** downgrade sqlite to 5.0.2 to address regression ([f6d2bfa](https://github.com/makigas/makibot/commit/f6d2bfa23c314ca9462828759788da1066e19605))
+* lift and lockdown should be privileged ([aac5491](https://github.com/makigas/makibot/commit/aac54912e23dc0ab0713e43debd5a414e5544cc7))
+* **makibotctl:** deploy-commands local should be optional ([dd4e3ad](https://github.com/makigas/makibot/commit/dd4e3ad6bbb363e616ad63d0699a15292f44d3c7))
+
+
+### Chore
+
+* **deps:** bump minimist from 1.2.5 to 1.2.6 ([#533](https://github.com/makigas/makibot/issues/533)) ([a85ee36](https://github.com/makigas/makibot/commit/a85ee3605a7db967cbaefd96a3804c22cb43e0de))
+* **deps:** bump nokogiri from 1.13.3 to 1.13.4 in /docs ([#534](https://github.com/makigas/makibot/issues/534)) ([bfe8818](https://github.com/makigas/makibot/commit/bfe88183cef022745b29e993b8de415ae7defac9))
+* **deps:** update dependencies ([7651761](https://github.com/makigas/makibot/commit/765176111bc3910c970435893ef4e5fbad8ad451))
+* **deps:** update discord-api-types ([32944fc](https://github.com/makigas/makibot/commit/32944fcffa524c9643205cc6d133f5181237ec92))
+
 ## [2.4.0](https://github.com/makigas/makibot/compare/v2.3.1...v2.4.0) (2022-04-15)
 
 
