@@ -34,7 +34,7 @@ makibotctl.command(
 );
 
 makibotctl.command<{ app: string; local?: string }>(
-  "deploy-commands <app> <local>",
+  "deploy-commands <app> [local]",
   "deploy global commands for this application",
   () => ({}),
   (argv) => {
