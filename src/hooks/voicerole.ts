@@ -1,6 +1,6 @@
 import { Hook } from "../lib/hook";
 import Makibot from "../Makibot";
-import VoiceRole from "discordjs-voicerole";
+import { VoiceRoleManager } from "discordjs-voicerole";
 import logger from "../lib/logger";
 import { VoiceState } from "discord.js";
 
@@ -17,11 +17,11 @@ export default class VoiceRoleService implements Hook {
 
   allowsRestart = true;
 
-  private voicerole: VoiceRole;
+  private voicerole: VoiceRoleManager;
 
   constructor(private client: Makibot) {
     const voiceRoleConfig = client.provider.get(null, "voiceroles", {});
-    this.voicerole = new VoiceRole(voiceRoleConfig);
+    this.voicerole = new VoiceRoleManager(voiceRoleConfig);
   }
 
   onVoiceStateUpdate(oldState: VoiceState, newState: VoiceState): Promise<void> {
@@ -47,6 +47,6 @@ export default class VoiceRoleService implements Hook {
 
   restart(): void {
     const voiceRoleConfig = this.client.provider.get(null, "voiceroles", {});
-    this.voicerole = new VoiceRole(voiceRoleConfig);
+    this.voicerole = new VoiceRoleManager(voiceRoleConfig);
   }
 }

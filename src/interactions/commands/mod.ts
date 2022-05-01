@@ -150,9 +150,11 @@ export default class ModCommand implements CommandInteractionHandler {
             option
               .setName("duracion")
               .setDescription("El vencimiento de este silencio")
-              .addChoice("hora", "now+h")
-              .addChoice("dia", "now+d")
-              .addChoice("semana", "now+w")
+              .setChoices(
+                { name: "hora", value: "now+h" },
+                { name: "dia", value: "now+d" },
+                { name: "semana", value: "now+w" }
+              )
           )
       )
       .addSubcommand((command) =>
@@ -213,9 +215,11 @@ export default class ModCommand implements CommandInteractionHandler {
             option
               .setName("duracion")
               .setDescription("El vencimiento de esta llamada de atención")
-              .addChoice("hora", "now+h")
-              .addChoice("dia", "now+d")
-              .addChoice("semana", "now+w")
+              .setChoices(
+                { name: "hora", value: "now+h" },
+                { name: "dia", value: "now+d" },
+                { name: "semana", value: "now+w" }
+              )
           )
       )
       .addSubcommand((command) =>
