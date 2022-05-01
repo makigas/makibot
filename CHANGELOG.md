@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.5.1](https://github.com/makigas/makibot/compare/v2.5.0...v2.5.1) (2022-05-01)
+
+
+### Chore
+
+* **deps:** update JS dependencies ([fb9e8e5](https://github.com/makigas/makibot/commit/fb9e8e5ca9b50e2162c454265125e9d4061604a3))
+* **deps:** update Ruby dependencies ([5d356b1](https://github.com/makigas/makibot/commit/5d356b1953205d170b4ceb9515fccceba488d992))
+
 ## [2.5.0](https://github.com/makigas/makibot/compare/v2.4.0...v2.5.0) (2022-04-19)
 
 
