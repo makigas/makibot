@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/makigas/makibot/compare/v2.5.1...v2.6.0) (2022-05-20)
+
+
+### Features
+
+* expose threadchannels and linkchannels through RPC ([6ec1993](https://github.com/makigas/makibot/commit/6ec1993f03cb224ca52cda086b7a8a89e27f084e))
+* greet newly created threads ([350dd12](https://github.com/makigas/makibot/commit/350dd12169a179aa537ffd91f9c873adcae85558))
+* **makibotctl:** manage thread and linkonly channels ([42c8f4a](https://github.com/makigas/makibot/commit/42c8f4a9cabae94eb1f39c9b4e6a61290068f767))
+
 ### [2.5.1](https://github.com/makigas/makibot/compare/v2.5.0...v2.5.1) (2022-05-01)
 
 
