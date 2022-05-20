@@ -41,6 +41,62 @@ export default class Client {
     return response.data as MemberKarmaJSON;
   }
 
+  async listThreadChannels(guild: string): Promise<string[]> {
+    const response = await this.client.get(`/guilds/${guild}/channels/threadonly`);
+    if (response.status != 200) {
+      throw new Error(`${response.statusText}: ${response.data}`);
+    }
+    const data: { channels: string[] } = response.data;
+    return data.channels;
+  }
+
+  async addThreadChannel(guild: string, channel: string): Promise<void> {
+    const payload = { channel };
+    const response = await this.client.post(`/guilds/${guild}/channels/threadonly`, payload, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 300) {
+      throw new Error(`${response.statusText}: ${response.data}`);
+    }
+  }
+
+  async deleteThreadChannel(guild: string, channel: string): Promise<void> {
+    const response = await this.client.delete(`/guilds/${guild}/channels/threadonly/${channel}`);
+    if (response.status >= 300) {
+      throw new Error(`${response.statusText}: ${response.data}`);
+    }
+  }
+
+  async listLinkChannels(guild: string): Promise<string[]> {
+    const response = await this.client.get(`/guilds/${guild}/channels/linkonly`);
+    if (response.status != 200) {
+      throw new Error(`${response.statusText}: ${response.data}`);
+    }
+    const data: { channels: string[] } = response.data;
+    return data.channels;
+  }
+
+  async addLinkChannel(guild: string, channel: string): Promise<void> {
+    const payload = { channel };
+    const response = await this.client.post(`/guilds/${guild}/channels/linkonly`, payload, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 300) {
+      throw new Error(`${response.statusText}: ${response.data}`);
+    }
+  }
+
+  async deleteLinkChannel(guild: string, channel: string): Promise<void> {
+    const response = await this.client.delete(`/guilds/${guild}/channels/linkonly/${channel}`);
+    if (response.status >= 300) {
+      throw new Error(`${response.statusText}: ${response.data}`);
+    }
+  }
+
   async setKarmaOffset(guild: string, member: string, offset: number): Promise<MemberKarmaJSON> {
     const payload = JSON.stringify({ offset });
     const response = await this.client.patch(`/guilds/${guild}/members/${member}/karma`, payload, {
