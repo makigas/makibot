@@ -72,12 +72,16 @@ function testModeration(message: Message): string | undefined {
   }
 }
 
-function isAllowed(message: Message): boolean {
+async function isAllowed(message: Message): Promise<boolean> {
   if (message.author.bot) {
     return true;
   } else {
     const member = new Member(message.member);
-    return member.crew || member.moderator;
+    if (member.moderator) {
+      return true;
+    }
+    const karma = await member.getKarma();
+    return karma.level >= 5;
   }
 }
 
@@ -152,7 +156,7 @@ export default class AntispamService implements Hook {
       );
     }
     const match = testModeration(message);
-    if (match && !isAllowed(message)) {
+    if (match && !(await isAllowed(message))) {
       return moderateMessage(message, match);
     }
     return null;
