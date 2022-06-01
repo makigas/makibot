@@ -22,7 +22,7 @@
     "discord.js": "^13.6.0",
     "discord-api-types": "^0.32.0",
     "discordjs-voicerole": "^3.0.0",
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "follow-redirects": ">=1.14.9",
     "get-urls": "<11.0.0",
