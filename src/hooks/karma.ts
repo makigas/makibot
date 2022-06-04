@@ -182,43 +182,33 @@ export default class KarmaService implements Hook {
 
   private async assertLevel(gm: GuildMember, channel: TextChannel): Promise<void> {
     const member = new Member(gm);
+    const server = new Server(gm.guild);
     const karma = await member.getKarma();
+    const expectedLevel = getLevelV2(karma.points);
 
-    /* If an account reaches a very low reputation level, should be muted. */
+    // If an account reaches a very low reputation level, should be muted.
     if (karma.points <= -3) {
       return this.muteLowReputation(member);
     }
 
+    // Check if the account has leveled up.
     const currentLevelTag = member.tagbag.tag("karma:level");
-    const expectedLevel = getLevelV2(karma.points);
     const currentLevel = await currentLevelTag.get(0);
     if (currentLevel != expectedLevel) {
       await currentLevelTag.set(expectedLevel);
 
+      // Check if the account has reached this level for the first time.
       const highScoreTag = member.tagbag.tag("karma:max");
       const highScoreValue = await highScoreTag.get(0);
       if (highScoreValue < expectedLevel) {
         await highScoreTag.set(expectedLevel);
-        if (expectedLevel === 1) {
-          /* First message. */
-          const toast = createToast({
-            title: `¡Es el primer mensaje de @${gm.user.username}!`,
-            description: [
-              `¡Ey! Este es el primer mensaje de @${gm.user.username} en este servidor.`,
-              "¡Te damos la bienvenida, esperamos que estés bien y te damos las gracias por",
-              "participar en este servidor!",
-            ].join(" "),
-            severity: "success",
-            target: gm.user,
-          });
-          await channel.send({ embeds: [toast] });
-        } else {
-          const toast = createToast({
-            title: `¡@${gm.user.username} ha subido al nivel ${expectedLevel}!`,
-            severity: "success",
-            target: gm.user,
-          });
-          await channel.send({ embeds: [toast] });
+
+        // Send a notification -- only if this channel doesn't use threads.
+        // Ye, we only want to do this the first time this level is reached.
+        const threadChannels = await server.getThreadChannels();
+        const linkChannels = await server.getLinkChannels();
+        if (!threadChannels.includes(channel.id) && !linkChannels.includes(channel.id)) {
+          await this.sendNotification(channel, gm, expectedLevel);
         }
       }
     }
@@ -232,5 +222,28 @@ export default class KarmaService implements Hook {
     const currentLevelTag = member.tagbag.tag("karma:level");
     const currentLevel = await currentLevelTag.get(0);
     await member.setCrew(currentLevel);
+  }
+
+  private async sendNotification(channel: TextChannel, gm: GuildMember, level: number) {
+    if (level === 1) {
+      const toast = createToast({
+        title: `¡Es el primer mensaje de @${gm.user.username}!`,
+        description: [
+          `¡Ey! Este es el primer mensaje de @${gm.user.username} en este servidor.`,
+          "¡Te damos la bienvenida, esperamos que estés bien y te damos las gracias por",
+          "participar en este servidor!",
+        ].join(" "),
+        severity: "success",
+        target: gm.user,
+      });
+      await channel.send({ embeds: [toast] });
+    } else {
+      const toast = createToast({
+        title: `¡@${gm.user.username} ha subido al nivel ${level}!`,
+        severity: "success",
+        target: gm.user,
+      });
+      await channel.send({ embeds: [toast] });
+    }
   }
 }
