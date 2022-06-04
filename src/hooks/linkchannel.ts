@@ -69,7 +69,7 @@ function isLinkableChannel(channel: TextBasedChannel): channel is LinkableChanne
 async function isManagedLinkChannel(channel: LinkableChannel): Promise<boolean> {
   if (channel.guild) {
     const server = new Server(channel.guild);
-    const linkables = await server.tagbag.tag("linkchannels").get([]);
+    const linkables = await server.getLinkChannels();
     return linkables.includes(channel.id);
   }
   return false;

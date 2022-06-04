@@ -13,6 +13,7 @@ import {
 import Makibot from "../Makibot";
 import Member from "./member";
 import Settings from "./settings";
+import Tag from "./tag";
 import TagBag from "./tagbag";
 
 type RoleJSONSchema = {
@@ -236,5 +237,98 @@ export default class Server {
     } catch (e) {
       return null;
     }
+  }
+
+  /**
+   * Returns the tag that contains the list of channels where thread is the
+   * primary communication source. This tag points to an array of snowflakes.
+   * Sending a message to one of the channels in the array should spawn a
+   * communications channel, which is handled by the threadchannel.ts hook.
+   */
+  private get threadChannels(): Tag {
+    return this.tagbag.tag("threadchannels");
+  }
+
+  /**
+   * Returns a list of threadchannels. These are channels where comunications
+   * are hold in threads. Sending a message to one of the channels in the
+   * array should open a thread, which is done by the threadchannel.ts hook.
+   * @returns a promise that resolves to the current array value.
+   */
+  getThreadChannels(): Promise<Snowflake[]> {
+    return this.threadChannels.get([]);
+  }
+
+  /**
+   * Adds an id to the array of snowflakes contained in threadChannels.
+   * If the id was already present, this function does a NOOP.
+   * @param id the snowflake to add to the list.
+   * @returns a promise that once fulfilled will have this id added.
+   */
+  async addThreadChannel(id: Snowflake): Promise<void> {
+    const old = await this.getThreadChannels();
+    if (!old.includes(id)) {
+      const next = [...old, id];
+      await this.threadChannels.set(next);
+    }
+  }
+
+  /**
+   * Removes an id from the array of snowflakes contained in threadChannels.
+   * If the id was not present, this function does a NOOP.
+   * @param id the snowflake to remove from the list.
+   * @returns a promise that once fulfilled will have this id removed.
+   */
+  async deleteThreadChannel(id: Snowflake): Promise<void> {
+    const old = await this.getThreadChannels();
+    const next = old.filter((tid) => String(tid) !== String(id));
+    await this.threadChannels.set(next);
+  }
+
+  /**
+   * Returns the tag for storing the list of linkchannels for this server.
+   * Link channels are channels where the only kind of acceptable messages
+   * are links. If the message does not contain a link, it should be removed.
+   * If the message contains a link, the hook will usually open a thread to
+   * discuss the link.
+   */
+  private get linkChannels(): Tag {
+    return this.tagbag.tag("linkchannels");
+  }
+
+  /**
+   * Returns the current list of linkchannels, which are channels where the
+   * communication should be kept in threads and these threads should only
+   * discuss links.
+   * @returns a promise that resolves to the array of channels in the list.
+   */
+  getLinkChannels(): Promise<Snowflake[]> {
+    return this.linkChannels.get([]);
+  }
+
+  /**
+   * Adds an id to the array of snowflakes contained in linkChannels.
+   * If the id was already present, this function does a NOOP.
+   * @param id the snowflake to add to the list.
+   * @returns a promise that once fulfilled will have this id added.
+   */
+  async addLinkChannel(id: Snowflake): Promise<void> {
+    const old = await this.getLinkChannels();
+    if (!old.includes(id)) {
+      const next = [...old, id];
+      await this.linkChannels.set(next);
+    }
+  }
+
+  /**
+   * Removes an id from the array of snowflakes contained in linkChannels.
+   * If the id was not present, this function does a NOOP.
+   * @param id the snowflake to remove from the list.
+   * @returns a promise that once fulfilled will have this id removed.
+   */
+  async deleteLinkChannel(id: Snowflake): Promise<void> {
+    const old = await this.getLinkChannels();
+    const next = old.filter((tid) => String(tid) !== String(id));
+    await this.linkChannels.set(next);
   }
 }

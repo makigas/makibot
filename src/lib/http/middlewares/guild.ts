@@ -37,8 +37,8 @@ export default function guildMiddleware(makibot: Makibot): express.Router {
   router.use("/members/:member", memberMiddleware(makibot));
   router.use("/roles/voices", voiceRoleMiddleware(makibot));
 
-  router.use("/channels/threadonly", threadOnlyChannels(makibot));
-  router.use("/channels/linkonly", linkOnlyChannels(makibot));
+  router.use("/channels/threadonly", threadOnlyChannels());
+  router.use("/channels/linkonly", linkOnlyChannels());
 
   router.use("/provider/:tag", providerMiddleware(makibot));
 

@@ -50,8 +50,8 @@ export default class Client {
     return data.channels;
   }
 
-  async addThreadChannel(guild: string, channel: string): Promise<void> {
-    const payload = { channel };
+  async addThreadChannel(guild: string, id: string): Promise<void> {
+    const payload = { id };
     const response = await this.client.post(`/guilds/${guild}/channels/threadonly`, payload, {
       headers: {
         "Content-Type": "application/json",
@@ -62,8 +62,8 @@ export default class Client {
     }
   }
 
-  async deleteThreadChannel(guild: string, channel: string): Promise<void> {
-    const response = await this.client.delete(`/guilds/${guild}/channels/threadonly/${channel}`);
+  async deleteThreadChannel(guild: string, id: string): Promise<void> {
+    const response = await this.client.delete(`/guilds/${guild}/channels/threadonly/${id}`);
     if (response.status >= 300) {
       throw new Error(`${response.statusText}: ${response.data}`);
     }
@@ -78,8 +78,8 @@ export default class Client {
     return data.channels;
   }
 
-  async addLinkChannel(guild: string, channel: string): Promise<void> {
-    const payload = { channel };
+  async addLinkChannel(guild: string, id: string): Promise<void> {
+    const payload = { id };
     const response = await this.client.post(`/guilds/${guild}/channels/linkonly`, payload, {
       headers: {
         "Content-Type": "application/json",
@@ -90,8 +90,8 @@ export default class Client {
     }
   }
 
-  async deleteLinkChannel(guild: string, channel: string): Promise<void> {
-    const response = await this.client.delete(`/guilds/${guild}/channels/linkonly/${channel}`);
+  async deleteLinkChannel(guild: string, id: string): Promise<void> {
+    const response = await this.client.delete(`/guilds/${guild}/channels/linkonly/${id}`);
     if (response.status >= 300) {
       throw new Error(`${response.statusText}: ${response.data}`);
     }

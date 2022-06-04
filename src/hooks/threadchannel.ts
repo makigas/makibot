@@ -52,8 +52,8 @@ function isThreadableChannel(channel: TextBasedChannel): channel is ThreadableCh
 async function isManagedThreadChannel(channel: ThreadableChannel): Promise<boolean> {
   if (channel.guild) {
     const server = new Server(channel.guild);
-    const linkables = await server.tagbag.tag("threadchannels").get([]);
-    return linkables.includes(channel.id);
+    const threadables = await server.getThreadChannels();
+    return threadables.includes(channel.id);
   }
   return false;
 }
