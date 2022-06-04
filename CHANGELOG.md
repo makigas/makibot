@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.6.1](https://github.com/makigas/makibot/compare/v2.6.0...v2.6.1) (2022-06-04)
+
+
+### Bug Fixes
+
+* use level for deciding whether to trigger antispam or not ([d401bf8](https://github.com/makigas/makibot/commit/d401bf8f2ec88ac384b9088d3209be7870511c4f))
+
+
+### Refactor
+
+* accessor for threadchannels and linkchannels ([0447b7f](https://github.com/makigas/makibot/commit/0447b7f0bfa325c1780432178891ca33684506ba))
+* do not present level up on thread channels ([ab90dbb](https://github.com/makigas/makibot/commit/ab90dbb9315886f68791dc0ea8a29e223f0b5e73))
+
 ## [2.6.0](https://github.com/makigas/makibot/compare/v2.5.1...v2.6.0) (2022-05-20)
 
 
