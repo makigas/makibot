@@ -1,30 +1,34 @@
 import path from "path";
 import { Client, CloseEvent, Intents } from "discord.js";
 
-import ConfigSchema from "./ConfigSchema";
-import { getDatabase, getKarmaDatabase } from "./settings";
 import { HookManager } from "./lib/hook";
-import { KarmaDatabase, openKarmaDatabase } from "./lib/karma/database";
+import { KarmaDatabase } from "./lib/karma/database";
 import { SettingProvider } from "./lib/provider";
 import { InteractionManager } from "./lib/interaction";
-import { ModerationRepository, newModRepository } from "./lib/modlog/database";
+import { ModerationRepository } from "./lib/modlog/database";
 import logger from "./lib/logger";
 
 export default class Makibot extends Client {
-  private _karma: KarmaDatabase;
+  /** The karma database contains the karma points and levels assigned to members. */
+  readonly karma: KarmaDatabase;
 
-  private _provider: SettingProvider;
+  /** The provider stores configuration. */
+  readonly provider: SettingProvider;
 
-  private _hooks: HookManager;
-  private _interactions: InteractionManager;
+  /** The hook manager is a collection of event listeners for Discord.js. */
+  readonly hooks: HookManager;
 
-  private _modrepo: ModerationRepository;
+  /** The interactions manager is a collection of interaction handlers. */
+  readonly interactions: InteractionManager;
 
-  public get manager(): HookManager {
-    return this._hooks;
-  }
+  /** The moderation repository stores the modlog. */
+  readonly modrepo: ModerationRepository;
 
-  public constructor() {
+  public constructor(
+    modrepo: ModerationRepository,
+    provider: SettingProvider,
+    karma: KarmaDatabase
+  ) {
     super({
       allowedMentions: {},
       intents: [
@@ -42,30 +46,17 @@ export default class Makibot extends Client {
       partials: ["MESSAGE", "REACTION", "GUILD_MEMBER"],
     });
 
-    this.on("ready", () => {
-      logger.info(`Logged in successfully as ${this.user.tag}.`);
-    });
+    this.modrepo = modrepo;
+    this.provider = provider;
+    this.karma = karma;
+    this.hooks = new HookManager(path.join(__dirname, "hooks"), this);
+    this.interactions = new InteractionManager(path.join(__dirname, "interactions"), this);
 
-    this.once("ready", () => {
+    this.on("ready", () => {
       if (process.env.VERSION_TAG) {
         this.user.setActivity({ name: process.env.VERSION_TAG });
       }
-      getDatabase()
-        .then(async (db) => {
-          this._modrepo = await newModRepository(db);
-          this._provider = new SettingProvider(db);
-          return this._provider.init();
-        })
-        .then(() => {
-          getKarmaDatabase()
-            .then((dbFile) => openKarmaDatabase(dbFile))
-            .then((db) => (this._karma = db));
-        })
-        .then(() => {
-          this._hooks = new HookManager(path.join(__dirname, "hooks"), this);
-          this._interactions = new InteractionManager(path.join(__dirname, "interactions"), this);
-        })
-        .catch(console.log);
+      logger.info(`Logged in successfully as ${this.user.tag}.`);
     });
 
     this.on("shardDisconnect", (e: CloseEvent) => {
@@ -78,22 +69,14 @@ export default class Makibot extends Client {
       }
       this.shutdown(1);
     });
-
-    this.login(ConfigSchema.token).catch(({ code }) => {
-      logger.error(code);
-    });
   }
 
-  get karma(): KarmaDatabase {
-    return this._karma;
-  }
-
-  get provider(): SettingProvider {
-    return this._provider;
-  }
-
-  get modrepo(): ModerationRepository {
-    return this._modrepo;
+  async connect(): Promise<void> {
+    try {
+      this.login(process.env.BOT_TOKEN);
+    } catch (e) {
+      logger.error(e.code);
+    }
   }
 
   shutdown(exitCode = 0): void {
