@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.7.0](https://github.com/makigas/makibot/compare/v2.6.1...v2.7.0) (2022-06-09)
+
+
+### Features
+
+* add trusted roles ([c62e817](https://github.com/makigas/makibot/commit/c62e817f99a86c8b4bf6e4a428dec21c7b94968a))
+
+
+### Refactor
+
+* do not instantiate dependencies in Makibot constructor ([4b25886](https://github.com/makigas/makibot/commit/4b2588697ce6ff6a1bbe80039bbfdb7d2cc9f619))
+
 ### [2.6.1](https://github.com/makigas/makibot/compare/v2.6.0...v2.6.1) (2022-06-04)
 
 
