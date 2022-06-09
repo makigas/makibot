@@ -75,14 +75,11 @@ function testModeration(message: Message): string | undefined {
 async function isAllowed(message: Message): Promise<boolean> {
   if (message.author.bot) {
     return true;
-  } else {
-    const member = new Member(message.member);
-    if (member.moderator) {
-      return true;
-    }
-    const karma = await member.getKarma();
-    return karma.level >= 5;
   }
+
+  /* Mods are allowed by default, trusted members may be trusted as well. */
+  const member = new Member(message.member);
+  return member.moderator || (await member.trusted());
 }
 
 async function followUp(message: Message, match: string): Promise<void> {

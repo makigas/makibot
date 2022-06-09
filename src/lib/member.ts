@@ -72,6 +72,12 @@ export default class Member {
     return this._tagbag;
   }
 
+  async trusted(): Promise<boolean> {
+    const trustedRoles = await this.server.getTrustedRoles();
+    const predicate = (role: Snowflake) => this.guildMember.roles.cache.has(role);
+    return trustedRoles.find(predicate) != null;
+  }
+
   get moderator(): boolean {
     return this.hasRole(this.server.modsRole);
   }
@@ -88,6 +94,9 @@ export default class Member {
     return this.hasRole(this.server.helperRole);
   }
 
+  /**
+   * @deprecated use server trusted roles instead
+   */
   get crew(): boolean {
     const tiers = this.server.karmaTiersRole;
     return Object.values(tiers).some((id) => this.hasRole(id));

@@ -7,6 +7,7 @@ import linkOnlyChannels from "./link";
 import memberMiddleware from "./member";
 import providerMiddleware from "./provider";
 import threadOnlyChannels from "./thread";
+import trustedRoles from "./trusted";
 import voiceRoleMiddleware from "./voiceroles";
 
 export interface MiddlewareLocals {
@@ -36,6 +37,7 @@ export default function guildMiddleware(makibot: Makibot): express.Router {
 
   router.use("/members/:member", memberMiddleware(makibot));
   router.use("/roles/voices", voiceRoleMiddleware(makibot));
+  router.use("/roles/trusted", trustedRoles());
 
   router.use("/channels/threadonly", threadOnlyChannels());
   router.use("/channels/linkonly", linkOnlyChannels());

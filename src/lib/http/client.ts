@@ -69,6 +69,34 @@ export default class Client {
     }
   }
 
+  async listTrustedRoles(guild: string): Promise<string[]> {
+    const response = await this.client.get(`/guilds/${guild}/roles/trusted`);
+    if (response.status != 200) {
+      throw new Error(`${response.statusText}: ${response.data}`);
+    }
+    const data: { channels: string[] } = response.data;
+    return data.channels;
+  }
+
+  async addTrustedRole(guild: string, id: string): Promise<void> {
+    const payload = { id };
+    const response = await this.client.post(`/guilds/${guild}/roles/trusted`, payload, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status >= 300) {
+      throw new Error(`${response.statusText}: ${response.data}`);
+    }
+  }
+
+  async deleteTrustedRole(guild: string, id: string): Promise<void> {
+    const response = await this.client.delete(`/guilds/${guild}/roles/trusted/${id}`);
+    if (response.status >= 300) {
+      throw new Error(`${response.statusText}: ${response.data}`);
+    }
+  }
+
   async listLinkChannels(guild: string): Promise<string[]> {
     const response = await this.client.get(`/guilds/${guild}/channels/linkonly`);
     if (response.status != 200) {

@@ -136,8 +136,27 @@ async function handleFlood(member: Member, message: Message): Promise<ModEvent> 
   }
 }
 
-function isExceptionable(member: Member, message: Message): boolean {
-  return message.author.bot || member.moderator || words(message.cleanContent).length <= 3;
+/**
+ * If this function returns true, it will leave the message as is without
+ * trying to moderate it or looking for dupes. Return true in those cases where
+ * you do not want to accidentally trigger the rule, such as mods, bening bots
+ * or trusted users.
+ *
+ * @param member the member that sent the message
+ * @param message the message that was sent
+ * @returns whether we should except this message or check
+ */
+async function isExceptionable(member: Member, message: Message): Promise<boolean> {
+  if (words(message.cleanContent).length <= 3) {
+    /* Too short to be moderated anyway. */
+    return true;
+  }
+  if (message.author.bot || member.moderator) {
+    /* You don't want to wipe message from good members. */
+    return true;
+  }
+  /* If the member is trusted. */
+  return member.trusted();
 }
 
 async function trackMessageInHistory(message: Message): Promise<void> {
@@ -188,7 +207,8 @@ export default class AntifloodService implements Hook {
     const member = new Member(message.member);
     const tripsFlood = await isRecentlySaid(message);
     trackMessageInHistory(message);
-    if (tripsFlood && !isExceptionable(member, message)) {
+    const exceptionable = await isExceptionable(member, message);
+    if (tripsFlood && !exceptionable) {
       await rememberFloodedMessage(message);
       return handleFlood(member, message);
     }

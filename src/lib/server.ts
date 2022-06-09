@@ -239,6 +239,41 @@ export default class Server {
     }
   }
 
+  private get trustedRoles(): Tag {
+    return this.tagbag.tag("trustedroles");
+  }
+
+  /**
+   * Returns the list of trusted (and safe) roles in this server.
+   * @returns the list of roles currently in the list of trusted roles
+   */
+  getTrustedRoles(): Promise<Snowflake[]> {
+    return this.trustedRoles.get([]);
+  }
+
+  /**
+   * Add a trusted role into the list, unless it was already present.
+   * @param id the id of the role to be added to the trusted list system.
+   */
+  async addTrustedRole(id: Snowflake): Promise<void> {
+    const old = await this.getTrustedRoles();
+    if (!old.includes(id)) {
+      const next = [...old, id];
+      await this.trustedRoles.set(next);
+    }
+  }
+
+  /**
+   * Delete a trusted role previously present in the trusted role list.
+   * @param id the id of role to be removed from the trusted list system.
+   */
+  async deleteTrustedRole(id: Snowflake): Promise<void> {
+    const old = await this.getTrustedRoles();
+    console.log(`Quitamos ${id} de ${old}`);
+    const next = old.filter((rid) => String(rid) !== String(id));
+    await this.trustedRoles.set(next);
+  }
+
   /**
    * Returns the tag that contains the list of channels where thread is the
    * primary communication source. This tag points to an array of snowflakes.

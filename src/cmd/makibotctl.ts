@@ -249,6 +249,29 @@ makibotctl.command<{ guild: string; member: string; offset: number }>(
 );
 
 makibotctl.command<{ guild: string; operation: "add" | "delete" | "list"; value?: string }>(
+  "trusted-roles <guild> <operation> [value]",
+  "manage trusted roles",
+  () => ({}),
+  async (argv) => {
+    switch (argv.operation) {
+      case "list": {
+        const channels = await client.listTrustedRoles(argv.guild);
+        channels.forEach((channel) => console.log(channel));
+        break;
+      }
+      case "add": {
+        await client.addTrustedRole(argv.guild, argv.value);
+        break;
+      }
+      case "delete": {
+        await client.deleteTrustedRole(argv.guild, argv.value);
+        break;
+      }
+    }
+  }
+);
+
+makibotctl.command<{ guild: string; operation: "add" | "delete" | "list"; value?: string }>(
   "thread-channels <guild> <operation> [value]",
   "manage thread only channels",
   () => ({}),
