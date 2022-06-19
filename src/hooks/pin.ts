@@ -1,4 +1,11 @@
-import type { Message, MessageReaction, PartialMessage, Snowflake, TextChannel } from "discord.js";
+import type {
+  GuildChannel,
+  Message,
+  MessageReaction,
+  PartialMessage,
+  Snowflake,
+  TextChannel,
+} from "discord.js";
 import { Hook } from "../lib/hook";
 import logger from "../lib/logger";
 import { quoteMessage } from "../lib/response";
@@ -53,6 +60,18 @@ export default class PinService implements Hook {
 
       /* I mean, I've just fetched this. */
       const message = reaction.message as Message;
+
+      /* Check permissions for this channel. */
+      if (message.channel.type === "GUILD_TEXT") {
+        const guildChannel = message.channel as GuildChannel;
+        const permissions = await guildChannel.permissionsFor(guildChannel.guild.roles.everyone);
+        if (!permissions.has("VIEW_CHANNEL")) {
+          logger.info(
+            `[pin] skipping pin of ${message.id} because ${message.channel.name} is not public`
+          );
+          return;
+        }
+      }
 
       /* Only pin messages in a properly configured guild will be delegated. */
       if (await delegatesToPin(reaction)) {
