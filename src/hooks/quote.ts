@@ -1,4 +1,4 @@
-import { Client, Message, Snowflake } from "discord.js";
+import { Client, GuildChannel, Message, Snowflake } from "discord.js";
 import { Hook } from "../lib/hook";
 import logger from "../lib/logger";
 import { quoteMessage } from "../lib/response";
@@ -39,6 +39,19 @@ export default class QuoteService implements Hook {
     if (reference && reference[0] === message.guild.id) {
       try {
         const referenced = await fetchMessage(message.client, reference);
+
+        /* Check permissions for this channel. */
+        if (referenced.channel.type === "GUILD_TEXT") {
+          const guildChannel = referenced.channel as GuildChannel;
+          const permissions = await guildChannel.permissionsFor(guildChannel.guild.roles.everyone);
+          if (!permissions.has("VIEW_CHANNEL")) {
+            logger.info(
+              `[quote] skipping quote of ${message.id} because ${referenced.channel.name} is not public`
+            );
+            return;
+          }
+        }
+
         if (referenced) {
           await message.channel.send(quoteMessage(referenced));
         }
