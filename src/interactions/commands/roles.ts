@@ -13,15 +13,7 @@ export default class RolesCommand implements CommandInteractionHandler {
       .setDescription("Establece tus roles en este servidor");
   }
 
-  async handle(event: CommandInteraction): Promise<void> {
-    if (event.inGuild()) {
-      return startRoleManager(event);
-    }
-    const toast = createToast({
-      title: "Comando no apto para DM",
-      description: "Este comando sólo se puede usar en una guild",
-      severity: "error",
-    });
-    return event.reply({ embeds: [toast] });
+  async handleGuild(event: CommandInteraction): Promise<void> {
+    return startRoleManager(event);
   }
 }

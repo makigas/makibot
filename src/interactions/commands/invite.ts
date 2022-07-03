@@ -11,7 +11,7 @@ export default class PreguntasCommand implements CommandInteractionHandler {
       .setDescription("Lanza el invite para unirse a este servidor");
   }
 
-  async handle(event: CommandInteraction): Promise<void> {
+  async handleGuild(event: CommandInteraction): Promise<void> {
     if (process.env.INVITE_TOKEN) {
       return event.reply({
         content: "Invite para makigas https://discord.gg/" + process.env.INVITE_TOKEN,

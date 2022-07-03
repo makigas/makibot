@@ -25,7 +25,7 @@ export default class EnunciadoCommand implements CommandInteractionHandler {
       .addUserOption((option) => option.setName("cuenta").setDescription("A quién mencionamos"));
   }
 
-  async handle(event: CommandInteraction): Promise<void> {
+  async handleGuild(event: CommandInteraction): Promise<void> {
     /* Check if there is someone to mention. */
     const mentioned: string | null = event.options.get("cuenta", false)?.value as string;
     if (mentioned) {

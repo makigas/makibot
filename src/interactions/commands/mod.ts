@@ -235,7 +235,7 @@ export default class ModCommand implements CommandInteractionHandler {
       );
   }
 
-  handle(event: CommandInteraction): Promise<void> {
+  handleGuild(event: CommandInteraction): Promise<void> {
     if (isModerationCommand(event)) {
       return this.handleModeration(event);
     } else if (isBlessCommand(event)) {

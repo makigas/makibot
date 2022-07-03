@@ -16,7 +16,7 @@ export default class LockdownCommand implements CommandInteractionHandler {
       .addSubcommand((i) => i.setName("channel").setDescription("Bloquea este canal"));
   }
 
-  async handle(event: CommandInteraction): Promise<void> {
+  async handleGuild(event: CommandInteraction): Promise<void> {
     const server = new Server(event.guild);
     try {
       if (event.options.getSubcommand() === "server") {

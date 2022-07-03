@@ -19,7 +19,7 @@ export default class ArchivarCommand implements CommandInteractionHandler {
       .setDescription("Archiva un hilo abierto por ti o abierto en uno de tus mensajes");
   }
 
-  async handle(event: CommandInteraction): Promise<void> {
+  async handleGuild(event: CommandInteraction): Promise<void> {
     if (event.channel.isThread()) {
       if (await canCloseMessage(event)) {
         await event.reply({ embeds: [ARCHIVED], ephemeral: true });

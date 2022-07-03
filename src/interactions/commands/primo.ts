@@ -19,7 +19,7 @@ export default class PrimoCommand implements CommandInteractionHandler {
     return new SlashCommandBuilder()
       .setName("primo")
       .setDescription("Determina si un número es primo o no")
-      .addNumberOption((option) =>
+      .addStringOption((option) =>
         option
           .setName("n")
           .setDescription("El valor que queremos testear como primo")
@@ -27,7 +27,7 @@ export default class PrimoCommand implements CommandInteractionHandler {
       );
   }
 
-  handle(command: CommandInteraction): Promise<void> {
+  handleGuild(command: CommandInteraction): Promise<void> {
     const n = command.options.getString("n", true);
     if (/^-?\d+$/g.test(n)) {
       const prime = bigInt(n);

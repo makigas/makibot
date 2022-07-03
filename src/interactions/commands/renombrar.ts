@@ -25,7 +25,7 @@ export default class RenombrarCommand implements CommandInteractionHandler {
       );
   }
 
-  async handle(event: CommandInteraction): Promise<void> {
+  async handleGuild(event: CommandInteraction): Promise<void> {
     if (event.channel.isThread()) {
       const message = await event.channel.fetchStarterMessage();
       if (event.channel.ownerId === event.user.id || event.user.id === message.author.id) {
