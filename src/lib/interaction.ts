@@ -7,7 +7,6 @@ import type {
   ButtonInteraction,
   CommandInteraction,
   ContextMenuInteraction,
-  Guild,
   Interaction,
 } from "discord.js";
 import path from "path";
@@ -56,7 +55,11 @@ export interface ContextMenuInteractionHandler extends BaseInteractionHandler {
 }
 
 export interface ButtonInteractionHandler extends BaseInteractionHandler {
-  handle(event: ButtonInteraction): Promise<void>;
+  /** Handle the command when sent to a guild. */
+  handleGuild?: (event: ButtonInteraction) => Promise<void>;
+
+  /** Handle the command when sent to a DM. */
+  handleDM?: (event: ButtonInteraction) => Promise<void>;
 }
 
 function loadInteractions<T extends BaseInteractionHandler>(path: string): { [k: string]: T } {
@@ -139,7 +142,35 @@ export class InteractionManager {
   private async handleButtonInteraction(interaction: ButtonInteraction): Promise<void> {
     const handler = this.buttons[interaction.customId];
     if (handler) {
-      await handler.handle(interaction);
+      if (interaction.inGuild()) {
+        if (handler.handleGuild) {
+          await handler.handleGuild(interaction);
+        } else {
+          const toast = createToast({
+            title: "Botón no apto en una guild",
+            description: "Este botón no se puede pulsar en una guild",
+            severity: "error",
+          });
+          await interaction.reply({
+            embeds: [toast],
+            ephemeral: true,
+          });
+        }
+      } else {
+        if (handler.handleDM) {
+          await handler.handleDM(interaction);
+        } else {
+          const toast = createToast({
+            title: "Botón no apto fuera de una guild",
+            description: "Este botón no se puede pulsar fuera de una guild",
+            severity: "error",
+          });
+          await interaction.reply({
+            embeds: [toast],
+            ephemeral: true,
+          });
+        }
+      }
     }
   }
 }

@@ -6,7 +6,7 @@ import { createToast } from "../../lib/response";
 export default class NoRemindButton implements ButtonInteractionHandler {
   name = "dont_remind_question";
 
-  async handle(event: ButtonInteraction): Promise<void> {
+  async handleGuild(event: ButtonInteraction): Promise<void> {
     if (event.channel.isThread()) {
       const originalMessage = await event.channel.fetchStarterMessage();
       if (originalMessage.author.id === event.user.id) {
@@ -32,8 +32,8 @@ export default class NoRemindButton implements ButtonInteractionHandler {
       }
     } else {
       const toast = createToast({
-        title: "Comando no apto para DM",
-        description: "Este comando sólo se puede usar en una guild",
+        title: "Botón no apto fuera de un hilo",
+        description: "Este botón sólo se puede usar en un hilo",
         severity: "error",
       });
       return event.reply({ embeds: [toast] });
