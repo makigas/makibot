@@ -42,10 +42,6 @@ const REACTIONS: { [reaction: string]: { kind: string; score: number } } = {
     kind: "downvote",
     score: -1,
   },
-  "⭐": {
-    kind: "star",
-    score: 3,
-  },
 };
 
 export default class KarmaService implements Hook {
@@ -144,7 +140,7 @@ export default class KarmaService implements Hook {
 
   async onMessageReactionBulkDestroy(message: Message): Promise<void> {
     await Promise.all(
-      ["upvote", "downvote", "star", "heart", "wave"].map((kind) =>
+      ["upvote", "downvote", "heart", "wave"].map((kind) =>
         this.karma.undoAction({
           actorId: message.id,
           actorType: "Message",

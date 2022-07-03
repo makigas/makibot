@@ -8,10 +8,6 @@ type KarmaTierJSONSchema = {
 };
 
 export type SettingsJSONSchema = {
-  pin: {
-    emoji: string;
-    pinboard: string;
-  };
   karmaTiers: KarmaTierJSONSchema[];
 };
 
@@ -28,36 +24,14 @@ export default class Settings {
   public constructor(guild: Guild) {
     this.client = guild.client as Makibot;
     this.tags = {
-      pinEmoji: new Tag(this.client.provider, "Pin.Emoji", { guild }),
-      pinChannel: new Tag(this.client.provider, "Pin.Pinboard", { guild }),
       karmaTiers: new Tag(this.client.provider, "Karma.Tiers", { guild }),
     };
   }
 
   public async toJSON(): Promise<SettingsJSONSchema> {
     return {
-      pin: {
-        emoji: await this.getPinEmoji(),
-        pinboard: await this.getPinBoard(),
-      },
       karmaTiers: await this.karmaTiers(),
     };
-  }
-
-  async getPinEmoji(): Promise<string> {
-    return this.tags.pinEmoji.get("\u2b50");
-  }
-
-  async setPinEmoji(emoji: string): Promise<void> {
-    await this.tags.pinEmoji.set(emoji);
-  }
-
-  async getPinBoard(): Promise<string> {
-    return this.tags.pinChannel.get();
-  }
-
-  async setPinPinboard(pinboard: string): Promise<void> {
-    await this.tags.pinChannel.set(pinboard);
   }
 
   async karmaTiers(): Promise<KarmaTier[]> {

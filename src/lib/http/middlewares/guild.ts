@@ -55,8 +55,6 @@ export default function guildMiddleware(makibot: Makibot): express.Router {
     const { server } = res.locals;
 
     const settings: { [prop: string]: (value: string) => Promise<void> } = {
-      "pin.pinboard": (value) => server.settings.setPinPinboard(value),
-      "pin.emoji": (value) => server.settings.setPinEmoji(value),
       "roles.crew": (value) => server.settings.setRoleCrewId(value),
       "roles.tier1": (value) => server.settings.addTier(2, value),
       "roles.tier2": (value) => server.settings.addTier(5, value),

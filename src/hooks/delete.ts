@@ -50,7 +50,7 @@ export default class DeleteService implements Hook {
   name = "delete";
 
   async onMessageDestroy(message: PartialMessage): Promise<void> {
-    if (message.cleanContent.startsWith(";;")) {
+    if (message.cleanContent && message.cleanContent.startsWith(";;")) {
       logger.info("[delete] skipping a fred command");
       return;
     }
