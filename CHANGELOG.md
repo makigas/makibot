@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/makigas/makibot/compare/v3.0.0...v4.0.0) (2022-07-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* Removes the old pin system and all the functions.
+
+### Features
+
+* add server settings command ([c13dcce](https://github.com/makigas/makibot/commit/c13dccedaa6bd9bfe37b191a7cdbccaaccc8d6d7))
+
+
+### Refactor
+
+* rewrite pin as a context menu ([48d8d87](https://github.com/makigas/makibot/commit/48d8d87d3d09d17d4b51e881c5f43bef3728f292))
+
 ## [3.0.0](https://github.com/makigas/makibot/compare/v2.7.0...v3.0.0) (2022-07-03)
 
 
