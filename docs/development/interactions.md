@@ -28,30 +28,22 @@ Un manager (InteractionManager) se ocupará de recibir de forma global todas las
 Para crear una interacción, hay que depositar en alguna de las subcarpetas del directorio `src/interactions` un archivo que exporte una clase. En función del tipo de interacción que se vaya a definir, hay que dejarla en una subcarpeta u otra:
 
 * Los comandos van en `src/interactions/commands`.
-* Los menús contextuales van en `src/interactions/menus`.
+* Los menús contextuales de usuario van en `src/interactions/usermenus`.
+* Los menús contextuales de mensaje van en `src/interactions/messagemenus`.
 * Los botones van en `src/interactions/buttons`.
 
 Dentro de cada archivo hay que exportar una clase que debe extender a alguna de las cuatro clases superiores:
 
 * Los comandos se procesan con clases que extienden `CommandInteractionHandler`.
-* Los menús contextuales se procesan con clases que extienden `ContextMenuInteractionHandler`.
+* Los menús contextuales de usuario se procesan con clases que extienden `UserContextMenuInteractionHandler`.
+* Los menús contextuales de mensaje se procesan con clases que extienden `MessageContextMenuInteractionHandler`.
 * Los botones se procesan con clases que extienden `ButtonInteractionHandler`.
 
-Estas interfaces están definidas en `src/lib/interactions`, y como se ve, implementan todas una función llamada `handle`. La diferencia está en el primer parámetro, que siempre será la propia interacción recibida, pero que en cada caso será del tipo que corresponda:
+Estas interfaces están definidas en `src/lib/interactions`. Cada una de estas interfaces tiene dos funciones: `handleDM` y `handleGuild`. Cada una de estas funciones será invocada en un contexto diferente. Cuando el bot recibe una interacción dentro de una guild, buscará la función `handleGuild`. Cuando el bot recibe una interacción fuera de una guild, buscará la función `handleDM`.
 
-```ts
-export interface CommandInteractionHandler extends BaseInteractionHandler {
-  handle(event: CommandInteraction): Promise<void>;
-}
+Las funciones son opcionales y cada handler es libre de implementar la función si quiere o no. Lo que significa que un handler puede implementar cero, una o dos funciones. Cuando un handler no implementa una función, el bot asume que el handler no se puede usar en el contexto proporcionado y lanza un error automáticamente. Por ejemplo, si un command handler no implementa la función handleDM, el bot asumirá que no se puede usar en un DM, de modo que si alguien le lanza el comando mediante DM al bot, responderá con un mensaje de error automáticamente.
 
-export interface ContextMenuInteractionHandler extends BaseInteractionHandler {
-  handle(event: ContextMenuInteraction): Promise<void>;
-}
-
-export interface ButtonInteractionHandler extends BaseInteractionHandler {
-  handle(event: ButtonInteraction): Promise<void>;
-}
-```
+En cuanto a las funciones `handleGuild` y `handleDM`, se diferencian principalmente en el tipo de parámetro, que dependerá del tipo de interacción a tratar. Los handlers de interacciones de tipo botón recibirán un ButtonInteraction; los de comando recibirán un CommandInteraction.
 
 ## Interacciones avanzadas con colectores
 
