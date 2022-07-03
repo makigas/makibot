@@ -3,7 +3,11 @@ import { RESTGetAPIApplicationGuildCommandsResult, Routes } from "discord-api-ty
 import path from "path";
 import * as yargs from "yargs";
 import Client from "../lib/http/client";
-import { CommandInteractionHandler, ContextMenuInteractionHandler } from "../lib/interaction";
+import {
+  CommandInteractionHandler,
+  MessageContextMenuInteractionHandler,
+  UserContextMenuInteractionHandler,
+} from "../lib/interaction";
 import { requireAllModules } from "../lib/utils/loader";
 
 const client = new Client();
@@ -45,7 +49,8 @@ makibotctl.command<{ app: string; local?: string }>(
 
     /* Compose the payloads for commands and menus. */
     const commandsDir = path.join(__dirname, "../interactions/commands");
-    const menusDir = path.join(__dirname, "../interactions/menus");
+    const messageMenusDir = path.join(__dirname, "../interactions/messagemenus");
+    const userMenusDir = path.join(__dirname, "../interactions/usermenus");
 
     const commandPayloads = requireAllModules(commandsDir).map((HandlerClass) => {
       if (typeof HandlerClass == "function") {
@@ -55,15 +60,23 @@ makibotctl.command<{ app: string; local?: string }>(
         return handler.build().toJSON();
       }
     });
-    const menuPayloads = requireAllModules(menusDir).map((HandlerClass) => {
+    const usermenuPayloads = requireAllModules(userMenusDir).map((HandlerClass) => {
       if (typeof HandlerClass == "function") {
         const handler = new (HandlerClass as {
-          new (): ContextMenuInteractionHandler;
+          new (): UserContextMenuInteractionHandler;
         })();
         return handler.build().toJSON();
       }
     });
-    const payloads = [...commandPayloads, ...menuPayloads];
+    const messagemenuPayloads = requireAllModules(messageMenusDir).map((HandlerClass) => {
+      if (typeof HandlerClass == "function") {
+        const handler = new (HandlerClass as {
+          new (): MessageContextMenuInteractionHandler;
+        })();
+        return handler.build().toJSON();
+      }
+    });
+    const payloads = [...commandPayloads, ...usermenuPayloads, ...messagemenuPayloads];
 
     /* Send the payloads. */
     const restClient = new REST({ version: "9" });

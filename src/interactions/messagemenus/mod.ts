@@ -1,5 +1,5 @@
 import { tokenToDate } from "datetoken";
-import { ApplicationCommandType, Snowflake } from "discord-api-types/v9";
+import { Snowflake } from "discord-api-types/v9";
 import {
   ButtonInteraction,
   ContextMenuInteraction,
@@ -7,12 +7,13 @@ import {
   Message,
   MessageActionRow,
   MessageButton,
+  MessageContextMenuInteraction,
   MessageSelectMenu,
   MessageSelectOptionData,
   SelectMenuInteraction,
 } from "discord.js";
 import { ContextMenuCommandBuilder, userMention } from "@discordjs/builders";
-import type { ContextMenuInteractionHandler } from "../../lib/interaction";
+import type { MessageContextMenuInteractionHandler } from "../../lib/interaction";
 import Member from "../../lib/member";
 import { applyAction } from "../../lib/modlog/actions";
 import { notifyModlog } from "../../lib/modlog/notifications";
@@ -357,37 +358,21 @@ class ModerationRequest {
   }
 }
 
-export default class ModRequestCommand implements ContextMenuInteractionHandler {
+export default class ModRequestCommand implements MessageContextMenuInteractionHandler {
   name = "Aplicar o pedir moderación";
 
   build() {
     return new ContextMenuCommandBuilder().setName("Aplicar o pedir moderación").setType(3);
   }
 
-  async handle(event: ContextMenuInteraction): Promise<void> {
-    const parent = await event.deferReply({ ephemeral: true, fetchReply: true });
-    if (event.inGuild()) {
-      return this.handleGuild(event, parent.id);
-    }
-    const toast = createToast({
-      title: "Este comando no puede usarse fuera de un servidor",
-      severity: "error",
-    });
-    await event.editReply({
-      embeds: [toast],
-    });
-  }
+  async handleGuild(interaction: MessageContextMenuInteraction): Promise<void> {
+    const parent = await interaction.deferReply({ ephemeral: true, fetchReply: true });
+    const parentId = parent.id;
 
-  private async handleGuild(
-    interaction: ContextMenuInteraction,
-    parentId: Snowflake
-  ): Promise<void> {
     /* I'm only extracting the parameters here to avoid promises. */
     const server = new Server(interaction.guild);
     const reporter = await server.member(interaction.user);
-    const message = await interaction.channel.messages.fetch(
-      interaction.options.get("message").message.id
-    );
+    const message = await interaction.channel.messages.fetch(interaction.targetMessage.id);
     const target = await server.member(message.author.id);
 
     const prompt = new ModerationRequest({ parentId, interaction, message, reporter, target });

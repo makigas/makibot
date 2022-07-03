@@ -6,8 +6,9 @@ import {
 import type {
   ButtonInteraction,
   CommandInteraction,
-  ContextMenuInteraction,
   Interaction,
+  MessageContextMenuInteraction,
+  UserContextMenuInteraction,
 } from "discord.js";
 import path from "path";
 import type Makibot from "../Makibot";
@@ -49,8 +50,23 @@ export interface CommandInteractionHandler extends BaseInteractionHandler {
     | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
 }
 
-export interface ContextMenuInteractionHandler extends BaseInteractionHandler {
-  handle(event: ContextMenuInteraction): Promise<void>;
+export interface UserContextMenuInteractionHandler extends BaseInteractionHandler {
+  /** Handle the command when sent to a guild. */
+  handleGuild?: (event: UserContextMenuInteraction) => Promise<void>;
+
+  /** Handle the command when sent to a DM. */
+  handleDM?: (event: UserContextMenuInteraction) => Promise<void>;
+
+  build(): ContextMenuCommandBuilder;
+}
+
+export interface MessageContextMenuInteractionHandler extends BaseInteractionHandler {
+  /** Handle the command when sent to a guild. */
+  handleGuild?: (event: MessageContextMenuInteraction) => Promise<void>;
+
+  /** Handle the command when sent to a DM. */
+  handleDM?: (event: MessageContextMenuInteraction) => Promise<void>;
+
   build(): ContextMenuCommandBuilder;
 }
 
@@ -75,12 +91,14 @@ function loadInteractions<T extends BaseInteractionHandler>(path: string): { [k:
 
 export class InteractionManager {
   private commands: Index<CommandInteractionHandler>;
-  private menus: Index<ContextMenuInteractionHandler>;
+  private usermenus: Index<UserContextMenuInteractionHandler>;
+  private messagemenus: Index<MessageContextMenuInteractionHandler>;
   private buttons: Index<ButtonInteractionHandler>;
 
   constructor(readonly root: string, private readonly client: Makibot) {
     this.commands = loadInteractions(path.join(root, "commands"));
-    this.menus = loadInteractions(path.join(root, "menus"));
+    this.usermenus = loadInteractions(path.join(root, "usermenus"));
+    this.messagemenus = loadInteractions(path.join(root, "messagemenus"));
     this.buttons = loadInteractions(path.join(root, "buttons"));
     client.on("interactionCreate", this.handleInteraction.bind(this));
   }
@@ -90,7 +108,11 @@ export class InteractionManager {
       await this.handleCommandInteraction(interaction);
     }
     if (interaction.isContextMenu()) {
-      await this.handleContextMenuInteraction(interaction);
+      if (interaction.isUserContextMenu()) {
+        await this.handleUserContextMenuInteraction(interaction);
+      } else if (interaction.isMessageContextMenu()) {
+        await this.handleMessageContextMenuInteraction(interaction);
+      }
     }
     if (interaction.isButton()) {
       await this.handleButtonInteraction(interaction);
@@ -132,10 +154,77 @@ export class InteractionManager {
     }
   }
 
-  private async handleContextMenuInteraction(interaction: ContextMenuInteraction): Promise<void> {
-    const handler = this.menus[interaction.commandName];
+  private async handleUserContextMenuInteraction(
+    interaction: UserContextMenuInteraction
+  ): Promise<void> {
+    const handler = this.usermenus[interaction.commandName];
     if (handler) {
-      await handler.handle(interaction);
+      if (interaction.inGuild()) {
+        if (handler.handleGuild) {
+          await handler.handleGuild(interaction);
+        } else {
+          const toast = createToast({
+            title: "Menú no apto en una guild",
+            description: "Este menú no se puede pulsar en una guild",
+            severity: "error",
+          });
+          await interaction.reply({
+            embeds: [toast],
+            ephemeral: true,
+          });
+        }
+      } else {
+        if (handler.handleDM) {
+          await handler.handleDM(interaction);
+        } else {
+          const toast = createToast({
+            title: "Menú no apto fuera de una guild",
+            description: "Este menú no se puede pulsar fuera de una guild",
+            severity: "error",
+          });
+          await interaction.reply({
+            embeds: [toast],
+            ephemeral: true,
+          });
+        }
+      }
+    }
+  }
+
+  private async handleMessageContextMenuInteraction(
+    interaction: MessageContextMenuInteraction
+  ): Promise<void> {
+    const handler = this.messagemenus[interaction.commandName];
+    if (handler) {
+      if (interaction.inGuild()) {
+        if (handler.handleGuild) {
+          await handler.handleGuild(interaction);
+        } else {
+          const toast = createToast({
+            title: "Menú no apto en una guild",
+            description: "Este menú no se puede pulsar en una guild",
+            severity: "error",
+          });
+          await interaction.reply({
+            embeds: [toast],
+            ephemeral: true,
+          });
+        }
+      } else {
+        if (handler.handleDM) {
+          await handler.handleDM(interaction);
+        } else {
+          const toast = createToast({
+            title: "Menú no apto fuera de una guild",
+            description: "Este menú no se puede pulsar fuera de una guild",
+            severity: "error",
+          });
+          await interaction.reply({
+            embeds: [toast],
+            ephemeral: true,
+          });
+        }
+      }
     }
   }
 
