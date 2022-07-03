@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/makigas/makibot/compare/v2.7.0...v3.0.0) (2022-07-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* split context menu by type
+* handle() is no longer invoked
+* handle() is no longer invoked.
+
+### Features
+
+* add snooze button on thread messages ([ef93d81](https://github.com/makigas/makibot/commit/ef93d81ce82d16c68456f6166bf1335079a19499))
+
+
+### Bug Fixes
+
+* do not quote messages sent to private channels ([75fbb4e](https://github.com/makigas/makibot/commit/75fbb4e70cedeab319f847c6c6bdcc26461294ce))
+* do not send to pinboard messages from private channels ([3260f40](https://github.com/makigas/makibot/commit/3260f403c686615aa7e3dca8ec82d66dc1b345f7))
+
+
+### Chore
+
+* **deps:** update standard dependencies ([71e287d](https://github.com/makigas/makibot/commit/71e287dbeadce723f63de7d5fa830c422c5a8b3e))
+
+
+### Refactor
+
+* split context menu by type ([5418539](https://github.com/makigas/makibot/commit/54185395941baa97259fa4d780eda82f00cdd4ea))
+* split DM and group in button handler ([32b940a](https://github.com/makigas/makibot/commit/32b940aae9c9abe207f1fd70f457797216741d73))
+* split guild and DM in command handling ([e17cdaf](https://github.com/makigas/makibot/commit/e17cdaf94513cfb51ff1cf17309b548f867fa51e))
+
 ## [2.7.0](https://github.com/makigas/makibot/compare/v2.6.1...v2.7.0) (2022-06-09)
 
 
