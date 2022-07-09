@@ -118,7 +118,7 @@ export default class ServerCommand implements CommandInteractionHandler {
   }
 
   private async getThreadChannels(server: Server): Promise<MessageEmbed> {
-    const channels = (await server.getThreadChannels()).map((s) => channelMention(s));
+    const channels = (await server.threadChannelManager.get()).map((s) => channelMention(s));
     const toast = createToast({
       title: "Thread channels",
       description: channels.join("\n"),
@@ -139,7 +139,7 @@ export default class ServerCommand implements CommandInteractionHandler {
         });
       }
       case "add": {
-        await server.addThreadChannel(channel.id);
+        await server.threadChannelManager.add(channel.id);
         const toast = await this.getThreadChannels(server);
         return command.reply({
           embeds: [toast],
@@ -147,7 +147,7 @@ export default class ServerCommand implements CommandInteractionHandler {
         });
       }
       case "remove": {
-        await server.deleteThreadChannel(channel.id);
+        await server.threadChannelManager.delete(channel.id);
         const toast = await this.getThreadChannels(server);
         return command.reply({
           embeds: [toast],
@@ -158,7 +158,7 @@ export default class ServerCommand implements CommandInteractionHandler {
   }
 
   private async getLinkChannels(server: Server): Promise<MessageEmbed> {
-    const channels = (await server.getLinkChannels()).map((s) => channelMention(s));
+    const channels = (await server.linkChannelManager.get()).map((s) => channelMention(s));
     const toast = createToast({
       title: "Link channels",
       description: channels.join("\n"),
@@ -179,7 +179,7 @@ export default class ServerCommand implements CommandInteractionHandler {
         });
       }
       case "add": {
-        await server.addLinkChannel(channel.id);
+        await server.linkChannelManager.add(channel.id);
         const toast = await this.getLinkChannels(server);
         return command.reply({
           embeds: [toast],
@@ -187,7 +187,7 @@ export default class ServerCommand implements CommandInteractionHandler {
         });
       }
       case "remove": {
-        await server.deleteLinkChannel(channel.id);
+        await server.linkChannelManager.delete(channel.id);
         const toast = await this.getLinkChannels(server);
         return command.reply({
           embeds: [toast],

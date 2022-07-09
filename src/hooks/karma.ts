@@ -201,8 +201,8 @@ export default class KarmaService implements Hook {
 
         // Send a notification -- only if this channel doesn't use threads.
         // Ye, we only want to do this the first time this level is reached.
-        const threadChannels = await server.getThreadChannels();
-        const linkChannels = await server.getLinkChannels();
+        const threadChannels = await server.threadChannelManager.get();
+        const linkChannels = await server.linkChannelManager.get();
         if (!threadChannels.includes(channel.id) && !linkChannels.includes(channel.id)) {
           await this.sendNotification(channel, gm, expectedLevel);
         }
