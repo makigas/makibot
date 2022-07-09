@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.1](https://github.com/makigas/makibot/compare/v4.0.0...v4.0.1) (2022-07-09)
+
+
+### Bug Fixes
+
+* some messageDelete come without content ([b1cdd9b](https://github.com/makigas/makibot/commit/b1cdd9b7b860865daac6f826ea829ba9979b4341))
+
+
+### Chore
+
+* **lint:** configure deprecation rules for eslint ([2d29171](https://github.com/makigas/makibot/commit/2d2917166dd6f22a4ed28e5b89c2d93d2798d193))
+
+
+### Refactor
+
+* create channel managers (links, threads, support) ([3b46473](https://github.com/makigas/makibot/commit/3b46473bc5d5e5f1bc4eefa8f7dabebf479eeb89))
+
 ## [4.0.0](https://github.com/makigas/makibot/compare/v3.0.0...v4.0.0) (2022-07-03)
 
 
