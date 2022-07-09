@@ -15,11 +15,13 @@ module.exports = {
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 2020,
     sourceType: "module",
+    project: "./tsconfig.json",
   },
-  plugins: ["@typescript-eslint"],
+  plugins: ["deprecation", "@typescript-eslint"],
   rules: {
     complexity: ["warn", { max: 10 }],
+    "deprecation/deprecation": "warn",
   },
 };
