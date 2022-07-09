@@ -36,6 +36,27 @@ const createDeleteEvent = (message: PartialMessage): MessageEmbedOptions => ({
   ],
 });
 
+const createLiteDeleteEvent = (message: PartialMessage): MessageEmbedOptions => ({
+  author: {
+    name: "Se ha eliminado un mensaje",
+    iconURL:
+      "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/248/wastebasket_1f5d1.png",
+  },
+  footer: {
+    iconURL:
+      "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/page-with-curl_1f4c3.png",
+    text: "Mensaje de moderación automática",
+  },
+  color: 0x9b9b9b,
+  description: [
+    `**Mensaje**: ${messageIdentifier(message)}`,
+    `**Canal**: ${channelIdentifier(message.channel)}`,
+    `**Fecha**: ${dateIdentifier(message.createdAt)}`,
+    ``,
+    `Mensaje parcial, la pasarela no ha entregado el contenido`,
+  ].join("\n"),
+});
+
 /**
  * A hook that triggers whenever a message is deleted, in order to log the deletion
  * for moderation purposes. A copy of the message content, including permalinks
@@ -50,21 +71,37 @@ export default class DeleteService implements Hook {
   name = "delete";
 
   async onMessageDestroy(message: PartialMessage): Promise<void> {
-    if (message.cleanContent && message.cleanContent.startsWith(";;")) {
-      logger.info("[delete] skipping a fred command");
-      return;
-    }
-    /* Log to the modlog the fact that a message was deleted. */
-    try {
-      const embed = createModlogNotification(createDeleteEvent(message));
-      const server = new Server(message.guild);
-      await server.sendToModlog("delete", {
-        username: embed.author.name,
-        avatarURL: embed.author.iconURL,
-        embeds: [embed],
-      });
-    } catch (e) {
-      logger.error(`[delete] error during message logging`, e);
+    if (message.cleanContent) {
+      /* This is a bot message, ignore it. */
+      if (message.cleanContent.startsWith(";;")) {
+        logger.info("[delete] skipping a fred command");
+        return;
+      }
+
+      /* Log to the modlog the fact that a message was deleted. */
+      try {
+        const embed = createModlogNotification(createDeleteEvent(message));
+        const server = new Server(message.guild);
+        await server.sendToModlog("delete", {
+          username: embed.author.name,
+          avatarURL: embed.author.iconURL,
+          embeds: [embed],
+        });
+      } catch (e) {
+        logger.error(`[delete] error during message logging`, e);
+      }
+    } else {
+      try {
+        const embed = createModlogNotification(createLiteDeleteEvent(message));
+        const server = new Server(message.guild);
+        await server.sendToModlog("delete", {
+          username: embed.author.name,
+          avatarURL: embed.author.iconURL,
+          embeds: [embed],
+        });
+      } catch (e) {
+        logger.error(`[delete] error during message logging`, e);
+      }
     }
   }
 }

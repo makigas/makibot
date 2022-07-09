@@ -10,10 +10,11 @@ export function userIdentifier(resolvable: Snowflake | User): string {
   if (typeof resolvable === "string") {
     /* We have a snowflake. */
     return `${userMention(resolvable)} (${resolvable})`;
-  } else {
+  } else if (resolvable.id) {
     /* We have an user. */
     return `${userMention(resolvable.id)} (${resolvable.tag}, ${resolvable.id})`;
   }
+  return "(null)";
 }
 
 /**

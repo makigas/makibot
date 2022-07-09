@@ -95,7 +95,7 @@ export default class KarmaService implements Hook {
     await this.karma.undoAction({
       actorId: message.id,
       kind: "message",
-      originatorId: message.author.id,
+      originatorId: message.author?.id,
       actorType: "Message",
     });
   }
