@@ -19,7 +19,7 @@
     "axios": "^0.27.2",
     "big-integer": "^1.6.51",
     "datetoken": "^1.1.1",
-    "discord-api-types": "^0.32.0",
+    "discord-api-types": "^0.36.1",
     "discord.js": "^13.6.0",
     "discordjs-voicerole": "^3.0.0",
     "dotenv": "^16.0.1",
