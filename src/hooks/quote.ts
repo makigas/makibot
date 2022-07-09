@@ -1,4 +1,4 @@
-import { Client, GuildChannel, Message, Snowflake } from "discord.js";
+import { Client, Message, Snowflake, TextBasedChannel } from "discord.js";
 import { Hook } from "../lib/hook";
 import logger from "../lib/logger";
 import { quoteMessage } from "../lib/response";
@@ -31,6 +31,18 @@ function fetchMessage(client: Client, reference: MessageReference): Promise<Mess
     });
 }
 
+/**
+ * @param channel the channel to test
+ * @returns true if the channel is public
+ */
+async function isPublicChannel(channel: TextBasedChannel): Promise<boolean> {
+  if (channel.isText() && channel.type === "GUILD_TEXT") {
+    const permissions = await channel.permissionsFor(channel.guild.roles.everyone);
+    return permissions.has("VIEW_CHANNEL");
+  }
+  return false;
+}
+
 export default class QuoteService implements Hook {
   name = "quote";
 
@@ -39,21 +51,17 @@ export default class QuoteService implements Hook {
     if (reference && reference[0] === message.guild.id) {
       try {
         const referenced = await fetchMessage(message.client, reference);
-
-        /* Check permissions for this channel. */
-        if (referenced.channel.type === "GUILD_TEXT") {
-          const guildChannel = referenced.channel as GuildChannel;
-          const permissions = await guildChannel.permissionsFor(guildChannel.guild.roles.everyone);
-          if (!permissions.has("VIEW_CHANNEL")) {
-            logger.info(
-              `[quote] skipping quote of ${message.id} because ${referenced.channel.name} is not public`
-            );
-            return;
+        if (
+          referenced.channelId === message.channelId ||
+          (await isPublicChannel(referenced.channel))
+        ) {
+          if (referenced) {
+            await message.channel.send(quoteMessage(referenced));
           }
-        }
-
-        if (referenced) {
-          await message.channel.send(quoteMessage(referenced));
+        } else {
+          logger.info(
+            `[quote] skipping quote of ${message.id} because ${referenced.channel.id} is not public`
+          );
         }
       } catch (e) {
         logger.error("[quote] cannot send message", e);
