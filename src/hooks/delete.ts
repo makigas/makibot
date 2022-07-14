@@ -71,8 +71,14 @@ export default class DeleteService implements Hook {
   name = "delete";
 
   async onMessageDestroy(message: PartialMessage): Promise<void> {
+    if (message.author?.bot) {
+      /* This is a bot message. Ignore it. */
+      logger.info("[delete] skipping a bot command");
+      return;
+    }
+
     if (message.cleanContent) {
-      /* This is a bot message, ignore it. */
+      /* This is a bot command, ignore it. */
       if (message.cleanContent.startsWith(";;")) {
         logger.info("[delete] skipping a fred command");
         return;
