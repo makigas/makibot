@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.2](https://github.com/makigas/makibot/compare/v4.0.1...v4.0.2) (2022-07-14)
+
+
+### Bug Fixes
+
+* allow sharing quotes when channel is the same ([9fd07dd](https://github.com/makigas/makibot/commit/9fd07dd0e225bfc1a35ffa64db94c17608994c55))
+* **delete:** do not log bot messages ([ecd3008](https://github.com/makigas/makibot/commit/ecd30080dcd44621fbef8dba36ea3fef12c49b0c))
+* **lint:** lint ([4497876](https://github.com/makigas/makibot/commit/44978766a97d33d6a0168807e1821e6b9db725a0))
+
 ### [4.0.1](https://github.com/makigas/makibot/compare/v4.0.0...v4.0.1) (2022-07-09)
 
 
