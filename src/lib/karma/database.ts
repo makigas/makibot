@@ -44,6 +44,10 @@ export interface KarmaDatabase {
   bountiesSentToday(sender: Snowflake): Promise<number>;
   bountiesReceivedToday(receiver: Snowflake): Promise<number>;
   bounty(id: Snowflake, sender: Snowflake, receiver: Snowflake, amount: number): Promise<void>;
+
+  loot(interaction: Snowflake, guild: Snowflake, target: Snowflake): Promise<number>;
+  yesterdayLoot(guild: Snowflake, target: Snowflake): Promise<number>;
+  lootedToday(guild: Snowflake, target: Snowflake): Promise<boolean>;
 }
 
 class SqliteKarmaDatabase implements KarmaDatabase {
@@ -155,6 +159,51 @@ class SqliteKarmaDatabase implements KarmaDatabase {
       )`,
       [actorId, actorType, kind, originatorId, target, points]
     );
+  }
+
+  async loot(interaction: Snowflake, guild: Snowflake, target: Snowflake): Promise<number> {
+    const lootedToday = await this.lootedToday(guild, target);
+    if (!lootedToday) {
+      const points = (await this.yesterdayLoot(guild, target)) + 1;
+      await this.db.run(
+        `
+     INSERT INTO karma(
+       actor_id, actor_type, kind, originator_id, target_id, datetime, points
+     ) values (
+       ?, 'Interaction', 'loot', ?, ?, DATETIME('now'), ?
+     )
+     `,
+        [interaction, guild, target, points]
+      );
+      return points;
+    }
+    return 0;
+  }
+
+  async yesterdayLoot(guild: Snowflake, target: Snowflake): Promise<number> {
+    const query = `SELECT points FROM karma
+     WHERE kind = 'loot'
+     AND originator_id = ?
+     AND target_id = ?
+     AND datetime >= DATETIME('now', '-1 day', 'start of day')
+     AND datetime < DATETIME('now', 'start of day')
+     LIMIT 1`;
+    const params = [guild, target];
+
+    const result = await this.db.get(query, params);
+    return result ? result.points || 0 : 0;
+  }
+
+  async lootedToday(guild: Snowflake, target: Snowflake): Promise<boolean> {
+    const query = `SELECT COUNT(*) AS count FROM karma
+     WHERE kind = 'loot'
+     AND originator_id = ?
+     AND target_id = ?
+     AND datetime >= DATETIME('now', 'start of day')
+     AND datetime < DATETIME('now', '+1 day', 'start of day')`;
+    const params = [guild, target];
+    const { count } = await this.db.get(query, params);
+    return !!count && count > 0;
   }
 }
 
