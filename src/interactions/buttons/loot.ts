@@ -53,10 +53,11 @@ export default class LootButton implements ButtonInteractionHandler {
         ephemeral: true,
       });
     } else {
+      await event.deferReply({ ephemeral: true });
       const points = await database.loot(event.id, event.guild.id, event.user.id);
       const member = await event.guild.members.fetch(event.user.id);
       await syncLevel(member);
-      await event.reply({
+      await event.editReply({
         embeds: [
           createToast({
             title: "Bonificación desbloqueada",
@@ -67,7 +68,6 @@ export default class LootButton implements ButtonInteractionHandler {
             ].join(" "),
           }),
         ],
-        ephemeral: true,
       });
     }
   }
