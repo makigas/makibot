@@ -76,6 +76,7 @@ async function createKarmaToast(member: Member, sudo = false): Promise<MessageEm
         `👎 ${stats.downvotes}`,
         `⭐ ${stats.stars}`,
         `❤️ ${stats.hearts}`,
+        `🎰 ${stats.loots}`,
         `👋 ${stats.waves}`,
       ].join(" / "),
   ].join("\n");
