@@ -1,19 +1,7 @@
 import { Snowflake } from "discord.js";
+import { readFileSync } from "fs";
 import { Database, open } from "sqlite";
 import sqlite3 from "sqlite3";
-
-const SETUP_SCRIPT = `
-  CREATE TABLE IF NOT EXISTS karma (
-    actor_id INTEGER NOT NULL,
-    actor_type VARCHAR(32) NOT NULL,
-    kind VARCHAR(32) NOT NULL,
-    originator_id INTEGER NOT NULL,
-    target_id INTEGER NOT NULL,
-    datetime DATETIME NOT NULL,
-    points INTEGER NOT NULL,
-    PRIMARY KEY (actor_id, kind, originator_id, target_id)
-  );
-`;
 
 interface KarmaUndoActionParams {
   kind: string;
@@ -212,6 +200,16 @@ export async function openKarmaDatabase(database: string): Promise<KarmaDatabase
     filename: database,
     driver: sqlite3.Database,
   });
-  await db.run(SETUP_SCRIPT);
+  const scripts = [
+    "./schemas/karma/karma.sql",
+    "./schemas/karma/offset.sql",
+    "./schemas/karma/histogram.sql",
+    "./schemas/karma/transactions.sql",
+    "./schemas/karma/totals.sql",
+  ];
+  for (const script of scripts) {
+    const content = readFileSync(script).toString();
+    await db.run(content);
+  }
   return new SqliteKarmaDatabase(db);
 }
