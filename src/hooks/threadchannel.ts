@@ -12,6 +12,7 @@ import {
 } from "discord.js";
 import { Hook } from "../lib/hook";
 import Member from "../lib/member";
+import { quoteMessage } from "../lib/response";
 import Server from "../lib/server";
 
 /**
@@ -28,7 +29,11 @@ export default class ThreadChannelService implements Hook {
       (await isManagedThreadChannel(msg.channel)) &&
       isAcceptableUser(msg.member)
     ) {
-      await startThread(msg);
+      if (messageIsReply(msg)) {
+        await embedMessageInParent(msg);
+      } else {
+        await startThread(msg);
+      }
     }
   }
 
@@ -43,6 +48,22 @@ export default class ThreadChannelService implements Hook {
       await msg.thread.setArchived(true, "Original message got deleted");
     }
   }
+}
+
+function messageIsReply(msg: Message): boolean {
+  return msg.reference?.messageId != null;
+}
+
+async function embedMessageInParent(msg: Message): Promise<void> {
+  const references = await msg.fetchReference();
+  if (references.hasThread) {
+    const quote = quoteMessage(msg);
+    await references.thread.send({
+      ...quote,
+      content: `${userMention(msg.author.id)} quiso decir:`,
+    });
+  }
+  await msg.delete();
 }
 
 type ThreadableChannel = TextChannel | NewsChannel;
