@@ -48,7 +48,11 @@ export default class PinMessageMenu implements MessageContextMenuInteractionHand
     const channel = event.channel;
     const message = await channel.messages.fetch(event.targetMessage.id);
 
-    if (channel.type === "GUILD_TEXT" || channel.type === "GUILD_PUBLIC_THREAD") {
+    if (
+      channel.type === "GUILD_TEXT" ||
+      channel.type === "GUILD_PUBLIC_THREAD" ||
+      channel.type === "GUILD_NEWS_THREAD"
+    ) {
       const guildChannel = message.channel as GuildChannel;
       const permissions = await channel.permissionsFor(guildChannel.guild.roles.everyone);
       if (!permissions.has("VIEW_CHANNEL")) {
