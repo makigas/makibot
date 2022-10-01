@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@discordjs/builders": "^0.13.0",
-    "@discordjs/rest": "^0.4.1",
+    "@discordjs/rest": "^1.2.0",
     "@sentry/node": "^7.4.1",
     "axios": "^0.27.2",
     "big-integer": "^1.6.51",
