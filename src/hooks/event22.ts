@@ -16,9 +16,12 @@ export default class Event22Service implements Hook {
 
   private webhook: string | null;
 
+  private enabled: boolean;
+
   constructor(client: Makibot) {
     this.activity = process.env.EVENT_22_ACTIVITY;
     this.webhook = process.env.EVENT_22_WEBHOOK;
+    this.enabled = !!process.env.EVENT_22_ENABLED;
     if (this.activity && this.webhook) {
       logger.debug("[event22] catching presence updates");
       client.on("presenceUpdate", this.presenceUpdate.bind(this));
@@ -33,16 +36,15 @@ export default class Event22Service implements Hook {
 
     // Log the event, which will come handy for debug purposes at the moment.
     const name = newPre.user.tag;
-    console.log({ name, oldAct, newAct });
 
-    const playingLol = newAct.find((a) => a === this.activity);
-    if (playingLol) {
+    const matchesActivity = newAct.find((a) => a === this.activity);
+    if (matchesActivity) {
       const member = new Member(newPre.member);
       const server = new Server(newPre.guild);
       const tag = member.tagbag.tag("event:20221228");
       const triggered = await tag.get(false);
       if (!triggered) {
-        await tag.set(true);
+        await tag.set(this.enabled);
         const client = new WebhookClient({ url: this.webhook });
         client.send(`\`${newPre.user.tag}\` ha abierto ${this.activity} 👀.`);
       } else {
