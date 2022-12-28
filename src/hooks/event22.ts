@@ -31,8 +31,7 @@ export default class Event22Service implements Hook {
 
   private async presenceUpdate(oldPre: Presence, newPre: Presence): Promise<void> {
     if (!validPresence(oldPre) || !validPresence(newPre)) {
-      logger.warn("[event22] invalid presence objects");
-      console.warn({ oldPre, newPre });
+      // Invalid presence object, specially after bot restarts
       return;
     }
 
@@ -46,12 +45,18 @@ export default class Event22Service implements Hook {
       const tag = member.tagbag.tag("event:20221228");
       const triggered = await tag.get(false);
       if (!triggered) {
-        await tag.set(this.enabled);
-        const client = new WebhookClient({ url: this.webhook });
-        client.send(`\`${newPre.user.tag}\` ha abierto ${this.activity} 👀.`);
+        if (Math.random() < 0.25) {
+          await tag.set(this.enabled);
+          const client = new WebhookClient({ url: this.webhook });
+          client.send(`\`${newPre.user.tag}\` ha abierto ${this.activity} 👀.`);
+        } else {
+          logger.info(`[event22] ${newPre.user.tag} uses it, but math does not match`);
+        }
       } else {
         logger.info(`[event22] ${newPre.user.tag} uses it again`);
       }
+    } else if (isMatchingBefore && !isMatchingNow) {
+        logger.info(`[event22] ${newPre.user.tag} closes it`);
     }
   }
 }
