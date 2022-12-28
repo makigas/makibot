@@ -56,7 +56,7 @@ export default class Event22Service implements Hook {
         logger.info(`[event22] ${newPre.user.tag} uses it again`);
       }
     } else if (isMatchingBefore && !isMatchingNow) {
-        logger.info(`[event22] ${newPre.user.tag} closes it`);
+      logger.info(`[event22] ${newPre.user.tag} closes it`);
     }
   }
 }
