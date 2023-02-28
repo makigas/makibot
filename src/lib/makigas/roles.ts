@@ -26,8 +26,13 @@ const ROLE_DEFINITIONS = [
   },
   {
     label: "Vídeos",
-    description: "Te menciono cuando suba vídeo o inicie directo",
+    description: "Te menciono cuando suba vídeo",
     emoji: "📼",
+  },
+  {
+    label: "Streams",
+    description: "Te menciono cuando inicie un directo",
+    emoji: "🟣",
   },
   {
     label: "Multijugador",
