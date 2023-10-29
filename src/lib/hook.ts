@@ -8,7 +8,6 @@ import {
   PartialMessageReaction,
   PartialUser,
   User,
-  VoiceState,
 } from "discord.js";
 import Makibot from "../Makibot";
 import logger from "./logger";
@@ -44,8 +43,6 @@ export interface Hook {
   onGuildMemberUpdate?: (prev: GuildMember, next: GuildMember) => Promise<void>;
   onGuildMemberLeave?: (member: GuildMember | PartialGuildMember) => Promise<void>;
   onGuildMemberBan?: (ban: GuildBan) => Promise<void>;
-
-  onVoiceStateUpdate?: (oldStatus: VoiceState, newStatus: VoiceState) => Promise<void>;
 }
 
 type HookConstructor = {
@@ -113,7 +110,6 @@ export class HookManager {
     client.on("guildMemberRemove", this.onGuildMemberRemove.bind(this));
     client.on("guildMemberUpdate", this.onGuildMemberUpdate.bind(this));
     client.on("guildBanAdd", this.onGuildMemberBan.bind(this));
-    client.on("voiceStateUpdate", this.onVoiceStateUpdate.bind(this));
   }
 
   /**
@@ -249,14 +245,6 @@ export class HookManager {
     for (const handler of handlers) {
       logger.debug(`[hooks] processing ${handler.name}(onGuildMemberBan)`);
       await handler.onGuildMemberBan(ban);
-    }
-  }
-
-  async onVoiceStateUpdate(oldState: VoiceState, newState: VoiceState): Promise<void> {
-    const handlers = this.filterServices("onVoiceStateUpdate");
-    for (const handler of handlers) {
-      logger.debug(`[hooks] processing ${handler.name}(onVoiceStateUpdate)`);
-      await handler.onVoiceStateUpdate(oldState, newState);
     }
   }
 
