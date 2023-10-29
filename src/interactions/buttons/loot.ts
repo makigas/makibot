@@ -1,6 +1,6 @@
 import { ButtonInteraction, GuildMember } from "discord.js";
 import { ButtonInteractionHandler } from "../../lib/interaction";
-import { tokenToDate } from "datetoken";
+import tokenToDate from "datetoken";
 import { time } from "@discordjs/builders";
 import Makibot from "../../Makibot";
 import { createToast } from "../../lib/response";

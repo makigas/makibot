@@ -1,4 +1,4 @@
-import { tokenToDate } from "datetoken";
+import tokenToDate from "datetoken";
 import { Message } from "discord.js";
 import Makibot from "../../Makibot";
 import Server from "../server";
