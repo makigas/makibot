@@ -216,23 +216,6 @@ export default class Member {
     }
   }
 
-  /**
-   * Forget any flag previously set by any hook or interaction in regard to the
-   * mod system. For instance, calling bless() will forget whether the member
-   * ever triggered the antispam system or how many times has the antiflood
-   * system been triggered recently.
-   */
-  async bless(): Promise<void> {
-    const tags = [
-      "antispam:trippedAt",
-      "antiflood:pings",
-      "antiflood:history",
-      "antiflood:history2",
-      "antiflood:floods",
-    ];
-    await Promise.all(tags.map((t) => this.tagbag.tag(t).delete()));
-  }
-
   async ban(reason?: string): Promise<void> {
     if (this.guildMember.bannable) {
       this.guildMember.ban({

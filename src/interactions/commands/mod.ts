@@ -7,7 +7,6 @@ import { createToast } from "../../lib/response";
 import { tokenToDate } from "datetoken";
 import Server from "../../lib/server";
 import Makibot from "../../Makibot";
-import Member from "../../lib/member";
 import { SlashCommandBuilder } from "@discordjs/builders";
 
 /**
@@ -124,17 +123,6 @@ export default class ModCommand implements CommandInteractionHandler {
       .setDefaultPermission(false)
       .addSubcommand((command) =>
         command
-          .setName("bless")
-          .setDescription("Limpia el estado de moderación de una cuenta")
-          .addUserOption((option) =>
-            option
-              .setName("cuenta")
-              .setDescription("La cuenta que será llamada la atención")
-              .setRequired(true)
-          )
-      )
-      .addSubcommand((command) =>
-        command
           .setName("mute")
           .setDescription("Silencia una cuenta en este servidor")
           .addUserOption((option) =>
@@ -238,8 +226,6 @@ export default class ModCommand implements CommandInteractionHandler {
   handleGuild(event: CommandInteraction): Promise<void> {
     if (isModerationCommand(event)) {
       return this.handleModeration(event);
-    } else if (isBlessCommand(event)) {
-      return this.handleBless(event);
     }
   }
 
@@ -259,37 +245,10 @@ export default class ModCommand implements CommandInteractionHandler {
       replyNonModerator(event);
     }
   }
-
-  private async handleBless(event: CommandInteraction): Promise<void> {
-    const targetAccount = event.options.get("cuenta", true).value as string;
-    const member = await getMember(event, targetAccount);
-    await member.bless();
-
-    await event.reply({
-      ephemeral: true,
-      embeds: [
-        createToast({
-          title: "Cuenta limpiada",
-          description: "Has limpiado la memoria de moderación de esta persona.",
-          severity: "success",
-          target: member.user,
-        }),
-      ],
-    });
-  }
-}
-
-function getMember(event: CommandInteraction, user: UserResolvable): Promise<Member> {
-  const server = new Server(event.guild);
-  return server.member(user);
 }
 
 function isModerationCommand(event: CommandInteraction): boolean {
   const choices = ["warn", "unwarn", "mute", "unmute", "kick", "ban"];
   const commandName = event.options.getSubcommand(true);
   return choices.includes(commandName);
-}
-
-function isBlessCommand(event: CommandInteraction): boolean {
-  return event.options.getSubcommand() === "bless";
 }
