@@ -199,13 +199,8 @@ export default class KarmaService implements Hook {
       if (highScoreValue < expectedLevel) {
         await highScoreTag.set(expectedLevel);
 
-        // Send a notification -- only if this channel doesn't use threads.
-        // Ye, we only want to do this the first time this level is reached.
-        const threadChannels = await server.threadChannelManager.get();
-        const linkChannels = await server.linkChannelManager.get();
-        if (!threadChannels.includes(channel.id) && !linkChannels.includes(channel.id)) {
-          await this.sendNotification(channel, gm, expectedLevel);
-        }
+        // Send a notification, only the first time this level is reached.
+        await this.sendNotification(channel, gm, expectedLevel);
       }
     }
 

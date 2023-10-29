@@ -47,50 +47,10 @@ const LOCKDOWN_PERMISSIONS = [
   Permissions.FLAGS.CREATE_PRIVATE_THREADS,
 ];
 
-/**
- * Allows to manage channels that have a specific category, such as link
- * channels, thread channels or support channels. This allows to put
- * channels in specific cohorts, such as marking a channel as link only
- * or a channel as support only.
- */
-class ChannelManager {
-  readonly tag: Tag;
-
-  constructor(server: Server, tagName: string) {
-    this.tag = server.tagbag.tag(tagName);
-  }
-
-  get(): Promise<Snowflake[]> {
-    return this.tag.get([]);
-  }
-
-  async add(id: Snowflake): Promise<void> {
-    const old = await this.get();
-    if (!old.includes(id)) {
-      const next = [...old, id];
-      await this.tag.set(next);
-    }
-  }
-
-  async delete(id: Snowflake): Promise<void> {
-    const old = await this.get();
-    const next = old.filter((tid) => String(tid) !== String(id));
-    await this.tag.set(next);
-  }
-}
-
 export default class Server {
   private _tagbag: TagBag;
 
-  readonly linkChannelManager: ChannelManager;
-  readonly threadChannelManager: ChannelManager;
-  readonly supportChannelManager: ChannelManager;
-
-  constructor(private guild: Guild) {
-    this.linkChannelManager = new ChannelManager(this, "linkchannels");
-    this.threadChannelManager = new ChannelManager(this, "threadchannels");
-    this.supportChannelManager = new ChannelManager(this, "supportchannels");
-  }
+  constructor(private guild: Guild) { }
 
   async queryAuditLogEvent<T extends GuildAuditLogsResolvable>(
     type: T,
@@ -319,71 +279,5 @@ export default class Server {
     console.log(`Quitamos ${id} de ${old}`);
     const next = old.filter((rid) => String(rid) !== String(id));
     await this.trustedRoles.set(next);
-  }
-
-  /**
-   * Returns a list of threadchannels. These are channels where comunications
-   * are hold in threads. Sending a message to one of the channels in the
-   * array should open a thread, which is done by the threadchannel.ts hook.
-   * @returns a promise that resolves to the current array value.
-   * @deprecated use the channel manager
-   */
-  getThreadChannels(): Promise<Snowflake[]> {
-    return this.threadChannelManager.get();
-  }
-
-  /**
-   * Adds an id to the array of snowflakes contained in threadChannels.
-   * If the id was already present, this function does a NOOP.
-   * @param id the snowflake to add to the list.
-   * @returns a promise that once fulfilled will have this id added.
-   * @deprecated use the channel manager
-   */
-  async addThreadChannel(id: Snowflake): Promise<void> {
-    return this.threadChannelManager.add(id);
-  }
-
-  /**
-   * Removes an id from the array of snowflakes contained in threadChannels.
-   * If the id was not present, this function does a NOOP.
-   * @param id the snowflake to remove from the list.
-   * @returns a promise that once fulfilled will have this id removed.
-   * @deprecated use the channel manager
-   */
-  async deleteThreadChannel(id: Snowflake): Promise<void> {
-    return this.threadChannelManager.delete(id);
-  }
-
-  /**
-   * Returns the current list of linkchannels, which are channels where the
-   * communication should be kept in threads and these threads should only
-   * discuss links.
-   * @returns a promise that resolves to the array of channels in the list.
-   * @deprecated use the channel manager
-   */
-  getLinkChannels(): Promise<Snowflake[]> {
-    return this.linkChannelManager.get();
-  }
-
-  /**
-   * Adds an id to the array of snowflakes contained in linkChannels.
-   * If the id was already present, this function does a NOOP.
-   * @param id the snowflake to add to the list.
-   * @returns a promise that once fulfilled will have this id added.
-   * @deprecated use the channel manager
-   */
-  async addLinkChannel(id: Snowflake): Promise<void> {
-    return this.linkChannelManager.add(id);
-  }
-
-  /**
-   * Removes an id from the array of snowflakes contained in linkChannels.
-   * If the id was not present, this function does a NOOP.
-   * @param id the snowflake to remove from the list.
-   * @returns a promise that once fulfilled will have this id removed.
-   * @deprecated use the channel manager
-   */
-  async deleteLinkChannel(id: Snowflake): Promise<void> {
-    return this.linkChannelManager.delete(id);
   }
 }

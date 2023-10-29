@@ -3,10 +3,8 @@ import express from "express";
 
 import Makibot from "../../../Makibot";
 import Server from "../../server";
-import linkOnlyChannels from "./link";
 import memberMiddleware from "./member";
 import providerMiddleware from "./provider";
-import threadOnlyChannels from "./thread";
 import trustedRoles from "./trusted";
 
 export interface MiddlewareLocals {
@@ -36,10 +34,6 @@ export default function guildMiddleware(makibot: Makibot): express.Router {
 
   router.use("/members/:member", memberMiddleware(makibot));
   router.use("/roles/trusted", trustedRoles());
-
-  router.use("/channels/threadonly", threadOnlyChannels());
-  router.use("/channels/linkonly", linkOnlyChannels());
-
   router.use("/provider/:tag", providerMiddleware(makibot));
 
   /* Print current settings for the server. */
