@@ -1,4 +1,4 @@
-import { CommandInteraction, UserResolvable } from "discord.js";
+import { CommandInteraction } from "discord.js";
 import { CommandInteractionHandler } from "../../lib/interaction";
 import { applyAction } from "../../lib/modlog/actions";
 import { notifyModlog } from "../../lib/modlog/notifications";
@@ -129,10 +129,10 @@ export default class ModCommand implements CommandInteractionHandler {
             option
               .setName("cuenta")
               .setDescription("La cuenta que será silenciada")
-              .setRequired(true)
+              .setRequired(true),
           )
           .addStringOption((option) =>
-            option.setName("razon").setDescription("La razón por la que se silencia a esta cuenta")
+            option.setName("razon").setDescription("La razón por la que se silencia a esta cuenta"),
           )
           .addStringOption((option) =>
             option
@@ -141,9 +141,9 @@ export default class ModCommand implements CommandInteractionHandler {
               .setChoices(
                 { name: "hora", value: "now+h" },
                 { name: "dia", value: "now+d" },
-                { name: "semana", value: "now+w" }
-              )
-          )
+                { name: "semana", value: "now+w" },
+              ),
+          ),
       )
       .addSubcommand((command) =>
         command
@@ -153,8 +153,8 @@ export default class ModCommand implements CommandInteractionHandler {
             option
               .setName("cuenta")
               .setDescription("La cuenta a la que se le quita el silencio")
-              .setRequired(true)
-          )
+              .setRequired(true),
+          ),
       )
       .addSubcommand((command) =>
         command
@@ -164,11 +164,11 @@ export default class ModCommand implements CommandInteractionHandler {
             option
               .setName("cuenta")
               .setDescription("La cuenta a la que se va a echar del servidor")
-              .setRequired(true)
+              .setRequired(true),
           )
           .addStringOption((option) =>
-            option.setName("razon").setDescription("La razón por la que se banea a esta persona")
-          )
+            option.setName("razon").setDescription("La razón por la que se banea a esta persona"),
+          ),
       )
       .addSubcommand((command) =>
         command
@@ -178,11 +178,11 @@ export default class ModCommand implements CommandInteractionHandler {
             option
               .setName("cuenta")
               .setDescription("La cuenta a la que se va a echar del servidor")
-              .setRequired(true)
+              .setRequired(true),
           )
           .addStringOption((option) =>
-            option.setName("razon").setDescription("La razón por la que se echa a esta persona")
-          )
+            option.setName("razon").setDescription("La razón por la que se echa a esta persona"),
+          ),
       )
       .addSubcommand((command) =>
         command
@@ -192,12 +192,12 @@ export default class ModCommand implements CommandInteractionHandler {
             option
               .setName("cuenta")
               .setDescription("La cuenta que será llamada la atención")
-              .setRequired(true)
+              .setRequired(true),
           )
           .addStringOption((option) =>
             option
               .setName("razon")
-              .setDescription("La razón por la que se llama la atención a esta cuenta")
+              .setDescription("La razón por la que se llama la atención a esta cuenta"),
           )
           .addStringOption((option) =>
             option
@@ -206,9 +206,9 @@ export default class ModCommand implements CommandInteractionHandler {
               .setChoices(
                 { name: "hora", value: "now+h" },
                 { name: "dia", value: "now+d" },
-                { name: "semana", value: "now+w" }
-              )
-          )
+                { name: "semana", value: "now+w" },
+              ),
+          ),
       )
       .addSubcommand((command) =>
         command
@@ -218,8 +218,8 @@ export default class ModCommand implements CommandInteractionHandler {
             option
               .setName("cuenta")
               .setDescription("La cuenta a la que se le quita la llamada de atención")
-              .setRequired(true)
-          )
+              .setRequired(true),
+          ),
       );
   }
 

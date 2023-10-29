@@ -6,7 +6,7 @@ parent: Manual de uso
 ---
 
 1. Tabla de contenidos
-{:toc}
+   {:toc}
 
 # Moderación
 
@@ -20,13 +20,13 @@ Makibot se puede ocupar de aplicar eventos de moderación. Un evento de moderaci
 
 En este momento existen los siguientes tipos de eventos de moderación:
 
-* <img src="/makibot/images/wastebasket.png" style="height: 1em;" alt=""> **Eliminación**: cuando el Makibot debe eliminar automáticamente un mensaje, por ejemplo, porque contenga un enlace inapropiado o porque no siga las normas. Sin embargo, no tiene ningún efecto real, y su aparición en el mod-log ocurre únicamente a modo informativo para todo el mundo.
-* <img src="/makibot/images/warning.png" style="height: 1em;" alt=""> **Advertencia** (warn): sirve como llamada de atención general, por ejemplo, para los casos en los que una cuenta incumpla una norma de forma severa o reiterada (por ejemplo, si se le pide varias veces que no haga algo inapropiado como mandar enlaces a sitios no permitidos, abusar de las reacciones, emojis, o mayúsculas). Le aplica un rol que podría limitar sus funciones en algunos canales.
-* <img src="/makibot/images/checkbox.png" style="height: 1em;" alt=""> **Un-warn**: elimina los efectos de una advertencia. Normalmente se dispara automáticamente cuando expira un warn.
-* <img src="/makibot/images/mute.png" style="height: 1em;" alt=""> **Silenciar** (mute): impide que esa persona pueda hablar en los canales. Se suele usar cuando una cuenta representa un peligro inminente por los mensajes que está enviando y se la quiere cuarentenar.
-* <img src="/makibot/images/speaker.png" style="height: 1em;" alt=""> **Des-silenciar** (unmute): elimina los efectos de un silencio. Normalmente se dispara automáticamente cuando expira un mute.
-* <img src="/makibot/images/shoe.png" style="height: 1em;" alt=""> **Patada** (kick): echa a esa persona del servidor. Se puede volver a incorporar siguiendo un enlace de invitación o buscando el servidor en la página de comunidades.
-* <img src="/makibot/images/hammer.png" style="height: 1em;" alt=""> **Expulsión** (ban): echa de forma irrevocable a esa persona del servidor. Intentar seguir un enlace para unirse resultará en un error.
+- <img src="/makibot/images/wastebasket.png" style="height: 1em;" alt=""> **Eliminación**: cuando el Makibot debe eliminar automáticamente un mensaje, por ejemplo, porque contenga un enlace inapropiado o porque no siga las normas. Sin embargo, no tiene ningún efecto real, y su aparición en el mod-log ocurre únicamente a modo informativo para todo el mundo.
+- <img src="/makibot/images/warning.png" style="height: 1em;" alt=""> **Advertencia** (warn): sirve como llamada de atención general, por ejemplo, para los casos en los que una cuenta incumpla una norma de forma severa o reiterada (por ejemplo, si se le pide varias veces que no haga algo inapropiado como mandar enlaces a sitios no permitidos, abusar de las reacciones, emojis, o mayúsculas). Le aplica un rol que podría limitar sus funciones en algunos canales.
+- <img src="/makibot/images/checkbox.png" style="height: 1em;" alt=""> **Un-warn**: elimina los efectos de una advertencia. Normalmente se dispara automáticamente cuando expira un warn.
+- <img src="/makibot/images/mute.png" style="height: 1em;" alt=""> **Silenciar** (mute): impide que esa persona pueda hablar en los canales. Se suele usar cuando una cuenta representa un peligro inminente por los mensajes que está enviando y se la quiere cuarentenar.
+- <img src="/makibot/images/speaker.png" style="height: 1em;" alt=""> **Des-silenciar** (unmute): elimina los efectos de un silencio. Normalmente se dispara automáticamente cuando expira un mute.
+- <img src="/makibot/images/shoe.png" style="height: 1em;" alt=""> **Patada** (kick): echa a esa persona del servidor. Se puede volver a incorporar siguiendo un enlace de invitación o buscando el servidor en la página de comunidades.
+- <img src="/makibot/images/hammer.png" style="height: 1em;" alt=""> **Expulsión** (ban): echa de forma irrevocable a esa persona del servidor. Intentar seguir un enlace para unirse resultará en un error.
 
 ## Mod-log
 
@@ -52,20 +52,20 @@ Existen dos interfaces principales para moderar.
 
 La forma rápida es moderar directamente usando el comando `/mod`. Tiene la ventaja de que se puede buscar rápidamente la persona usando el autocompletado. Este comando tiene varios subcomandos según la acción a usar. Para moderar, se usaría lo siguiente:
 
-* `/mod warn {cuenta} [razon] [duracion]`: aplica un warn.
+- `/mod warn {cuenta} [razon] [duracion]`: aplica un warn.
   - cuenta: la cuenta a la que se aplica la llamada de atención.
   - razón (opcional): el motivo por el que se llama la atención.
   - duración (opcional): hora, día o semana, indica la duración.
-* `/mod unwarn {cuenta}`: expira un warn antes de tiempo.
-* `/mod mute {cuenta} [razon] [duracion]`: aplica un mute.
+- `/mod unwarn {cuenta}`: expira un warn antes de tiempo.
+- `/mod mute {cuenta} [razon] [duracion]`: aplica un mute.
   - cuenta: la cuenta a la que se aplica el silencio.
   - razón (opcional): el motivo por el que se silencia.
   - duración (opcional): hora, día o semana, indica la duración.
-* `/mod unmute {cuenta}`: expira un mute.
-* `/mod kick {cuenta} [razon] [duracion]`: echa del servidor.
+- `/mod unmute {cuenta}`: expira un mute.
+- `/mod kick {cuenta} [razon] [duracion]`: echa del servidor.
   - cuenta: la cuenta a la que se echa.
   - razón (opcional): el motivo por el que echa.
-* `/mod ban {cuenta} [razon] [duracion]`: banea del servidor.
+- `/mod ban {cuenta} [razon] [duracion]`: banea del servidor.
   - cuenta: la cuenta a la que se banea.
   - razón (opcional): el motivo por el que se banea.
 

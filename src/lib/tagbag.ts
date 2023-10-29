@@ -8,7 +8,7 @@ export default class TagBag {
   constructor(
     private provider: SettingProvider,
     private resolvable: Snowflake,
-    private guild?: Guild
+    private guild?: Guild,
   ) {
     this.tags = {};
   }

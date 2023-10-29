@@ -44,7 +44,7 @@ export default class Server {
 
   async queryAuditLogEvent<T extends GuildAuditLogsResolvable>(
     type: T,
-    finder: (event: GuildAuditLogsEntry<T>) => boolean
+    finder: (event: GuildAuditLogsEntry<T>) => boolean,
   ): Promise<GuildAuditLogsEntry<T>> {
     const events = await this.guild.fetchAuditLogs({ type });
     return events.entries.find((event) => finder(event));
@@ -76,7 +76,7 @@ export default class Server {
 
   async sendToModlog(
     kind: "default" | "sensible" | "delete" | "public",
-    payload: WebhookMessageOptions
+    payload: WebhookMessageOptions,
   ): Promise<void> {
     const url = await this.tagbag.tag(`webhook:${kind}mod`).get(null);
     if (url) {

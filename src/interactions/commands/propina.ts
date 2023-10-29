@@ -106,13 +106,13 @@ export default class PropinaCommand implements CommandInteractionHandler {
       .setName("propina")
       .setDescription("Regala una parte de tu karma a otra persona")
       .addUserOption((option) =>
-        option.setName("target").setDescription("A quién le regalamos el karma").setRequired(true)
+        option.setName("target").setDescription("A quién le regalamos el karma").setRequired(true),
       )
       .addIntegerOption((option) =>
         option
           .setName("valor")
           .setDescription("La cantidad de karma que le vamos a entregar")
-          .setRequired(true)
+          .setRequired(true),
       );
   }
 

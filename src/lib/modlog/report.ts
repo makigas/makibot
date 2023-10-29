@@ -41,7 +41,7 @@ export async function proposeReport(
   client: Makibot,
   message: Message,
   reason: string,
-  target: "default" | "sensible" = "default"
+  target: "default" | "sensible" = "default",
 ) {
   const embed = buildModReport(message, reason);
   const server = new Server(message.guild);

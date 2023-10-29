@@ -95,7 +95,10 @@ export class InteractionManager {
   private messagemenus: Index<MessageContextMenuInteractionHandler>;
   private buttons: Index<ButtonInteractionHandler>;
 
-  constructor(readonly root: string, private readonly client: Makibot) {
+  constructor(
+    readonly root: string,
+    private readonly client: Makibot,
+  ) {
     this.commands = loadInteractions(path.join(root, "commands"));
     this.usermenus = loadInteractions(path.join(root, "usermenus"));
     this.messagemenus = loadInteractions(path.join(root, "messagemenus"));
@@ -155,7 +158,7 @@ export class InteractionManager {
   }
 
   private async handleUserContextMenuInteraction(
-    interaction: UserContextMenuInteraction
+    interaction: UserContextMenuInteraction,
   ): Promise<void> {
     const handler = this.usermenus[interaction.commandName];
     if (handler) {
@@ -192,7 +195,7 @@ export class InteractionManager {
   }
 
   private async handleMessageContextMenuInteraction(
-    interaction: MessageContextMenuInteraction
+    interaction: MessageContextMenuInteraction,
   ): Promise<void> {
     const handler = this.messagemenus[interaction.commandName];
     if (handler) {

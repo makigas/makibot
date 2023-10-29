@@ -89,8 +89,8 @@ export default class KarmaService implements Hook {
           actorId: message.id,
           actorType: "Message",
           kind,
-        })
-      )
+        }),
+      ),
     );
     await this.karma.undoAction({
       actorId: message.id,
@@ -145,8 +145,8 @@ export default class KarmaService implements Hook {
           actorId: message.id,
           actorType: "Message",
           kind,
-        })
-      )
+        }),
+      ),
     );
   }
 
@@ -178,7 +178,6 @@ export default class KarmaService implements Hook {
 
   private async assertLevel(gm: GuildMember, channel: TextChannel): Promise<void> {
     const member = new Member(gm);
-    const server = new Server(gm.guild);
     const karma = await member.getKarma();
     const expectedLevel = getLevelV2(karma.points);
 

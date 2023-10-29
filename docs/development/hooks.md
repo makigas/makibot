@@ -6,7 +6,7 @@ parent: Desarrollo
 ---
 
 1. Tabla de contenidos
-{:toc}
+   {:toc}
 
 ## ¿Qué es un hook?
 
@@ -114,14 +114,14 @@ export default class MyHook implements Hook {
 
 Esta es una lista de las funciones y los prototipos de referencia:
 
-* `onMessageCreate(message)`: Se ejecuta cuando se recibe un mensaje nuevo, en un servidor o por mensaje privado. Recibe como parámetro el mensaje.
-* `onPremoderateMessage(message)`: Se ejecuta cuando se recibe un mensaje nuevo antes de llamar a onMessageCreate, para aquellos servicios que lo implementen. Esta función debe devolver una promesa que resuelva a null si el mensaje es seguro. Si un servicio detecta que un mensaje debe ser moderado automáticamente (porque tiene spam), debe devolver directamente un payload ModEvent. Cuando una función devuelve un ModEvent, el mensaje se modera automáticamente y es eliminado, sin llamar a onMessageCreate.
-* `onMessageUpdate(oldMessage, newMessage)`: Se ejecuta cuando se modifica un mensaje que el bot previamente haya podido ver. Recibe como parámetros el viejo mensaje y el nuevo mensaje. Por ejemplo, si ha cambiado de contenido, podrá comparar `oldMessage.cleanContent` con `newMessage.cleanContent`.
-* `onmessageDestroy(message)`: Se ejecuta cuando se elimina un mensaje que el bot previamente haya recibido haya sido eliminado. **El mensaje es parcial**. No trates de hacer un `fetch()` porque la API te va a devolver HTTP 404.
-* `onMessageReactionAdd(reaction, user)`: Se ejecuta cuando un usuario (`user`) reacciona (`reaction`) a un mensaje (`reaction.message`).
-* `onMessageReactionDestroy(reaction, user)`: Se ejecuta cuando un usuario (`user`) elimina su reacción (`reaction`) de un mensaje (`reaction.message`).
-* `onMessageReactionBulkDestroy(message)`: Se ejecuta cuando todas las reacciones de un mensaje (`message`) son eliminadas.
-* `onGuildMemberJoin(member)`: Se ejecuta cuando un miembro se une al servidor.
-* `onGuildMemberUpdate(prev, next)`: Se ejecuta cuando un miembro actualiza algo sobre ello. Depende mucho del evento que dispara la API de Discord. Te proporciona el estado anterior del usuario y el nuevo estado del usuario y ya es cosa tuya hacer el diff y detectar qué ha cambiado.
-* `onGuildMemberLeave(member)`: Se ejecuta cuando un miembro abandona el servidor. El `member` podría ser parcial. Cuidado con hacer un `fetch()`, porque el evento se puede recibir en cuentas que se eliminan (por ejemplo, el usuario borra su cuenta de Discord, o se trata de una cuenta temporal que Discord borra). En ese caso, hacer un `fetch()` provocará un error HTTP 404 en la API de Discord.
-* `onBuildMemberBan(ban)`: se ejecuta cuando un miembro es baneado. La información está disponible a través del objeto `ban`.
+- `onMessageCreate(message)`: Se ejecuta cuando se recibe un mensaje nuevo, en un servidor o por mensaje privado. Recibe como parámetro el mensaje.
+- `onPremoderateMessage(message)`: Se ejecuta cuando se recibe un mensaje nuevo antes de llamar a onMessageCreate, para aquellos servicios que lo implementen. Esta función debe devolver una promesa que resuelva a null si el mensaje es seguro. Si un servicio detecta que un mensaje debe ser moderado automáticamente (porque tiene spam), debe devolver directamente un payload ModEvent. Cuando una función devuelve un ModEvent, el mensaje se modera automáticamente y es eliminado, sin llamar a onMessageCreate.
+- `onMessageUpdate(oldMessage, newMessage)`: Se ejecuta cuando se modifica un mensaje que el bot previamente haya podido ver. Recibe como parámetros el viejo mensaje y el nuevo mensaje. Por ejemplo, si ha cambiado de contenido, podrá comparar `oldMessage.cleanContent` con `newMessage.cleanContent`.
+- `onmessageDestroy(message)`: Se ejecuta cuando se elimina un mensaje que el bot previamente haya recibido haya sido eliminado. **El mensaje es parcial**. No trates de hacer un `fetch()` porque la API te va a devolver HTTP 404.
+- `onMessageReactionAdd(reaction, user)`: Se ejecuta cuando un usuario (`user`) reacciona (`reaction`) a un mensaje (`reaction.message`).
+- `onMessageReactionDestroy(reaction, user)`: Se ejecuta cuando un usuario (`user`) elimina su reacción (`reaction`) de un mensaje (`reaction.message`).
+- `onMessageReactionBulkDestroy(message)`: Se ejecuta cuando todas las reacciones de un mensaje (`message`) son eliminadas.
+- `onGuildMemberJoin(member)`: Se ejecuta cuando un miembro se une al servidor.
+- `onGuildMemberUpdate(prev, next)`: Se ejecuta cuando un miembro actualiza algo sobre ello. Depende mucho del evento que dispara la API de Discord. Te proporciona el estado anterior del usuario y el nuevo estado del usuario y ya es cosa tuya hacer el diff y detectar qué ha cambiado.
+- `onGuildMemberLeave(member)`: Se ejecuta cuando un miembro abandona el servidor. El `member` podría ser parcial. Cuidado con hacer un `fetch()`, porque el evento se puede recibir en cuentas que se eliminan (por ejemplo, el usuario borra su cuenta de Discord, o se trata de una cuenta temporal que Discord borra). En ese caso, hacer un `fetch()` provocará un error HTTP 404 en la API de Discord.
+- `onBuildMemberBan(ban)`: se ejecuta cuando un miembro es baneado. La información está disponible a través del objeto `ban`.

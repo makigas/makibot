@@ -164,7 +164,7 @@ export const modEventBuilder = (
   message: Message,
   type: ModEventType,
   reason: string,
-  expires?: string
+  expires?: string,
 ): ModEvent => ({
   createdAt: new Date(),
   expired: false,

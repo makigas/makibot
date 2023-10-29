@@ -33,7 +33,7 @@ describe("TagBag", () => {
       expect(provider.get).to.have.been.calledOnceWith(
         "global",
         "12345678901234567890:foobar",
-        "default"
+        "default",
       );
     });
 
@@ -46,12 +46,12 @@ describe("TagBag", () => {
       expect(provider.get).to.have.been.calledWith(
         "global",
         "12345678901234567890:foobar",
-        "default"
+        "default",
       );
       expect(provider.get).to.have.been.calledWith(
         "global",
         "12345678901234567890:foobar",
-        "newDefault"
+        "newDefault",
       );
     });
 
@@ -63,7 +63,7 @@ describe("TagBag", () => {
       expect(provider.get).to.have.been.calledOnceWith(
         "global",
         "12345678901234567890:foobar",
-        "default"
+        "default",
       );
       expect(provider.set).to.have.been.calledOnceWith("global", "12345678901234567890:foobar", 10);
     });
@@ -75,7 +75,7 @@ describe("TagBag", () => {
       expect(provider.get).to.have.been.calledOnceWith(
         "1122334455",
         "12345678901234567890:foobar",
-        "default"
+        "default",
       );
     });
   });

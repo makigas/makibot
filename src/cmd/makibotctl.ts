@@ -34,7 +34,7 @@ makibotctl.command(
         console.error(e);
         process.exit(1);
       });
-  }
+  },
 );
 
 makibotctl.command<{ app: string; local?: string }>(
@@ -102,7 +102,7 @@ makibotctl.command<{ app: string; local?: string }>(
           process.exit(1);
         });
     }
-  }
+  },
 );
 
 makibotctl.command<{ app: string; local: string }>(
@@ -122,7 +122,7 @@ makibotctl.command<{ app: string; local: string }>(
           await restClient.delete(Routes.applicationGuildCommand(argv.app, argv.local, command.id));
         }
       });
-  }
+  },
 );
 
 makibotctl.command(
@@ -133,7 +133,7 @@ makibotctl.command(
     const guilds = await client.guilds();
     guilds.forEach((guild) => console.log(`${guild.id} | ${guild.name}`));
     process.exit(0);
-  }
+  },
 );
 
 makibotctl.command<{ guild: string }>(
@@ -151,7 +151,7 @@ makibotctl.command<{ guild: string }>(
         console.error(`Error: ${err}`);
         process.exit(1);
       });
-  }
+  },
 );
 
 makibotctl.command<{ guild: string; key: string }>(
@@ -169,7 +169,7 @@ makibotctl.command<{ guild: string; key: string }>(
         console.error("Error: " + e);
         process.exit(1);
       });
-  }
+  },
 );
 
 makibotctl.command<{ guild: string; key: string; value: string }>(
@@ -187,7 +187,7 @@ makibotctl.command<{ guild: string; key: string; value: string }>(
         console.error("Error: " + e);
         process.exit(1);
       });
-  }
+  },
 );
 
 makibotctl.command<{ guild: string; key: string }>(
@@ -205,7 +205,7 @@ makibotctl.command<{ guild: string; key: string }>(
         console.error("Error: " + e);
         process.exit(1);
       });
-  }
+  },
 );
 
 makibotctl.command<{ guild: string; key: string; value: string }>(
@@ -222,7 +222,7 @@ makibotctl.command<{ guild: string; key: string; value: string }>(
         console.error(`Error: ${err}`);
         process.exit(1);
       });
-  }
+  },
 );
 
 makibotctl.command<{ guild: string; member: string }>(
@@ -240,7 +240,7 @@ makibotctl.command<{ guild: string; member: string }>(
       console.error(`Error: ${e}`);
       process.exit(1);
     }
-  }
+  },
 );
 
 makibotctl.command<{ guild: string; member: string; offset: number }>(
@@ -258,7 +258,7 @@ makibotctl.command<{ guild: string; member: string; offset: number }>(
       console.error(`Error: ${e}`);
       process.exit(1);
     }
-  }
+  },
 );
 
 makibotctl.help().argv;

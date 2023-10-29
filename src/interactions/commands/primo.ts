@@ -23,7 +23,7 @@ export default class PrimoCommand implements CommandInteractionHandler {
         option
           .setName("n")
           .setDescription("El valor que queremos testear como primo")
-          .setRequired(true)
+          .setRequired(true),
       );
   }
 
@@ -50,6 +50,10 @@ export default class PrimoCommand implements CommandInteractionHandler {
   private isPrime(n: BigInteger): boolean {
     if (n.eq(2) || n.eq(3) || n.eq(5)) return true;
     if (n.lt(2) || n.mod(2).eq(0) || n.mod(3).eq(0) || n.mod(5).eq(0)) return false;
+    return this.probabilisticCheck(n);
+  }
+
+  private probabilisticCheck(n: BigInteger): boolean {
     const start = Date.now();
     for (let i = bigInt(7); !i.multiply(i).gt(n); i = i.add(6)) {
       const elapsed = Date.now() - start;

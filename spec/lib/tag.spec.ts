@@ -120,7 +120,7 @@ describe("Tag", () => {
             key.endsWith("::updatedAt") ? 4500000 : 15) as unknown as <T>(
             guild: string,
             key: string,
-            defVal?: T
+            defVal?: T,
           ) => T;
 
           const tag = new Tag(provider, "myKey", {
@@ -138,7 +138,7 @@ describe("Tag", () => {
             key.endsWith("::updatedAt") ? 4500000 : 15) as unknown as <T>(
             guild: string,
             key: string,
-            defVal?: T
+            defVal?: T,
           ) => T;
 
           const tag = new Tag(provider, "myKey", {

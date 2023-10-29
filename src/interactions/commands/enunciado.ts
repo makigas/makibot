@@ -20,7 +20,7 @@ export default class EnunciadoCommand implements CommandInteractionHandler {
     return new SlashCommandBuilder()
       .setName("enunciado")
       .setDescription(
-        "Lanza un recordatorio amistoso para invitar a borrar un mensaje que contiene un enunciado"
+        "Lanza un recordatorio amistoso para invitar a borrar un mensaje que contiene un enunciado",
       )
       .addUserOption((option) => option.setName("cuenta").setDescription("A quién mencionamos"));
   }

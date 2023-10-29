@@ -31,7 +31,7 @@ export interface Hook {
   onMessageCreate?: (message: Message) => Promise<void>;
   onMessageUpdate?: (
     oldMessage: Message | PartialMessage,
-    newMessage: Message | PartialMessage
+    newMessage: Message | PartialMessage,
   ) => Promise<void>;
   onMessageDestroy?: (message: PartialMessage) => Promise<void>;
 
@@ -95,7 +95,10 @@ export class HookManager {
 
   private services: Hook[];
 
-  constructor(path: string, private client: Makibot) {
+  constructor(
+    path: string,
+    private client: Makibot,
+  ) {
     this.services = requireAllHooks(client, path);
     logger.debug("[hooks] finished registering services");
 
@@ -162,7 +165,7 @@ export class HookManager {
 
   async onMessageUpdate(
     oldMessage: Message | PartialMessage,
-    newMessage: Message | PartialMessage
+    newMessage: Message | PartialMessage,
   ): Promise<void> {
     if (isProcessableMessage(oldMessage) && isProcessableMessage(newMessage)) {
       const handlers = this.filterServices("onMessageUpdate");
@@ -185,7 +188,7 @@ export class HookManager {
 
   async onMessageReactionAdd(
     reaction: MessageReaction | PartialMessageReaction,
-    user: User | PartialUser
+    user: User | PartialUser,
   ): Promise<void> {
     const [fullReaction, fullUser] = await Promise.all([reaction.fetch(), user.fetch()]);
     const handlers = this.filterServices("onMessageReactionAdd");
@@ -197,7 +200,7 @@ export class HookManager {
 
   async onMessageReactionRemove(
     reaction: MessageReaction | PartialMessageReaction,
-    user: User | PartialUser
+    user: User | PartialUser,
   ): Promise<void> {
     const [fullReaction, fullUser] = await Promise.all([reaction.fetch(), user.fetch()]);
     const handlers = this.filterServices("onMessageReactionDestroy");

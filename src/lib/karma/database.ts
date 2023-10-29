@@ -75,7 +75,7 @@ class SqliteKarmaDatabase implements KarmaDatabase {
     id: Snowflake,
     sender: Snowflake,
     receiver: Snowflake,
-    amount: number
+    amount: number,
   ): Promise<void> {
     /* FIXME: this is not using a transaction. node-sqlite3 doesn't support transactions ·_· */
     try {
@@ -145,7 +145,7 @@ class SqliteKarmaDatabase implements KarmaDatabase {
       ) values (
         ?, ?, ?, ?, ?, datetime('now'), ?
       )`,
-      [actorId, actorType, kind, originatorId, target, points]
+      [actorId, actorType, kind, originatorId, target, points],
     );
   }
 
@@ -161,7 +161,7 @@ class SqliteKarmaDatabase implements KarmaDatabase {
        ?, 'Interaction', 'loot', ?, ?, DATETIME('now'), ?
      )
      `,
-        [interaction, guild, target, points]
+        [interaction, guild, target, points],
       );
       return points;
     }

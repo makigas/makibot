@@ -5,12 +5,10 @@ import { time } from "@discordjs/builders";
 import Makibot from "../../Makibot";
 import { createToast } from "../../lib/response";
 import Member from "../../lib/member";
-import Server from "../../lib/server";
 import { getLevelV2 } from "../../lib/karma";
 
 async function syncLevel(gm: GuildMember) {
   const member = new Member(gm);
-  const server = new Server(gm.guild);
   const karma = await member.getKarma();
   const expectedLevel = getLevelV2(karma.points);
 
@@ -45,7 +43,7 @@ export default class LootButton implements ButtonInteractionHandler {
             title: "No tan deprisa",
             description: `Sólo puedes usar este comando una vez por día. Se reseteará en ${time(
               nextDay,
-              "R"
+              "R",
             )}, a las ${time(nextDay)}`,
             severity: "warning",
           }),

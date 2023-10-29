@@ -18,7 +18,7 @@ export class SettingProvider {
 
   async init(): Promise<void> {
     await this.db.run(
-      "CREATE TABLE IF NOT EXISTS settings (guild INTEGER PRIMARY KEY, settings TEXT)"
+      "CREATE TABLE IF NOT EXISTS settings (guild INTEGER PRIMARY KEY, settings TEXT)",
     );
     await this.db.each(
       "SELECT CAST(guild as TEXT) as guild, settings FROM settings",
@@ -27,7 +27,7 @@ export class SettingProvider {
           const { guild, settings } = data;
           this.cache[guildToCacheName(guild)] = JSON.parse(settings);
         }
-      }
+      },
     );
   }
 

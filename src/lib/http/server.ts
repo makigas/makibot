@@ -34,7 +34,7 @@ export default function serverFactory(makibot: Makibot): express.Express {
       makibot.guilds.cache.map((guild) => ({
         id: guild.id,
         name: guild.name,
-      }))
+      })),
     );
   });
 

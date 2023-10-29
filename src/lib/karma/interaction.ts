@@ -9,7 +9,7 @@ import {
   Snowflake,
 } from "discord.js";
 import { getPointsForLevelV2 } from "../karma";
-import Member, { KarmaStats } from "../member";
+import Member from "../member";
 import { createToast } from "../response";
 import Server from "../server";
 
@@ -92,7 +92,7 @@ const KARMA_INTERACTION_ACTION_ROW: MessageActionRowOptions = {
 
 function createInteractionCollector(
   interaction: BaseCommandInteraction | MessageComponentInteraction,
-  parentId: Snowflake
+  parentId: Snowflake,
 ): InteractionCollector<ButtonInteraction> {
   const collector = interaction.channel.createMessageComponentCollector({
     componentType: "BUTTON",
@@ -115,7 +115,7 @@ function createInteractionCollector(
 
 export async function handleKarmaInteraction(
   interaction: BaseCommandInteraction | MessageComponentInteraction,
-  target: Snowflake
+  target: Snowflake,
 ): Promise<void> {
   await interaction.deferReply({ ephemeral: true });
 

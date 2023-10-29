@@ -67,10 +67,10 @@ export default class SearchMakigasESCommand implements CommandInteractionHandler
           .setName("busqueda")
           .setDescription("Tipo de búsqueda")
           .setChoices({ name: "Vídeo", value: "video" }, { name: "BBS", value: "bbs" })
-          .setRequired(true)
+          .setRequired(true),
       )
       .addStringOption((o) =>
-        o.setName("q").setDescription("¿Qué deseas buscar?").setRequired(true)
+        o.setName("q").setDescription("¿Qué deseas buscar?").setRequired(true),
       );
   }
 

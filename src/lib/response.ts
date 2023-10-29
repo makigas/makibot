@@ -49,7 +49,10 @@ function embedDescription(message: Message): string {
 export function quoteMessage(message: Message): MessageOptions {
   const quote = new MessageEmbed();
   quote.setDescription(embedDescription(message));
-  quote.setFooter(message.author.username, message.author.avatarURL());
+  quote.setFooter({
+    text: message.author.username,
+    iconURL: message.author.avatarURL(),
+  });
   quote.setTimestamp(message.editedTimestamp || message.createdTimestamp);
 
   /* Attachments. */

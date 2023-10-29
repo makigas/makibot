@@ -1,5 +1,5 @@
-import { channelMention, SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import { SlashCommandBuilder } from "@discordjs/builders";
+import { CommandInteraction } from "discord.js";
 import { CommandInteractionHandler } from "../../lib/interaction";
 import { createToast } from "../../lib/response";
 import Server from "../../lib/server";
@@ -13,7 +13,7 @@ export default class ServerCommand implements CommandInteractionHandler {
       .setDescription("Get or modify server settings")
       .setDefaultPermission(false)
       .addSubcommand((cmd) =>
-        cmd.setName("view-settings").setDescription("View current server settings")
+        cmd.setName("view-settings").setDescription("View current server settings"),
       )
       .addSubcommand((cmd) =>
         cmd
@@ -27,13 +27,13 @@ export default class ServerCommand implements CommandInteractionHandler {
                 { name: "Default modlog", value: "webhook:defaultmod" },
                 { name: "Sensible modlog", value: "webhook:sensiblemod" },
                 { name: "Delete modlog", value: "webhook:deletemod" },
-                { name: "Public modlog", value: "webhook:publicmod" }
+                { name: "Public modlog", value: "webhook:publicmod" },
               )
-              .setRequired(true)
+              .setRequired(true),
           )
           .addStringOption((o) =>
-            o.setName("url").setDescription("The URL to assign").setRequired(false)
-          )
+            o.setName("url").setDescription("The URL to assign").setRequired(false),
+          ),
       );
   }
 

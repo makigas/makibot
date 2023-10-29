@@ -60,7 +60,7 @@ export default class QuoteService implements Hook {
           }
         } else {
           logger.info(
-            `[quote] skipping quote of ${message.id} because ${referenced.channel.id} is not public`
+            `[quote] skipping quote of ${message.id} because ${referenced.channel.id} is not public`,
           );
         }
       } catch (e) {

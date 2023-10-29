@@ -36,7 +36,7 @@ export const createLeaveEvent = (member: PartialGuildMember): MessageEmbedOption
 
 export const createNicknameEvent = (
   oldMember: GuildMember,
-  newMember: GuildMember
+  newMember: GuildMember,
 ): MessageEmbedOptions => ({
   color: 0xffda84,
   author: {
@@ -91,7 +91,7 @@ async function handleTimeout(prev: GuildMember, next: GuildMember): Promise<void
         "MEMBER_UPDATE",
         (event) =>
           event.target.id === next.user.id &&
-          event.changes.some((change) => change.key === "communication_disabled_until")
+          event.changes.some((change) => change.key === "communication_disabled_until"),
       );
       if (audit) {
         reason = audit.reason;
@@ -123,8 +123,8 @@ async function handleTimeout(prev: GuildMember, next: GuildMember): Promise<void
         (event) =>
           event.target.id === next.user.id &&
           event.changes.some(
-            (change) => change.key === "communication_disabled_until" && !change.new
-          )
+            (change) => change.key === "communication_disabled_until" && !change.new,
+          ),
       );
       if (audit) {
         executor = audit.executor;
@@ -184,7 +184,7 @@ export default class RosterService implements Hook {
 
     const kickEvent = await server.queryAuditLogEvent(
       "MEMBER_KICK",
-      (e) => e.target.id === member.id
+      (e) => e.target.id === member.id,
     );
 
     if (kickEvent && member.joinedAt && kickEvent.createdAt > member.joinedAt) {
@@ -211,7 +211,7 @@ export default class RosterService implements Hook {
     const server = new Server(ban.guild);
     const event = await server.queryAuditLogEvent(
       "MEMBER_BAN_ADD",
-      (e) => e.target.id == ban.user.id
+      (e) => e.target.id == ban.user.id,
     );
     const banEvent: ModEvent = {
       createdAt: new Date(),

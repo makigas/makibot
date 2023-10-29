@@ -69,7 +69,7 @@ class RoleManager {
   constructor(
     private interaction: BaseCommandInteraction | MessageComponentInteraction,
     private member: GuildMember,
-    private parentId: Snowflake
+    private parentId: Snowflake,
   ) {
     this.menuCollector = this.interaction.channel.createMessageComponentCollector({
       componentType: "SELECT_MENU",
@@ -108,13 +108,13 @@ class RoleManager {
     /* Set and unset roles that should not apply here. */
     await this.member.roles.add(
       difference(event.values, this.currentMemberRoles).map((r) =>
-        this.member.guild.roles.cache.find((p) => p.name === r)
-      )
+        this.member.guild.roles.cache.find((p) => p.name === r),
+      ),
     );
     await this.member.roles.remove(
       difference(this.currentMemberRoles, event.values).map((r) =>
-        this.member.guild.roles.cache.find((p) => p.name === r)
-      )
+        this.member.guild.roles.cache.find((p) => p.name === r),
+      ),
     );
 
     /* Update the message. */
@@ -123,7 +123,7 @@ class RoleManager {
 
   private async handleButtonCollector(event: ButtonInteraction): Promise<void> {
     await this.member.roles.remove(
-      this.currentMemberRoles.map((r) => this.member.guild.roles.cache.find((p) => p.name === r))
+      this.currentMemberRoles.map((r) => this.member.guild.roles.cache.find((p) => p.name === r)),
     );
     await event.update(this.render());
   }
@@ -137,7 +137,7 @@ class RoleManager {
 }
 
 export async function startRoleManager(
-  interaction: BaseCommandInteraction | MessageComponentInteraction
+  interaction: BaseCommandInteraction | MessageComponentInteraction,
 ): Promise<void> {
   const message = await interaction.deferReply({ ephemeral: true, fetchReply: true });
   const member = await interaction.guild.members.fetch(interaction.user.id);

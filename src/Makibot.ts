@@ -27,7 +27,7 @@ export default class Makibot extends Client {
   public constructor(
     modrepo: ModerationRepository,
     provider: SettingProvider,
-    karma: KarmaDatabase
+    karma: KarmaDatabase,
   ) {
     super({
       allowedMentions: {},
@@ -63,7 +63,7 @@ export default class Makibot extends Client {
       console.error(`> Reason: ${e.reason} Code: ${e.code}`);
       if (e.code == 4014 /* DISALLOWED_INTENTS */) {
         console.error(
-          `> Suggestion: Active the "Privileged Gateway Intents" in your control panel\n`
+          `> Suggestion: Active the "Privileged Gateway Intents" in your control panel\n`,
         );
       }
       this.shutdown(1);

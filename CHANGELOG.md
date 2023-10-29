@@ -4,494 +4,426 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [4.0.2](https://github.com/makigas/makibot/compare/v4.0.1...v4.0.2) (2022-07-14)
 
-
 ### Bug Fixes
 
-* allow sharing quotes when channel is the same ([9fd07dd](https://github.com/makigas/makibot/commit/9fd07dd0e225bfc1a35ffa64db94c17608994c55))
-* **delete:** do not log bot messages ([ecd3008](https://github.com/makigas/makibot/commit/ecd30080dcd44621fbef8dba36ea3fef12c49b0c))
-* **lint:** lint ([4497876](https://github.com/makigas/makibot/commit/44978766a97d33d6a0168807e1821e6b9db725a0))
+- allow sharing quotes when channel is the same ([9fd07dd](https://github.com/makigas/makibot/commit/9fd07dd0e225bfc1a35ffa64db94c17608994c55))
+- **delete:** do not log bot messages ([ecd3008](https://github.com/makigas/makibot/commit/ecd30080dcd44621fbef8dba36ea3fef12c49b0c))
+- **lint:** lint ([4497876](https://github.com/makigas/makibot/commit/44978766a97d33d6a0168807e1821e6b9db725a0))
 
 ### [4.0.1](https://github.com/makigas/makibot/compare/v4.0.0...v4.0.1) (2022-07-09)
 
-
 ### Bug Fixes
 
-* some messageDelete come without content ([b1cdd9b](https://github.com/makigas/makibot/commit/b1cdd9b7b860865daac6f826ea829ba9979b4341))
-
+- some messageDelete come without content ([b1cdd9b](https://github.com/makigas/makibot/commit/b1cdd9b7b860865daac6f826ea829ba9979b4341))
 
 ### Chore
 
-* **lint:** configure deprecation rules for eslint ([2d29171](https://github.com/makigas/makibot/commit/2d2917166dd6f22a4ed28e5b89c2d93d2798d193))
-
+- **lint:** configure deprecation rules for eslint ([2d29171](https://github.com/makigas/makibot/commit/2d2917166dd6f22a4ed28e5b89c2d93d2798d193))
 
 ### Refactor
 
-* create channel managers (links, threads, support) ([3b46473](https://github.com/makigas/makibot/commit/3b46473bc5d5e5f1bc4eefa8f7dabebf479eeb89))
+- create channel managers (links, threads, support) ([3b46473](https://github.com/makigas/makibot/commit/3b46473bc5d5e5f1bc4eefa8f7dabebf479eeb89))
 
 ## [4.0.0](https://github.com/makigas/makibot/compare/v3.0.0...v4.0.0) (2022-07-03)
 
-
 ### ⚠ BREAKING CHANGES
 
-* Removes the old pin system and all the functions.
+- Removes the old pin system and all the functions.
 
 ### Features
 
-* add server settings command ([c13dcce](https://github.com/makigas/makibot/commit/c13dccedaa6bd9bfe37b191a7cdbccaaccc8d6d7))
-
+- add server settings command ([c13dcce](https://github.com/makigas/makibot/commit/c13dccedaa6bd9bfe37b191a7cdbccaaccc8d6d7))
 
 ### Refactor
 
-* rewrite pin as a context menu ([48d8d87](https://github.com/makigas/makibot/commit/48d8d87d3d09d17d4b51e881c5f43bef3728f292))
+- rewrite pin as a context menu ([48d8d87](https://github.com/makigas/makibot/commit/48d8d87d3d09d17d4b51e881c5f43bef3728f292))
 
 ## [3.0.0](https://github.com/makigas/makibot/compare/v2.7.0...v3.0.0) (2022-07-03)
 
-
 ### ⚠ BREAKING CHANGES
 
-* split context menu by type
-* handle() is no longer invoked
-* handle() is no longer invoked.
+- split context menu by type
+- handle() is no longer invoked
+- handle() is no longer invoked.
 
 ### Features
 
-* add snooze button on thread messages ([ef93d81](https://github.com/makigas/makibot/commit/ef93d81ce82d16c68456f6166bf1335079a19499))
-
+- add snooze button on thread messages ([ef93d81](https://github.com/makigas/makibot/commit/ef93d81ce82d16c68456f6166bf1335079a19499))
 
 ### Bug Fixes
 
-* do not quote messages sent to private channels ([75fbb4e](https://github.com/makigas/makibot/commit/75fbb4e70cedeab319f847c6c6bdcc26461294ce))
-* do not send to pinboard messages from private channels ([3260f40](https://github.com/makigas/makibot/commit/3260f403c686615aa7e3dca8ec82d66dc1b345f7))
-
+- do not quote messages sent to private channels ([75fbb4e](https://github.com/makigas/makibot/commit/75fbb4e70cedeab319f847c6c6bdcc26461294ce))
+- do not send to pinboard messages from private channels ([3260f40](https://github.com/makigas/makibot/commit/3260f403c686615aa7e3dca8ec82d66dc1b345f7))
 
 ### Chore
 
-* **deps:** update standard dependencies ([71e287d](https://github.com/makigas/makibot/commit/71e287dbeadce723f63de7d5fa830c422c5a8b3e))
-
+- **deps:** update standard dependencies ([71e287d](https://github.com/makigas/makibot/commit/71e287dbeadce723f63de7d5fa830c422c5a8b3e))
 
 ### Refactor
 
-* split context menu by type ([5418539](https://github.com/makigas/makibot/commit/54185395941baa97259fa4d780eda82f00cdd4ea))
-* split DM and group in button handler ([32b940a](https://github.com/makigas/makibot/commit/32b940aae9c9abe207f1fd70f457797216741d73))
-* split guild and DM in command handling ([e17cdaf](https://github.com/makigas/makibot/commit/e17cdaf94513cfb51ff1cf17309b548f867fa51e))
+- split context menu by type ([5418539](https://github.com/makigas/makibot/commit/54185395941baa97259fa4d780eda82f00cdd4ea))
+- split DM and group in button handler ([32b940a](https://github.com/makigas/makibot/commit/32b940aae9c9abe207f1fd70f457797216741d73))
+- split guild and DM in command handling ([e17cdaf](https://github.com/makigas/makibot/commit/e17cdaf94513cfb51ff1cf17309b548f867fa51e))
 
 ## [2.7.0](https://github.com/makigas/makibot/compare/v2.6.1...v2.7.0) (2022-06-09)
 
-
 ### Features
 
-* add trusted roles ([c62e817](https://github.com/makigas/makibot/commit/c62e817f99a86c8b4bf6e4a428dec21c7b94968a))
-
+- add trusted roles ([c62e817](https://github.com/makigas/makibot/commit/c62e817f99a86c8b4bf6e4a428dec21c7b94968a))
 
 ### Refactor
 
-* do not instantiate dependencies in Makibot constructor ([4b25886](https://github.com/makigas/makibot/commit/4b2588697ce6ff6a1bbe80039bbfdb7d2cc9f619))
+- do not instantiate dependencies in Makibot constructor ([4b25886](https://github.com/makigas/makibot/commit/4b2588697ce6ff6a1bbe80039bbfdb7d2cc9f619))
 
 ### [2.6.1](https://github.com/makigas/makibot/compare/v2.6.0...v2.6.1) (2022-06-04)
 
-
 ### Bug Fixes
 
-* use level for deciding whether to trigger antispam or not ([d401bf8](https://github.com/makigas/makibot/commit/d401bf8f2ec88ac384b9088d3209be7870511c4f))
-
+- use level for deciding whether to trigger antispam or not ([d401bf8](https://github.com/makigas/makibot/commit/d401bf8f2ec88ac384b9088d3209be7870511c4f))
 
 ### Refactor
 
-* accessor for threadchannels and linkchannels ([0447b7f](https://github.com/makigas/makibot/commit/0447b7f0bfa325c1780432178891ca33684506ba))
-* do not present level up on thread channels ([ab90dbb](https://github.com/makigas/makibot/commit/ab90dbb9315886f68791dc0ea8a29e223f0b5e73))
+- accessor for threadchannels and linkchannels ([0447b7f](https://github.com/makigas/makibot/commit/0447b7f0bfa325c1780432178891ca33684506ba))
+- do not present level up on thread channels ([ab90dbb](https://github.com/makigas/makibot/commit/ab90dbb9315886f68791dc0ea8a29e223f0b5e73))
 
 ## [2.6.0](https://github.com/makigas/makibot/compare/v2.5.1...v2.6.0) (2022-05-20)
 
-
 ### Features
 
-* expose threadchannels and linkchannels through RPC ([6ec1993](https://github.com/makigas/makibot/commit/6ec1993f03cb224ca52cda086b7a8a89e27f084e))
-* greet newly created threads ([350dd12](https://github.com/makigas/makibot/commit/350dd12169a179aa537ffd91f9c873adcae85558))
-* **makibotctl:** manage thread and linkonly channels ([42c8f4a](https://github.com/makigas/makibot/commit/42c8f4a9cabae94eb1f39c9b4e6a61290068f767))
+- expose threadchannels and linkchannels through RPC ([6ec1993](https://github.com/makigas/makibot/commit/6ec1993f03cb224ca52cda086b7a8a89e27f084e))
+- greet newly created threads ([350dd12](https://github.com/makigas/makibot/commit/350dd12169a179aa537ffd91f9c873adcae85558))
+- **makibotctl:** manage thread and linkonly channels ([42c8f4a](https://github.com/makigas/makibot/commit/42c8f4a9cabae94eb1f39c9b4e6a61290068f767))
 
 ### [2.5.1](https://github.com/makigas/makibot/compare/v2.5.0...v2.5.1) (2022-05-01)
 
-
 ### Chore
 
-* **deps:** update JS dependencies ([fb9e8e5](https://github.com/makigas/makibot/commit/fb9e8e5ca9b50e2162c454265125e9d4061604a3))
-* **deps:** update Ruby dependencies ([5d356b1](https://github.com/makigas/makibot/commit/5d356b1953205d170b4ceb9515fccceba488d992))
+- **deps:** update JS dependencies ([fb9e8e5](https://github.com/makigas/makibot/commit/fb9e8e5ca9b50e2162c454265125e9d4061604a3))
+- **deps:** update Ruby dependencies ([5d356b1](https://github.com/makigas/makibot/commit/5d356b1953205d170b4ceb9515fccceba488d992))
 
 ## [2.5.0](https://github.com/makigas/makibot/compare/v2.4.0...v2.5.0) (2022-04-19)
 
-
 ### Features
 
-* add lockdown and lift commands ([999e385](https://github.com/makigas/makibot/commit/999e385752bbb745998ae946516be2b499c3024b))
-* **makibotctl:** deploy commands locally ([b7e30a2](https://github.com/makigas/makibot/commit/b7e30a28c5d0b20fe388cf81b3b29c84d491985d))
-
+- add lockdown and lift commands ([999e385](https://github.com/makigas/makibot/commit/999e385752bbb745998ae946516be2b499c3024b))
+- **makibotctl:** deploy commands locally ([b7e30a2](https://github.com/makigas/makibot/commit/b7e30a28c5d0b20fe388cf81b3b29c84d491985d))
 
 ### Bug Fixes
 
-* **deps:** downgrade sqlite to 5.0.2 to address regression ([f6d2bfa](https://github.com/makigas/makibot/commit/f6d2bfa23c314ca9462828759788da1066e19605))
-* lift and lockdown should be privileged ([aac5491](https://github.com/makigas/makibot/commit/aac54912e23dc0ab0713e43debd5a414e5544cc7))
-* **makibotctl:** deploy-commands local should be optional ([dd4e3ad](https://github.com/makigas/makibot/commit/dd4e3ad6bbb363e616ad63d0699a15292f44d3c7))
-
+- **deps:** downgrade sqlite to 5.0.2 to address regression ([f6d2bfa](https://github.com/makigas/makibot/commit/f6d2bfa23c314ca9462828759788da1066e19605))
+- lift and lockdown should be privileged ([aac5491](https://github.com/makigas/makibot/commit/aac54912e23dc0ab0713e43debd5a414e5544cc7))
+- **makibotctl:** deploy-commands local should be optional ([dd4e3ad](https://github.com/makigas/makibot/commit/dd4e3ad6bbb363e616ad63d0699a15292f44d3c7))
 
 ### Chore
 
-* **deps:** bump minimist from 1.2.5 to 1.2.6 ([#533](https://github.com/makigas/makibot/issues/533)) ([a85ee36](https://github.com/makigas/makibot/commit/a85ee3605a7db967cbaefd96a3804c22cb43e0de))
-* **deps:** bump nokogiri from 1.13.3 to 1.13.4 in /docs ([#534](https://github.com/makigas/makibot/issues/534)) ([bfe8818](https://github.com/makigas/makibot/commit/bfe88183cef022745b29e993b8de415ae7defac9))
-* **deps:** update dependencies ([7651761](https://github.com/makigas/makibot/commit/765176111bc3910c970435893ef4e5fbad8ad451))
-* **deps:** update discord-api-types ([32944fc](https://github.com/makigas/makibot/commit/32944fcffa524c9643205cc6d133f5181237ec92))
+- **deps:** bump minimist from 1.2.5 to 1.2.6 ([#533](https://github.com/makigas/makibot/issues/533)) ([a85ee36](https://github.com/makigas/makibot/commit/a85ee3605a7db967cbaefd96a3804c22cb43e0de))
+- **deps:** bump nokogiri from 1.13.3 to 1.13.4 in /docs ([#534](https://github.com/makigas/makibot/issues/534)) ([bfe8818](https://github.com/makigas/makibot/commit/bfe88183cef022745b29e993b8de415ae7defac9))
+- **deps:** update dependencies ([7651761](https://github.com/makigas/makibot/commit/765176111bc3910c970435893ef4e5fbad8ad451))
+- **deps:** update discord-api-types ([32944fc](https://github.com/makigas/makibot/commit/32944fcffa524c9643205cc6d133f5181237ec92))
 
 ## [2.4.0](https://github.com/makigas/makibot/compare/v2.3.1...v2.4.0) (2022-04-15)
 
-
 ### Features
 
-* add lockdown commands ([830d5c1](https://github.com/makigas/makibot/commit/830d5c19ce97cdf589bc1305737f40b31b037b7f))
-* announce bans generated outside /mod ban ([0cf2604](https://github.com/makigas/makibot/commit/0cf26040e821358c100b09be46cec8a04989e3f4))
-* log kick events if they come outside /mod kick ([3aab28b](https://github.com/makigas/makibot/commit/3aab28bca14beddcfb9e4388880fbb11f192e5ad))
-* properly log timeouts and untimeouts ([c498956](https://github.com/makigas/makibot/commit/c49895610a59ce470a333b1bb8b351150ca4b122))
-* **roster:** detect nickname changes ([d22a4fc](https://github.com/makigas/makibot/commit/d22a4fc3356f549e67382acd4e6f61caa1f67365))
-* **roster:** log timeouts and manual timeout evicts ([5920bc4](https://github.com/makigas/makibot/commit/5920bc4e45c37d70a3802f9c9e4d56db6f29c754))
-
+- add lockdown commands ([830d5c1](https://github.com/makigas/makibot/commit/830d5c19ce97cdf589bc1305737f40b31b037b7f))
+- announce bans generated outside /mod ban ([0cf2604](https://github.com/makigas/makibot/commit/0cf26040e821358c100b09be46cec8a04989e3f4))
+- log kick events if they come outside /mod kick ([3aab28b](https://github.com/makigas/makibot/commit/3aab28bca14beddcfb9e4388880fbb11f192e5ad))
+- properly log timeouts and untimeouts ([c498956](https://github.com/makigas/makibot/commit/c49895610a59ce470a333b1bb8b351150ca4b122))
+- **roster:** detect nickname changes ([d22a4fc](https://github.com/makigas/makibot/commit/d22a4fc3356f549e67382acd4e6f61caa1f67365))
+- **roster:** log timeouts and manual timeout evicts ([5920bc4](https://github.com/makigas/makibot/commit/5920bc4e45c37d70a3802f9c9e4d56db6f29c754))
 
 ### Bug Fixes
 
-* skip logging fred events ([e5bc4c0](https://github.com/makigas/makibot/commit/e5bc4c0dacc15daa373e64fc247b8aecd46c1054))
+- skip logging fred events ([e5bc4c0](https://github.com/makigas/makibot/commit/e5bc4c0dacc15daa373e64fc247b8aecd46c1054))
 
 ### [2.3.1](https://github.com/makigas/makibot/compare/v2.3.0...v2.3.1) (2022-03-17)
 
-
 ### Bug Fixes
 
-* **bounties:** cannot coerce number into integer ([ca98ca4](https://github.com/makigas/makibot/commit/ca98ca417fa87ab3102a63e1b953f66c222af774))
-* **deps:** don't treat discord-api-types as a devDependency ([2155611](https://github.com/makigas/makibot/commit/21556115ea6aba04ec1644d46639abfdeac50a09))
+- **bounties:** cannot coerce number into integer ([ca98ca4](https://github.com/makigas/makibot/commit/ca98ca417fa87ab3102a63e1b953f66c222af774))
+- **deps:** don't treat discord-api-types as a devDependency ([2155611](https://github.com/makigas/makibot/commit/21556115ea6aba04ec1644d46639abfdeac50a09))
 
 ## [2.3.0](https://github.com/makigas/makibot/compare/v2.2.0...v2.3.0) (2022-03-16)
 
-
 ### Features
 
-* allow the /karma command to receive an user ([e501812](https://github.com/makigas/makibot/commit/e5018127fa3c1d91fbdf1e6e6c7172e5e2899637))
-* deploy commands using the bot itself ([5b8b32b](https://github.com/makigas/makibot/commit/5b8b32b90418335a967c0a13775e8b3a25c41db2))
-
+- allow the /karma command to receive an user ([e501812](https://github.com/makigas/makibot/commit/e5018127fa3c1d91fbdf1e6e6c7172e5e2899637))
+- deploy commands using the bot itself ([5b8b32b](https://github.com/makigas/makibot/commit/5b8b32b90418335a967c0a13775e8b3a25c41db2))
 
 ### Bug Fixes
 
-* autoarchive deleted linkchannel and threadchannel messages ([0a8700a](https://github.com/makigas/makibot/commit/0a8700a112026580d086ff29c5606019561f2558))
-* coerce OpenGraph title into string ([f3accf8](https://github.com/makigas/makibot/commit/f3accf8956f589258b24a336dc43db82f0697245))
-* recompute the karma when bounties are given ([2023b30](https://github.com/makigas/makibot/commit/2023b305e2b0b73740bcabe6e989b7eef0eaf9c5))
-
+- autoarchive deleted linkchannel and threadchannel messages ([0a8700a](https://github.com/makigas/makibot/commit/0a8700a112026580d086ff29c5606019561f2558))
+- coerce OpenGraph title into string ([f3accf8](https://github.com/makigas/makibot/commit/f3accf8956f589258b24a336dc43db82f0697245))
+- recompute the karma when bounties are given ([2023b30](https://github.com/makigas/makibot/commit/2023b305e2b0b73740bcabe6e989b7eef0eaf9c5))
 
 ### Chore
 
-* **deps:** update dependencies ([d246336](https://github.com/makigas/makibot/commit/d246336e9f78db64788109a140ea9b4ddb695ad2))
-* **deps:** update more dependencies ([b8d0401](https://github.com/makigas/makibot/commit/b8d0401ace9592b15aa0893254ea735c625d111e))
-* remove unnecessary console.log ([0eac3cd](https://github.com/makigas/makibot/commit/0eac3cdd25e32f8ca38980a77aee3984b8f6bcbe))
+- **deps:** update dependencies ([d246336](https://github.com/makigas/makibot/commit/d246336e9f78db64788109a140ea9b4ddb695ad2))
+- **deps:** update more dependencies ([b8d0401](https://github.com/makigas/makibot/commit/b8d0401ace9592b15aa0893254ea735c625d111e))
+- remove unnecessary console.log ([0eac3cd](https://github.com/makigas/makibot/commit/0eac3cdd25e32f8ca38980a77aee3984b8f6bcbe))
 
 ## [2.2.0](https://github.com/makigas/makibot/compare/v2.1.0...v2.2.0) (2022-03-13)
 
-
 ### Features
 
-* command to search in makigas.es and bbs ([#521](https://github.com/makigas/makibot/issues/521)) ([4933ad5](https://github.com/makigas/makibot/commit/4933ad557312fc8a8dbd6bfcae612bd6e7a63d4b)), closes [makigas#7](https://github.com/makigas/makigas/issues/7)
-* **csgo:** remove dead rules ([1de0102](https://github.com/makigas/makibot/commit/1de010212da55ea501dd46e47655727c4e823164))
-* **csgo:** start intercepting BbyStealer virus ([d5f0980](https://github.com/makigas/makibot/commit/d5f0980ffb5f530d02ab5bdf1075ea90e30ff831))
-
+- command to search in makigas.es and bbs ([#521](https://github.com/makigas/makibot/issues/521)) ([4933ad5](https://github.com/makigas/makibot/commit/4933ad557312fc8a8dbd6bfcae612bd6e7a63d4b)), closes [makigas#7](https://github.com/makigas/makigas/issues/7)
+- **csgo:** remove dead rules ([1de0102](https://github.com/makigas/makibot/commit/1de010212da55ea501dd46e47655727c4e823164))
+- **csgo:** start intercepting BbyStealer virus ([d5f0980](https://github.com/makigas/makibot/commit/d5f0980ffb5f530d02ab5bdf1075ea90e30ff831))
 
 ### Bug Fixes
 
-* **karma:** typo in welcome message ([4a9229f](https://github.com/makigas/makibot/commit/4a9229f82232ad0406c01007f5c773ea36976db4))
+- **karma:** typo in welcome message ([4a9229f](https://github.com/makigas/makibot/commit/4a9229f82232ad0406c01007f5c773ea36976db4))
 
 ## [2.1.0](https://github.com/makigas/makibot/compare/v2.0.0...v2.1.0) (2022-03-01)
 
-
 ### Features
 
-* add more information onto the shardDisconnect dispatch event, and document it ([#512](https://github.com/makigas/makibot/issues/512)) ([095b3ca](https://github.com/makigas/makibot/commit/095b3caa5383e229d6562e44ba14c0ace3005a7e))
-* **antispam:** disallow linking to RT.com ([3181fa1](https://github.com/makigas/makibot/commit/3181fa11da2ae5ce02ae1a0e1d4058b62a263bda))
-* present the error code using the logger ([#514](https://github.com/makigas/makibot/issues/514)) ([00a33bb](https://github.com/makigas/makibot/commit/00a33bb55c6e9b0c02c347e5d7f4fd6371c7dfa0))
-
+- add more information onto the shardDisconnect dispatch event, and document it ([#512](https://github.com/makigas/makibot/issues/512)) ([095b3ca](https://github.com/makigas/makibot/commit/095b3caa5383e229d6562e44ba14c0ace3005a7e))
+- **antispam:** disallow linking to RT.com ([3181fa1](https://github.com/makigas/makibot/commit/3181fa11da2ae5ce02ae1a0e1d4058b62a263bda))
+- present the error code using the logger ([#514](https://github.com/makigas/makibot/issues/514)) ([00a33bb](https://github.com/makigas/makibot/commit/00a33bb55c6e9b0c02c347e5d7f4fd6371c7dfa0))
 
 ### Chore
 
-* **deps:** bump nokogiri from 1.12.5 to 1.13.3 in /docs ([#506](https://github.com/makigas/makibot/issues/506)) ([4ead52d](https://github.com/makigas/makibot/commit/4ead52d96511bee8f7d4fbc80cbebfbc1ebd1763))
-* **deps:** update dependencies ([9b95440](https://github.com/makigas/makibot/commit/9b95440c51bf5be16e6f465f4f68d80b35468f73))
+- **deps:** bump nokogiri from 1.12.5 to 1.13.3 in /docs ([#506](https://github.com/makigas/makibot/issues/506)) ([4ead52d](https://github.com/makigas/makibot/commit/4ead52d96511bee8f7d4fbc80cbebfbc1ebd1763))
+- **deps:** update dependencies ([9b95440](https://github.com/makigas/makibot/commit/9b95440c51bf5be16e6f465f4f68d80b35468f73))
 
 ## [2.0.0](https://github.com/makigas/makibot/compare/v1.1.1...v2.0.0) (2022-02-25)
 
-
 ### ⚠ BREAKING CHANGES
 
-* wrap all the modlogs into a common send
+- wrap all the modlogs into a common send
 
 ### Features
 
-* restore karma when member joins server ([f03fb4e](https://github.com/makigas/makibot/commit/f03fb4e5774885660fa88d9c1cdc216776c62b8a))
-
+- restore karma when member joins server ([f03fb4e](https://github.com/makigas/makibot/commit/f03fb4e5774885660fa88d9c1cdc216776c62b8a))
 
 ### Bug Fixes
 
-* messages are not being sent to the pinboard ([1e88aad](https://github.com/makigas/makibot/commit/1e88aad040882cfbac2817b1c93439f6cc9a192f))
-* mods cannot close a thread with /archivar ([e17d18c](https://github.com/makigas/makibot/commit/e17d18c5b4c79a24d1d40f530a56fc5387b0c460))
-* roles are not being triggered when message are sent ([1a69343](https://github.com/makigas/makibot/commit/1a693434e06527d34fc4706a8cf802cc0b9615f3))
-
+- messages are not being sent to the pinboard ([1e88aad](https://github.com/makigas/makibot/commit/1e88aad040882cfbac2817b1c93439f6cc9a192f))
+- mods cannot close a thread with /archivar ([e17d18c](https://github.com/makigas/makibot/commit/e17d18c5b4c79a24d1d40f530a56fc5387b0c460))
+- roles are not being triggered when message are sent ([1a69343](https://github.com/makigas/makibot/commit/1a693434e06527d34fc4706a8cf802cc0b9615f3))
 
 ### Refactor
 
-* use promises in the SettingProvider ([#502](https://github.com/makigas/makibot/issues/502)) ([e9cbb9a](https://github.com/makigas/makibot/commit/e9cbb9ac8cf476f18a961c225fc4f704ba5cd86a))
-* wrap all the modlogs into a common send ([d9dc509](https://github.com/makigas/makibot/commit/d9dc509563422554654c5dd4d0f819acd5dc5adc))
-
+- use promises in the SettingProvider ([#502](https://github.com/makigas/makibot/issues/502)) ([e9cbb9a](https://github.com/makigas/makibot/commit/e9cbb9ac8cf476f18a961c225fc4f704ba5cd86a))
+- wrap all the modlogs into a common send ([d9dc509](https://github.com/makigas/makibot/commit/d9dc509563422554654c5dd4d0f819acd5dc5adc))
 
 ### Chore
 
-* **deps:** bump node-fetch from 2.6.6 to 2.6.7 ([#497](https://github.com/makigas/makibot/issues/497)) ([d168201](https://github.com/makigas/makibot/commit/d168201f6ace93abccf1b1f90cb2ba4b9b5447ef))
+- **deps:** bump node-fetch from 2.6.6 to 2.6.7 ([#497](https://github.com/makigas/makibot/issues/497)) ([d168201](https://github.com/makigas/makibot/commit/d168201f6ace93abccf1b1f90cb2ba4b9b5447ef))
 
 ### [1.1.1](https://github.com/makigas/makibot/compare/v1.1.0...v1.1.1) (2022-02-12)
 
-
 ### Bug Fixes
 
-* **antiflood:** ignore messages that start thread ([e2e58fa](https://github.com/makigas/makibot/commit/e2e58facae12fbc33afbbbc5ce0d891c4a91830a))
-
+- **antiflood:** ignore messages that start thread ([e2e58fa](https://github.com/makigas/makibot/commit/e2e58facae12fbc33afbbbc5ce0d891c4a91830a))
 
 ### Chore
 
-* **deps:** update dependencies ([2fcb15b](https://github.com/makigas/makibot/commit/2fcb15b43fa02614e23cb7c066bdd7920925ea71))
+- **deps:** update dependencies ([2fcb15b](https://github.com/makigas/makibot/commit/2fcb15b43fa02614e23cb7c066bdd7920925ea71))
 
 ## [1.1.0](https://github.com/makigas/makibot/compare/v1.0.0...v1.1.0) (2022-01-30)
 
-
 ### Features
 
-* **linkchannel:** try to get link title using Open Graph ([3e8ec4d](https://github.com/makigas/makibot/commit/3e8ec4d6c4233d0149a15a7f584d3d5cae35f9f5))
-
+- **linkchannel:** try to get link title using Open Graph ([3e8ec4d](https://github.com/makigas/makibot/commit/3e8ec4d6c4233d0149a15a7f584d3d5cae35f9f5))
 
 ### Chore
 
-* **deps:** bump log4js from 6.3.0 to 6.4.0 ([#496](https://github.com/makigas/makibot/issues/496)) ([28cbb27](https://github.com/makigas/makibot/commit/28cbb274eb3e910bbf938b0e0ea755e4caaae420))
-* **deps:** update dependencies ([3ddaf17](https://github.com/makigas/makibot/commit/3ddaf1794a8ca77e283882d7b67147d6883cc669))
+- **deps:** bump log4js from 6.3.0 to 6.4.0 ([#496](https://github.com/makigas/makibot/issues/496)) ([28cbb27](https://github.com/makigas/makibot/commit/28cbb274eb3e910bbf938b0e0ea755e4caaae420))
+- **deps:** update dependencies ([3ddaf17](https://github.com/makigas/makibot/commit/3ddaf1794a8ca77e283882d7b67147d6883cc669))
 
 ## [1.0.0](https://github.com/makigas/makibot/compare/v0.39.2...v1.0.0) (2022-01-17)
 
-
 ### Features
 
-* add button to manage helper roles ([ba66988](https://github.com/makigas/makibot/commit/ba6698838f6181038fcd941b33c85e476f026d79))
-* add button to remove all roles or helpers ([ebf58c0](https://github.com/makigas/makibot/commit/ebf58c0627f9683e091c6a97a738abef6d04c554))
-* add helper manager (command) ([84aa1ed](https://github.com/makigas/makibot/commit/84aa1ed74f130879baf0cd2f88be2e0205b79212))
-
+- add button to manage helper roles ([ba66988](https://github.com/makigas/makibot/commit/ba6698838f6181038fcd941b33c85e476f026d79))
+- add button to remove all roles or helpers ([ebf58c0](https://github.com/makigas/makibot/commit/ebf58c0627f9683e091c6a97a738abef6d04c554))
+- add helper manager (command) ([84aa1ed](https://github.com/makigas/makibot/commit/84aa1ed74f130879baf0cd2f88be2e0205b79212))
 
 ### Bug Fixes
 
-* **antiflood:** do not treat as flood the same channel ([d75c222](https://github.com/makigas/makibot/commit/d75c222c94873491577b01330f3d7c1d0d433fb7))
-* **antispam:** exception for VODs and clips ([70284bc](https://github.com/makigas/makibot/commit/70284bc8b17dd1f18ad9bc6a82130f888cbfd3ea))
-* downgrade to get-urls 10 to fix ESM modules ([5d2a438](https://github.com/makigas/makibot/commit/5d2a438609c5c489659786ff8df899e38f421dce))
-
+- **antiflood:** do not treat as flood the same channel ([d75c222](https://github.com/makigas/makibot/commit/d75c222c94873491577b01330f3d7c1d0d433fb7))
+- **antispam:** exception for VODs and clips ([70284bc](https://github.com/makigas/makibot/commit/70284bc8b17dd1f18ad9bc6a82130f888cbfd3ea))
+- downgrade to get-urls 10 to fix ESM modules ([5d2a438](https://github.com/makigas/makibot/commit/5d2a438609c5c489659786ff8df899e38f421dce))
 
 ### Chore
 
-* **csgo:** add spam filters ([#494](https://github.com/makigas/makibot/issues/494)) ([65b261e](https://github.com/makigas/makibot/commit/65b261e36e5952b3f0dcf148dcca13bbfa8f3ade))
-* **deps:** update dependencies ([50275e7](https://github.com/makigas/makibot/commit/50275e7b2bf2ad8f354e5453daace1064a1d8790))
-* **deps:** update vulnerable dependencies ([cfcc244](https://github.com/makigas/makibot/commit/cfcc24421c82c27590f4aeabe9bf517a330713ac))
-* handle deprecations ([d32e62a](https://github.com/makigas/makibot/commit/d32e62acae1be27171e7735abcc5a491e6c30118))
-
+- **csgo:** add spam filters ([#494](https://github.com/makigas/makibot/issues/494)) ([65b261e](https://github.com/makigas/makibot/commit/65b261e36e5952b3f0dcf148dcca13bbfa8f3ade))
+- **deps:** update dependencies ([50275e7](https://github.com/makigas/makibot/commit/50275e7b2bf2ad8f354e5453daace1064a1d8790))
+- **deps:** update vulnerable dependencies ([cfcc244](https://github.com/makigas/makibot/commit/cfcc24421c82c27590f4aeabe9bf517a330713ac))
+- handle deprecations ([d32e62a](https://github.com/makigas/makibot/commit/d32e62acae1be27171e7735abcc5a491e6c30118))
 
 ### Refactor
 
-* **antispam:** better error messages ([ead53a8](https://github.com/makigas/makibot/commit/ead53a8742b8492e1cd5e56579cb592464896106))
+- **antispam:** better error messages ([ead53a8](https://github.com/makigas/makibot/commit/ead53a8742b8492e1cd5e56579cb592464896106))
 
 ### [0.39.2](https://github.com/makigas/makibot/compare/v0.39.1...v0.39.2) (2022-01-02)
 
-
 ### Features
 
-* **csgo:** airdrop scammers not always mention ([013b7e9](https://github.com/makigas/makibot/commit/013b7e90c08b1a0bc08d6d7f958b80e2e351d28a))
-* **roles:** add Archivist role ([90a5fe2](https://github.com/makigas/makibot/commit/90a5fe2db05930d0626c6a2c8101b72366363ce6))
-
+- **csgo:** airdrop scammers not always mention ([013b7e9](https://github.com/makigas/makibot/commit/013b7e90c08b1a0bc08d6d7f958b80e2e351d28a))
+- **roles:** add Archivist role ([90a5fe2](https://github.com/makigas/makibot/commit/90a5fe2db05930d0626c6a2c8101b72366363ce6))
 
 ### Bug Fixes
 
-* **types:** broken types after updating deps ([1cba099](https://github.com/makigas/makibot/commit/1cba0998cecf639abd215fe94f702e5b2949e946))
-
+- **types:** broken types after updating deps ([1cba099](https://github.com/makigas/makibot/commit/1cba0998cecf639abd215fe94f702e5b2949e946))
 
 ### Chore
 
-* **csgo:** new spam detected ([#487](https://github.com/makigas/makibot/issues/487)) ([810930c](https://github.com/makigas/makibot/commit/810930ce65f549b919a7feacf5bb681f601f0e1a))
-* **deps:** bump dependencies ([dd272b6](https://github.com/makigas/makibot/commit/dd272b632a2e723542d7ee01b6ed2412b2c92dd5))
-* **deps:** update dependencies ([caff47d](https://github.com/makigas/makibot/commit/caff47d11a16c1d8eccc08d4e1332d9cebeff9be))
+- **csgo:** new spam detected ([#487](https://github.com/makigas/makibot/issues/487)) ([810930c](https://github.com/makigas/makibot/commit/810930ce65f549b919a7feacf5bb681f601f0e1a))
+- **deps:** bump dependencies ([dd272b6](https://github.com/makigas/makibot/commit/dd272b632a2e723542d7ee01b6ed2412b2c92dd5))
+- **deps:** update dependencies ([caff47d](https://github.com/makigas/makibot/commit/caff47d11a16c1d8eccc08d4e1332d9cebeff9be))
 
 ### [0.39.1](https://github.com/makigas/makibot/compare/v0.39.0...v0.39.1) (2021-12-21)
 
-
 ### Features
 
-* **antispam:** block links pointing to forms.gle ([3cc500d](https://github.com/makigas/makibot/commit/3cc500d27490a4e9bfe30084de59ccc3f08a1296))
-* **csgo:** add spam link ([6271cf0](https://github.com/makigas/makibot/commit/6271cf004dcc186f439febfcfcb0b42d5681b561))
-* separate defaultMod from deleteMod ([6030ae0](https://github.com/makigas/makibot/commit/6030ae07aa066eb433354dadc56799f652ee1822))
-
+- **antispam:** block links pointing to forms.gle ([3cc500d](https://github.com/makigas/makibot/commit/3cc500d27490a4e9bfe30084de59ccc3f08a1296))
+- **csgo:** add spam link ([6271cf0](https://github.com/makigas/makibot/commit/6271cf004dcc186f439febfcfcb0b42d5681b561))
+- separate defaultMod from deleteMod ([6030ae0](https://github.com/makigas/makibot/commit/6030ae07aa066eb433354dadc56799f652ee1822))
 
 ### Chore
 
-* **karma:** better welcome message ([43c855f](https://github.com/makigas/makibot/commit/43c855f9dcaadbda69504ee8cdd6af5cf6e41ca0))
+- **karma:** better welcome message ([43c855f](https://github.com/makigas/makibot/commit/43c855f9dcaadbda69504ee8cdd6af5cf6e41ca0))
 
 ## [0.39.0](https://github.com/makigas/makibot/compare/v0.38.1...v0.39.0) (2021-12-02)
 
-
 ### Features
 
-* add bless subcommand to /mod ([0f04f50](https://github.com/makigas/makibot/commit/0f04f50cefad6abc32faf27d32d86359850a72ec))
-
+- add bless subcommand to /mod ([0f04f50](https://github.com/makigas/makibot/commit/0f04f50cefad6abc32faf27d32d86359850a72ec))
 
 ### Bug Fixes
 
-* do not crash if modevent cannot be evicted ([d23365d](https://github.com/makigas/makibot/commit/d23365dbf87d6ac57e5b2cd4422483e95b025bf4))
-* don't crash on private modlog errors ([516b996](https://github.com/makigas/makibot/commit/516b99668b6df1dba411f0f5705a71e8ab829117))
-
+- do not crash if modevent cannot be evicted ([d23365d](https://github.com/makigas/makibot/commit/d23365dbf87d6ac57e5b2cd4422483e95b025bf4))
+- don't crash on private modlog errors ([516b996](https://github.com/makigas/makibot/commit/516b99668b6df1dba411f0f5705a71e8ab829117))
 
 ### Refactor
 
-* cleanup unused cooldown properties ([3e33e79](https://github.com/makigas/makibot/commit/3e33e79df524a1bd051ff22ded7ed1248e5cf666))
-
+- cleanup unused cooldown properties ([3e33e79](https://github.com/makigas/makibot/commit/3e33e79df524a1bd051ff22ded7ed1248e5cf666))
 
 ### Chore
 
-* **deps-dev:** bump discord-api-types from 0.24.0 to 0.25.2 ([#482](https://github.com/makigas/makibot/issues/482)) ([b2b12a3](https://github.com/makigas/makibot/commit/b2b12a3938c6dde5c549c9d9f88e61fb65b13c65))
-* **deps-dev:** bump prettier from 2.4.1 to 2.5.0 ([#483](https://github.com/makigas/makibot/issues/483)) ([1e12186](https://github.com/makigas/makibot/commit/1e12186d3c1dc71ad0b6bfcf1772c51ebca767c4))
-* **deps:** update dependencies ([629a61f](https://github.com/makigas/makibot/commit/629a61fd61b8a6188e3a27469a1a93639275efcb))
-* **lint:** measure cyclomatic complexity ([4d13e41](https://github.com/makigas/makibot/commit/4d13e415d5b0a2e2d9160c6fb81946cc7c15354a))
+- **deps-dev:** bump discord-api-types from 0.24.0 to 0.25.2 ([#482](https://github.com/makigas/makibot/issues/482)) ([b2b12a3](https://github.com/makigas/makibot/commit/b2b12a3938c6dde5c549c9d9f88e61fb65b13c65))
+- **deps-dev:** bump prettier from 2.4.1 to 2.5.0 ([#483](https://github.com/makigas/makibot/issues/483)) ([1e12186](https://github.com/makigas/makibot/commit/1e12186d3c1dc71ad0b6bfcf1772c51ebca767c4))
+- **deps:** update dependencies ([629a61f](https://github.com/makigas/makibot/commit/629a61fd61b8a6188e3a27469a1a93639275efcb))
+- **lint:** measure cyclomatic complexity ([4d13e41](https://github.com/makigas/makibot/commit/4d13e415d5b0a2e2d9160c6fb81946cc7c15354a))
 
 ### [0.38.1](https://github.com/makigas/makibot/compare/v0.38.0...v0.38.1) (2021-11-28)
 
-
 ### Bug Fixes
 
-* missing arrow function in interface ([#477](https://github.com/makigas/makibot/issues/477)) ([262e49f](https://github.com/makigas/makibot/commit/262e49f4defc97fed5066e748f59ef484e41d6be))
-* **ops:** should not deploy unless CI passes ([024b8b8](https://github.com/makigas/makibot/commit/024b8b8b7922e483b7894fe405ed43e783e01661))
-
+- missing arrow function in interface ([#477](https://github.com/makigas/makibot/issues/477)) ([262e49f](https://github.com/makigas/makibot/commit/262e49f4defc97fed5066e748f59ef484e41d6be))
+- **ops:** should not deploy unless CI passes ([024b8b8](https://github.com/makigas/makibot/commit/024b8b8b7922e483b7894fe405ed43e783e01661))
 
 ### Refactor
 
-* migrate modlog to webhooks ([d276e37](https://github.com/makigas/makibot/commit/d276e37359c7d66d240905873d42ac47a5318c5a))
-* remove old warning system ([54f1da1](https://github.com/makigas/makibot/commit/54f1da1ef315d09cd09e121e02b9b4c7589c9b17))
-* remove unused autorole hook ([f9bd3fc](https://github.com/makigas/makibot/commit/f9bd3fc8ded16fe1bfe6064c211e9aa1baa028b9))
-
+- migrate modlog to webhooks ([d276e37](https://github.com/makigas/makibot/commit/d276e37359c7d66d240905873d42ac47a5318c5a))
+- remove old warning system ([54f1da1](https://github.com/makigas/makibot/commit/54f1da1ef315d09cd09e121e02b9b4c7589c9b17))
+- remove unused autorole hook ([f9bd3fc](https://github.com/makigas/makibot/commit/f9bd3fc8ded16fe1bfe6064c211e9aa1baa028b9))
 
 ### Chore
 
-* install Sentry integration ([ba55f6c](https://github.com/makigas/makibot/commit/ba55f6cfc9c903dcd8f5aa3e6bde7a488d5899b8))
-* **lint:** pass eslint ([954d429](https://github.com/makigas/makibot/commit/954d42921b5ea8832c53da2d88a7876a6316a665))
+- install Sentry integration ([ba55f6c](https://github.com/makigas/makibot/commit/ba55f6cfc9c903dcd8f5aa3e6bde7a488d5899b8))
+- **lint:** pass eslint ([954d429](https://github.com/makigas/makibot/commit/954d42921b5ea8832c53da2d88a7876a6316a665))
 
 ## [0.38.0](https://github.com/makigas/makibot/compare/v0.37.1...v0.38.0) (2021-11-23)
 
-
 ### Features
 
-* Added a new Discord nitro domain ([#475](https://github.com/makigas/makibot/issues/475)) ([aebf64b](https://github.com/makigas/makibot/commit/aebf64b3a0ef238bc29d1cfc661bf21404ed139f))
-* detect airdrop spammers ([b5a13fd](https://github.com/makigas/makibot/commit/b5a13fd340439c6b414d63ecb228f3ad62dd2b4c))
-* present version name when the bot runs ([6eac465](https://github.com/makigas/makibot/commit/6eac465ee0943613d7b4403b239f07168841bcea))
-
+- Added a new Discord nitro domain ([#475](https://github.com/makigas/makibot/issues/475)) ([aebf64b](https://github.com/makigas/makibot/commit/aebf64b3a0ef238bc29d1cfc661bf21404ed139f))
+- detect airdrop spammers ([b5a13fd](https://github.com/makigas/makibot/commit/b5a13fd340439c6b414d63ecb228f3ad62dd2b4c))
+- present version name when the bot runs ([6eac465](https://github.com/makigas/makibot/commit/6eac465ee0943613d7b4403b239f07168841bcea))
 
 ### Bug Fixes
 
-* **antispam:** properly escape dots in URLs ([b9bc5c0](https://github.com/makigas/makibot/commit/b9bc5c0aa62f631c145ef8651865c8125e3f02a0))
-
+- **antispam:** properly escape dots in URLs ([b9bc5c0](https://github.com/makigas/makibot/commit/b9bc5c0aa62f631c145ef8651865c8125e3f02a0))
 
 ### Chore
 
-* add case for 0 in prime test ([#474](https://github.com/makigas/makibot/issues/474)) ([52f7b5d](https://github.com/makigas/makibot/commit/52f7b5debdb4d781941120ce5701660c5b86d952))
-
+- add case for 0 in prime test ([#474](https://github.com/makigas/makibot/issues/474)) ([52f7b5d](https://github.com/makigas/makibot/commit/52f7b5debdb4d781941120ce5701660c5b86d952))
 
 ### Refactor
 
-* make /roles use collectors ([0b92aca](https://github.com/makigas/makibot/commit/0b92acab50baa79ec689b7dfe05f62e7ec3c5733))
-* new mass-requirer ([#476](https://github.com/makigas/makibot/issues/476)) ([776e8fe](https://github.com/makigas/makibot/commit/776e8fe56170bcd4dfe787ac0bb100e851e54194))
-* remove traces of old antiraid system ([366a841](https://github.com/makigas/makibot/commit/366a841370abf22e11ad4427dfdc76b0f5268275))
-* reorganize and document HookManager ([94b4b54](https://github.com/makigas/makibot/commit/94b4b54f7121242e8441ae4b19c595aff46379a4))
-* rewrite /karma to use collectors ([ac764e5](https://github.com/makigas/makibot/commit/ac764e5bf173009a808d900adb780caa511e3ea7))
-* rewrite /report menu to use collectors ([baf3e91](https://github.com/makigas/makibot/commit/baf3e91beda497e5c517ea6d429cf97e533c0050))
+- make /roles use collectors ([0b92aca](https://github.com/makigas/makibot/commit/0b92acab50baa79ec689b7dfe05f62e7ec3c5733))
+- new mass-requirer ([#476](https://github.com/makigas/makibot/issues/476)) ([776e8fe](https://github.com/makigas/makibot/commit/776e8fe56170bcd4dfe787ac0bb100e851e54194))
+- remove traces of old antiraid system ([366a841](https://github.com/makigas/makibot/commit/366a841370abf22e11ad4427dfdc76b0f5268275))
+- reorganize and document HookManager ([94b4b54](https://github.com/makigas/makibot/commit/94b4b54f7121242e8441ae4b19c595aff46379a4))
+- rewrite /karma to use collectors ([ac764e5](https://github.com/makigas/makibot/commit/ac764e5bf173009a808d900adb780caa511e3ea7))
+- rewrite /report menu to use collectors ([baf3e91](https://github.com/makigas/makibot/commit/baf3e91beda497e5c517ea6d429cf97e533c0050))
 
 ### [0.37.1](https://github.com/makigas/makibot/compare/v0.37.0...v0.37.1) (2021-11-17)
 
-
 ### Bug Fixes
 
-* **mod:** prevent crash on expiration if member left ([b1fa498](https://github.com/makigas/makibot/commit/b1fa498da5a20791682fe28a71bda7158f304f73))
-* **primo:** reword some error messages ([7eccfe1](https://github.com/makigas/makibot/commit/7eccfe12f5063ad9b746a465fd7883ebdf9ad596))
-
+- **mod:** prevent crash on expiration if member left ([b1fa498](https://github.com/makigas/makibot/commit/b1fa498da5a20791682fe28a71bda7158f304f73))
+- **primo:** reword some error messages ([7eccfe1](https://github.com/makigas/makibot/commit/7eccfe12f5063ad9b746a465fd7883ebdf9ad596))
 
 ### Chore
 
-* **deps-dev:** bump @types/node from 16.11.6 to 16.11.7 ([#470](https://github.com/makigas/makibot/issues/470)) ([5e90e93](https://github.com/makigas/makibot/commit/5e90e9363ee6e39bfa5b9b2ba608bd79fde95627))
-* **deps-dev:** bump @typescript-eslint/eslint-plugin ([#469](https://github.com/makigas/makibot/issues/469)) ([0bc1f3a](https://github.com/makigas/makibot/commit/0bc1f3a41b69cf6a01a6a0f8c54cb648cdf8e0b1))
-* **deps-dev:** bump @typescript-eslint/parser from 5.3.0 to 5.4.0 ([#468](https://github.com/makigas/makibot/issues/468)) ([d88fbdd](https://github.com/makigas/makibot/commit/d88fbddcb7fb8f3c87a6c749be3e0437d811cb5b))
-* **deps-dev:** bump eslint from 8.1.0 to 8.2.0 ([#473](https://github.com/makigas/makibot/issues/473)) ([009bb36](https://github.com/makigas/makibot/commit/009bb369aa736461a3893f0ed4a6cd04071c410f))
-* **deps-dev:** bump lint-staged from 11.2.6 to 12.0.2 ([#467](https://github.com/makigas/makibot/issues/467)) ([72596ed](https://github.com/makigas/makibot/commit/72596ed621bfe097af4ed013ca056fc12d1b386a))
-* **deps-dev:** bump sinon from 11.1.2 to 12.0.1 ([#471](https://github.com/makigas/makibot/issues/471)) ([40df359](https://github.com/makigas/makibot/commit/40df359995744157c30137d89f1f920ee2ba272e))
-* **deps:** bump big-integer from 1.6.50 to 1.6.51 ([#472](https://github.com/makigas/makibot/issues/472)) ([b1c6f55](https://github.com/makigas/makibot/commit/b1c6f55f89f653141c96979b69477118d68273f5))
-* remove console.logs ([aad9dcd](https://github.com/makigas/makibot/commit/aad9dcd2b2ae41b42f996680ae10f968bcf1465d))
-
+- **deps-dev:** bump @types/node from 16.11.6 to 16.11.7 ([#470](https://github.com/makigas/makibot/issues/470)) ([5e90e93](https://github.com/makigas/makibot/commit/5e90e9363ee6e39bfa5b9b2ba608bd79fde95627))
+- **deps-dev:** bump @typescript-eslint/eslint-plugin ([#469](https://github.com/makigas/makibot/issues/469)) ([0bc1f3a](https://github.com/makigas/makibot/commit/0bc1f3a41b69cf6a01a6a0f8c54cb648cdf8e0b1))
+- **deps-dev:** bump @typescript-eslint/parser from 5.3.0 to 5.4.0 ([#468](https://github.com/makigas/makibot/issues/468)) ([d88fbdd](https://github.com/makigas/makibot/commit/d88fbddcb7fb8f3c87a6c749be3e0437d811cb5b))
+- **deps-dev:** bump eslint from 8.1.0 to 8.2.0 ([#473](https://github.com/makigas/makibot/issues/473)) ([009bb36](https://github.com/makigas/makibot/commit/009bb369aa736461a3893f0ed4a6cd04071c410f))
+- **deps-dev:** bump lint-staged from 11.2.6 to 12.0.2 ([#467](https://github.com/makigas/makibot/issues/467)) ([72596ed](https://github.com/makigas/makibot/commit/72596ed621bfe097af4ed013ca056fc12d1b386a))
+- **deps-dev:** bump sinon from 11.1.2 to 12.0.1 ([#471](https://github.com/makigas/makibot/issues/471)) ([40df359](https://github.com/makigas/makibot/commit/40df359995744157c30137d89f1f920ee2ba272e))
+- **deps:** bump big-integer from 1.6.50 to 1.6.51 ([#472](https://github.com/makigas/makibot/issues/472)) ([b1c6f55](https://github.com/makigas/makibot/commit/b1c6f55f89f653141c96979b69477118d68273f5))
+- remove console.logs ([aad9dcd](https://github.com/makigas/makibot/commit/aad9dcd2b2ae41b42f996680ae10f968bcf1465d))
 
 ### Refactor
 
-* cleanup logger ([4ba5e53](https://github.com/makigas/makibot/commit/4ba5e53426fd9fe425c51206f8d7b7490f885e01))
+- cleanup logger ([4ba5e53](https://github.com/makigas/makibot/commit/4ba5e53426fd9fe425c51206f8d7b7490f885e01))
 
 ## [0.37.0](https://github.com/makigas/makibot/compare/v0.36.0...v0.37.0) (2021-11-10)
 
-
 ### Features
 
-* add commands for threads management ([#466](https://github.com/makigas/makibot/issues/466)) ([08a4914](https://github.com/makigas/makibot/commit/08a4914a1b93d8467e4766c782a98df8d272f833))
-* add hook for logging deleted messages ([2486709](https://github.com/makigas/makibot/commit/2486709d380919d9242a02c82fe028adcbe0fd8b))
-* backport commands from the serverless bot ([36bc408](https://github.com/makigas/makibot/commit/36bc4080c9ad2c99d095b646e58b9a95cbc86e38))
-* design thread-only channels ([#465](https://github.com/makigas/makibot/issues/465)) ([afac477](https://github.com/makigas/makibot/commit/afac477b607621958afaa755d68737be10a84cae))
-
+- add commands for threads management ([#466](https://github.com/makigas/makibot/issues/466)) ([08a4914](https://github.com/makigas/makibot/commit/08a4914a1b93d8467e4766c782a98df8d272f833))
+- add hook for logging deleted messages ([2486709](https://github.com/makigas/makibot/commit/2486709d380919d9242a02c82fe028adcbe0fd8b))
+- backport commands from the serverless bot ([36bc408](https://github.com/makigas/makibot/commit/36bc4080c9ad2c99d095b646e58b9a95cbc86e38))
+- design thread-only channels ([#465](https://github.com/makigas/makibot/issues/465)) ([afac477](https://github.com/makigas/makibot/commit/afac477b607621958afaa755d68737be10a84cae))
 
 ### Bug Fixes
 
-* action not properly escaping variable ([c41e95d](https://github.com/makigas/makibot/commit/c41e95da02202dc9b297860c14b2ed431877023f))
-
+- action not properly escaping variable ([c41e95d](https://github.com/makigas/makibot/commit/c41e95da02202dc9b297860c14b2ed431877023f))
 
 ### Refactor
 
-* custom date tokens for mod durations ([095463e](https://github.com/makigas/makibot/commit/095463ef8baaaf8e3e743275439cffeb77badede))
-
+- custom date tokens for mod durations ([095463e](https://github.com/makigas/makibot/commit/095463ef8baaaf8e3e743275439cffeb77badede))
 
 ### Chore
 
-* **deps:** bump datetoken to 1.1.0 ([86c93f4](https://github.com/makigas/makibot/commit/86c93f4a3dd2cf579bab7bcdd2b155b0dca3e39b))
+- **deps:** bump datetoken to 1.1.0 ([86c93f4](https://github.com/makigas/makibot/commit/86c93f4a3dd2cf579bab7bcdd2b155b0dca3e39b))
 
 ## [0.36.0](https://github.com/makigas/makibot/compare/v0.35.1...v0.36.0) (2021-11-05)
 
-
 ### Features
 
-* add an explanation about the karma system ([0377000](https://github.com/makigas/makibot/commit/0377000990bedb4575d8848098ae522cf18cf60c))
-* add button handler to see karma ([73de7fa](https://github.com/makigas/makibot/commit/73de7fa1cabf54d8941f36537d9df437b11d7775))
-* simplify release policy ([6bb3a3f](https://github.com/makigas/makibot/commit/6bb3a3f4f20b7e5c8e8ce557e051bb52a817200b))
-
+- add an explanation about the karma system ([0377000](https://github.com/makigas/makibot/commit/0377000990bedb4575d8848098ae522cf18cf60c))
+- add button handler to see karma ([73de7fa](https://github.com/makigas/makibot/commit/73de7fa1cabf54d8941f36537d9df437b11d7775))
+- simplify release policy ([6bb3a3f](https://github.com/makigas/makibot/commit/6bb3a3f4f20b7e5c8e8ce557e051bb52a817200b))
 
 ### Bug Fixes
 
-* github actions, you never get it right the first time ([e07b918](https://github.com/makigas/makibot/commit/e07b9187283d3675e581fcb525d51df945dec13f))
-* plural/singular in propinas ([#463](https://github.com/makigas/makibot/issues/463)) ([beb0434](https://github.com/makigas/makibot/commit/beb04348a7aafe086ee4ad60c0b0d1e152dc1fec))
-* update binary distribution paths ([7f5a915](https://github.com/makigas/makibot/commit/7f5a9158829691959e00e43e11945eea6845ced3))
-
+- github actions, you never get it right the first time ([e07b918](https://github.com/makigas/makibot/commit/e07b9187283d3675e581fcb525d51df945dec13f))
+- plural/singular in propinas ([#463](https://github.com/makigas/makibot/issues/463)) ([beb0434](https://github.com/makigas/makibot/commit/beb04348a7aafe086ee4ad60c0b0d1e152dc1fec))
+- update binary distribution paths ([7f5a915](https://github.com/makigas/makibot/commit/7f5a9158829691959e00e43e11945eea6845ced3))
 
 ### Chore
 
-* **deps:** unpin Node.js version to 16.x ([#462](https://github.com/makigas/makibot/issues/462)) ([c348ead](https://github.com/makigas/makibot/commit/c348ead9eda2fed93a1b0f40d458d1371bd5b625))
-* **deps:** update dependencies ([1e5a71e](https://github.com/makigas/makibot/commit/1e5a71e433ade386361a0178af3259e572c67960))
-* **doc:** chat tag should point to the server ([bfb751b](https://github.com/makigas/makibot/commit/bfb751baeebc7e80e30f33dc3c0dccfe9ccf4e27))
-* **doc:** show badges in README.md ([00e6ff8](https://github.com/makigas/makibot/commit/00e6ff8ca7689eb2ccc90dc58045598bc851fe53))
-* rebrand clank as makibot ([550da2c](https://github.com/makigas/makibot/commit/550da2c2c69af407b55dfbc8449bf400204735cc))
-
+- **deps:** unpin Node.js version to 16.x ([#462](https://github.com/makigas/makibot/issues/462)) ([c348ead](https://github.com/makigas/makibot/commit/c348ead9eda2fed93a1b0f40d458d1371bd5b625))
+- **deps:** update dependencies ([1e5a71e](https://github.com/makigas/makibot/commit/1e5a71e433ade386361a0178af3259e572c67960))
+- **doc:** chat tag should point to the server ([bfb751b](https://github.com/makigas/makibot/commit/bfb751baeebc7e80e30f33dc3c0dccfe9ccf4e27))
+- **doc:** show badges in README.md ([00e6ff8](https://github.com/makigas/makibot/commit/00e6ff8ca7689eb2ccc90dc58045598bc851fe53))
+- rebrand clank as makibot ([550da2c](https://github.com/makigas/makibot/commit/550da2c2c69af407b55dfbc8449bf400204735cc))
 
 ### Refactor
 
-* **ops:** use new GitHub Action for building Docker ([c887213](https://github.com/makigas/makibot/commit/c88721314ef62968a130bccbb48b077339b04fb7))
-* refactor all the actions ([cd2f0ce](https://github.com/makigas/makibot/commit/cd2f0ceef8c218af0e4b9e8fe098cf391295c605))
-* remove old warn hook ([9fe99e2](https://github.com/makigas/makibot/commit/9fe99e2285eb21309bf395f3431907827be127f8))
-* remove verification process ([bd8597c](https://github.com/makigas/makibot/commit/bd8597c1c9e3a88bb025316c7f6c2003867543d8))
-* use new public modlog for automute ([ed13e88](https://github.com/makigas/makibot/commit/ed13e8839915c55e717ece1fac9c0c2ccbf3d1d8))
+- **ops:** use new GitHub Action for building Docker ([c887213](https://github.com/makigas/makibot/commit/c88721314ef62968a130bccbb48b077339b04fb7))
+- refactor all the actions ([cd2f0ce](https://github.com/makigas/makibot/commit/cd2f0ceef8c218af0e4b9e8fe098cf391295c605))
+- remove old warn hook ([9fe99e2](https://github.com/makigas/makibot/commit/9fe99e2285eb21309bf395f3431907827be127f8))
+- remove verification process ([bd8597c](https://github.com/makigas/makibot/commit/bd8597c1c9e3a88bb025316c7f6c2003867543d8))
+- use new public modlog for automute ([ed13e88](https://github.com/makigas/makibot/commit/ed13e8839915c55e717ece1fac9c0c2ccbf3d1d8))
 
 ### [0.35.1](https://github.com/makigas/makibot/compare/v0.35.0...v0.35.1) (2021-10-26)
 
