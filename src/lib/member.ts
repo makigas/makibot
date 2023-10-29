@@ -224,17 +224,6 @@ export default class Member {
     }
   }
 
-  async tripAntispam(): Promise<void> {
-    /* Put the current timestamp. */
-    await this.tagbag.tag("antispam:trippedAt").set(Date.now());
-  }
-
-  async trippedAntispam(): Promise<boolean> {
-    const tag = await this.tagbag.tag("antispam:trippedAt").get(0);
-    const sevenDaysAgo = Date.now() - 7 * 86400 * 1000;
-    return tag >= sevenDaysAgo;
-  }
-
   private get threadChannelSnoozeTag(): Tag {
     return this.tagbag.tag("dontRemindThreadChannelUntil");
   }

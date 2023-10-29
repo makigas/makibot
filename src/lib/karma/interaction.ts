@@ -42,20 +42,6 @@ Con suficiente reputación se puede subir de nivel. En función de tu nivel, te 
 Estos roles te permiten desbloquear funciones extra en el servidor, reservadas a las cuentas verificadas, y quizás en el futuro también permita otro tipo de sorpresas.
 `;
 
-function getKarmaPrivileges(stats: KarmaStats): string {
-  const boolToEmoji = (bool: boolean) => (bool ? "✅" : "❌");
-  const privileges: [name: string, status: boolean][] = [
-    ["Envío de mensajes (requiere nivel 0)", stats.level >= 0],
-    ["Confianza del sistema antispam (requiere nivel 2)", stats.level >= 2],
-    ["Enviar mensajes en #hice-esto (requiere nivel 2)", stats.level >= 2],
-    ["Enviar enlaces a #enlaces (requiere nivel 5)", stats.level >= 5],
-  ];
-  return (
-    "**Privilegios**:\n" +
-    privileges.map(([name, status]) => `${boolToEmoji(status)} ${name}`).join("\n")
-  );
-}
-
 async function createKarmaToast(member: Member, sudo = false): Promise<MessageEmbed> {
   const stats = await member.getKarma();
   const nextLevel = getPointsForLevelV2(stats.level + 1);
@@ -81,9 +67,7 @@ async function createKarmaToast(member: Member, sudo = false): Promise<MessageEm
       ].join(" / "),
   ].join("\n");
 
-  const privileges = getKarmaPrivileges(stats);
-
-  const description = [baseStats, sudo && sudoStats, privileges].filter(Boolean).join("\n\n");
+  const description = [baseStats, sudo && sudoStats].filter(Boolean).join("\n\n");
 
   return createToast({
     title: `Reputación de @${member.user.username}`,
