@@ -49,5 +49,5 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
-          docker-compose --project-directory docker/makibot pull makibot
-          docker-compose --project-directory docker/makibot up -d
+          docker compose --project-directory docker/makigas/makibot pull makibot
+          docker compose --project-directory docker/makigas/makibot up -d
