@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0-0](https://github.com/makigas/makibot/compare/v4.0.2...v5.0.0-0) (2023-10-29)
+
+
+### Features
+
+* add bitrate command ([#564](https://github.com/makigas/makibot/issues/564)) ([577a8b7](https://github.com/makigas/makibot/commit/577a8b78e7e151b49ebfe141dc47b4ea2fc15527))
+* add looting system ([5a1103f](https://github.com/makigas/makibot/commit/5a1103f8a2ed4e85a44b92bcc917b400428a983f))
+* add rol for Streams ([15fac9d](https://github.com/makigas/makibot/commit/15fac9de931b45053fc05c1f7728ac34ae5918b6))
+* **karma:** add extra karma views ([9dee103](https://github.com/makigas/makibot/commit/9dee1037fcc05d9b0844f223f16453d3b0d8d3b9))
+* **loot:** show loot points in the karma card ([a586271](https://github.com/makigas/makibot/commit/a586271f5c28f6fb492fd186e77e85ff03542cde))
+* replying to a message in a threadChannel should embed response ([27f7305](https://github.com/makigas/makibot/commit/27f7305df748a179df6971e2fe371c836d68b356))
+
+
+### Bug Fixes
+
+* **loot:** defer interaction reply to prevent timeout ([a854709](https://github.com/makigas/makibot/commit/a8547099f76dacdc2d6ee65173ee6132963f7fed))
+* **ops:** update command for deployment ([3964a8b](https://github.com/makigas/makibot/commit/3964a8bcfa6ebdd09a85f9972492d2ba0f3f492f))
+* **pin:** messages in news_thread cannot be pinned ([3b2857a](https://github.com/makigas/makibot/commit/3b2857a3d1832f239752bc150c55e225beb05632))
+* **roles:** delete Streams role ([4465638](https://github.com/makigas/makibot/commit/446563835cdeefd8124645ca53c3d04e5d134e56))
+
+
+### Refactor
+
+* **antispam:** remove antispam capabilities ([1b2b167](https://github.com/makigas/makibot/commit/1b2b16732128fdbe5d672184bef74843631ff905))
+* deprecate antispam capabilities ([9459fe8](https://github.com/makigas/makibot/commit/9459fe8f760ad61c805d470b1bc95bbe83885d32))
+* **makibotctl:** remove commands for removed features ([2d4f825](https://github.com/makigas/makibot/commit/2d4f825ddd2c40faa2ccaf2d768bba1e26541f3c))
+* **pin:** remove pinboard feature ([e23c4f4](https://github.com/makigas/makibot/commit/e23c4f44b2e32e3ade766c70a688fb90fc753567))
+* remove antiflood and blessing capabilities ([7abc122](https://github.com/makigas/makibot/commit/7abc122c6272f1da9bdf49888cc3efe1f0802444))
+* remove easter egg for 2022-12-28 ([1127a42](https://github.com/makigas/makibot/commit/1127a42b5eaee6327a0fb1a97f4cb160e8026ea9))
+* remove voice hooks ([ec8f59d](https://github.com/makigas/makibot/commit/ec8f59d4d7979369a60c2292d91540ba12ccf0e9))
+* **roles:** remove more deprecated roles ([2b1bfc9](https://github.com/makigas/makibot/commit/2b1bfc90961bad076ebb2a521c644ec55a9d6a90))
+
+
+### Chore
+
+* **deps:** remove get-urls ([2d9f545](https://github.com/makigas/makibot/commit/2d9f54555469768b86adf5872a340be22612bcef))
+* **deps:** remove og dependencies related to links ([2f27434](https://github.com/makigas/makibot/commit/2f27434fc99b85efdd2407803fb189bcc35cbfe3))
+* **deps:** update datetoken; handle breaking changes ([24a946f](https://github.com/makigas/makibot/commit/24a946f5dea0d8564ebfee56b1f862c8f0d9f233))
+* **deps:** update dependencies ([dfcecaa](https://github.com/makigas/makibot/commit/dfcecaa063473106f67871d80627701d14e954c7))
+* **deps:** update express ([f91e3a1](https://github.com/makigas/makibot/commit/f91e3a10b0649cdddb9610f7af4bfe3a4bb79a5f))
+* **deps:** update husky ([d635c05](https://github.com/makigas/makibot/commit/d635c05b33eb7b917670593cf2fc0fd1d47f0699))
+* **deps:** update linters ([8fcb15c](https://github.com/makigas/makibot/commit/8fcb15ca24ef1c2ad864678d4c64d1e0b926d49b))
+* **deps:** update more dependencies ([8b2619b](https://github.com/makigas/makibot/commit/8b2619b4b5fbc1227ba0b1e47bcf34d15cb3c50b))
+* **deps:** update system dependencies ([06bf25c](https://github.com/makigas/makibot/commit/06bf25cacbeec2fc4c162749acec5e7b57b9cf83))
+* **deps:** update testing dependencies ([be22d5d](https://github.com/makigas/makibot/commit/be22d5def385a0d6ea504849f08def17954ee61b))
+* **fmt:** update eslint and prettier, clean up ([43f462f](https://github.com/makigas/makibot/commit/43f462f4c7d7a21144f8b65fa12a35431b83fd06))
+* **helper:** remove helper support ([49adce1](https://github.com/makigas/makibot/commit/49adce19b59eac2a2fe8a01aec56b2f05dbdd106))
+* **noremind:** delete snoozing capabilities ([1f02ed9](https://github.com/makigas/makibot/commit/1f02ed939ac9fd3a748de8ce6c75209d89c8c41f))
+* remove lift and lockdown commands ([63c3706](https://github.com/makigas/makibot/commit/63c37065ee47e396fbb406ffd02eed253f6cabd4))
+* remove support for linkchannels and threadchannels ([ac2882d](https://github.com/makigas/makibot/commit/ac2882de626ad8f25250bc5998f6d8dfef062d08))
+* **test:** remove tests for removed features ([0597544](https://github.com/makigas/makibot/commit/059754497bb6005d757c034b8a85508c965b2398))
+
 ### [4.0.2](https://github.com/makigas/makibot/compare/v4.0.1...v4.0.2) (2022-07-14)
 
 ### Bug Fixes
