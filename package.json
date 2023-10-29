@@ -24,7 +24,6 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "follow-redirects": ">=1.15.1",
-    "get-urls": "<11.0.0",
     "log4js": "^6.5.2",
     "open-graph": "^0.2.6",
     "require-all": "^3.0.0",
