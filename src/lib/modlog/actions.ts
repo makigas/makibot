@@ -50,7 +50,6 @@ const actions: { [type in ModEventType]: ActionHooks } = {
       const server = new Server(guild);
       const member = await server.member(event.target);
       await member.setWarned(true);
-      await member.setHelper(false); // revoke helper
     },
   },
   UNWARN: {

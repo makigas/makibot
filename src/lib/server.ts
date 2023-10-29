@@ -68,7 +68,6 @@ export default class Server {
       name: this.guild.name,
       icon: this.guild.iconURL(),
       roles: {
-        helper: roleToJSON(this.helperRole),
         mods: roleToJSON(this.modsRole),
         warn: roleToJSON(this.warnRole),
       },
@@ -124,11 +123,6 @@ export default class Server {
 
   get settings(): Settings {
     return new Settings(this.guild);
-  }
-
-  get helperRole(): Role {
-    const helperRoleName = process.env.HELPER_ROLE || "helpers";
-    return this.getRoleByName(helperRoleName);
   }
 
   get modsRole(): Role {

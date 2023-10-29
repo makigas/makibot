@@ -92,10 +92,6 @@ export default class Member {
     return this.hasRole(this.server.muteRole);
   }
 
-  get helper(): boolean {
-    return this.hasRole(this.server.helperRole);
-  }
-
   /**
    * @deprecated use server trusted roles instead
    */
@@ -212,10 +208,6 @@ export default class Member {
 
   async setWarned(value: boolean): Promise<boolean> {
     return this.setRole(this.server.warnRole, value);
-  }
-
-  async setHelper(value: boolean): Promise<boolean> {
-    return this.setRole(this.server.helperRole, value);
   }
 
   async kick(): Promise<void> {
