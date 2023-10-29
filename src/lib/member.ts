@@ -3,7 +3,6 @@ import Makibot from "../Makibot";
 import { getLevelV2 } from "./karma";
 import logger from "./logger";
 import Server from "./server";
-import Tag from "./tag";
 import TagBag from "./tagbag";
 
 export interface KarmaStats {
@@ -222,23 +221,5 @@ export default class Member {
         reason,
       });
     }
-  }
-
-  private get threadChannelSnoozeTag(): Tag {
-    return this.tagbag.tag("dontRemindThreadChannelUntil");
-  }
-
-  async threadChannelHelpSnoozedUntil(): Promise<number> {
-    return this.threadChannelSnoozeTag.get(0);
-  }
-
-  async threadChannelNotificationsSnoozed(): Promise<boolean> {
-    const until = await this.threadChannelHelpSnoozedUntil();
-    return Date.now() < until;
-  }
-
-  async snoozeThreadChannelHelp(): Promise<void> {
-    const until = Date.now() + 30 * 86400 * 1000;
-    await this.threadChannelSnoozeTag.set(until);
   }
 }
