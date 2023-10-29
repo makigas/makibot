@@ -2,8 +2,6 @@ import {
   Guild,
   GuildAuditLogsEntry,
   GuildAuditLogsResolvable,
-  Message,
-  Permissions,
   Role,
   Snowflake,
   TextChannel,
@@ -13,7 +11,6 @@ import {
 } from "discord.js";
 import Makibot from "../Makibot";
 import Member from "./member";
-import { quoteMessage } from "./response";
 import Settings from "./settings";
 import Tag from "./tag";
 import TagBag from "./tagbag";
@@ -43,7 +40,7 @@ export type ServerJSONSchema = {
 export default class Server {
   private _tagbag: TagBag;
 
-  constructor(private guild: Guild) { }
+  constructor(private guild: Guild) {}
 
   async queryAuditLogEvent<T extends GuildAuditLogsResolvable>(
     type: T,
@@ -76,33 +73,6 @@ export default class Server {
         warn: roleToJSON(this.warnRole),
       },
     };
-  }
-
-  async setPinboardWebhook(url: string): Promise<void> {
-    if (url) {
-      await this.tagbag.tag("webhook:pinboard").set(url);
-    } else {
-      await this.tagbag.tag("webhook:pinboard").delete();
-    }
-  }
-
-  getPinboardWebhook(): Promise<string | null> {
-    return this.tagbag.tag("webhook:pinboard").get(null);
-  }
-
-  async sendToPinboard(message: Message): Promise<Snowflake | null> {
-    const pinboard = await this.tagbag.tag("webhook:pinboard").get(null);
-    if (pinboard) {
-      const quote = quoteMessage(message);
-      const client = new WebhookClient({ url: pinboard });
-      const result = await client.send({
-        ...quote,
-        username: message.member.nickname || message.author.username,
-        avatarURL: message.author.avatarURL(),
-      });
-      return result.id;
-    }
-    return null;
   }
 
   async sendToModlog(

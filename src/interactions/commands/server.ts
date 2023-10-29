@@ -27,8 +27,7 @@ export default class ServerCommand implements CommandInteractionHandler {
                 { name: "Default modlog", value: "webhook:defaultmod" },
                 { name: "Sensible modlog", value: "webhook:sensiblemod" },
                 { name: "Delete modlog", value: "webhook:deletemod" },
-                { name: "Public modlog", value: "webhook:publicmod" },
-                { name: "Pinboard", value: "webhook:pinboard" }
+                { name: "Public modlog", value: "webhook:publicmod" }
               )
               .setRequired(true)
           )
@@ -75,7 +74,6 @@ export default class ServerCommand implements CommandInteractionHandler {
       sensible: await server.tagbag.tag("webhook:sensiblemod").get("(none)"),
       delete: await server.tagbag.tag("webhook:deletemod").get("(none)"),
       public: await server.tagbag.tag("webhook:publicmod").get("(none)"),
-      pinboard: await server.tagbag.tag("webhook:pinboard").get("(none)"),
     };
 
     const webhookToast = createToast({
@@ -86,7 +84,6 @@ export default class ServerCommand implements CommandInteractionHandler {
         `**Sensible modlog**: ${webhooks.sensible}`,
         `**Delete modlog**: ${webhooks.delete}`,
         `**Public modlog**: ${webhooks.public}`,
-        `**Pinboard**: ${webhooks.pinboard}`,
       ].join("\n"),
       severity: "info",
     });
