@@ -30,16 +30,6 @@ const ROLE_DEFINITIONS = [
     emoji: "📼",
   },
   {
-    label: "Multijugador",
-    description: "Para organizar juegos en línea en el canal de juegos",
-    emoji: "🎮",
-  },
-  {
-    label: "Helper",
-    description: "Te hace mencionable y te señala como alguien que ayuda",
-    emoji: "✨",
-  },
-  {
     label: "Archivo",
     description: "Muestra los canales del servidor que han sido archivados",
     emoji: "💾",
