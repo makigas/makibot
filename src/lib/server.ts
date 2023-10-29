@@ -40,13 +40,6 @@ export type ServerJSONSchema = {
   roles: { [key: string]: RoleJSONSchema | null };
 };
 
-const LOCKDOWN_PERMISSIONS = [
-  Permissions.FLAGS.SEND_MESSAGES,
-  Permissions.FLAGS.SEND_MESSAGES_IN_THREADS,
-  Permissions.FLAGS.CREATE_PUBLIC_THREADS,
-  Permissions.FLAGS.CREATE_PRIVATE_THREADS,
-];
-
 export default class Server {
   private _tagbag: TagBag;
 
@@ -70,40 +63,6 @@ export default class Server {
       this._tagbag = new TagBag(client.provider, this.guild.id, this.guild);
     }
     return this._tagbag;
-  }
-
-  async lockdown(channelId?: Snowflake) {
-    if (channelId) {
-      /* They have asked me to mute a channel */
-      const channel = await this.guild.channels.fetch(channelId);
-      if (channel) {
-        channel.permissionOverwrites.create(
-          channel.guild.roles.everyone,
-          Object.fromEntries(LOCKDOWN_PERMISSIONS.map((p) => [p, false]))
-        );
-      }
-    } else {
-      /* Lock the entire server. */
-      const newBitmap = this.guild.roles.everyone.permissions.remove(LOCKDOWN_PERMISSIONS);
-      await this.guild.roles.everyone.setPermissions(newBitmap);
-    }
-  }
-
-  async liftLockdown(channelId?: Snowflake) {
-    if (channelId) {
-      /* They have asked me to mute a channel */
-      const channel = await this.guild.channels.fetch(channelId);
-      if (channel) {
-        channel.permissionOverwrites.create(
-          channel.guild.roles.everyone,
-          Object.fromEntries(LOCKDOWN_PERMISSIONS.map((p) => [p, null]))
-        );
-      }
-    } else {
-      /* Unlock the entire server. */
-      const newBitmap = this.guild.roles.everyone.permissions.add(LOCKDOWN_PERMISSIONS);
-      await this.guild.roles.everyone.setPermissions(newBitmap);
-    }
   }
 
   async toJSON(): Promise<ServerJSONSchema> {
