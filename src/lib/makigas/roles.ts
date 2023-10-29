@@ -30,11 +30,6 @@ const ROLE_DEFINITIONS = [
     emoji: "📼",
   },
   {
-    label: "Streams",
-    description: "Te menciono cuando inicie un directo",
-    emoji: "🟣",
-  },
-  {
     label: "Multijugador",
     description: "Para organizar juegos en línea en el canal de juegos",
     emoji: "🎮",
