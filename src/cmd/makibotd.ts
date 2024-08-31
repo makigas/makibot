@@ -6,8 +6,8 @@ import logger from "../lib/logger";
 import * as Sentry from "@sentry/node";
 import { getDatabase, getKarmaDatabase } from "../settings";
 import { newModRepository } from "../lib/modlog/database";
-import { SettingProvider } from "../lib/provider";
 import { openKarmaDatabase } from "../lib/karma/database";
+import { SqliteSettingProvider, migrateSettingsSchema } from "../lib/provider";
 
 logger.info(".88b  d88.  .d8b.  db   dD d888888b d8888b.  .d88b.  d888888b ");
 logger.info("88'YbdP`88 d8' `8b 88 ,8P'   `88'   88  `8D .8P  Y8. `~~88~~' ");
@@ -33,8 +33,11 @@ async function makibotFactory(): Promise<Makibot> {
   const modrepo = await newModRepository(database);
 
   logger.debug("preparing setting provider...");
-  const provider = new SettingProvider(database);
+  const provider = new SqliteSettingProvider(database);
   await provider.init();
+
+  logger.debug("running migrations...");
+  await migrateSettingsSchema(database);
 
   logger.debug("loading karma database...");
   const karmaDatabase = await getKarmaDatabase();
