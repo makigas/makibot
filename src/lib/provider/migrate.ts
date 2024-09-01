@@ -4,6 +4,12 @@ import logger from "../logger";
 type BigBlob = Record<string, object>;
 
 async function inputDatabaseNeedsMigration(db: Database): Promise<boolean> {
+  const hasTable = await db.get(
+    `SELECT COUNT(*) AS total FROM sqlite_master WHERE type='table' AND name='settings'`,
+  );
+  if (hasTable.total == 0) {
+    return false;
+  }
   const result = await db.get(`SELECT COUNT(*) AS total FROM settings`);
   return result.total > 0;
 }
