@@ -1,4 +1,3 @@
-import tokenToDate from "datetoken";
 import { Snowflake } from "discord-api-types/v9";
 import {
   ButtonInteraction,
@@ -12,15 +11,11 @@ import {
   MessageSelectOptionData,
   SelectMenuInteraction,
 } from "discord.js";
-import { ContextMenuCommandBuilder, userMention } from "@discordjs/builders";
+import { ContextMenuCommandBuilder } from "@discordjs/builders";
 import type { MessageContextMenuInteractionHandler } from "../../lib/interaction";
 import Member from "../../lib/member";
-import { applyAction } from "../../lib/modlog/actions";
-import { notifyModlog } from "../../lib/modlog/notifications";
-import { ModEvent, ModEventType } from "../../lib/modlog/types";
 import { createToast } from "../../lib/response";
 import Server from "../../lib/server";
-import Makibot from "../../Makibot";
 import { proposeReport } from "../../lib/modlog/report";
 
 /** List of reasons on why a message would be reported. */
@@ -34,59 +29,31 @@ const REASON_OPTIONS: MessageSelectOptionData[] = [
   { label: "Mensaje irrespetuoso o dañino", value: "unrespectful" },
 ];
 
-/** List of actions that a moderator can take against a message. */
-const ACTION_OPTIONS: MessageSelectOptionData[] = [
-  { label: "Avisar amistosamente (sin represaliar)", value: "remind" },
-  { label: "Aislar cuenta (60 minutos)", value: "timeout.hour" },
-  { label: "Aislar cuenta (24 horas)", value: "timeout.day" },
-  { label: "Aislar cuenta (7 días)", value: "timeout.week" },
-  { label: "Echar (podrá volver a entrar)", value: "kick" },
-  { label: "Banear (no podrá volver a entrar)", value: "ban" },
-];
-
 /** List of actions that a non-moderator can take against a message. */
 const ALERT_OPTIONS: MessageSelectOptionData[] = [
   { label: "Reporte normal: avisar a moderadores", value: "mods" },
   { label: "Reporte sensible: avisar sólo a administradores", value: "admin" },
 ];
 
-const DELETE_OPTIONS: MessageSelectOptionData[] = [
-  { label: "Conservar mensaje", value: "keep" },
-  { label: "Eliminar mensaje", value: "delete" },
-];
+class ReportForm {
+  /** Current value on why the user is reporting this message. */
+  reason: string | null;
 
-interface ReportForm {
-  /** Current value of the reason select. */
-  reason: string;
+  /** Current value on the target of the report itself. */
+  alert: string | null;
 
-  /** Current value of the action select. */
-  action: string;
+  constructor() {
+    this.reason = null;
+    this.alert = null;
+  }
 
-  /** Current value of the alert select. */
-  alert: string;
+  public get valid(): boolean {
+    return this.reason != null && this.alert != null;
+  }
 
-  /** Whether to delete the message as well. */
-  delete: string;
-}
-
-function castModEventType(action: string): ModEventType {
-  const types = {
-    "timeout.hour": "TIMEOUT",
-    "timeout.day": "TIMEOUT",
-    "timeout.week": "TIMEOUT",
-    kick: "KICK",
-    ban: "BAN",
-  };
-  return types[action] || null;
-}
-
-function castExpirationDate(action: string): Date {
-  const tokens = {
-    "timeout.hour": "now+h",
-    "timeout.day": "now+d",
-    "timeout.week": "now+w",
-  };
-  return tokens[action] ? tokenToDate(tokens[action]) : null;
+  cleanReason(): string | null {
+    return REASON_OPTIONS.find((r) => r.value === this.reason)?.label;
+  }
 }
 
 class ModerationRequest {
@@ -105,30 +72,13 @@ class ModerationRequest {
     target: Member;
   }) {
     Object.assign(this, options);
-    this.form = { action: null, alert: null, reason: null, delete: "keep" };
+    this.form = new ReportForm();
     this.setUpMenuCollector();
     this.setUpButtonCollector();
   }
 
-  private get cleanReason(): string {
-    return REASON_OPTIONS.find((r) => r.value === this.form.reason).label;
-  }
-
-  private buildModEvent(): ModEvent {
-    return {
-      guild: this.interaction.guildId,
-      target: this.target.id,
-      mod: this.reporter.id,
-      type: castModEventType(this.form.action),
-      reason: this.cleanReason,
-      createdAt: new Date(),
-      expiresAt: castExpirationDate(this.form.action),
-      expired: false,
-    };
-  }
-
   private selectDispatchers: {
-    [customId: string]: (menu: SelectMenuInteraction) => void | Promise<void>;
+    [customId: string]: (menu: SelectMenuInteraction) => void;
   } = {
     "report:reason": (menu) => {
       this.form.reason = menu.values[0];
@@ -136,23 +86,13 @@ class ModerationRequest {
     "report:alert": (menu) => {
       this.form.alert = menu.values[0];
     },
-    "report:action": (menu) => {
-      this.form.action = menu.values[0];
-    },
-    "report:delete": (menu) => {
-      this.form.delete = menu.values[0];
-    },
   };
 
   private buttonDispatchers: {
-    [customId: string]: (btn: ButtonInteraction) => void | Promise<void>;
+    [customId: string]: (btn: ButtonInteraction) => Promise<void>;
   } = {
     "report:send": async (button) => {
-      if (this.sudo) {
-        await this.dispatchAction();
-      } else {
-        await this.dispatchAlert();
-      }
+      await this.dispatchAlert();
       return button.update({
         embeds: [
           createToast({
@@ -178,44 +118,13 @@ class ModerationRequest {
     },
   };
 
-  private async dispatchAction(): Promise<void> {
-    if (this.form.action === "remind") {
-      await this.sendReminder();
-    } else {
-      const event = this.buildModEvent();
-      const persistedEvent = await applyAction(this.interaction.client as Makibot, event);
-      if (persistedEvent.type !== "BAN" && persistedEvent.type !== "KICK") {
-        await notifyModlog(this.interaction.client as Makibot, persistedEvent);
-      }
-    }
-    if (this.form.delete === "delete") {
-      await this.message.delete();
-    }
-  }
-
-  private async sendReminder(): Promise<void> {
-    await this.message.reply({
-      content: [
-        `Hola ${userMention(this.target.id)}, me han pedido que te recuerde amistosamente`,
-        "que las normas de este servidor están para cumplirlas. Si te continúas",
-        "comportando de forma inapropiada, podrían echarte de este servidor.",
-      ].join(" "),
-      embeds: [
-        createToast({
-          title: this.cleanReason,
-          severity: "warning",
-        }),
-      ],
-    });
-  }
-
   private async dispatchAlert(): Promise<void> {
     const targets = {
       mods: "default",
       admin: "sensible",
     };
     const target = targets[this.form.alert];
-    proposeReport(this.interaction.client as Makibot, this.message, this.cleanReason, target);
+    proposeReport(this.message, this.form.cleanReason(), target);
   }
 
   private collectorFilter(item: SelectMenuInteraction | ButtonInteraction): boolean {
@@ -259,11 +168,6 @@ class ModerationRequest {
     });
   }
 
-  get sudo() {
-    /* Only moderators can moderate a message directly. Non mods can alert to mods. */
-    return this.reporter.moderator;
-  }
-
   get privilegedTarget() {
     return false; // return this.target.user.bot || this.target.moderator;
   }
@@ -281,59 +185,31 @@ class ModerationRequest {
     await this.interaction.editReply(this.renderForm());
   }
 
-  get reasonSelectMenu(): MessageSelectMenu {
-    return new MessageSelectMenu({
-      customId: "report:reason",
-      placeholder: "¿Qué problema existe?",
-      options: REASON_OPTIONS.map((reason) => ({
-        ...reason,
-        default: this.form.reason === reason.value,
-      })),
-    });
-  }
-
-  get alertSelectMenu(): MessageSelectMenu {
-    return new MessageSelectMenu({
-      customId: "report:alert",
-      placeholder: "¿A quién hay que informar?",
-      options: ALERT_OPTIONS.map((alert) => ({
-        ...alert,
-        default: this.form.alert === alert.value,
-      })),
-    });
-  }
-
-  get actionSelectMenu(): MessageSelectMenu {
-    return new MessageSelectMenu({
-      customId: "report:action",
-      placeholder: "¿Qué acción tomar?",
-      options: ACTION_OPTIONS.map((action) => ({
-        ...action,
-        default: this.form.action === action.value,
-      })),
-    });
-  }
-
-  get deleteSelectMenu(): MessageSelectMenu {
-    return new MessageSelectMenu({
-      customId: "report:delete",
-      placeholder: "¿Eliminar mensaje?",
-      options: DELETE_OPTIONS.map((del) => ({
-        ...del,
-        default: this.form.delete === del.value,
-      })),
-    });
-  }
-
-  get validForm(): boolean {
-    return !!this.form.reason && (this.sudo ? !!this.form.action : !!this.form.alert);
-  }
-
   renderForm(): InteractionReplyOptions {
-    const reason = new MessageActionRow({ components: [this.reasonSelectMenu] });
-    const action = new MessageActionRow({ components: [this.actionSelectMenu] });
-    const alert = new MessageActionRow({ components: [this.alertSelectMenu] });
-    const del = new MessageActionRow({ components: [this.deleteSelectMenu] });
+    const reason = new MessageActionRow({
+      components: [
+        new MessageSelectMenu({
+          customId: "report:reason",
+          placeholder: "¿Qué problema existe?",
+          options: REASON_OPTIONS.map((reason) => ({
+            ...reason,
+            default: this.form.reason === reason.value,
+          })),
+        }),
+      ],
+    });
+    const alert = new MessageActionRow({
+      components: [
+        new MessageSelectMenu({
+          customId: "report:alert",
+          placeholder: "¿A quién hay que informar?",
+          options: ALERT_OPTIONS.map((alert) => ({
+            ...alert,
+            default: this.form.alert === alert.value,
+          })),
+        }),
+      ],
+    });
     const buttons = new MessageActionRow({
       type: "ACTION_ROW",
       components: [
@@ -341,7 +217,7 @@ class ModerationRequest {
           customId: "report:send",
           label: "Enviar",
           style: "PRIMARY",
-          disabled: !this.validForm,
+          disabled: !this.form.valid,
         }),
         new MessageButton({
           customId: "report:cancel",
@@ -350,19 +226,18 @@ class ModerationRequest {
         }),
       ],
     });
-    const components = this.sudo ? [reason, action, del, buttons] : [reason, alert, buttons];
     return {
-      content: "Gestionar un problema con este mensaje",
-      components: components.map((c) => new MessageActionRow(c)),
+      content: "¿Qué problema tiene este mensaje?",
+      components: [reason, alert, buttons],
     };
   }
 }
 
 export default class ModRequestCommand implements MessageContextMenuInteractionHandler {
-  name = "Aplicar o pedir moderación";
+  name = "Avisar a moderación";
 
   build() {
-    return new ContextMenuCommandBuilder().setName("Aplicar o pedir moderación").setType(3);
+    return new ContextMenuCommandBuilder().setName("Avisar a moderación").setType(3);
   }
 
   async handle(interaction: MessageContextMenuInteraction): Promise<void> {

@@ -1,6 +1,5 @@
 import { hyperlink, userMention } from "@discordjs/builders";
 import { Message, MessageEmbedOptions, TextChannel } from "discord.js";
-import Makibot from "../../Makibot";
 import Server from "../server";
 
 function buildModReport(message: Message, reason: string): MessageEmbedOptions {
@@ -38,7 +37,6 @@ function buildModReport(message: Message, reason: string): MessageEmbedOptions {
 }
 
 export async function proposeReport(
-  client: Makibot,
   message: Message,
   reason: string,
   target: "default" | "sensible" = "default",
