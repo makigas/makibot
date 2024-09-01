@@ -16,7 +16,7 @@ const STALE_HOURS = 24;
  */
 function tombstoneTag(channel: TextChannel): Tag {
   const provider = (channel.client as Makibot).provider;
-  return new Tag(provider, `tombstone:${channel.id}`, { guild: channel.guild });
+  return new Tag(provider, `tombstone:${channel.id}`, channel.guild);
 }
 
 /**

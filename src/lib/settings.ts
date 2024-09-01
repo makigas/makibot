@@ -24,7 +24,7 @@ export default class Settings {
   public constructor(guild: Guild) {
     this.client = guild.client as Makibot;
     this.tags = {
-      karmaTiers: new Tag(this.client.provider, "Karma.Tiers", { guild }),
+      karmaTiers: new Tag(this.client.provider, "Karma.Tiers", guild),
     };
   }
 
