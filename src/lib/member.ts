@@ -5,7 +5,7 @@ import logger from "./logger";
 import Server from "./server";
 import TagBag from "./tagbag";
 
-export interface KarmaStats {
+interface KarmaStats {
   messages: number;
   upvotes: number;
   downvotes: number;

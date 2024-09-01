@@ -1,12 +1,12 @@
 import { Guild } from "discord.js";
 import { SettingProvider } from "../../src/lib/provider";
 
-export type TtlStrategy = "NONE" | "TOUCH_FIRST" | "TOUCH_ALWAYS";
+type TtlStrategy = "NONE" | "TOUCH_FIRST" | "TOUCH_ALWAYS";
 
 /**
  * Additional options to be used when creating a tag.
  */
-export interface TagOptions {
+interface TagOptions {
   /** If provided, the guild that the tag will be bound to. */
   guild?: Guild;
 

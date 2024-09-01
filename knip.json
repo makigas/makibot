@@ -1,0 +1,9 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": ["src/cmd/*.ts", "src/hooks/*.ts", "src/interactions/*/*.ts"],
+  "mocha": {
+    "config": ["package.json"],
+    "entry": "**/*.spec.ts"
+  },
+  "ignoreDependencies": ["husky", "uws"]
+}

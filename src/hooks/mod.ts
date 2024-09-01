@@ -1,5 +1,5 @@
-import { logger } from "@sentry/utils";
 import { Hook } from "../lib/hook";
+import logger from "../lib/logger";
 import { applyAction } from "../lib/modlog/actions";
 import { notifyModlog } from "../lib/modlog/notifications";
 import { ModEvent, ModEventType } from "../lib/modlog/types";

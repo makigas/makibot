@@ -5,7 +5,7 @@ import { getLevelV1, getLevelV2 } from "../../karma";
 import Member from "../../member";
 import { MiddlewareLocals as GuildMiddlewareLocals } from "./guild";
 
-export interface MiddlewareLocals extends GuildMiddlewareLocals {
+interface MiddlewareLocals extends GuildMiddlewareLocals {
   guildMember: GuildMember;
   member: Member;
 }
