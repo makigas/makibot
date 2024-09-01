@@ -4,7 +4,6 @@ import {
   SlashCommandSubcommandsOnlyBuilder,
 } from "@discordjs/builders";
 import type {
-  ButtonInteraction,
   CommandInteraction,
   Interaction,
   MessageContextMenuInteraction,
@@ -70,14 +69,6 @@ export interface MessageContextMenuInteractionHandler extends BaseInteractionHan
   build(): ContextMenuCommandBuilder;
 }
 
-export interface ButtonInteractionHandler extends BaseInteractionHandler {
-  /** Handle the command when sent to a guild. */
-  handleGuild?: (event: ButtonInteraction) => Promise<void>;
-
-  /** Handle the command when sent to a DM. */
-  handleDM?: (event: ButtonInteraction) => Promise<void>;
-}
-
 function loadInteractions<T extends BaseInteractionHandler>(path: string): { [k: string]: T } {
   const handlers = requireAllModules(path).map<T>((HandlerClass) => {
     if (typeof HandlerClass === "function") {
@@ -93,7 +84,6 @@ export class InteractionManager {
   private commands: Index<CommandInteractionHandler>;
   private usermenus: Index<UserContextMenuInteractionHandler>;
   private messagemenus: Index<MessageContextMenuInteractionHandler>;
-  private buttons: Index<ButtonInteractionHandler>;
 
   constructor(
     readonly root: string,
@@ -102,7 +92,6 @@ export class InteractionManager {
     this.commands = loadInteractions(path.join(root, "commands"));
     this.usermenus = loadInteractions(path.join(root, "usermenus"));
     this.messagemenus = loadInteractions(path.join(root, "messagemenus"));
-    this.buttons = loadInteractions(path.join(root, "buttons"));
     client.on("interactionCreate", this.handleInteraction.bind(this));
   }
 
@@ -116,9 +105,6 @@ export class InteractionManager {
       } else if (interaction.isMessageContextMenu()) {
         await this.handleMessageContextMenuInteraction(interaction);
       }
-    }
-    if (interaction.isButton()) {
-      await this.handleButtonInteraction(interaction);
     }
   }
 
@@ -220,41 +206,6 @@ export class InteractionManager {
           const toast = createToast({
             title: "Menú no apto fuera de una guild",
             description: "Este menú no se puede pulsar fuera de una guild",
-            severity: "error",
-          });
-          await interaction.reply({
-            embeds: [toast],
-            ephemeral: true,
-          });
-        }
-      }
-    }
-  }
-
-  private async handleButtonInteraction(interaction: ButtonInteraction): Promise<void> {
-    const handler = this.buttons[interaction.customId];
-    if (handler) {
-      if (interaction.inGuild()) {
-        if (handler.handleGuild) {
-          await handler.handleGuild(interaction);
-        } else {
-          const toast = createToast({
-            title: "Botón no apto en una guild",
-            description: "Este botón no se puede pulsar en una guild",
-            severity: "error",
-          });
-          await interaction.reply({
-            embeds: [toast],
-            ephemeral: true,
-          });
-        }
-      } else {
-        if (handler.handleDM) {
-          await handler.handleDM(interaction);
-        } else {
-          const toast = createToast({
-            title: "Botón no apto fuera de una guild",
-            description: "Este botón no se puede pulsar fuera de una guild",
             severity: "error",
           });
           await interaction.reply({
