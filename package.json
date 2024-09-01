@@ -85,7 +85,8 @@
     "url": "git+https://github.com/makigas/makibot.git"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.nostrict.json",
+    "build:strict": "tsc",
     "clean": "rimraf makigas-makibot*.tgz dist",
     "start": "ts-node -r dotenv/config src/cmd/makibotd",
     "makibotctl": "ts-node -r dotenv/config src/cmd/makibotctl",
