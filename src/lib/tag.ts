@@ -14,7 +14,9 @@ export default class Tag {
     this.guildId = guild?.id || "global";
   }
 
-  get<T>(defVal?: T): Promise<T> {
+  get<T>(): Promise<T | undefined>;
+  get<T>(defVal: T): Promise<T>;
+  get<T>(defVal?: T): Promise<T | undefined> {
     return Promise.resolve(this.provider.get(this.guildId, this.key, defVal));
   }
 

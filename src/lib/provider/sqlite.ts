@@ -39,7 +39,7 @@ function guildToCacheName(guild: string): string {
 }
 
 export class SqliteSettingProvider implements SettingProvider {
-  private cache: { [server: string]: object } = {};
+  private cache: { [server: string]: Record<string, unknown> } = {};
 
   constructor(private readonly database: Database) {}
 
@@ -59,10 +59,10 @@ export class SqliteSettingProvider implements SettingProvider {
     await this.database.exec("COMMIT");
   }
 
-  get<T>(guild: Snowflake | "global", key: string, defaultValue: T = undefined): T {
+  get<T>(guild: Snowflake | "global", key: string, defaultValue?: T): T | undefined {
     logger.trace(`[sqlite] reading key ${guild} / ${key}`);
     const settings = this.cache[guildToCacheName(guild)];
-    return settings && settings[key] ? settings[key] : defaultValue;
+    return settings && key in settings ? (settings[key] as T) : defaultValue;
   }
 
   async set<T>(guild: Snowflake | "global", key: string, value: T): Promise<T> {
