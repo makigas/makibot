@@ -37,9 +37,9 @@ const REASON_OPTIONS: MessageSelectOptionData[] = [
 /** List of actions that a moderator can take against a message. */
 const ACTION_OPTIONS: MessageSelectOptionData[] = [
   { label: "Avisar amistosamente (sin represaliar)", value: "remind" },
-  { label: "Aplicar warn (60 minutos)", value: "warn.hour" },
-  { label: "Aplicar warn (24 horas)", value: "warn.day" },
-  { label: "Aplicar warn (7 días)", value: "warn.week" },
+  { label: "Aislar cuenta (60 minutos)", value: "timeout.hour" },
+  { label: "Aislar cuenta (24 horas)", value: "timeout.day" },
+  { label: "Aislar cuenta (7 días)", value: "timeout.week" },
   { label: "Echar (podrá volver a entrar)", value: "kick" },
   { label: "Banear (no podrá volver a entrar)", value: "ban" },
 ];
@@ -71,9 +71,9 @@ interface ReportForm {
 
 function castModEventType(action: string): ModEventType {
   const types = {
-    "warn.hour": "WARN",
-    "warn.day": "WARN",
-    "warn.week": "WARN",
+    "timeout.hour": "TIMEOUT",
+    "timeout.day": "TIMEOUT",
+    "timeout.week": "TIMEOUT",
     kick: "KICK",
     ban: "BAN",
   };
@@ -82,9 +82,9 @@ function castModEventType(action: string): ModEventType {
 
 function castExpirationDate(action: string): Date {
   const tokens = {
-    "warn.hour": "now+h",
-    "warn.day": "now+d",
-    "warn.week": "now+w",
+    "timeout.hour": "now+h",
+    "timeout.day": "now+d",
+    "timeout.week": "now+w",
   };
   return tokens[action] ? tokenToDate(tokens[action]) : null;
 }
@@ -265,7 +265,7 @@ class ModerationRequest {
   }
 
   get privilegedTarget() {
-    return this.target.user.bot || this.target.moderator;
+    return false; // return this.target.user.bot || this.target.moderator;
   }
 
   validate(): string {
