@@ -1,5 +1,5 @@
 import path from "path";
-import { Client, CloseEvent, Intents } from "discord.js";
+import { Client, CloseEvent, DiscordAPIError, Intents } from "discord.js";
 
 import { HookManager } from "./lib/hook";
 import { KarmaDatabase } from "./lib/karma/database";
@@ -53,9 +53,9 @@ export default class Makibot extends Client {
 
     this.on("ready", () => {
       if (process.env.VERSION_TAG) {
-        this.user.setActivity({ name: process.env.VERSION_TAG });
+        this.user!.setActivity({ name: process.env.VERSION_TAG });
       }
-      logger.info(`Logged in successfully as ${this.user.tag}.`);
+      logger.info(`Logged in successfully as ${this.user!.tag}.`);
     });
 
     this.on("shardDisconnect", (e: CloseEvent) => {
@@ -74,7 +74,10 @@ export default class Makibot extends Client {
     try {
       this.login(process.env.BOT_TOKEN);
     } catch (e) {
-      logger.error(e.code);
+      if (e instanceof DiscordAPIError) {
+        logger.error(e.code);
+      }
+      throw e;
     }
   }
 

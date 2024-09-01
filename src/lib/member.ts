@@ -25,11 +25,13 @@ export default class Member {
 
   readonly server: Server;
 
-  private _tagbag: TagBag;
+  readonly tagbag: TagBag;
 
   constructor(guildMember: GuildMember) {
     this.guildMember = guildMember;
     this.server = new Server(this.guildMember.guild);
+    const client: Makibot = this.guildMember.client as Makibot;
+    this.tagbag = new TagBag(client.provider, this.guildMember.id, this.guildMember.guild);
   }
 
   get user(): User {
@@ -61,16 +63,8 @@ export default class Member {
     return this.guildMember.user.tag;
   }
 
-  get avatar(): string {
+  get avatar(): string | null {
     return this.guildMember.user.avatarURL();
-  }
-
-  get tagbag(): TagBag {
-    if (!this._tagbag) {
-      const client: Makibot = this.guildMember.client as Makibot;
-      this._tagbag = new TagBag(client.provider, this.guildMember.id, this.guildMember.guild);
-    }
-    return this._tagbag;
   }
 
   async trusted(): Promise<boolean> {
@@ -148,10 +142,6 @@ export default class Member {
     }
   }
 
-  async setModerator(value: boolean): Promise<boolean> {
-    return this.setRole(this.server.modsRole, value);
-  }
-
   async setCrew(level: number): Promise<boolean> {
     const tiers = await this.server.karmaTiersRole();
 
@@ -161,18 +151,20 @@ export default class Member {
     }
 
     /* Get the tier this user should be in. (If none, will return 0). */
-    const assignableLevel = Object.keys(tiers).reduce((current, tierLevel) => {
-      if (parseInt(tierLevel) > level) {
+    const assignableLevel = Object.keys(tiers).reduce((current, tierLevelStr) => {
+      const tierLevel = parseInt(tierLevelStr);
+      if (tierLevel > level) {
         /* Skip tiers that require more level. */
         return current;
       } else {
         /* Get the maximum: either this new level or the level we already have. */
-        return parseInt(tierLevel) > current ? tierLevel : current;
+        return tierLevel > current ? tierLevel : current;
       }
     }, 0);
 
-    Object.keys(tiers).forEach(async (level) => {
-      const shouldHaveThisLevel = parseInt(level) == assignableLevel;
+    Object.keys(tiers).forEach(async (levelStr) => {
+      const level = parseInt(levelStr);
+      const shouldHaveThisLevel = level == assignableLevel;
 
       const tierTag = this.tagbag.tag("karma:tier:" + level);
       const inThisTierTag = await tierTag.get(false);

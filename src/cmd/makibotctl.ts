@@ -110,18 +110,21 @@ makibotctl.command<{ app: string; local: string }>(
   "Remove deployed commands for a local guild",
   () => ({}),
   async (argv) => {
+    if (!process.env.BOT_TOKEN) {
+      console.error("Please, provide the bot token in the BOT_TOKEN env variable");
+      process.exit(1);
+    }
+
     const restClient = new REST({ version: "9" });
     restClient.setToken(process.env.BOT_TOKEN);
 
     /* Fetch the commands. */
-    restClient
-      .get(Routes.applicationGuildCommands(argv.app, argv.local))
-      .then(async (commands: RESTGetAPIApplicationGuildCommandsResult) => {
-        for (const command of commands) {
-          console.log(`Deleting local command ${command.name}`);
-          await restClient.delete(Routes.applicationGuildCommand(argv.app, argv.local, command.id));
-        }
-      });
+    const url = Routes.applicationGuildCommands(argv.app, argv.local);
+    const response = (await restClient.get(url)) as RESTGetAPIApplicationGuildCommandsResult;
+    for (const command of response) {
+      console.log(`Deleting local command ${command.name}`);
+      await restClient.delete(Routes.applicationGuildCommand(argv.app, argv.local, command.id));
+    }
   },
 );
 

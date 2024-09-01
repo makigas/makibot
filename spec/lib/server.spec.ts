@@ -10,7 +10,7 @@ import Makibot from "../../src/Makibot";
 const expect = chai.expect;
 chai.use(sinonChai);
 
-function mockSettingProvider<T>(returns: T = undefined): SettingProvider {
+function mockSettingProvider<T>(returns?: T): SettingProvider {
   const fakeSettingProvider = {
     get: stub().returns(returns),
     set: stub().returns(Promise.resolve(returns)),

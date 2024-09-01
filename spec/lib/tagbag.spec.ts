@@ -11,7 +11,7 @@ import TagBag from "../../src/lib/tagbag";
 const expect = chai.expect;
 chai.use(sinonChai);
 
-function mockSettingProvider<T>(returns: T = undefined): SettingProvider {
+function mockSettingProvider<T>(returns?: T): SettingProvider {
   const fakeSettingProvider = {
     get: stub().returns(Promise.resolve(returns)),
     set: stub().returns(Promise.resolve(returns)),
