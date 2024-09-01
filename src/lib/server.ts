@@ -15,26 +15,10 @@ import Settings from "./settings";
 import Tag from "./tag";
 import TagBag from "./tagbag";
 
-type RoleJSONSchema = {
-  id: string;
-  name: string;
-  color: string;
-};
-
-function roleToJSON(role?: Role): null | RoleJSONSchema {
-  if (!role) return null;
-  return {
-    id: role.id,
-    name: role.name,
-    color: role.hexColor,
-  };
-}
-
 export type ServerJSONSchema = {
   id: string;
   name: string;
   icon: string;
-  roles: { [key: string]: RoleJSONSchema | null };
 };
 
 export default class Server {
@@ -67,10 +51,6 @@ export default class Server {
       id: this.guild.id,
       name: this.guild.name,
       icon: this.guild.iconURL(),
-      roles: {
-        mods: roleToJSON(this.modsRole),
-        warn: roleToJSON(this.warnRole),
-      },
     };
   }
 
@@ -128,21 +108,6 @@ export default class Server {
   get modsRole(): Role {
     const modsRoleName = process.env.MODS_ROLE || "mods";
     return this.getRoleByName(modsRoleName);
-  }
-
-  get muteRole(): Role {
-    const mutedRoleName = process.env.MUTE_ROLE || "mute";
-    return this.getRoleByName(mutedRoleName);
-  }
-
-  get warnRole(): Role {
-    const warnRoleName = process.env.WARN_ROLE || "warn";
-    return this.getRoleByName(warnRoleName);
-  }
-
-  get linksDisabledRole(): Role {
-    const linksDisabledRole = process.env.LINKS_DISABLE_ROLE || "links-disabled";
-    return this.getRoleByName(linksDisabledRole);
   }
 
   async karmaTiersRole(): Promise<{ [level: number]: Role }> {

@@ -33,9 +33,6 @@ Understood variables:
 - `BOT_OWNER`: the user ID of the main server administrator. While most commands and hooks understand the idea of "server mods", it is still required for some administrative actions to be issued by the server admin.
 - `INVITE_TOKEN`: if provided, will use this token to build the invite link when using the `/invite` command. Otherwise, it just links to http://discord.makigas.es.
 - `MODS_ROLE`: the name of the role to use for moderator members in the server. Otherwise, it fallbacks to "mods".
-- `MUTE_ROLE`: the name of the role to use for muted users. Otherwise, it fallbacks to "mute".
-- `WARN_ROLE`: the name of the role to use for warned users. Otherwise, it fallbacks to "warn".
-- `LINKS_DISABLE_ROLE`: the name of the role to use for members that are not allowed to post links. Otherwise, it fallbacks to "links-disabled"
 
 ### Install and run
 

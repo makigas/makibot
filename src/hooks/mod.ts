@@ -7,8 +7,6 @@ import Makibot from "../Makibot";
 
 function castRevertType(event: ModEvent): ModEventType {
   const types = {
-    WARN: "UNWARN",
-    MUTE: "UNMUTE",
     TIMEOUT: "UNTIMEOUT",
   };
   return types[event.type];

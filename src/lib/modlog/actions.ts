@@ -4,8 +4,7 @@ import { ModEvent, ModEventType } from "./types";
 
 interface ActionHooks {
   /**
-   * Validates that an action can be applied. (For instance, you cannot
-   * unmute someone who is not muted). If this function returns null,
+   * Validates that an action can be applied. If this function returns null,
    * it means it is possible to trigger the action. Otherwise, it returns
    * the string to present in the error message.
    * @param client the client (in order to fetch stuff)
@@ -35,73 +34,6 @@ const actions: { [type in ModEventType]: ActionHooks } = {
       await client.modrepo.evictAny(event.target, "TIMEOUT");
     },
     validate: () => null,
-  },
-  WARN: {
-    async validate(client, event) {
-      const guild = await client.guilds.fetch(event.guild);
-      const server = new Server(guild);
-      const member = await server.member(event.target);
-      return member.warned ? "Esta cuenta ya tiene una llamada de atención" : null;
-    },
-    async apply(client, event) {
-      const guild = await client.guilds.fetch(event.guild);
-      const server = new Server(guild);
-      const member = await server.member(event.target);
-      await member.setWarned(true);
-    },
-  },
-  UNWARN: {
-    async validate(client, event) {
-      const guild = await client.guilds.fetch(event.guild);
-      const server = new Server(guild);
-      const member = await server.member(event.target);
-      if (member) {
-        return !member.warned ? "Esta cuenta no tiene ninguna llamada de atención" : null;
-      }
-      return null;
-    },
-    async apply(client, event) {
-      const guild = await client.guilds.fetch(event.guild);
-      const server = new Server(guild);
-      const member = await server.member(event.target);
-      if (member) {
-        await member.setWarned(false);
-      }
-      await client.modrepo.evictAny(event.target, "WARN");
-    },
-  },
-  MUTE: {
-    async validate(client, event) {
-      const guild = await client.guilds.fetch(event.guild);
-      const server = new Server(guild);
-      const member = await server.member(event.target);
-      return member.muted ? "Esta cuenta ya está silenciada" : null;
-    },
-    async apply(client, event) {
-      const guild = await client.guilds.fetch(event.guild);
-      const server = new Server(guild);
-      const member = await server.member(event.target);
-      await member.setMuted(true);
-    },
-  },
-  UNMUTE: {
-    async validate(client, event) {
-      const guild = await client.guilds.fetch(event.guild);
-      const server = new Server(guild);
-      const member = await server.member(event.target);
-      if (member) {
-        return !member.muted ? "Esta cuenta no está silenciada" : null;
-      }
-    },
-    async apply(client, event) {
-      const guild = await client.guilds.fetch(event.guild);
-      const server = new Server(guild);
-      const member = await server.member(event.target);
-      if (member) {
-        await member.setMuted(false);
-      }
-      await client.modrepo.evictAny(event.target, "MUTE");
-    },
   },
   KICK: {
     async validate() {

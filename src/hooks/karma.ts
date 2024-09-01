@@ -11,8 +11,6 @@ import { Hook } from "../lib/hook";
 import { canReceivePoints, getLevelV2 } from "../lib/karma";
 import { KarmaDatabase } from "../lib/karma/database";
 import Member from "../lib/member";
-import { applyAction } from "../lib/modlog/actions";
-import { notifyModlog } from "../lib/modlog/notifications";
 import { createToast } from "../lib/response";
 import Server from "../lib/server";
 import Makibot from "../Makibot";
@@ -150,41 +148,10 @@ export default class KarmaService implements Hook {
     );
   }
 
-  /**
-   * When an account reaches a reputation that is too low, the account will be automatically
-   * muted. Muting an account prevents the account from sending more messages. It has to be
-   * manually unlocked by a moderator to allow the account to talk again.
-   *
-   * @param gm the guild member to mute due to low reputation.
-   */
-  private async muteLowReputation(member: Member): Promise<void> {
-    const alreadyMuted = member.tagbag.tag("karma:mutenotified");
-
-    if (!alreadyMuted.get(false)) {
-      const persisted = await applyAction(this.bot, {
-        createdAt: new Date(),
-        expiresAt: null,
-        expired: false,
-        type: "MUTE",
-        mod: this.bot.user.id,
-        reason: "(cuenta silenciada automáticamente debido al nivel de reputación)",
-        target: member.id,
-        guild: member.server.id,
-      });
-      await notifyModlog(this.bot, persisted);
-      await alreadyMuted.set(true);
-    }
-  }
-
   private async assertLevel(gm: GuildMember, channel: TextChannel): Promise<void> {
     const member = new Member(gm);
     const karma = await member.getKarma();
     const expectedLevel = getLevelV2(karma.points);
-
-    // If an account reaches a very low reputation level, should be muted.
-    if (karma.points <= -3) {
-      return this.muteLowReputation(member);
-    }
 
     // Check if the account has leveled up.
     const currentLevelTag = member.tagbag.tag("karma:level");

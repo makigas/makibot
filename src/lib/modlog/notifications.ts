@@ -7,10 +7,6 @@ import type { ModEvent } from "./types";
 
 const PUBLIC_TEMPLATES = {
   DELETE: ":wastebasket: Se ha eliminado un mensaje de $TARGET$. Razón: `$REASON$`",
-  WARN: ":warning: Se llamó la atención a $TARGET$. Razón: `$REASON$`. Expira: $EXP$",
-  UNWARN: ":ballot_box_with_check: Ha expirado la llamada de atención a $TARGET$",
-  MUTE: ":mute: Se ha silenciado a $TARGET$. Razón: `$REASON$`. Expira: $EXP$",
-  UNMUTE: ":speaker: Ha expirado el silencio a $TARGET$",
   KICK: ":athletic_shoe: Se echó a $TARGET$ del servidor, Razón: `$REASON$`.",
   BAN: ":hammer: Se baneó a $TARGET$ del servidor. Razón: `$REASON$`.",
   TIMEOUT: ":stop_sign: $TARGET$ tiene limitada la cuenta. Expira: $EXP$. Razón: $REASON$.",
@@ -38,50 +34,6 @@ const PRIVATE_TEMPLATES = {
       [
         `**Objetivo**: ${userIdentifier(event.target)}`,
         event.mod ? `**Mod**: ${userIdentifier(event.mod)}` : "Expiró de forma natural",
-      ].join("\n"),
-  },
-  WARN: {
-    color: 0xffcd4c,
-    name: "Se ha aplicado un warn",
-    icon: "https://makigas.github.io/makibot/images/warning.png",
-    fields: (event: ModEvent): string =>
-      [
-        `**Objetivo**: ${userIdentifier(event.target)}`,
-        `**Mod**: ${userIdentifier(event.mod)}`,
-        `**Razón**: ${event.reason}`,
-        `**Expiración**: ${event.expiresAt ? dateIdentifier(event.expiresAt) : "manualmente"}`,
-      ].join("\n"),
-  },
-  UNWARN: {
-    color: 0x15669b,
-    name: "Ha expirado un warn",
-    icon: "https://makigas.github.io/makibot/images/checkbox.png",
-    fields: (event: ModEvent): string =>
-      [
-        `**Objetivo**: ${userIdentifier(event.target)}`,
-        `**Mod**: ${userIdentifier(event.mod)}`,
-      ].join("\n"),
-  },
-  MUTE: {
-    color: 0x899aa8,
-    name: "Se ha aplicado un mute",
-    icon: "https://makigas.github.io/makibot/images/mute.png",
-    fields: (event: ModEvent): string =>
-      [
-        `**Objetivo**: ${userIdentifier(event.target)}`,
-        `**Mod**: ${userIdentifier(event.mod)}`,
-        `**Razón**: ${event.reason}`,
-        `**Expiración**: ${event.expiresAt ? dateIdentifier(event.expiresAt) : "manualmente"}`,
-      ].join("\n"),
-  },
-  UNMUTE: {
-    color: 0x899aa8,
-    name: "Ha expirado un mute",
-    icon: "https://makigas.github.io/makibot/images/speaker.png",
-    fields: (event: ModEvent): string =>
-      [
-        `**Objetivo**: ${userIdentifier(event.target)}`,
-        `**Mod**: ${userIdentifier(event.mod)}`,
       ].join("\n"),
   },
   KICK: {

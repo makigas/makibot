@@ -54,11 +54,6 @@ async function checkMemberLevel(member: Member): Promise<void> {
 async function assertLevel(member: Member, channel: TextChannel): Promise<void> {
   const karma = await member.getKarma();
 
-  /* If an account reaches a very low reputation level, should be muted. */
-  if (karma.points <= -3) {
-    return this.muteLowReputation(member);
-  }
-
   const currentLevelTag = member.tagbag.tag("karma:level");
   const expectedLevel = getLevelV2(karma.points);
   const currentLevel = await currentLevelTag.get(0);

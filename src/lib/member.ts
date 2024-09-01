@@ -83,24 +83,12 @@ export default class Member {
     return this.hasRole(this.server.modsRole);
   }
 
-  get warned(): boolean {
-    return this.hasRole(this.server.warnRole);
-  }
-
-  get muted(): boolean {
-    return this.hasRole(this.server.muteRole);
-  }
-
   /**
    * @deprecated use server trusted roles instead
    */
   get crew(): boolean {
     const tiers = this.server.karmaTiersRole;
     return Object.values(tiers).some((id) => this.hasRole(id));
-  }
-
-  get canPostLinks(): boolean {
-    return !this.hasRole(this.server.linksDisabledRole);
   }
 
   async getKarma(): Promise<KarmaStats> {
@@ -160,10 +148,6 @@ export default class Member {
     }
   }
 
-  async setMuted(value: boolean): Promise<boolean> {
-    return this.setRole(this.server.muteRole, value);
-  }
-
   async setModerator(value: boolean): Promise<boolean> {
     return this.setRole(this.server.modsRole, value);
   }
@@ -203,10 +187,6 @@ export default class Member {
     });
 
     return true;
-  }
-
-  async setWarned(value: boolean): Promise<boolean> {
-    return this.setRole(this.server.warnRole, value);
   }
 
   async kick(): Promise<void> {

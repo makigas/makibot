@@ -42,10 +42,6 @@ export default function memberMiddleware(makibot: Makibot): express.Router {
     res.json({
       tag: guildMember.user.tag,
       moderator: member.moderator,
-      status: {
-        warned: member.warned,
-        canPostLinks: member.canPostLinks,
-      },
     });
   });
 
