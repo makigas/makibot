@@ -27,7 +27,7 @@ export default class PrimoCommand implements CommandInteractionHandler {
       );
   }
 
-  handleGuild(command: CommandInteraction): Promise<void> {
+  handle(command: CommandInteraction): Promise<void> {
     const n = command.options.getString("n", true);
     if (/^-?\d+$/g.test(n)) {
       const prime = bigInt(n);

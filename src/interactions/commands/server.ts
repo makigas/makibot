@@ -37,7 +37,7 @@ export default class ServerCommand implements CommandInteractionHandler {
       );
   }
 
-  handleGuild(command: CommandInteraction): Promise<void> {
+  handle(command: CommandInteraction): Promise<void> {
     const server = new Server(command.guild);
     const subcommandName = command.options.getSubcommand();
     switch (subcommandName) {

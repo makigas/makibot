@@ -365,7 +365,7 @@ export default class ModRequestCommand implements MessageContextMenuInteractionH
     return new ContextMenuCommandBuilder().setName("Aplicar o pedir moderación").setType(3);
   }
 
-  async handleGuild(interaction: MessageContextMenuInteraction): Promise<void> {
+  async handle(interaction: MessageContextMenuInteraction): Promise<void> {
     const parent = await interaction.deferReply({ ephemeral: true, fetchReply: true });
     const parentId = parent.id;
 

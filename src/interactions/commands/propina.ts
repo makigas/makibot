@@ -116,7 +116,7 @@ export default class PropinaCommand implements CommandInteractionHandler {
       );
   }
 
-  async handleGuild(command: CommandInteraction): Promise<void> {
+  async handle(command: CommandInteraction): Promise<void> {
     const client = command.client as Makibot;
     const server = new Server(command.guild);
 

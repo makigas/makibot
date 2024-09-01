@@ -74,7 +74,7 @@ export default class SearchMakigasESCommand implements CommandInteractionHandler
       );
   }
 
-  async handleGuild(command: CommandInteraction<CacheType>): Promise<void> {
+  async handle(command: CommandInteraction<CacheType>): Promise<void> {
     const searchType = command.options.getString("busqueda", true);
     const query = command.options.getString("q", true);
 

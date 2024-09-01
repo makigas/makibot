@@ -13,7 +13,7 @@ export default class KarmaCommand implements CommandInteractionHandler {
       .addUserOption((o) => o.setName("cuenta").setDescription("¿De quién miramos el karma?"));
   }
 
-  async handleGuild(event: CommandInteraction): Promise<void> {
+  async handle(event: CommandInteraction): Promise<void> {
     const userId = event.options.getUser("cuenta", false)?.id || event.user.id;
     return handleKarmaInteraction(event, userId);
   }

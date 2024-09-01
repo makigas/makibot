@@ -10,7 +10,7 @@ export default class ViewKarmaCommand implements UserContextMenuInteractionHandl
     return new ContextMenuCommandBuilder().setName("Ver karma").setType(2);
   }
 
-  async handleGuild(event: UserContextMenuInteraction): Promise<void> {
+  async handle(event: UserContextMenuInteraction): Promise<void> {
     return handleKarmaInteraction(event, event.targetUser.id);
   }
 }

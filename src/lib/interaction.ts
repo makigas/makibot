@@ -12,7 +12,6 @@ import type {
 import path from "path";
 import type Makibot from "../Makibot";
 import logger from "./logger";
-import { createToast } from "./response";
 import { Index, mapBy } from "./utils/functional";
 import { requireAllModules } from "./utils/loader";
 
@@ -37,12 +36,7 @@ interface BaseInteractionHandler {
 }
 
 export interface CommandInteractionHandler extends BaseInteractionHandler {
-  /** Handle the command when sent to a guild. */
-  handleGuild?: (event: CommandInteraction) => Promise<void>;
-
-  /** Handle the command when sent to a DM. */
-  handleDM?: (event: CommandInteraction) => Promise<void>;
-
+  handle(event: CommandInteraction): Promise<void>;
   build():
     | SlashCommandBuilder
     | SlashCommandSubcommandsOnlyBuilder
@@ -50,22 +44,12 @@ export interface CommandInteractionHandler extends BaseInteractionHandler {
 }
 
 export interface UserContextMenuInteractionHandler extends BaseInteractionHandler {
-  /** Handle the command when sent to a guild. */
-  handleGuild?: (event: UserContextMenuInteraction) => Promise<void>;
-
-  /** Handle the command when sent to a DM. */
-  handleDM?: (event: UserContextMenuInteraction) => Promise<void>;
-
+  handle(event: UserContextMenuInteraction): Promise<void>;
   build(): ContextMenuCommandBuilder;
 }
 
 export interface MessageContextMenuInteractionHandler extends BaseInteractionHandler {
-  /** Handle the command when sent to a guild. */
-  handleGuild?: (event: MessageContextMenuInteraction) => Promise<void>;
-
-  /** Handle the command when sent to a DM. */
-  handleDM?: (event: MessageContextMenuInteraction) => Promise<void>;
-
+  handle(event: MessageContextMenuInteraction): Promise<void>;
   build(): ContextMenuCommandBuilder;
 }
 
@@ -97,123 +81,11 @@ export class InteractionManager {
 
   private async handleInteraction(interaction: Interaction): Promise<void> {
     if (interaction.isCommand()) {
-      await this.handleCommandInteraction(interaction);
-    }
-    if (interaction.isContextMenu()) {
-      if (interaction.isUserContextMenu()) {
-        await this.handleUserContextMenuInteraction(interaction);
-      } else if (interaction.isMessageContextMenu()) {
-        await this.handleMessageContextMenuInteraction(interaction);
-      }
-    }
-  }
-
-  private async handleCommandInteraction(interaction: CommandInteraction): Promise<void> {
-    const handler = this.commands[interaction.commandName];
-    if (handler) {
-      if (interaction.inGuild()) {
-        if (handler.handleGuild) {
-          await handler.handleGuild(interaction);
-        } else {
-          const toast = createToast({
-            title: "Comando no apto en una guild",
-            description: "Este comando no se puede usar en una guild",
-            severity: "error",
-          });
-          await interaction.reply({
-            embeds: [toast],
-            ephemeral: true,
-          });
-        }
-      } else {
-        if (handler.handleDM) {
-          await handler.handleDM(interaction);
-        } else {
-          const toast = createToast({
-            title: "Comando no apto fuera de una guild",
-            description: "Este comando no se puede usar fuera de una guild",
-            severity: "error",
-          });
-          await interaction.reply({
-            embeds: [toast],
-            ephemeral: true,
-          });
-        }
-      }
-    }
-  }
-
-  private async handleUserContextMenuInteraction(
-    interaction: UserContextMenuInteraction,
-  ): Promise<void> {
-    const handler = this.usermenus[interaction.commandName];
-    if (handler) {
-      if (interaction.inGuild()) {
-        if (handler.handleGuild) {
-          await handler.handleGuild(interaction);
-        } else {
-          const toast = createToast({
-            title: "Menú no apto en una guild",
-            description: "Este menú no se puede pulsar en una guild",
-            severity: "error",
-          });
-          await interaction.reply({
-            embeds: [toast],
-            ephemeral: true,
-          });
-        }
-      } else {
-        if (handler.handleDM) {
-          await handler.handleDM(interaction);
-        } else {
-          const toast = createToast({
-            title: "Menú no apto fuera de una guild",
-            description: "Este menú no se puede pulsar fuera de una guild",
-            severity: "error",
-          });
-          await interaction.reply({
-            embeds: [toast],
-            ephemeral: true,
-          });
-        }
-      }
-    }
-  }
-
-  private async handleMessageContextMenuInteraction(
-    interaction: MessageContextMenuInteraction,
-  ): Promise<void> {
-    const handler = this.messagemenus[interaction.commandName];
-    if (handler) {
-      if (interaction.inGuild()) {
-        if (handler.handleGuild) {
-          await handler.handleGuild(interaction);
-        } else {
-          const toast = createToast({
-            title: "Menú no apto en una guild",
-            description: "Este menú no se puede pulsar en una guild",
-            severity: "error",
-          });
-          await interaction.reply({
-            embeds: [toast],
-            ephemeral: true,
-          });
-        }
-      } else {
-        if (handler.handleDM) {
-          await handler.handleDM(interaction);
-        } else {
-          const toast = createToast({
-            title: "Menú no apto fuera de una guild",
-            description: "Este menú no se puede pulsar fuera de una guild",
-            severity: "error",
-          });
-          await interaction.reply({
-            embeds: [toast],
-            ephemeral: true,
-          });
-        }
-      }
+      await this.commands[interaction.commandName]?.handle(interaction);
+    } else if (interaction.isUserContextMenu()) {
+      await this.usermenus[interaction.commandName]?.handle(interaction);
+    } else if (interaction.isMessageContextMenu()) {
+      await this.messagemenus[interaction.commandName]?.handle(interaction);
     }
   }
 }
