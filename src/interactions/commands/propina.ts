@@ -113,11 +113,31 @@ export default class PropinaCommand implements CommandInteractionHandler {
 
   async handle(command: CommandInteraction): Promise<void> {
     const client = command.client as Makibot;
+    if (!command.guild) {
+      return;
+    }
     const server = new Server(command.guild);
 
     const targetSnowflake = String(command.options.get("target", true).value);
     const targetMember = await server.member(targetSnowflake);
     const originMember = await server.member(command.user);
+
+    if (!originMember) {
+      const toast = createToast({
+        title: `No se ha especificado un origen válido`,
+        description: `No hay nada que puedas hacer. Si estás viendo este error, es que Discord está en problemas.`,
+        severity: "error",
+      });
+      return command.reply({ embeds: [toast], ephemeral: true });
+    }
+    if (!targetMember) {
+      const toast = createToast({
+        title: `No se ha especificado un destino de la propina`,
+        description: `Asegúrate de especificar a quién le quieres entregar puntuación.`,
+        severity: "error",
+      });
+      return command.reply({ embeds: [toast], ephemeral: true });
+    }
 
     const userValidation = validatesUsers(originMember, targetMember);
     if (userValidation) {

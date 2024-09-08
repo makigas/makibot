@@ -7,6 +7,7 @@ import {
   MessageComponentInteraction,
   MessageEmbed,
   Snowflake,
+  TextBasedChannel,
 } from "discord.js";
 import { getPointsForLevelV2 } from "../karma";
 import Member from "../member";
@@ -91,10 +92,10 @@ const KARMA_INTERACTION_ACTION_ROW: MessageActionRowOptions = {
 };
 
 function createInteractionCollector(
-  interaction: BaseCommandInteraction | MessageComponentInteraction,
+  channel: TextBasedChannel,
   parentId: Snowflake,
 ): InteractionCollector<ButtonInteraction> {
-  const collector = interaction.channel.createMessageComponentCollector({
+  const collector = channel.createMessageComponentCollector({
     componentType: "BUTTON",
     filter: (btn) => btn.customId === "karma:explain" && btn.message.id === parentId,
   });
@@ -119,12 +120,29 @@ export async function handleKarmaInteraction(
 ): Promise<void> {
   await interaction.deferReply({ ephemeral: true });
 
+  if (!interaction.guild || !interaction.member || !interaction.channel) {
+    await interaction.editReply({
+      content: "Hay un problema con esta acción.",
+    });
+    return;
+  }
+
   const server = new Server(interaction.guild);
   const member = await server.member(target);
   const dispatcher = await server.member(interaction.member.user.id);
 
   /* You cannot get the karma for a bot. */
-  if (member.user.bot) {
+  if (!member || !dispatcher) {
+    const toast = createToast({
+      title: `Balance de karma`,
+      description: "Hay un problema para recibir los parámetros de API",
+      severity: "error",
+    });
+    await interaction.editReply({
+      embeds: [toast],
+    });
+    return;
+  } else if (member.user.bot) {
     const toast = createToast({
       title: `Balance de karma de @${member.user.username}`,
       description: "Este usuario es un bot y no tiene karma",
@@ -141,5 +159,5 @@ export async function handleKarmaInteraction(
     embeds: [report],
     components: [new MessageActionRow(KARMA_INTERACTION_ACTION_ROW)],
   });
-  createInteractionCollector(interaction, message.id);
+  createInteractionCollector(interaction.channel, message.id);
 }

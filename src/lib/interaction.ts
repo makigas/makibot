@@ -53,15 +53,27 @@ export interface MessageContextMenuInteractionHandler extends BaseInteractionHan
   build(): ContextMenuCommandBuilder;
 }
 
+type InteractionHandlerConstructor<T extends BaseInteractionHandler> = {
+  new (): T;
+};
+
+function isValidHandlerConstructor<T extends BaseInteractionHandler>(
+  object: unknown,
+): object is InteractionHandlerConstructor<T> {
+  return typeof object === "function";
+}
+
 function loadInteractions<T extends BaseInteractionHandler>(path: string): { [k: string]: T } {
-  const handlers = requireAllModules(path).map<T>((HandlerClass) => {
-    if (typeof HandlerClass === "function") {
-      const handler = new (HandlerClass as { new (): T })();
-      logger.debug(`[interactions] loaded interaction for ${handler.name}`);
-      return handler;
+  const modules = requireAllModules(path);
+  const interactions: T[] = [];
+  modules.forEach((HandlerClass) => {
+    if (isValidHandlerConstructor(HandlerClass)) {
+      const instance: T = new HandlerClass() as T;
+      logger.debug(`[interactions] loaded interaction for ${instance.name}`);
+      interactions.push(instance);
     }
   });
-  return mapBy(handlers, "name");
+  return mapBy(interactions, "name");
 }
 
 export class InteractionManager {

@@ -20,6 +20,8 @@ export type ServerJSONSchema = {
   icon: string | null;
 };
 
+export type ModlogType = "default" | "sensible" | "delete" | "public";
+
 export default class Server {
   readonly tagbag: TagBag;
 
@@ -48,10 +50,7 @@ export default class Server {
     };
   }
 
-  async sendToModlog(
-    kind: "default" | "sensible" | "delete" | "public",
-    payload: WebhookMessageOptions,
-  ): Promise<void> {
+  async sendToModlog(kind: ModlogType, payload: WebhookMessageOptions): Promise<void> {
     const url = await this.tagbag.tag(`webhook:${kind}mod`).get(null);
     if (url) {
       const client = new WebhookClient({ url });

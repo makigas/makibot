@@ -15,7 +15,7 @@ import { ContextMenuCommandBuilder } from "@discordjs/builders";
 import type { MessageContextMenuInteractionHandler } from "../../lib/interaction";
 import Member from "../../lib/member";
 import { createToast } from "../../lib/response";
-import Server from "../../lib/server";
+import Server, { ModlogType } from "../../lib/server";
 import { proposeReport } from "../../lib/modlog";
 
 /** List of reasons on why a message would be reported. */
@@ -29,6 +29,8 @@ const REASON_OPTIONS: MessageSelectOptionData[] = [
   { label: "Mensaje irrespetuoso o dañino", value: "unrespectful" },
 ];
 
+type AlertOption = "mods" | "admin";
+
 /** List of actions that a non-moderator can take against a message. */
 const ALERT_OPTIONS: MessageSelectOptionData[] = [
   { label: "Reporte normal: avisar a moderadores", value: "mods" },
@@ -40,7 +42,7 @@ class ReportForm {
   reason: string | null;
 
   /** Current value on the target of the report itself. */
-  alert: string | null;
+  alert: AlertOption | null;
 
   constructor() {
     this.reason = null;
@@ -51,8 +53,8 @@ class ReportForm {
     return this.reason != null && this.alert != null;
   }
 
-  cleanReason(): string | null {
-    return REASON_OPTIONS.find((r) => r.value === this.reason)?.label;
+  cleanReason(): string {
+    return REASON_OPTIONS.find((r) => r.value === this.reason)?.label || "Razón desconocida";
   }
 }
 
@@ -64,14 +66,24 @@ class ModerationRequest {
   private readonly message: Message;
   private readonly form: ReportForm;
 
-  constructor(options: {
+  constructor({
+    message,
+    parentId,
+    interaction,
+    reporter,
+    target,
+  }: {
     message: Message;
     parentId: Snowflake;
     interaction: ContextMenuInteraction;
     reporter: Member;
     target: Member;
   }) {
-    Object.assign(this, options);
+    this.message = message;
+    this.parentId = parentId;
+    this.interaction = interaction;
+    this.reporter = reporter;
+    this.target = target;
     this.form = new ReportForm();
     this.setUpMenuCollector();
     this.setUpButtonCollector();
@@ -84,7 +96,7 @@ class ModerationRequest {
       this.form.reason = menu.values[0];
     },
     "report:alert": (menu) => {
-      this.form.alert = menu.values[0];
+      this.form.alert = menu.values[0] as AlertOption;
     },
   };
 
@@ -119,11 +131,11 @@ class ModerationRequest {
   };
 
   private async dispatchAlert(): Promise<void> {
-    const targets = {
+    const targets: Record<AlertOption, Extract<ModlogType, "default" | "sensible">> = {
       mods: "default",
       admin: "sensible",
     };
-    const target = targets[this.form.alert];
+    const target = targets[this.form.alert!];
     proposeReport(this.message, this.form.cleanReason(), target);
   }
 
@@ -137,7 +149,7 @@ class ModerationRequest {
    * action.
    */
   private setUpMenuCollector(): void {
-    const collector = this.interaction.channel.createMessageComponentCollector({
+    const collector = this.interaction.channel!.createMessageComponentCollector({
       componentType: "SELECT_MENU",
       filter: this.collectorFilter.bind(this),
     });
@@ -156,7 +168,7 @@ class ModerationRequest {
    * a report operation.
    */
   private setUpButtonCollector(): void {
-    const collector = this.interaction.channel.createMessageComponentCollector({
+    const collector = this.interaction.channel!.createMessageComponentCollector({
       componentType: "BUTTON",
       filter: this.collectorFilter.bind(this),
     });
@@ -172,13 +184,14 @@ class ModerationRequest {
     return false; // return this.target.user.bot || this.target.moderator;
   }
 
-  validate(): string {
+  validate(): string | null {
     if (this.target.id === this.reporter.id) {
       return "No puedes reportar tus propios mensajes";
     }
     if (this.privilegedTarget) {
       return "No se pueden reportar los mensajes de esa cuenta";
     }
+    return null;
   }
 
   async start(): Promise<void> {
@@ -245,21 +258,46 @@ export default class ModRequestCommand implements MessageContextMenuInteractionH
     const parentId = parent.id;
 
     /* I'm only extracting the parameters here to avoid promises. */
-    const server = new Server(interaction.guild);
-    const reporter = await server.member(interaction.user);
-    const message = await interaction.channel.messages.fetch(interaction.targetMessage.id);
-    const target = await server.member(message.author.id);
+    if (interaction.guild && interaction.channel) {
+      const server = new Server(interaction.guild);
+      const reporter = await server.member(interaction.user);
+      const message = await interaction.channel.messages.fetch(interaction.targetMessage.id);
+      const target = await server.member(message.author.id);
 
-    const prompt = new ModerationRequest({ parentId, interaction, message, reporter, target });
+      if (!reporter || !target) {
+        await interaction.editReply({
+          embeds: [
+            createToast({
+              title: "Error al utilizar el comando",
+              description: "Tenemos un problema para extraer los datos del mensaje a reportar",
+              severity: "error",
+            }),
+          ],
+        });
+        return;
+      }
 
-    /* Make sure preconditions are valid. */
-    const invalidReason = prompt.validate();
-    if (invalidReason) {
-      await interaction.editReply({
-        embeds: [createToast({ title: invalidReason, severity: "error" })],
-      });
+      const prompt = new ModerationRequest({ parentId, interaction, message, reporter, target });
+
+      /* Make sure preconditions are valid. */
+      const invalidReason = prompt.validate();
+      if (invalidReason) {
+        await interaction.editReply({
+          embeds: [createToast({ title: invalidReason, severity: "error" })],
+        });
+      } else {
+        await prompt.start();
+      }
     } else {
-      await prompt.start();
+      await interaction.editReply({
+        embeds: [
+          createToast({
+            title: "Error al utilizar el comando",
+            description: "No fue culpa tuya, Discord no debió haberte permitido usar este comando.",
+            severity: "error",
+          }),
+        ],
+      });
     }
   }
 }

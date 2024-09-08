@@ -37,14 +37,18 @@ export default class ServerCommand implements CommandInteractionHandler {
       );
   }
 
-  handle(command: CommandInteraction): Promise<void> {
-    const server = new Server(command.guild);
-    const subcommandName = command.options.getSubcommand();
-    switch (subcommandName) {
-      case "view-settings":
-        return this.handleViewSettings(server, command);
-      case "set-webhook":
-        return this.setWebhook(server, command);
+  async handle(command: CommandInteraction): Promise<void> {
+    if (command.guild) {
+      const server = new Server(command.guild);
+      const subcommandName = command.options.getSubcommand();
+      switch (subcommandName) {
+        case "view-settings":
+          await this.handleViewSettings(server, command);
+          break;
+        case "set-webhook":
+          await this.setWebhook(server, command);
+          break;
+      }
     }
   }
 

@@ -1,6 +1,6 @@
 import { hyperlink, userMention } from "@discordjs/builders";
 import { Message, MessageEmbedOptions, TextChannel, WebhookMessageOptions } from "discord.js";
-import Server from "../server";
+import Server, { ModlogType } from "../server";
 
 function buildModReport(message: Message, reason: string): MessageEmbedOptions {
   return {
@@ -49,7 +49,7 @@ function buildModReport(message: Message, reason: string): MessageEmbedOptions {
 export async function proposeReport(
   message: Message,
   reason: string,
-  target: "default" | "sensible" = "default",
+  target: Extract<ModlogType, "default" | "sensible"> = "default",
 ) {
   if (!message.guild) {
     throw new Error("Missing guild information for the reported message");
