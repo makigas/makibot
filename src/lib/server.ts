@@ -20,7 +20,7 @@ export type ServerJSONSchema = {
   icon: string | null;
 };
 
-export type ModlogType = "default" | "sensible" | "delete" | "public";
+type ModlogType = "default" | "delete" | "public";
 
 export default class Server {
   readonly tagbag: TagBag;

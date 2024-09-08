@@ -1,6 +1,6 @@
 import { hyperlink, userMention } from "@discordjs/builders";
 import { Message, MessageEmbedOptions, TextChannel, WebhookMessageOptions } from "discord.js";
-import Server, { ModlogType } from "../server";
+import Server from "../server";
 
 function buildModReport(message: Message, reason: string): MessageEmbedOptions {
   return {
@@ -46,11 +46,7 @@ function buildModReport(message: Message, reason: string): MessageEmbedOptions {
  * @param target the modlog where the proposal should be sent
  * @returns a promise that resolves once the proposal has been saved
  */
-export async function proposeReport(
-  message: Message,
-  reason: string,
-  target: Extract<ModlogType, "default" | "sensible"> = "default",
-) {
+export async function proposeReport(message: Message, reason: string) {
   if (!message.guild) {
     throw new Error("Missing guild information for the reported message");
   }
@@ -61,5 +57,5 @@ export async function proposeReport(
     payload.username = embed.author.name;
     payload.avatarURL = embed.author.iconURL;
   }
-  return server.sendToModlog(target, payload);
+  return server.sendToModlog("default", payload);
 }

@@ -7,6 +7,7 @@ import type {
   CommandInteraction,
   Interaction,
   MessageContextMenuInteraction,
+  ModalSubmitInteraction,
   UserContextMenuInteraction,
 } from "discord.js";
 import path from "path";
@@ -53,6 +54,10 @@ export interface MessageContextMenuInteractionHandler extends BaseInteractionHan
   build(): ContextMenuCommandBuilder;
 }
 
+export interface ModalInteractionHandler extends BaseInteractionHandler {
+  handle(event: ModalSubmitInteraction): Promise<void>;
+}
+
 type InteractionHandlerConstructor<T extends BaseInteractionHandler> = {
   new (): T;
 };
@@ -80,6 +85,7 @@ export class InteractionManager {
   private commands: Index<CommandInteractionHandler>;
   private usermenus: Index<UserContextMenuInteractionHandler>;
   private messagemenus: Index<MessageContextMenuInteractionHandler>;
+  private modalsubmits: Index<ModalInteractionHandler>;
 
   constructor(
     readonly root: string,
@@ -88,16 +94,23 @@ export class InteractionManager {
     this.commands = loadInteractions(path.join(root, "commands"));
     this.usermenus = loadInteractions(path.join(root, "usermenus"));
     this.messagemenus = loadInteractions(path.join(root, "messagemenus"));
+    this.modalsubmits = loadInteractions(path.join(root, "modals"));
     client.on("interactionCreate", this.handleInteraction.bind(this));
   }
 
   private async handleInteraction(interaction: Interaction): Promise<void> {
     if (interaction.isCommand()) {
-      await this.commands[interaction.commandName]?.handle(interaction);
+      const name = interaction.commandName.split(":")[0];
+      await this.commands[name]?.handle(interaction);
     } else if (interaction.isUserContextMenu()) {
-      await this.usermenus[interaction.commandName]?.handle(interaction);
+      const name = interaction.commandName.split(":")[0];
+      await this.usermenus[name]?.handle(interaction);
     } else if (interaction.isMessageContextMenu()) {
-      await this.messagemenus[interaction.commandName]?.handle(interaction);
+      const name = interaction.commandName.split(":")[0];
+      await this.messagemenus[name]?.handle(interaction);
+    } else if (interaction.isModalSubmit()) {
+      const name = interaction.customId.split(":")[0];
+      await this.modalsubmits[name]?.handle(interaction);
     }
   }
 }

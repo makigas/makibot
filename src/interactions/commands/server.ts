@@ -26,7 +26,6 @@ export default class ServerCommand implements CommandInteractionHandler {
               .setDescription("The type of webhook to set")
               .addChoices(
                 { name: "Default modlog", value: "webhook:defaultmod" },
-                { name: "Sensible modlog", value: "webhook:sensiblemod" },
                 { name: "Delete modlog", value: "webhook:deletemod" },
                 { name: "Public modlog", value: "webhook:publicmod" },
               )
@@ -76,7 +75,6 @@ export default class ServerCommand implements CommandInteractionHandler {
   private async handleViewSettings(server: Server, command: CommandInteraction): Promise<void> {
     const webhooks = {
       default: await server.tagbag.tag("webhook:defaultmod").get("(none)"),
-      sensible: await server.tagbag.tag("webhook:sensiblemod").get("(none)"),
       delete: await server.tagbag.tag("webhook:deletemod").get("(none)"),
       public: await server.tagbag.tag("webhook:publicmod").get("(none)"),
     };
@@ -86,7 +84,6 @@ export default class ServerCommand implements CommandInteractionHandler {
       description: [
         `**Webhooks settings**`,
         `**Default modlog**: ${webhooks.default}`,
-        `**Sensible modlog**: ${webhooks.sensible}`,
         `**Delete modlog**: ${webhooks.delete}`,
         `**Public modlog**: ${webhooks.public}`,
       ].join("\n"),
