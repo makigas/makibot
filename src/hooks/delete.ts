@@ -1,4 +1,4 @@
-import { MessageEmbedOptions, PartialMessage } from "discord.js";
+import { MessageEmbedOptions, PartialMessage, WebhookMessageOptions } from "discord.js";
 import { Hook } from "../lib/hook";
 import logger from "../lib/logger";
 import { createModlogNotification } from "../lib/modlog";
@@ -10,52 +10,42 @@ import {
   userIdentifier,
 } from "../lib/utils/format";
 
-const createDeleteEvent = (message: PartialMessage): MessageEmbedOptions => ({
-  author: {
-    name: "Se ha eliminado un mensaje",
-    iconURL:
-      "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/248/wastebasket_1f5d1.png",
-  },
-  footer: {
-    iconURL:
-      "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/page-with-curl_1f4c3.png",
-    text: "Mensaje de moderación automática",
-  },
-  color: 0x9b9b9b,
-  description: [
-    `**Usuario**: ${userIdentifier(message.author)}`,
-    `**Mensaje**: ${messageIdentifier(message)}`,
-    `**Canal**: ${channelIdentifier(message.channel)}`,
-    `**Fecha**: ${dateIdentifier(message.createdAt)}`,
-  ].join("\n"),
-  fields: [
-    {
-      name: "Contenido",
-      value: message.cleanContent,
+function createDeleteEmbed(message: PartialMessage): MessageEmbedOptions {
+  const base: MessageEmbedOptions = {
+    author: {
+      name: "Se ha eliminado un mensaje",
+      iconURL:
+        "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/248/wastebasket_1f5d1.png",
     },
-  ],
-});
-
-const createLiteDeleteEvent = (message: PartialMessage): MessageEmbedOptions => ({
-  author: {
-    name: "Se ha eliminado un mensaje",
-    iconURL:
-      "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/248/wastebasket_1f5d1.png",
-  },
-  footer: {
-    iconURL:
-      "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/page-with-curl_1f4c3.png",
-    text: "Mensaje de moderación automática",
-  },
-  color: 0x9b9b9b,
-  description: [
-    `**Mensaje**: ${messageIdentifier(message)}`,
-    `**Canal**: ${channelIdentifier(message.channel)}`,
-    `**Fecha**: ${dateIdentifier(message.createdAt)}`,
-    ``,
-    `Mensaje parcial, la pasarela no ha entregado el contenido`,
-  ].join("\n"),
-});
+    footer: {
+      iconURL:
+        "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/247/page-with-curl_1f4c3.png",
+      text: "Mensaje de moderación automática",
+    },
+    color: 0x9b9b9b,
+    description: [
+      `**Usuario**: ${message.author ? userIdentifier(message.author) : "(desconocido)"}`,
+      `**Mensaje**: ${messageIdentifier(message)}`,
+      `**Canal**: ${channelIdentifier(message.channel)}`,
+      `**Fecha**: ${dateIdentifier(message.createdAt)}`,
+    ].join("\n"),
+    fields: [],
+  };
+  if (message.attachments?.size > 0) {
+    /* Log attachments. */
+    const attachments = message.attachments.map((a) => `${a.name} (${a.contentType})`);
+    base.description += `\n**Adjuntos**: (${attachments.length}) ${attachments.join(", ")}`;
+  }
+  if (message.cleanContent) {
+    /* Log message content. */
+    base.fields!.push({ name: "Contenido", value: message.cleanContent });
+  }
+  if (!message.cleanContent && (!message.attachments || message.attachments.size === 0)) {
+    /* Sometimes a partial message with no information at all will come. */
+    base.description += `\n\nMensaje parcial. La pasarela no ha entregado el contenido`;
+  }
+  return base;
+}
 
 /**
  * A hook that triggers whenever a message is deleted, in order to log the deletion
@@ -77,37 +67,22 @@ export default class DeleteService implements Hook {
       return;
     }
 
-    if (message.cleanContent) {
-      /* This is a bot command, ignore it. */
-      if (message.cleanContent.startsWith(";;")) {
-        logger.info("[delete] skipping a fred command");
-        return;
-      }
+    if (!message.guild) {
+      logger.info("[delete] skipping a message without a guild");
+      return;
+    }
 
-      /* Log to the modlog the fact that a message was deleted. */
-      try {
-        const embed = createModlogNotification(createDeleteEvent(message));
-        const server = new Server(message.guild);
-        await server.sendToModlog("delete", {
-          username: embed.author.name,
-          avatarURL: embed.author.iconURL,
-          embeds: [embed],
-        });
-      } catch (e) {
-        logger.error(`[delete] error during message logging`, e);
+    try {
+      const embed = createModlogNotification(createDeleteEmbed(message));
+      const server = new Server(message.guild);
+      const payload: WebhookMessageOptions = { embeds: [embed] };
+      if (embed.author) {
+        payload.username = embed.author.name;
+        payload.avatarURL = embed.author.iconURL;
       }
-    } else {
-      try {
-        const embed = createModlogNotification(createLiteDeleteEvent(message));
-        const server = new Server(message.guild);
-        await server.sendToModlog("delete", {
-          username: embed.author.name,
-          avatarURL: embed.author.iconURL,
-          embeds: [embed],
-        });
-      } catch (e) {
-        logger.error(`[delete] error during message logging`, e);
-      }
+      await server.sendToModlog("delete", payload);
+    } catch (e) {
+      logger.error(`[delete] error during message logging`, e);
     }
   }
 }
