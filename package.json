@@ -13,13 +13,13 @@
     "url": "https://github.com/makigas/makibot/issues"
   },
   "dependencies": {
-    "@discordjs/builders": "^0.13.0",
+    "@discordjs/builders": "^0.16.0",
     "@discordjs/rest": "^0.4.1",
     "@sentry/node": "^7.76.0",
     "axios": "^1.6.0",
     "big-integer": "^1.6.51",
-    "discord-api-types": "^0.32.0",
-    "discord.js": "^13.6.0",
+    "discord-api-types": "^0.33.5",
+    "discord.js": "^13.17.1",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "log4js": "^6.9.1",
@@ -35,7 +35,7 @@
     "@types/chai-as-promised": "^7.1.7",
     "@types/express": "^4.17.20",
     "@types/mocha": "^10.0.3",
-    "@types/node": "^16.11.32",
+    "@types/node": "^20.14.8",
     "@types/require-all": "^3.0.5",
     "@types/sinon": "^10.0.20",
     "@types/sinon-chai": "^3.2.11",
@@ -60,7 +60,7 @@
     "typescript": "^4.7.4"
   },
   "engines": {
-    "node": ">=16.6 <20"
+    "node": ">=20 <21"
   },
   "files": [
     "contrib/",

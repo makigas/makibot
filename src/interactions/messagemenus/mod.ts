@@ -2,7 +2,8 @@ import { Snowflake } from "discord-api-types/v9";
 import {
   ButtonInteraction,
   ContextMenuInteraction,
-  InteractionReplyOptions,
+  InteractionEditReplyOptions,
+  InteractionUpdateOptions,
   Message,
   MessageActionRow,
   MessageButton,
@@ -198,7 +199,7 @@ class ModerationRequest {
     await this.interaction.editReply(this.renderForm());
   }
 
-  renderForm(): InteractionReplyOptions {
+  renderForm(): InteractionEditReplyOptions & InteractionUpdateOptions {
     const reason = new MessageActionRow({
       components: [
         new MessageSelectMenu({
@@ -223,22 +224,18 @@ class ModerationRequest {
         }),
       ],
     });
-    const buttons = new MessageActionRow({
-      type: "ACTION_ROW",
-      components: [
-        new MessageButton({
-          customId: "report:send",
-          label: "Enviar",
-          style: "PRIMARY",
-          disabled: !this.form.valid,
-        }),
-        new MessageButton({
-          customId: "report:cancel",
-          label: "Cancelar",
-          style: "DANGER",
-        }),
-      ],
-    });
+    const buttons = new MessageActionRow().addComponents(
+      new MessageButton()
+        .setCustomId("report:send")
+        .setLabel("Enviar")
+        .setStyle("PRIMARY")
+        .setDisabled(!this.form.valid),
+      new MessageButton()
+        .setCustomId("report:cancel")
+        .setLabel("Cancelar")
+        .setStyle("DANGER")
+        .setDisabled(false),
+    );
     return {
       content: "¿Qué problema tiene este mensaje?",
       components: [reason, alert, buttons],

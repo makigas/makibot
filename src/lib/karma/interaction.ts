@@ -3,7 +3,7 @@ import {
   ButtonInteraction,
   InteractionCollector,
   MessageActionRow,
-  MessageActionRowOptions,
+  MessageButton,
   MessageComponentInteraction,
   MessageEmbed,
   Snowflake,
@@ -78,19 +78,6 @@ async function createKarmaToast(member: Member, sudo = false): Promise<MessageEm
   });
 }
 
-const KARMA_INTERACTION_ACTION_ROW: MessageActionRowOptions = {
-  type: "ACTION_ROW",
-  components: [
-    {
-      type: "BUTTON",
-      customId: "karma:explain",
-      label: "¿Cómo funciona el karma?",
-      style: "SECONDARY",
-      emoji: "❓",
-    },
-  ],
-};
-
 function createInteractionCollector(
   channel: TextBasedChannel,
   parentId: Snowflake,
@@ -157,7 +144,17 @@ export async function handleKarmaInteraction(
   const report = await createKarmaToast(member, dispatcher.moderator);
   const message = await interaction.editReply({
     embeds: [report],
-    components: [new MessageActionRow(KARMA_INTERACTION_ACTION_ROW)],
+    components: [
+      new MessageActionRow(
+        new MessageActionRow().addComponents(
+          new MessageButton()
+            .setCustomId("karma:explain")
+            .setLabel("¿Cómo funciona el karma?")
+            .setStyle("SECONDARY")
+            .setEmoji("❓"),
+        ),
+      ),
+    ],
   });
   createInteractionCollector(interaction.channel, message.id);
 }

@@ -11,7 +11,8 @@ export default class ServerCommand implements CommandInteractionHandler {
     return new SlashCommandBuilder()
       .setName("server")
       .setDescription("Get or modify server settings")
-      .setDefaultPermission(false)
+      .setDMPermission(false)
+      .setDefaultMemberPermissions(0)
       .addSubcommand((cmd) =>
         cmd.setName("view-settings").setDescription("View current server settings"),
       )

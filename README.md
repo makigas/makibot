@@ -9,7 +9,7 @@
 
 ## Requirements
 
-- Node.js >= 16.8.0.
+- Node.js 20.
 - A Discord application behaving as a bot.
 - A Discord server to put the bot in.
 
