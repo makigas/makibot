@@ -48,7 +48,7 @@ function validatesAmount(amount: number): MessageEmbed | null {
 async function checkMemberLevel(member: Member): Promise<void> {
   const currentLevelTag = member.tagbag.tag("karma:level");
   const currentLevel = await currentLevelTag.get(0);
-  await member.setCrew(currentLevel);
+  await member.setKarmaVanityLevel(currentLevel);
 }
 
 async function assertLevel(member: Member, channel: TextChannel): Promise<void> {

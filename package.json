@@ -16,6 +16,7 @@
     "@discordjs/builders": "^0.16.0",
     "@discordjs/rest": "^0.4.1",
     "@sentry/node": "^8.28.0",
+    "async-lock": "^1.4.1",
     "axios": "^1.6.0",
     "big-integer": "^1.6.51",
     "discord-api-types": "^0.33.5",
@@ -32,6 +33,7 @@
   "description": "Discord bot for the makigas server",
   "devDependencies": {
     "@eslint/js": "^9.10.0",
+    "@types/async-lock": "^1.4.2",
     "@types/chai": "^4.3.9",
     "@types/chai-as-promised": "^7.1.7",
     "@types/eslint__js": "^8.42.3",

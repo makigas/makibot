@@ -96,7 +96,7 @@ export default function memberMiddleware(makibot: Makibot): express.Router {
         }
 
         /* Update tier presence. */
-        res.locals.member.setCrew(await currentLevel.get(0));
+        res.locals.member.setKarmaVanityLevel(await currentLevel.get(0));
       }
 
       res.json({

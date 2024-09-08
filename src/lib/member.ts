@@ -63,26 +63,8 @@ export default class Member {
     return this.guildMember.user.tag;
   }
 
-  get avatar(): string | null {
-    return this.guildMember.user.avatarURL();
-  }
-
-  async trusted(): Promise<boolean> {
-    const trustedRoles = await this.server.getTrustedRoles();
-    const predicate = (role: Snowflake) => this.guildMember.roles.cache.has(role);
-    return trustedRoles.find(predicate) != null;
-  }
-
   get moderator(): boolean {
     return this.hasRole(this.server.modsRole);
-  }
-
-  /**
-   * @deprecated use server trusted roles instead
-   */
-  get crew(): boolean {
-    const tiers = this.server.karmaTiersRole;
-    return Object.values(tiers).some((id) => this.hasRole(id));
   }
 
   async getKarma(): Promise<KarmaStats> {
@@ -138,11 +120,11 @@ export default class Member {
       await this.tagbag.tag("karma:level").set(levelV2);
       await this.tagbag.tag("karma:max").set(levelV2);
       await this.tagbag.tag("karma:ver").set("v2");
-      await this.setCrew(levelV2);
+      await this.setKarmaVanityLevel(levelV2);
     }
   }
 
-  async setCrew(level: number): Promise<boolean> {
+  async setKarmaVanityLevel(level: number): Promise<boolean> {
     const tiers = await this.server.karmaTiersRole();
 
     if (Object.keys(tiers).length == 0) {
@@ -179,19 +161,5 @@ export default class Member {
     });
 
     return true;
-  }
-
-  async kick(): Promise<void> {
-    if (this.guildMember.kickable) {
-      await this.guildMember.kick();
-    }
-  }
-
-  async ban(reason?: string): Promise<void> {
-    if (this.guildMember.bannable) {
-      this.guildMember.ban({
-        reason,
-      });
-    }
   }
 }

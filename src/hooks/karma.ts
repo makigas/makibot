@@ -14,6 +14,8 @@ import Member from "../lib/member";
 import { createToast } from "../lib/response";
 import Server from "../lib/server";
 import Makibot from "../Makibot";
+import AsyncLock from "async-lock";
+import logger from "../lib/logger";
 
 function isTextChannel(channel: TextBasedChannel): channel is TextChannel {
   return (
@@ -42,10 +44,40 @@ const REACTIONS: { [reaction: string]: { kind: string; score: number } } = {
   },
 };
 
+interface PendingLevelCheck {
+  member: GuildMember;
+  channel: TextChannel;
+}
+
 export default class KarmaService implements Hook {
   name = "karma";
 
-  constructor(private bot: Makibot) {}
+  private pending: Map<string, PendingLevelCheck>;
+  private lock: AsyncLock;
+
+  constructor(private bot: Makibot) {
+    this.pending = new Map();
+    this.lock = new AsyncLock();
+    setInterval(() => this.doLevelCheck(), 5000);
+  }
+
+  private deferLevelCheck(member: GuildMember, channel: TextChannel) {
+    this.lock.acquire('check', async () => {
+      logger.trace("[karma] defering level check for " + member.id);
+      this.pending.set(member.id, { member, channel });
+    }).then(() => {});
+  }
+
+  private doLevelCheck() {
+    logger.trace("[karma] checking levels...");
+    this.lock.acquire('check', async () => {
+      for (const pending of this.pending.values()) {
+        logger.trace("[karma] checking levels for " + pending.member.id);
+        this.assertLevel(pending.member, pending.channel);
+      }
+      this.pending.clear();
+    }).then(() => {});
+  }
 
   /* Made as a getter so that we can defer accessing the karma db until the very last moment. */
   private get karma(): KarmaDatabase {
@@ -76,10 +108,8 @@ export default class KarmaService implements Hook {
       originatorId: message.author.id,
       target: message.author.id,
     });
-
-    const channel = message.channel;
-    if (isTextChannel(channel)) {
-      await this.assertLevel(message.member, channel);
+    if (isTextChannel(message.channel)) {
+      this.deferLevelCheck(message.member, message.channel);
     }
   }
 
@@ -122,10 +152,8 @@ export default class KarmaService implements Hook {
         target: reaction.message.author.id,
       });
     }
-
-    const channel = reaction.message.channel;
-    if (isTextChannel(channel)) {
-      await this.assertLevel(reaction.message.member, channel);
+    if (isTextChannel(reaction.message.channel)) {
+      this.deferLevelCheck(reaction.message.member, reaction.message.channel);
     }
   }
 
@@ -183,7 +211,7 @@ export default class KarmaService implements Hook {
   private async checkMemberLevel(member: Member): Promise<void> {
     const currentLevelTag = member.tagbag.tag("karma:level");
     const currentLevel = await currentLevelTag.get(0);
-    await member.setCrew(currentLevel);
+    await member.setKarmaVanityLevel(currentLevel);
   }
 
   private async sendNotification(channel: TextChannel, gm: GuildMember, level: number) {
