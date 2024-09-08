@@ -101,7 +101,7 @@ export default class Server {
       } else {
         return null;
       }
-    } catch (e) {
+    } catch {
       return null;
     }
   }

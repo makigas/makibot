@@ -9,6 +9,7 @@ import {
   UserContextMenuInteractionHandler,
 } from "../lib/interaction";
 import { requireAllModules } from "../lib/utils/loader";
+import logger from "../lib/logger";
 
 const client = new Client();
 
@@ -264,4 +265,5 @@ makibotctl.command<{ guild: string; member: string; offset: number }>(
   },
 );
 
-makibotctl.help().argv;
+const argv = makibotctl.help().argv;
+logger.info("invoked script with argv", argv);

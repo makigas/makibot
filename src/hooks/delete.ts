@@ -38,7 +38,7 @@ function createDeleteEmbed(message: Message | PartialMessage): MessageEmbedOptio
   }
   if (message.cleanContent) {
     /* Log message content. */
-    base.fields!.push({ name: "Contenido", value: message.cleanContent });
+    base.fields?.push({ name: "Contenido", value: message.cleanContent });
   }
   if (!message.cleanContent && (!message.attachments || message.attachments.size === 0)) {
     /* Sometimes a partial message with no information at all will come. */

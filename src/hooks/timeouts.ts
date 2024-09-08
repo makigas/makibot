@@ -36,7 +36,9 @@ export default class TimeoutsService implements Hook {
     expired.forEach(async (event) => {
       const reverseEvent = revertEvent(event);
       try {
-        await this.client.modrepo.evict(event.id!);
+        if (event.id) {
+          await this.client.modrepo.evict(event.id);
+        }
         const persisted = await this.client.modrepo.persistEvent(reverseEvent);
         await notifyModlog(this.client, persisted);
       } catch (e) {

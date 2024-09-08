@@ -82,7 +82,7 @@ export class SqliteSettingProvider implements SettingProvider {
     logger.trace(`[sqlite] removing key ${guild} / ${key}`);
     const guildKey = guildToCacheName(guild);
     this.cache[guildKey] ||= {};
-    delete this.cache[guildKey][key];
+    delete this.cache[guildKey][key]; // eslint-disable-line @typescript-eslint/no-dynamic-delete
 
     await this.database.exec("BEGIN TRANSACTION");
     await this.database.run(DELETE_STMT, [guildToDatabaseName(guild), key]);

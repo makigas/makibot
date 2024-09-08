@@ -97,17 +97,17 @@ async function findTimeout(
         event.changes.some((change) => change.key === "communication_disabled_until")
       : false,
   );
-  if (!timeoutEvent) {
+  if (!member.communicationDisabledUntil || !timeoutEvent || !timeoutEvent.executor) {
     return null;
   }
   const modEvent: ModEvent = {
     createdAt: timeoutEvent.createdAt,
-    expiresAt: member.communicationDisabledUntil!,
+    expiresAt: member.communicationDisabledUntil,
     expired: false,
     guild: server.id,
     type: "TIMEOUT",
     target: member.id,
-    mod: timeoutEvent.executor!.id,
+    mod: timeoutEvent.executor.id,
   };
   if (timeoutEvent.reason) modEvent.reason = timeoutEvent.reason;
   return modEvent;
@@ -125,7 +125,7 @@ async function findLiftTimeout(
         )
       : false,
   );
-  if (!untimeoutEvent) {
+  if (!untimeoutEvent || !untimeoutEvent.executor) {
     return null;
   }
   return {
@@ -133,7 +133,7 @@ async function findLiftTimeout(
     expired: true,
     guild: member.guild.id,
     type: "UNTIMEOUT",
-    mod: untimeoutEvent.executor!.id,
+    mod: untimeoutEvent.executor.id,
     target: member.id,
   };
 }
@@ -146,7 +146,7 @@ async function findKick(
     "MEMBER_KICK",
     (e) => e.target != null && e.target.id === member.id,
   );
-  if (!kickEvent) {
+  if (!kickEvent || !kickEvent.executor) {
     return null;
   }
   const modEvent: ModEvent = {
@@ -154,7 +154,7 @@ async function findKick(
     expired: false,
     guild: member.guild.id,
     type: "KICK",
-    mod: kickEvent.executor!.id,
+    mod: kickEvent.executor.id,
     target: member.id,
   };
   if (kickEvent.reason) {
@@ -168,7 +168,7 @@ async function findBan(server: Server, user: User): Promise<ModEvent | null> {
     "MEMBER_BAN_ADD",
     (e) => e.target != null && e.target.id === user.id,
   );
-  if (!banEvent) {
+  if (!banEvent || !banEvent.executor) {
     return null;
   }
   const modEvent: ModEvent = {
@@ -176,7 +176,7 @@ async function findBan(server: Server, user: User): Promise<ModEvent | null> {
     expired: false,
     guild: server.id,
     type: "BAN",
-    mod: banEvent.executor!.id,
+    mod: banEvent.executor.id,
     target: user.id,
   };
   if (banEvent.reason) {

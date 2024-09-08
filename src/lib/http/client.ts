@@ -28,7 +28,7 @@ export default class Client {
       } else {
         return false;
       }
-    } catch (e) {
+    } catch {
       return false;
     }
   }

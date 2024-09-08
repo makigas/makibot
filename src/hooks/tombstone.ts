@@ -36,7 +36,7 @@ async function getTombstone(channel: TextChannel): Promise<Message | null> {
   /* Fetch the tombstone message. */
   try {
     return channel.messages.fetch(id);
-  } catch (e) {
+  } catch {
     /* For some reason couldn't fetch it. */
     await tombstone.delete();
     return null;
@@ -60,7 +60,7 @@ export default class TombstoneService implements Hook {
       if (tombstone) {
         await tombstone.delete();
       }
-    } catch (e) {
+    } catch {
       /* Message not found, let's ignore it. */
     } finally {
       tombstoneTag(channel).delete();

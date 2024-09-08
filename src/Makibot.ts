@@ -53,9 +53,9 @@ export default class Makibot extends Client {
 
     this.on("ready", () => {
       if (process.env.VERSION_TAG) {
-        this.user!.setActivity({ name: process.env.VERSION_TAG });
+        this.user?.setActivity({ name: process.env.VERSION_TAG });
       }
-      logger.info(`Logged in successfully as ${this.user!.tag}.`);
+      logger.info(`Logged in successfully as ${this.user?.tag}.`);
     });
 
     this.on("shardDisconnect", (e: CloseEvent) => {
