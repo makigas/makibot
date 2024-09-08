@@ -1,6 +1,6 @@
 import { Snowflake } from "discord-api-types/v9";
 
-export type ModEventType = "DELETE" | "KICK" | "BAN" | "TIMEOUT" | "UNTIMEOUT";
+export type ModEventType = "KICK" | "BAN" | "TIMEOUT" | "UNTIMEOUT";
 
 /**
  * A moderation event as created and managed by the system.

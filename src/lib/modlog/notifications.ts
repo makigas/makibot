@@ -1,16 +1,15 @@
 import { time, userMention } from "@discordjs/builders";
-import { Guild, MessageEmbedOptions } from "discord.js";
+import { Guild, MessageEmbedOptions, WebhookMessageOptions } from "discord.js";
 import type Makibot from "../../Makibot";
 import Server from "../server";
 import { dateIdentifier, userIdentifier } from "../utils/format";
 import type { ModEvent } from "./types";
 
 const PUBLIC_TEMPLATES = {
-  DELETE: ":wastebasket: Se ha eliminado un mensaje de $TARGET$. Razón: `$REASON$`",
   KICK: ":athletic_shoe: Se echó a $TARGET$ del servidor, Razón: `$REASON$`.",
   BAN: ":hammer: Se baneó a $TARGET$ del servidor. Razón: `$REASON$`.",
   TIMEOUT: ":stop_sign: $TARGET$ tiene limitada la cuenta. Expira: $EXP$. Razón: $REASON$.",
-  UNTIMEOUT: ":white_check_mark: Ha expirado las limitaciones de cuenta de $TARGET$.",
+  UNTIMEOUT: ":white_check_mark: $TARGET$ ya no tiene limitada la cuenta.",
 };
 
 const PRIVATE_TEMPLATES = {
@@ -91,17 +90,14 @@ function composePublicModlogMessage(event: ModEvent): string {
 
 function composePrivateModlogMessage(event: ModEvent): MessageEmbedOptions {
   const template = PRIVATE_TEMPLATES[event.type];
-  if (template) {
-    return createModlogNotification({
-      color: template.color,
-      author: {
-        name: template.name,
-        iconURL: template.icon,
-      },
-      description: template.fields(event),
-    });
-  }
-  return null;
+  return createModlogNotification({
+    color: template.color,
+    author: {
+      name: template.name,
+      iconURL: template.icon,
+    },
+    description: template.fields(event),
+  });
 }
 
 async function sendToPublicModlog(guild: Guild, event: ModEvent): Promise<void> {
@@ -115,11 +111,12 @@ async function sendToPublicModlog(guild: Guild, event: ModEvent): Promise<void> 
 async function sendToPrivateModlog(guild: Guild, event: ModEvent): Promise<void> {
   const message = composePrivateModlogMessage(event);
   const server = new Server(guild);
-  await server.sendToModlog("default", {
-    username: message.author.name,
-    avatarURL: message.author.iconURL,
-    embeds: [message],
-  });
+  const payload: WebhookMessageOptions = { embeds: [message] };
+  if (message.author) {
+    payload.avatarURL = message.author.iconURL;
+    payload.username = message.author.name;
+  }
+  await server.sendToModlog("default", payload);
 }
 
 /**

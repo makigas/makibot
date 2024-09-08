@@ -16,7 +16,7 @@ import type { MessageContextMenuInteractionHandler } from "../../lib/interaction
 import Member from "../../lib/member";
 import { createToast } from "../../lib/response";
 import Server from "../../lib/server";
-import { proposeReport } from "../../lib/modlog/report";
+import { proposeReport } from "../../lib/modlog";
 
 /** List of reasons on why a message would be reported. */
 const REASON_OPTIONS: MessageSelectOptionData[] = [

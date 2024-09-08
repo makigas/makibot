@@ -5,7 +5,7 @@ import { HookManager } from "./lib/hook";
 import { KarmaDatabase } from "./lib/karma/database";
 import { SettingProvider } from "./lib/provider";
 import { InteractionManager } from "./lib/interaction";
-import { ModerationRepository } from "./lib/modlog/database";
+import { ModerationRepository } from "./lib/modlog";
 import logger from "./lib/logger";
 
 export default class Makibot extends Client {

@@ -69,10 +69,10 @@ const EXPIRE_ANY = `
 
 export interface ModerationRepository {
   /** Save a moderation event, return the event number as callback. */
-  persistEvent(event: ModEvent): Promise<number>;
+  persistEvent(event: ModEvent): Promise<ModEvent>;
 
   /** Retrieve a moderation event by event number. */
-  retrieveEvent(id: number): Promise<ModEvent>;
+  retrieveEvent(id: number): Promise<ModEvent | null>;
 
   /** Retrieve events that are pending to be evicted. */
   retrieveExpired(): Promise<ModEvent[]>;
@@ -88,19 +88,18 @@ function isValidModEventType(type: string): type is ModEventType {
   return types.indexOf(type) >= 0;
 }
 
-function coerceModEventType(type: string): ModEventType {
-  return isValidModEventType(type) ? type : null;
-}
-
 function rowToModEvent(row: EventRow): ModEvent {
+  if (!isValidModEventType(row.kind)) {
+    throw new Error("Invalid mod event type");
+  }
   return {
     createdAt: new Date(row.created_at),
     expired: row.evicted,
-    expiresAt: new Date(row.expires_at),
+    expiresAt: row.expires_at ? new Date(row.expires_at) : undefined,
     guild: row.guild_id,
     mod: row.mod_id,
     target: row.target_id,
-    type: coerceModEventType(row.kind),
+    type: row.kind,
     id: row.id,
     reason: row.reason,
   };
@@ -109,7 +108,7 @@ function rowToModEvent(row: EventRow): ModEvent {
 class SqliteBaseModerationRepository implements ModerationRepository {
   constructor(private db: Database) {}
 
-  async persistEvent(event: ModEvent): Promise<number> {
+  async persistEvent(event: ModEvent): Promise<ModEvent> {
     /* Place the moderation event in the system. */
     const values = [
       event.guild,
@@ -121,13 +120,19 @@ class SqliteBaseModerationRepository implements ModerationRepository {
     ];
     await this.db.run(INSERT_EVENT, values);
 
-    /* Return rowid. */
-    return this.db.get("select last_insert_rowid() AS id").then((row: { id: number }) => row.id);
+    /* Assign rowid */
+    const { id } = await this.db.get("select last_insert_rowid() as id");
+    const persistedEvent = { ...event, id };
+    return persistedEvent;
   }
 
-  async retrieveEvent(id: number): Promise<ModEvent> {
-    const row: EventRow = await this.db.get(RETRIEVE_EVENT, [id]);
-    return rowToModEvent(row);
+  async retrieveEvent(id: number): Promise<ModEvent | null> {
+    const row: EventRow | undefined = await this.db.get(RETRIEVE_EVENT, [id]);
+    if (row) {
+      return rowToModEvent(row);
+    } else {
+      return null;
+    }
   }
 
   async retrieveExpired(): Promise<ModEvent[]> {

@@ -1,32 +1,30 @@
 import { Hook } from "../lib/hook";
 import logger from "../lib/logger";
-import { applyAction } from "../lib/modlog/actions";
-import { notifyModlog } from "../lib/modlog/notifications";
-import { ModEvent, ModEventType } from "../lib/modlog/types";
+import { notifyModlog, ModEvent } from "../lib/modlog";
 import Makibot from "../Makibot";
-
-function castRevertType(event: ModEvent): ModEventType {
-  const types = {
-    TIMEOUT: "UNTIMEOUT",
-  };
-  return types[event.type];
-}
 
 function revertEvent(event: ModEvent): ModEvent {
   return {
     createdAt: new Date(),
     expired: false,
     guild: event.guild,
-    type: castRevertType(event),
+    type: "UNTIMEOUT",
     mod: event.mod,
     reason: "(expiración automática)",
     target: event.target,
-    expiresAt: null,
   };
 }
 
-export default class ModService implements Hook {
-  name = "moderation";
+/**
+ * This service logs timeouts that expire naturally. Back in the days, this
+ * service also dealt with other kinds of moderation events, but the modlog
+ * feature of this bot is now passive, so this is all it does. The reason
+ * why it marks it anyway is because Discord doesn't notify bots when
+ * timeouts expire naturally, only they do if a mod forces the timeout to
+ * expire, so we manually have to purge the database periodically.
+ */
+export default class TimeoutsService implements Hook {
+  name = "timeouts";
 
   constructor(private client: Makibot) {
     setInterval(() => this.cleanExpired(), 10000);
@@ -38,11 +36,14 @@ export default class ModService implements Hook {
     expired.forEach(async (event) => {
       const reverseEvent = revertEvent(event);
       try {
-        const persisted = await applyAction(this.client, reverseEvent);
+        await this.client.modrepo.evict(event.id!);
+        const persisted = await this.client.modrepo.persistEvent(reverseEvent);
         await notifyModlog(this.client, persisted);
       } catch (e) {
         logger.warn("[mod] cannot automatically clean event", e);
-        this.client.modrepo.evict(event.id);
+        if (event.id) {
+          this.client.modrepo.evict(event.id);
+        }
       }
     });
   }

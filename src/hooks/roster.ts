@@ -1,9 +1,15 @@
-import { Guild, GuildBan, GuildMember, MessageEmbedOptions, PartialGuildMember } from "discord.js";
+import {
+  Guild,
+  GuildBan,
+  GuildMember,
+  MessageEmbedOptions,
+  PartialGuildMember,
+  User,
+  WebhookMessageOptions,
+} from "discord.js";
 import { Hook } from "../lib/hook";
 import logger from "../lib/logger";
-import { applyAction } from "../lib/modlog/actions";
-import { createModlogNotification, notifyModlog } from "../lib/modlog/notifications";
-import { ModEvent } from "../lib/modlog/types";
+import { createModlogNotification, notifyModlog, ModEvent } from "../lib/modlog";
 import Server from "../lib/server";
 import { dateIdentifier, userIdentifier } from "../lib/utils/format";
 import Makibot from "../Makibot";
@@ -21,7 +27,9 @@ export const createJoinEvent = (member: GuildMember): MessageEmbedOptions => ({
   ].join("\n"),
 });
 
-export const createLeaveEvent = (member: PartialGuildMember): MessageEmbedOptions => ({
+export const createLeaveEvent = (
+  member: GuildMember | PartialGuildMember,
+): MessageEmbedOptions => ({
   color: 0xdd3247,
   author: {
     name: "Abandono del servidor",
@@ -58,11 +66,12 @@ export const createNicknameEvent = (
 async function sendEvent(guild: Guild, embed: MessageEmbedOptions): Promise<void> {
   try {
     const server = new Server(guild);
-    await server.sendToModlog("default", {
-      username: embed.author.name,
-      avatarURL: embed.author.iconURL,
-      embeds: [embed],
-    });
+    const payload: WebhookMessageOptions = { embeds: [embed] };
+    if (embed.author) {
+      payload.username = embed.author.name;
+      payload.avatarURL = embed.author.iconURL;
+    }
+    await server.sendToModlog("default", payload);
   } catch (e) {
     logger.error(`[roster] error during event handling`, e);
   }
@@ -75,75 +84,120 @@ function handleMemberUpdateNickname(prev: GuildMember, next: GuildMember): Promi
   return sendEvent(next.guild, event);
 }
 
+async function findTimeout(server: Server, member: GuildMember): Promise<ModEvent | null> {
+  const timeoutEvent = await server.queryAuditLogEvent("MEMBER_UPDATE", (event) =>
+    event.target && event.changes
+      ? event.target.id === member.user.id &&
+        event.changes.some((change) => change.key === "communication_disabled_until")
+      : false,
+  );
+  if (!timeoutEvent) {
+    return null;
+  }
+  const modEvent: ModEvent = {
+    createdAt: timeoutEvent.createdAt,
+    expiresAt: member.communicationDisabledUntil!,
+    expired: false,
+    guild: server.id,
+    type: "TIMEOUT",
+    target: member.id,
+    mod: timeoutEvent.executor!.id,
+  };
+  if (timeoutEvent.reason) modEvent.reason = timeoutEvent.reason;
+  return modEvent;
+}
+
+async function findLiftTimeout(server: Server, member: GuildMember): Promise<ModEvent | null> {
+  const untimeoutEvent = await server.queryAuditLogEvent("MEMBER_UPDATE", (event) =>
+    event.target && event.changes
+      ? event.target.id === member.user.id &&
+        event.changes?.some(
+          (change) => change.key === "communication_disabled_until" && !change.new,
+        )
+      : false,
+  );
+  if (!untimeoutEvent) {
+    return null;
+  }
+  return {
+    createdAt: new Date(),
+    expired: true,
+    guild: member.guild.id,
+    type: "UNTIMEOUT",
+    mod: untimeoutEvent.executor!.id,
+    target: member.id,
+  };
+}
+
+async function findKick(
+  server: Server,
+  member: GuildMember | PartialGuildMember,
+): Promise<ModEvent | null> {
+  const kickEvent = await server.queryAuditLogEvent(
+    "MEMBER_KICK",
+    (e) => e.target != null && e.target.id === member.id,
+  );
+  if (!kickEvent) {
+    return null;
+  }
+  const modEvent: ModEvent = {
+    createdAt: kickEvent.createdAt,
+    expired: false,
+    guild: member.guild.id,
+    type: "KICK",
+    mod: kickEvent.executor!.id,
+    target: member.id,
+  };
+  if (kickEvent.reason) {
+    modEvent.reason = kickEvent.reason;
+  }
+  return modEvent;
+}
+
+async function findBan(server: Server, user: User): Promise<ModEvent | null> {
+  const banEvent = await server.queryAuditLogEvent(
+    "MEMBER_BAN_ADD",
+    (e) => e.target != null && e.target.id === user.id,
+  );
+  if (!banEvent) {
+    return null;
+  }
+  const modEvent: ModEvent = {
+    createdAt: banEvent.createdAt,
+    expired: false,
+    guild: server.id,
+    type: "BAN",
+    mod: banEvent.executor!.id,
+    target: user.id,
+  };
+  if (banEvent.reason) {
+    modEvent.reason = banEvent.reason;
+  }
+  return modEvent;
+}
+
 async function handleTimeout(prev: GuildMember, next: GuildMember): Promise<void> {
   const server = new Server(next.guild);
+  const repo = (next.client as Makibot).modrepo;
 
-  /* NOTE: We do not receive events when a timeout decays naturally. */
   if (
     next.communicationDisabledUntilTimestamp &&
     next.communicationDisabledUntilTimestamp > Date.now()
   ) {
-    /* We applied a timeout. */
-    let reason = null,
-      executor = null;
-    try {
-      const audit = await server.queryAuditLogEvent(
-        "MEMBER_UPDATE",
-        (event) =>
-          event.target.id === next.user.id &&
-          event.changes.some((change) => change.key === "communication_disabled_until"),
-      );
-      if (audit) {
-        reason = audit.reason;
-        executor = audit.executor;
-      }
-    } catch (e) {
-      logger.warn(`[roster] error on queryAuditLogEvent: ${e}`);
+    /* A timeout was applied or updated. */
+    const timeoutEvent = await findTimeout(server, next);
+    if (timeoutEvent) {
+      const persisted = await repo.persistEvent(timeoutEvent);
+      await notifyModlog(next.client as Makibot, persisted);
     }
-
-    const timeoutEvent: ModEvent = {
-      createdAt: new Date(),
-      expiresAt: next.communicationDisabledUntil,
-      expired: false,
-      guild: next.guild.id,
-      type: "TIMEOUT",
-      mod: executor?.id,
-      reason: reason,
-      target: next.id,
-    };
-
-    const persisted = await applyAction(next.client as Makibot, timeoutEvent);
-    await notifyModlog(next.client as Makibot, persisted);
   } else if (!next.communicationDisabledUntil) {
-    /* We manually lifted a timeout. */
-    let executor = null;
-    try {
-      const audit = await server.queryAuditLogEvent(
-        "MEMBER_UPDATE",
-        (event) =>
-          event.target.id === next.user.id &&
-          event.changes.some(
-            (change) => change.key === "communication_disabled_until" && !change.new,
-          ),
-      );
-      if (audit) {
-        executor = audit.executor;
-      }
-    } catch (e) {
-      logger.warn(`[roster] error on queryAuditLogEvent: ${e}`);
+    /* A timeout has lifted because someone lifted it. */
+    const untimeoutEvent = await findLiftTimeout(server, next);
+    if (untimeoutEvent) {
+      const persisted = await repo.persistEvent(untimeoutEvent);
+      await repo.evictAny(next.id, "TIMEOUT");
+      await notifyModlog(next.client as Makibot, persisted);
     }
-
-    const untimeoutEvent: ModEvent = {
-      createdAt: new Date(),
-      expired: true,
-      guild: next.guild.id,
-      type: "UNTIMEOUT",
-      mod: executor?.id,
-      target: next.id,
-    };
-
-    const persisted = await applyAction(next.client as Makibot, untimeoutEvent);
-    await notifyModlog(next.client as Makibot, persisted);
   }
 }
 
@@ -178,29 +232,18 @@ export default class RosterService implements Hook {
     await Promise.all(promises);
   }
 
-  async onGuildMemberLeave(member: PartialGuildMember): Promise<void> {
+  async onGuildMemberLeave(member: GuildMember | PartialGuildMember): Promise<void> {
     // Check if the member left on their own, or if it was a kick.
     const server = new Server(member.guild);
 
-    const kickEvent = await server.queryAuditLogEvent(
-      "MEMBER_KICK",
-      (e) => e.target.id === member.id,
-    );
-
+    const kickEvent = await findKick(server, member);
     if (kickEvent && member.joinedAt && kickEvent.createdAt > member.joinedAt) {
-      // It was a kick.
-      const kickNotificationEvent: ModEvent = {
-        createdAt: new Date(),
-        expired: false,
-        guild: member.guild.id,
-        type: "KICK",
-        mod: kickEvent.executor.id,
-        reason: kickEvent.reason,
-        target: kickEvent.target.id,
-      };
-      await notifyModlog(member.client as Makibot, kickNotificationEvent);
+      /* We have evidence the user has just been kicked. */
+      const repo = (member.client as Makibot).modrepo;
+      const persisted = await repo.persistEvent(kickEvent);
+      await notifyModlog(member.client as Makibot, persisted);
     } else {
-      // It was a normal leave
+      /* Normal leave. */
       logger.debug(`[roster] announcing leave for ${member.user.tag}`);
       const event = createModlogNotification(createLeaveEvent(member));
       return sendEvent(member.guild, event);
@@ -209,19 +252,11 @@ export default class RosterService implements Hook {
 
   async onGuildMemberBan(ban: GuildBan): Promise<void> {
     const server = new Server(ban.guild);
-    const event = await server.queryAuditLogEvent(
-      "MEMBER_BAN_ADD",
-      (e) => e.target.id == ban.user.id,
-    );
-    const banEvent: ModEvent = {
-      createdAt: new Date(),
-      expired: false,
-      guild: ban.guild.id,
-      type: "BAN",
-      mod: event.executor.id,
-      reason: event.reason,
-      target: event.target.id,
-    };
-    await notifyModlog(ban.client as Makibot, banEvent);
+    const repo = (ban.client as Makibot).modrepo;
+    const banEvent = await findBan(server, ban.user);
+    if (banEvent) {
+      const persisted = await repo.persistEvent(banEvent);
+      await notifyModlog(ban.client as Makibot, persisted);
+    }
   }
 }

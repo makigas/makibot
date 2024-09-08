@@ -1,5 +1,5 @@
 import { hyperlink, userMention } from "@discordjs/builders";
-import { Message, MessageEmbedOptions, TextChannel } from "discord.js";
+import { Message, MessageEmbedOptions, TextChannel, WebhookMessageOptions } from "discord.js";
 import Server from "../server";
 
 function buildModReport(message: Message, reason: string): MessageEmbedOptions {
@@ -36,16 +36,30 @@ function buildModReport(message: Message, reason: string): MessageEmbedOptions {
   };
 }
 
+/**
+ * This is the main handler for the modmenu action, allowing users to notify
+ * mods about a specific message so that they can propose an action such as
+ * banning, kicking, timeouting or doing nothing.
+
+ * @param message the message that is being proposed
+ * @param reason the reason on why the message should be moderated
+ * @param target the modlog where the proposal should be sent
+ * @returns a promise that resolves once the proposal has been saved
+ */
 export async function proposeReport(
   message: Message,
   reason: string,
   target: "default" | "sensible" = "default",
 ) {
+  if (!message.guild) {
+    throw new Error("Missing guild information for the reported message");
+  }
   const embed = buildModReport(message, reason);
   const server = new Server(message.guild);
-  return server.sendToModlog(target, {
-    embeds: [embed],
-    username: embed.author.name,
-    avatarURL: embed.author.iconURL,
-  });
+  const payload: WebhookMessageOptions = { embeds: [embed] };
+  if (embed.author) {
+    payload.username = embed.author.name;
+    payload.avatarURL = embed.author.iconURL;
+  }
+  return server.sendToModlog(target, payload);
 }

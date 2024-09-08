@@ -1,7 +1,7 @@
 import { MessageEmbedOptions, PartialMessage } from "discord.js";
 import { Hook } from "../lib/hook";
 import logger from "../lib/logger";
-import { createModlogNotification } from "../lib/modlog/notifications";
+import { createModlogNotification } from "../lib/modlog";
 import Server from "../lib/server";
 import {
   channelIdentifier,

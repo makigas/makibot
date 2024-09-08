@@ -5,7 +5,7 @@ import serverFactory from "../lib/http/server";
 import logger from "../lib/logger";
 import * as Sentry from "@sentry/node";
 import { getDatabase, getKarmaDatabase } from "../settings";
-import { newModRepository } from "../lib/modlog/database";
+import { newModRepository } from "../lib/modlog";
 import { openKarmaDatabase } from "../lib/karma/database";
 import { SqliteSettingProvider, migrateSettingsSchema } from "../lib/provider";
 
