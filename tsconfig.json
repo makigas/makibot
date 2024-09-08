@@ -2,8 +2,8 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "module": "commonjs",
-    "target": "es2018",
-    "lib": ["es2018"],
+    "target": "es2023",
+    "lib": ["es2023"],
     "outDir": "dist",
     "rootDir": "src",
     "strict": true

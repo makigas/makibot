@@ -15,7 +15,7 @@
   "dependencies": {
     "@discordjs/builders": "^0.16.0",
     "@discordjs/rest": "^0.4.1",
-    "@sentry/node": "^7.76.0",
+    "@sentry/node": "^8.28.0",
     "axios": "^1.6.0",
     "big-integer": "^1.6.51",
     "discord-api-types": "^0.33.5",
@@ -47,16 +47,14 @@
     "eslint": "^9.10.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
-    "husky": "^8.0.3",
-    "lint-staged": "^15.0.2",
     "mocha": "^10.2.0",
     "prettier": "^3.3.3",
-    "rimraf": "^5.0.5",
+    "rimraf": "^6.0.1",
     "sinon": "^17.0.0",
     "sinon-chai": "^3.7.0",
     "standard-version": "^9.5.0",
     "ts-node": "^10.8.2",
-    "typescript": "^4.7.4",
+    "typescript": "^5.5.4",
     "typescript-eslint": "^8.4.0"
   },
   "engines": {
@@ -75,9 +73,6 @@
     "roster"
   ],
   "license": "ISC",
-  "lint-staged": {
-    "*.ts": "eslint"
-  },
   "main": "dist/Makibot.js",
   "name": "@makigas/makibot",
   "repository": {
@@ -90,7 +85,6 @@
     "start": "ts-node -r dotenv/config src/cmd/makibotd",
     "makibotctl": "ts-node -r dotenv/config src/cmd/makibotctl",
     "lint": "eslint \"src/**/*.ts\"",
-    "lint:staged": "lint-staged",
     "test": "mocha -r ts-node/register spec/**/*.spec.ts",
     "release": "standard-version"
   },
