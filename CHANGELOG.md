@@ -2,6 +2,66 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0](https://github.com/makigas/makibot/compare/v5.0.0...v6.0.0) (2024-09-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* use modals for reporting message
+* make hook system strict
+* passive modlog
+* replace mod menu with "alert mods" feature
+* remove quote command
+* remove TTL from the Tag settings
+* remove warn, unwarn, mute and unmute
+* remove handleDM method
+* remove onPremoderateMessage hook
+* remove deprecated commands and buttons
+* remove the role manager
+* rewrite the SettingProvider
+
+### Features
+
+* log attachment names in delete hook ([67bd516](https://github.com/makigas/makibot/commit/67bd5168ec3dfb7428fbdaf3b74e2e815beb3fde))
+* passive modlog ([9233913](https://github.com/makigas/makibot/commit/9233913a7dd699507557d1a82d557fb22b43a56a))
+* replace mod menu with "alert mods" feature ([aa066ca](https://github.com/makigas/makibot/commit/aa066ca24eb3ed9c2585291ee1b572d506e3c9fe))
+* the mod menu will now grant timeouts ([3b11be6](https://github.com/makigas/makibot/commit/3b11be6a4d9fd3dcd5c7e1568fcca6597eecd89c))
+
+
+### Bug Fixes
+
+* fix the /makigas command when used in forum ([bbc9faf](https://github.com/makigas/makibot/commit/bbc9faff48eab06aa66855da48bab0467d4d43c5))
+* settings migration fails on empty databases ([f632ba4](https://github.com/makigas/makibot/commit/f632ba43b46861c26e590945874bf34e3cf12408))
+
+
+### Chore
+
+* **deps:** update Actions environment ([7b98463](https://github.com/makigas/makibot/commit/7b98463555d8a56188a414b889248db96725d2a5))
+* **deps:** update dependencies with exceptions ([8261b47](https://github.com/makigas/makibot/commit/8261b47c58e8833159e54b8a1c861396bbc4fbc9))
+* **deps:** update ESLint ([6ea953e](https://github.com/makigas/makibot/commit/6ea953e90e257aa882b5097a651fd36e8218e4ea))
+* make interactions compile in strict mode ([5517eb1](https://github.com/makigas/makibot/commit/5517eb17d645c39f1e80254dcbce143dab2f0db4))
+* prepare for strict mode ([2d6f1ac](https://github.com/makigas/makibot/commit/2d6f1ac0e2deb95259661bedfc3838666648d5cf))
+* update DiscordJS to 13-LTS and NodeJS to 20 ([4ebc501](https://github.com/makigas/makibot/commit/4ebc5014230a363d5b818287d19a62a5a6f4d4d3))
+
+
+### Refactor
+
+* better typing for src/lib/provider ([5459e95](https://github.com/makigas/makibot/commit/5459e95b044c0571e5a8db62858e73bb76bc8e2f))
+* make hook system strict ([ace032c](https://github.com/makigas/makibot/commit/ace032c5c0da83aff9a8652a02eb29d87f8c0c16))
+* make some files pass in strict mode ([16e2e1b](https://github.com/makigas/makibot/commit/16e2e1b8c7bf61d5a68d0cc5950bba3ddecfa0cc))
+* make the entire package strict ([88268b6](https://github.com/makigas/makibot/commit/88268b680f1a0335df9043fb165c102f94015674))
+* remove dead code ([19d533f](https://github.com/makigas/makibot/commit/19d533fdd316c5b1bdad0dd77187c67baeffd205))
+* remove deprecated commands and buttons ([9d53a94](https://github.com/makigas/makibot/commit/9d53a94de746c37ed787062091c4850c99ff5e6e))
+* remove handleDM method ([24df62b](https://github.com/makigas/makibot/commit/24df62b94d3c15c4e42f004c02fc293d3b2dbec3))
+* remove onPremoderateMessage hook ([a9f559a](https://github.com/makigas/makibot/commit/a9f559ab7de276550abe47ce698b633482df3890))
+* remove quote command ([ad7cc56](https://github.com/makigas/makibot/commit/ad7cc56ccabf9be73e9cb09a53be775dc704c3f6))
+* remove the role manager ([4a79269](https://github.com/makigas/makibot/commit/4a79269712603f371cadec9d8703646a72d893ae))
+* remove TTL from the Tag settings ([dabb62f](https://github.com/makigas/makibot/commit/dabb62f3252fd46da004b33eb81119362ab4a22b))
+* remove warn, unwarn, mute and unmute ([89d9a0a](https://github.com/makigas/makibot/commit/89d9a0ae7060d71b9dcd2301232a92cabff8451a))
+* rewrite the SettingProvider ([1915dc1](https://github.com/makigas/makibot/commit/1915dc1d1e955007245ef12c70f3cc06f56c6dfe))
+* use a separate task for karma levels ([62f719c](https://github.com/makigas/makibot/commit/62f719c5605b83788962353cb71c2683c9b315e7))
+* use modals for reporting message ([cdd3ee0](https://github.com/makigas/makibot/commit/cdd3ee0e3f36b681021b501a37fd3e5bde6b9c98))
+
 ## [5.0.0](https://github.com/makigas/makibot/compare/v5.0.0-0...v5.0.0) (2023-10-29)
 
 ## [5.0.0-0](https://github.com/makigas/makibot/compare/v4.0.2...v5.0.0-0) (2023-10-29)
