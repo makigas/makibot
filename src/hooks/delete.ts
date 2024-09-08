@@ -1,4 +1,4 @@
-import { MessageEmbedOptions, PartialMessage, WebhookMessageOptions } from "discord.js";
+import { Message, MessageEmbedOptions, PartialMessage, WebhookMessageOptions } from "discord.js";
 import { Hook } from "../lib/hook";
 import logger from "../lib/logger";
 import { createModlogNotification } from "../lib/modlog";
@@ -10,7 +10,7 @@ import {
   userIdentifier,
 } from "../lib/utils/format";
 
-function createDeleteEmbed(message: PartialMessage): MessageEmbedOptions {
+function createDeleteEmbed(message: Message | PartialMessage): MessageEmbedOptions {
   const base: MessageEmbedOptions = {
     author: {
       name: "Se ha eliminado un mensaje",
@@ -60,7 +60,7 @@ function createDeleteEmbed(message: PartialMessage): MessageEmbedOptions {
 export default class DeleteService implements Hook {
   name = "delete";
 
-  async onMessageDestroy(message: PartialMessage): Promise<void> {
+  async onMessageDestroy(message: Message | PartialMessage): Promise<void> {
     if (message.author?.bot) {
       /* This is a bot message. Ignore it. */
       logger.info("[delete] skipping a bot command");

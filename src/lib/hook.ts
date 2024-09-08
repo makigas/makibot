@@ -17,25 +17,22 @@ export interface Hook {
   /* The identifier of the hook. */
   name: string;
 
-  /** Allows restart? */
-  allowsRestart?: boolean;
-
-  /** Callback to ask the hook to restart itself. */
-  restart?: () => void;
-
   onMessageCreate?: (message: Message) => Promise<void>;
   onMessageUpdate?: (
     oldMessage: Message | PartialMessage,
     newMessage: Message | PartialMessage,
   ) => Promise<void>;
-  onMessageDestroy?: (message: PartialMessage) => Promise<void>;
+  onMessageDestroy?: (message: Message | PartialMessage) => Promise<void>;
 
   onMessageReactionAdd?: (reaction: MessageReaction, user: User) => Promise<void>;
   onMessageReactionDestroy?: (reaction: MessageReaction, user: User) => Promise<void>;
   onMessageReactionBulkDestroy?: (message: Message) => Promise<void>;
 
   onGuildMemberJoin?: (member: GuildMember) => Promise<void>;
-  onGuildMemberUpdate?: (prev: GuildMember, next: GuildMember) => Promise<void>;
+  onGuildMemberUpdate?: (
+    prev: PartialGuildMember | GuildMember,
+    next: PartialGuildMember | GuildMember,
+  ) => Promise<void>;
   onGuildMemberLeave?: (member: GuildMember | PartialGuildMember) => Promise<void>;
   onGuildMemberBan?: (ban: GuildBan) => Promise<void>;
 }
@@ -63,7 +60,7 @@ function isProcessableMessage(message: Message | PartialMessage): boolean {
  * is useful to coerce types so that TypeScript does not complain.
  */
 function isValidHookConstructor(object: unknown): object is HookConstructor {
-  return object && typeof object === "function";
+  return typeof object === "function";
 }
 
 /**
@@ -74,20 +71,18 @@ function isValidHookConstructor(object: unknown): object is HookConstructor {
  */
 function requireAllHooks(client: Makibot, path: string): Hook[] {
   const modules = requireAllModules(path);
-  return modules
-    .map((Service) => {
-      if (isValidHookConstructor(Service)) {
-        const instance: Hook = new Service(client);
-        logger.debug(`[hooks] loaded hook ${instance.name}`);
-        return instance;
-      }
-    })
-    .filter(Boolean);
+  const hooks: Hook[] = [];
+  modules.forEach((Service) => {
+    if (isValidHookConstructor(Service)) {
+      const instance: Hook = new Service(client);
+      logger.debug(`[hooks] loaded hook ${instance.name}`);
+      hooks.push(instance);
+    }
+  });
+  return hooks;
 }
 
 export class HookManager {
-  private watchdog: { [name: string]: Hook } = {};
-
   private services: Hook[];
 
   constructor(
@@ -116,15 +111,19 @@ export class HookManager {
    * @returns a subset of the hooks that implement this method
    */
   private filterServices(method: string): Hook[] {
-    return this.services.filter((srv) => srv[method] && typeof srv[method] === "function");
+    return this.services.filter(
+      (srv) => method in srv && typeof srv[method as keyof Hook] === "function",
+    );
   }
 
   async onMessageCreate(message: Message): Promise<void> {
     if (isProcessableMessage(message)) {
       const handlers = this.filterServices("onMessageCreate");
       for (const handler of handlers) {
-        logger.debug(`[hooks] processing ${handler.name}(messageCreate)`);
-        await handler.onMessageCreate(message);
+        if (handler.onMessageCreate) {
+          logger.debug(`[hooks] processing ${handler.name}(messageCreate)`);
+          await handler.onMessageCreate(message);
+        }
       }
     }
   }
@@ -136,18 +135,22 @@ export class HookManager {
     if (isProcessableMessage(oldMessage) && isProcessableMessage(newMessage)) {
       const handlers = this.filterServices("onMessageUpdate");
       for (const handler of handlers) {
-        logger.debug(`[hooks] processing ${handler.name}(messageUpdate)`);
-        await handler.onMessageUpdate(oldMessage, newMessage);
+        if (handler.onMessageUpdate) {
+          logger.debug(`[hooks] processing ${handler.name}(messageUpdate)`);
+          await handler.onMessageUpdate(oldMessage, newMessage);
+        }
       }
     }
   }
 
-  async onMessageDelete(message: PartialMessage): Promise<void> {
+  async onMessageDelete(message: Message | PartialMessage): Promise<void> {
     if (isProcessableMessage(message)) {
       const handlers = this.filterServices("onMessageDestroy");
       for (const handler of handlers) {
-        logger.debug(`[hooks] processing ${handler.name}(messageDestroy)`);
-        await handler.onMessageDestroy(message);
+        if (handler.onMessageDestroy) {
+          logger.debug(`[hooks] processing ${handler.name}(messageDestroy)`);
+          await handler.onMessageDestroy(message);
+        }
       }
     }
   }
@@ -159,8 +162,10 @@ export class HookManager {
     const [fullReaction, fullUser] = await Promise.all([reaction.fetch(), user.fetch()]);
     const handlers = this.filterServices("onMessageReactionAdd");
     for (const handler of handlers) {
-      logger.debug(`[hooks] processing ${handler.name}(onMessageReactionAdd)`);
-      await handler.onMessageReactionAdd(fullReaction, fullUser);
+      if (handler.onMessageReactionAdd) {
+        logger.debug(`[hooks] processing ${handler.name}(onMessageReactionAdd)`);
+        await handler.onMessageReactionAdd(fullReaction, fullUser);
+      }
     }
   }
 
@@ -171,8 +176,10 @@ export class HookManager {
     const [fullReaction, fullUser] = await Promise.all([reaction.fetch(), user.fetch()]);
     const handlers = this.filterServices("onMessageReactionDestroy");
     for (const handler of handlers) {
-      logger.debug(`[hooks] processing ${handler.name}(onMessageReactionDestroy)`);
-      await handler.onMessageReactionDestroy(fullReaction, fullUser);
+      if (handler.onMessageReactionDestroy) {
+        logger.debug(`[hooks] processing ${handler.name}(onMessageReactionDestroy)`);
+        await handler.onMessageReactionDestroy(fullReaction, fullUser);
+      }
     }
   }
 
@@ -180,45 +187,53 @@ export class HookManager {
     const fullMessage = await message.fetch();
     const handlers = this.filterServices("onMessageReactionBulkDestroy");
     for (const handler of handlers) {
-      logger.debug(`[hooks] processing ${handler.name}(onMessageReactionBulkDestroy)`);
-      await handler.onMessageReactionBulkDestroy(fullMessage);
+      if (handler.onMessageReactionBulkDestroy) {
+        logger.debug(`[hooks] processing ${handler.name}(onMessageReactionBulkDestroy)`);
+        await handler.onMessageReactionBulkDestroy(fullMessage);
+      }
     }
   }
 
   async onGuildMemberAdd(member: GuildMember): Promise<void> {
     const handlers = this.filterServices("onGuildMemberJoin");
     for (const handler of handlers) {
-      logger.debug(`[hooks] processing ${handler.name}(onGuildMemberJoin)`);
-      await handler.onGuildMemberJoin(member);
+      if (handler.onGuildMemberJoin) {
+        logger.debug(`[hooks] processing ${handler.name}(onGuildMemberJoin)`);
+        await handler.onGuildMemberJoin(member);
+      }
     }
   }
 
   async onGuildMemberRemove(member: GuildMember | PartialGuildMember): Promise<void> {
     const handlers = this.filterServices("onGuildMemberLeave");
     for (const handler of handlers) {
-      logger.debug(`[hooks] processing ${handler.name}(onGuildMemberLeave)`);
-      await handler.onGuildMemberLeave(member);
+      if (handler.onGuildMemberLeave) {
+        logger.debug(`[hooks] processing ${handler.name}(onGuildMemberLeave)`);
+        await handler.onGuildMemberLeave(member);
+      }
     }
   }
 
-  async onGuildMemberUpdate(oldMember: GuildMember, newMember: GuildMember): Promise<void> {
+  async onGuildMemberUpdate(
+    oldMember: GuildMember | PartialGuildMember,
+    newMember: GuildMember | PartialGuildMember,
+  ): Promise<void> {
     const handlers = this.filterServices("onGuildMemberUpdate");
     for (const handler of handlers) {
-      logger.debug(`[hooks] processing ${handler.name}(onGuildMemberUpdate)`);
-      await handler.onGuildMemberUpdate(oldMember, newMember);
+      if (handler.onGuildMemberUpdate) {
+        logger.debug(`[hooks] processing ${handler.name}(onGuildMemberUpdate)`);
+        await handler.onGuildMemberUpdate(oldMember, newMember);
+      }
     }
   }
 
   async onGuildMemberBan(ban: GuildBan): Promise<void> {
     const handlers = this.filterServices("onGuildMemberBan");
     for (const handler of handlers) {
-      logger.debug(`[hooks] processing ${handler.name}(onGuildMemberBan)`);
-      await handler.onGuildMemberBan(ban);
+      if (handler.onGuildMemberBan) {
+        logger.debug(`[hooks] processing ${handler.name}(onGuildMemberBan)`);
+        await handler.onGuildMemberBan(ban);
+      }
     }
-  }
-
-  restart(name: string): void {
-    logger.debug(`[hooks] restarting service ${name}...`);
-    this.watchdog[name]?.restart();
   }
 }

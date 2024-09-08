@@ -67,7 +67,7 @@ export default class TombstoneService implements Hook {
     }
   }
 
-  async onMessageDestroy(message: PartialMessage): Promise<void> {
+  async onMessageDestroy(message: Message | PartialMessage): Promise<void> {
     const channel = message.channel as TextChannel;
 
     /* Discard messages not sent to a guild. */
@@ -84,7 +84,8 @@ export default class TombstoneService implements Hook {
     /* Fetch the now latest message in that channel and check if it's stale. */
     const messages = await message.channel.messages.fetch({ limit: 1 });
     const staleness = STALE_HOURS * 3600 * 1000;
-    if (messages.first().createdTimestamp < Date.now() - staleness) {
+    const firstMessage = messages.first();
+    if (firstMessage && firstMessage.createdTimestamp < Date.now() - staleness) {
       /* It is. Send a tombstone. */
       const toast = createToast({
         title: "Un mensaje ha sido eliminado",

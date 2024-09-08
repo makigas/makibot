@@ -43,8 +43,8 @@ export const createLeaveEvent = (
 });
 
 export const createNicknameEvent = (
-  oldMember: GuildMember,
-  newMember: GuildMember,
+  oldMember: PartialGuildMember | GuildMember,
+  newMember: PartialGuildMember | GuildMember,
 ): MessageEmbedOptions => ({
   color: 0xffda84,
   author: {
@@ -77,14 +77,20 @@ async function sendEvent(guild: Guild, embed: MessageEmbedOptions): Promise<void
   }
 }
 
-function handleMemberUpdateNickname(prev: GuildMember, next: GuildMember): Promise<void> {
+function handleMemberUpdateNickname(
+  prev: PartialGuildMember | GuildMember,
+  next: PartialGuildMember | GuildMember,
+): Promise<void> {
   /* The member has changed nicknames. */
   logger.debug(`[roster] has: changed nickname`);
   const event = createNicknameEvent(prev, next);
   return sendEvent(next.guild, event);
 }
 
-async function findTimeout(server: Server, member: GuildMember): Promise<ModEvent | null> {
+async function findTimeout(
+  server: Server,
+  member: PartialGuildMember | GuildMember,
+): Promise<ModEvent | null> {
   const timeoutEvent = await server.queryAuditLogEvent("MEMBER_UPDATE", (event) =>
     event.target && event.changes
       ? event.target.id === member.user.id &&
@@ -107,7 +113,10 @@ async function findTimeout(server: Server, member: GuildMember): Promise<ModEven
   return modEvent;
 }
 
-async function findLiftTimeout(server: Server, member: GuildMember): Promise<ModEvent | null> {
+async function findLiftTimeout(
+  server: Server,
+  member: PartialGuildMember | GuildMember,
+): Promise<ModEvent | null> {
   const untimeoutEvent = await server.queryAuditLogEvent("MEMBER_UPDATE", (event) =>
     event.target && event.changes
       ? event.target.id === member.user.id &&
@@ -176,7 +185,10 @@ async function findBan(server: Server, user: User): Promise<ModEvent | null> {
   return modEvent;
 }
 
-async function handleTimeout(prev: GuildMember, next: GuildMember): Promise<void> {
+async function handleTimeout(
+  prev: PartialGuildMember | GuildMember,
+  next: PartialGuildMember | GuildMember,
+): Promise<void> {
   const server = new Server(next.guild);
   const repo = (next.client as Makibot).modrepo;
 
@@ -215,7 +227,10 @@ export default class RosterService implements Hook {
     return sendEvent(member.guild, event);
   }
 
-  async onGuildMemberUpdate(oldMember: GuildMember, newMember: GuildMember): Promise<void> {
+  async onGuildMemberUpdate(
+    oldMember: PartialGuildMember | GuildMember,
+    newMember: PartialGuildMember | GuildMember,
+  ): Promise<void> {
     logger.debug(`[roster] evaluating member changes for ${newMember.id}`);
 
     const promises = [];

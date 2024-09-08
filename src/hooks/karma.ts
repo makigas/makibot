@@ -55,11 +55,14 @@ export default class KarmaService implements Hook {
   async onGuildMemberJoin(member: GuildMember): Promise<void> {
     const server = new Server(member.guild);
     const serverMember = await server.member(member);
-    await this.checkMemberLevel(serverMember);
+    if (serverMember) {
+      await this.checkMemberLevel(serverMember);
+    }
   }
 
   async onMessageCreate(message: Message): Promise<void> {
     if (
+      !message.member ||
       !canReceivePoints(message.member) ||
       (message.type !== "DEFAULT" && message.type !== "REPLY")
     ) {
@@ -80,7 +83,7 @@ export default class KarmaService implements Hook {
     }
   }
 
-  async onMessageDestroy(message: PartialMessage): Promise<void> {
+  async onMessageDestroy(message: Message | PartialMessage): Promise<void> {
     await Promise.all(
       ["upvote", "downvote", "star", "heart", "wave"].map((kind) =>
         this.karma.undoAction({
@@ -100,13 +103,15 @@ export default class KarmaService implements Hook {
 
   async onMessageReactionAdd(reaction: MessageReaction, user: User): Promise<void> {
     if (
+      !reaction.message.member ||
+      !reaction.message.author ||
       !canReceivePoints(reaction.message.member) ||
       user.bot ||
       reaction.message.author.id == user.id
     ) {
       return;
     }
-    const reactionSpec = REACTIONS[reaction.emoji.name];
+    const reactionSpec = reaction.emoji?.name && REACTIONS[reaction.emoji.name];
     if (reactionSpec) {
       await this.karma.action({
         actorId: reaction.message.id,
@@ -125,7 +130,7 @@ export default class KarmaService implements Hook {
   }
 
   async onMessageReactionDestroy(reaction: MessageReaction, user: User): Promise<void> {
-    const reactionSpec = REACTIONS[reaction.emoji.name];
+    const reactionSpec = reaction.emoji?.name && REACTIONS[reaction.emoji.name];
     if (reactionSpec) {
       await this.karma.undoAction({
         actorId: reaction.message.id,
