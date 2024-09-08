@@ -11,23 +11,23 @@ Command: `/makigas video [q]
 Resquest: https://www.makigas.es/videos.json?q=:q
 
 
-BBS API
-Command: `/makigas bbs [q]`
-https://bbs.makigas.es/api/discussions?filter[q]=:q
+Foro API
+Command: `/makigas foro [q]`
+https://foro.makigas.es/api/discussions?filter[q]=:q
 */
 
 const MAX_SEARCH_RESULT_VIDEOAPI = 3;
-const MAX_SEARCH_RESULT_BBSAPI = 5;
+const MAX_SEARCH_RESULT_FOROAPI = 5;
 
 //Typing the "makigas.es/videos.json" api
-class VideoAPI {
-  public videos: Video[];
+interface VideoAPI {
+  videos: Video[];
 }
 
-class Video {
-  public title: string;
-  public description: string;
-  public _links: {
+interface Video {
+  title: string;
+  description: string;
+  _links: {
     self: {
       href: string;
     };
@@ -42,13 +42,13 @@ class Video {
   };
 }
 
-//Typing the "bbs.makigas.es/api/discussions?filter[q]={q}" api
+//Typing the "foro.makigas.es/api/discussions?filter[q]={q}" api
 
-class BBSAPI {
-  data: BBS[];
+interface ForoAPI {
+  data: Foro[];
 }
 
-class BBS {
+interface Foro {
   attributes: {
     title: string;
     slug: string;
@@ -66,7 +66,7 @@ export default class SearchMakigasESCommand implements CommandInteractionHandler
         o
           .setName("busqueda")
           .setDescription("Tipo de búsqueda")
-          .setChoices({ name: "Vídeo", value: "video" }, { name: "BBS", value: "bbs" })
+          .setChoices({ name: "Vídeo", value: "video" }, { name: "Foro", value: "foro" })
           .setRequired(true),
       )
       .addStringOption((o) =>
@@ -82,13 +82,13 @@ export default class SearchMakigasESCommand implements CommandInteractionHandler
       return this.requestVideo(command, query);
     }
 
-    return this.requestBBS(command, query);
+    return this.requestForo(command, query);
   }
 
-  requestBBS(command: CommandInteraction, query: string) {
-    const url = `https://bbs.makigas.es/api/discussions?filter[q]=${query}`;
+  requestForo(command: CommandInteraction, query: string) {
+    const url = `https://foro.makigas.es/api/discussions?filter[q]=${query}`;
     this.request(url)
-      .then((res: AxiosResponse<BBSAPI, void>) => {
+      .then((res: AxiosResponse<ForoAPI, void>) => {
         const discussions = res.data.data;
         if (discussions.length == 0) {
           command.reply({
@@ -96,7 +96,7 @@ export default class SearchMakigasESCommand implements CommandInteractionHandler
           });
           return;
         }
-        const embeds = discussions.slice(0, MAX_SEARCH_RESULT_BBSAPI).map(this.createToastsBBS);
+        const embeds = discussions.slice(0, MAX_SEARCH_RESULT_FOROAPI).map(this.createToastForo);
 
         command.reply({
           embeds,
@@ -155,10 +155,10 @@ export default class SearchMakigasESCommand implements CommandInteractionHandler
     });
   }
 
-  createToastsBBS(bbs: BBS): MessageEmbed {
+  createToastForo(foro: Foro): MessageEmbed {
     return createToast({
-      title: bbs.attributes.title,
-      description: `https://bbs.makigas.es/d/${bbs.attributes.slug}`,
+      title: foro.attributes.title,
+      description: `https://foro.makigas.es/d/${foro.attributes.slug}`,
       severity: "success",
     });
   }
