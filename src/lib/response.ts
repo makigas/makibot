@@ -27,10 +27,11 @@ interface NotificationOptions {
 
 export function createToast(options: NotificationOptions): MessageEmbed {
   const embed = new MessageEmbed();
-  if (options.target) {
+  const avatarURL = options.target?.avatarURL();
+  if (options.target && avatarURL) {
     embed.setAuthor({
       name: options.title,
-      iconURL: options.target.avatarURL(),
+      iconURL: avatarURL,
     });
   } else {
     embed.setAuthor({

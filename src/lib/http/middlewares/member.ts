@@ -26,7 +26,9 @@ export default function memberMiddleware(makibot: Makibot): express.Router {
 
   /* Add a middleware for extracting the member from the request object. */
   router.use((req: RouterRequest, res, next) => {
-    const guildMember = res.locals.guild.members.cache.find((m) => m.id == req.params.member);
+    const guildMember = res.locals.guild.members.cache.find(
+      (m: GuildMember) => m.id == req.params.member,
+    );
     if (guildMember) {
       const member = new Member(guildMember);
       res.locals = { ...res.locals, guildMember, member };
@@ -71,11 +73,7 @@ export default function memberMiddleware(makibot: Makibot): express.Router {
     } else {
       /* Generation. */
       const karmagen = await res.locals.member.tagbag.tag("karma:ver").get<string>("v1");
-      const levelFormulas = {
-        v1: getLevelV1,
-        v2: getLevelV2,
-      };
-      const getLevel = levelFormulas[karmagen];
+      const getLevel = getLevelFormula(karmagen);
 
       /* Bump the offset. */
       await res.locals.member.tagbag.tag("karma:offset").set(offset);
@@ -86,12 +84,14 @@ export default function memberMiddleware(makibot: Makibot): express.Router {
 
       /* Test if level has to be updated. */
       const currentLevel = res.locals.member.tagbag.tag("karma:level");
-      if (currentLevel.get(0) != expectedLevel) {
+      const currentLevelValue = await currentLevel.get(0);
+      if (currentLevelValue != expectedLevel) {
         await currentLevel.set(expectedLevel);
 
         /* Test if highest level has to be updated. */
         const highScoreLevel = res.locals.member.tagbag.tag("karma:max");
-        if (highScoreLevel.get(0) < expectedLevel) {
+        const highScoreLevelValue = await highScoreLevel.get(0);
+        if (highScoreLevelValue < expectedLevel) {
           await highScoreLevel.set(expectedLevel);
         }
 
@@ -108,4 +108,18 @@ export default function memberMiddleware(makibot: Makibot): express.Router {
   });
 
   return router;
+}
+
+type LevelFormula = (points: number) => number;
+
+function getLevelFormula(kind: string): LevelFormula {
+  const levelFormulas: Record<string, LevelFormula> = {
+    v1: getLevelV1,
+    v2: getLevelV2,
+  };
+  if (kind in levelFormulas) {
+    return levelFormulas[kind];
+  } else {
+    return () => 0;
+  }
 }
