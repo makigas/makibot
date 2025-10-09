@@ -28,6 +28,7 @@ export interface KarmaDatabase {
   count(target: Snowflake, settings?: KarmaCountParams): Promise<number>;
   undoAction(actor: KarmaUndoActionParams): Promise<void>;
   action(options: KarmaActionParams): Promise<void>;
+  lastInteraction(target: Snowflake): Promise<number>;
 
   bountiesSentToday(sender: Snowflake): Promise<number>;
   bountiesReceivedToday(receiver: Snowflake): Promise<number>;
@@ -114,6 +115,12 @@ class SqliteKarmaDatabase implements KarmaDatabase {
       params.push(`-${seconds} seconds`);
     }
     return this.db.get(query, params).then(({ score }) => score || 0);
+  }
+
+  lastInteraction(target: Snowflake): Promise<number> {
+    let query = "SELECT MAX(datetime) AS datetime FROM karma WHERE target_id = ?";
+    const params: [string] = [target];
+    return this.db.get(query, params).then(({ datetime }) => Date.parse(datetime));
   }
 
   async undoAction({

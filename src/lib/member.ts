@@ -18,6 +18,7 @@ interface KarmaStats {
   level: number;
   total: number;
   version: string;
+  last: number;
 }
 
 export default class Member {
@@ -77,8 +78,9 @@ export default class Member {
       this.client.karma.count(this.id, { kind: "heart" }),
       this.client.karma.count(this.id, { kind: "loots" }),
       this.client.karma.count(this.id, { kind: "wave" }),
+      this.client.karma.lastInteraction(this.id),
     ]);
-    const [total, messages, upvotes, downvotes, stars, hearts, loots, waves] = results;
+    const [total, messages, upvotes, downvotes, stars, hearts, loots, waves, last] = results;
     const offset = await this.tagbag.tag("karma:offset").get(0);
     const level = await this.tagbag.tag("karma:level").get(0);
     const version = await this.tagbag.tag("karma:ver").get<string>("v1");
@@ -104,6 +106,7 @@ export default class Member {
       loots,
       total,
       version,
+      last,
     };
   }
 
