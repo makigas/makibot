@@ -21,7 +21,7 @@ async function isProbablyCompromisedMessage(msg: Message) {
     }
     const attachments = msg.attachments.map(attachment => attachment.name);
     // TODO: imagine using tesseract to actually detect words from the images and see if there are keywords like "airdrop" or that stuff
-    if (attachments.length < 4 && !attachments.every(at => at?.endsWith(".jpg") || at?.endsWith(".png"))) {
+    if (attachments.length < 4 || !attachments.every(at => at?.endsWith(".jpg") || at?.endsWith(".png"))) {
         return false;
     }
 
