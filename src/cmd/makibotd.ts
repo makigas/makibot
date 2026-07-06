@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 
+import "../instrument";
+
+import * as Sentry from "@sentry/node";
 import Makibot from "../Makibot";
 import serverFactory from "../lib/http/server";
 import logger from "../lib/logger";
-import * as Sentry from "@sentry/node";
 import { getDatabase, getKarmaDatabase } from "../settings";
 import { newModRepository } from "../lib/modlog";
 import { openKarmaDatabase } from "../lib/karma/database";
@@ -22,10 +24,12 @@ if (!process.env.BOT_TOKEN) {
   process.exit(1);
 }
 
-/* Feed me: SENTRY_DSN, SENTRY_ENVIRONMENT, SENTRY_RELEASE */
-Sentry.init();
+Sentry.logger.info("Makibot is starting");
+Sentry.metrics.count("makibot.lifecycle.start", 1);
 
 async function makibotFactory(): Promise<Makibot> {
+  const startedAt = performance.now();
+
   logger.debug("loading main database...");
   const database = await getDatabase();
 
@@ -45,11 +49,18 @@ async function makibotFactory(): Promise<Makibot> {
   logger.debug("initialising karma database...");
   const karma = await openKarmaDatabase(karmaDatabase);
 
+  Sentry.metrics.distribution("makibot.initialization.duration", performance.now() - startedAt, {
+    unit: "millisecond",
+  });
+
   return new Makibot(modrepo, provider, karma);
 }
 
 makibotFactory().then(async (makibot) => {
   await makibot.connect();
+  Sentry.logger.info("Makibot connected to Discord");
+  Sentry.metrics.count("makibot.lifecycle.connected", 1);
+
   const server = serverFactory(makibot);
   const service = server.listen(8080, "0.0.0.0");
 

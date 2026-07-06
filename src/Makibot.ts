@@ -1,4 +1,5 @@
 import path from "path";
+import * as Sentry from "@sentry/node";
 import { Client, CloseEvent, DiscordAPIError, Intents } from "discord.js";
 
 import { HookManager } from "./lib/hook";
@@ -81,10 +82,15 @@ export default class Makibot extends Client {
     }
   }
 
-  shutdown(exitCode = 0): void {
+  async shutdown(exitCode = 0): Promise<void> {
     logger.info("The bot was asked to shutdown.");
+    Sentry.logger.info("Makibot is shutting down", { exitCode });
+    Sentry.metrics.count("makibot.lifecycle.shutdown", 1, {
+      attributes: { exitCode },
+    });
     this.destroy();
     logger.info("Good night!");
+    await Sentry.close(2000);
     process.exit(exitCode);
   }
 }

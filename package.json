@@ -15,7 +15,7 @@
   "dependencies": {
     "@discordjs/builders": "^0.16.0",
     "@discordjs/rest": "^0.4.1",
-    "@sentry/node": "^8.28.0",
+    "@sentry/node": "^10.63.0",
     "async-lock": "^1.4.1",
     "axios": "^1.6.0",
     "big-integer": "^1.6.51",
