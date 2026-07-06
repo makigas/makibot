@@ -62,21 +62,25 @@ export default class KarmaService implements Hook {
   }
 
   private deferLevelCheck(member: GuildMember, channel: TextChannel) {
-    this.lock.acquire('check', async () => {
-      logger.trace("[karma] defering level check for " + member.id);
-      this.pending.set(member.id, { member, channel });
-    }).then(() => {});
+    this.lock
+      .acquire("check", async () => {
+        logger.trace("[karma] defering level check for " + member.id);
+        this.pending.set(member.id, { member, channel });
+      })
+      .then(() => {});
   }
 
   private doLevelCheck() {
     logger.trace("[karma] checking levels...");
-    this.lock.acquire('check', async () => {
-      for (const pending of this.pending.values()) {
-        logger.trace("[karma] checking levels for " + pending.member.id);
-        this.assertLevel(pending.member, pending.channel);
-      }
-      this.pending.clear();
-    }).then(() => {});
+    this.lock
+      .acquire("check", async () => {
+        for (const pending of this.pending.values()) {
+          logger.trace("[karma] checking levels for " + pending.member.id);
+          this.assertLevel(pending.member, pending.channel);
+        }
+        this.pending.clear();
+      })
+      .then(() => {});
   }
 
   /* Made as a getter so that we can defer accessing the karma db until the very last moment. */

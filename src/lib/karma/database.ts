@@ -118,7 +118,7 @@ class SqliteKarmaDatabase implements KarmaDatabase {
   }
 
   lastInteraction(target: Snowflake): Promise<number> {
-    let query = "SELECT MAX(datetime) AS datetime FROM karma WHERE target_id = ?";
+    const query = "SELECT MAX(datetime) AS datetime FROM karma WHERE target_id = ?";
     const params: [string] = [target];
     return this.db.get(query, params).then(({ datetime }) => Date.parse(datetime));
   }
