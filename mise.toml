@@ -1,0 +1,34 @@
+[tools]
+node = "20"
+
+[tasks.install]
+description = "Install dependencies from the lockfile"
+run = "npm ci"
+
+[tasks.build]
+description = "Compile the TypeScript sources"
+run = "npm run build"
+
+[tasks.test]
+description = "Run the test suite"
+run = "npm test"
+
+[tasks.lint]
+description = "Lint the TypeScript sources"
+run = "npm run lint"
+
+[tasks.check]
+description = "Run all CI checks"
+depends = ["build", "lint", "test"]
+
+[tasks.start]
+description = "Start makibot in development mode"
+run = "npm start"
+
+[tasks.makibotctl]
+description = "Run the makibot control CLI"
+run = "npm run makibotctl"
+
+[tasks.clean]
+description = "Remove generated artifacts"
+run = "npm run clean"

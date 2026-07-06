@@ -9,7 +9,9 @@
 
 ## Requirements
 
-- Node.js 20.
+- [Mise](https://mise.jdx.dev/) (recommended), which installs the project's
+  Node.js version automatically.
+- Node.js 20 when not using Mise.
 - A Discord application behaving as a bot.
 - A Discord server to put the bot in.
 
@@ -36,8 +38,14 @@ Understood variables:
 
 ### Install and run
 
-- `npm install`
-- `npm start`
+With Mise:
+
+- `mise install`
+- `mise run install`
+- `mise run start`
+
+Run `mise tasks` to see the available build, test, lint and utility tasks.
+Without Mise, you can still use `npm ci` and `npm start` directly.
 
 ## Contributing
 

@@ -3,26 +3,14 @@ name: CI
 on: [push]
 
 jobs:
-  mocha:
-    name: Run test suite
+  check:
+    name: Run project checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-      - run: npm install
-      - run: npm test
-  lint:
-    name: Run test suite
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-      - run: npm install
-      - run: npm run lint
+      - uses: jdx/mise-action@v4
+      - run: mise run install
+      - run: mise run check
   docker:
     name: Build Docker image
     runs-on: ubuntu-latest
