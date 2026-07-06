@@ -55,31 +55,25 @@ makibotctl.command<{ app: string; local?: string }>(
 
     const commandPayloads = requireAllModules(commandsDir).map((HandlerClass) => {
       if (typeof HandlerClass == "function") {
-        const handler = new (
-          HandlerClass as {
-            new (): CommandInteractionHandler;
-          }
-        )();
+        const handler = new (HandlerClass as {
+          new (): CommandInteractionHandler;
+        })();
         return handler.build().toJSON();
       }
     });
     const usermenuPayloads = requireAllModules(userMenusDir).map((HandlerClass) => {
       if (typeof HandlerClass == "function") {
-        const handler = new (
-          HandlerClass as {
-            new (): UserContextMenuInteractionHandler;
-          }
-        )();
+        const handler = new (HandlerClass as {
+          new (): UserContextMenuInteractionHandler;
+        })();
         return handler.build().toJSON();
       }
     });
     const messagemenuPayloads = requireAllModules(messageMenusDir).map((HandlerClass) => {
       if (typeof HandlerClass == "function") {
-        const handler = new (
-          HandlerClass as {
-            new (): MessageContextMenuInteractionHandler;
-          }
-        )();
+        const handler = new (HandlerClass as {
+          new (): MessageContextMenuInteractionHandler;
+        })();
         return handler.build().toJSON();
       }
     });
